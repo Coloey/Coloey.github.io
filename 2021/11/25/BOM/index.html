@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"coloey.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="BOMlocation对象提供当前窗口加载文档的信息，以及通常的导航功能，它既是window的属性也是document的属性。 查询字符串123456789101112131415161718let getQueryStringArgs&#x3D;function()&amp;#123;    &#x2F;&#x2F;取得没有开头问号的查询字符串        let qs&#x3D;(location.search.length&gt;0)?">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BOM">
+<meta property="og:url" content="https://coloey.github.io/2021/11/25/BOM/index.html">
+<meta property="og:site_name" content="小七的博客">
+<meta property="og:description" content="BOMlocation对象提供当前窗口加载文档的信息，以及通常的导航功能，它既是window的属性也是document的属性。 查询字符串123456789101112131415161718let getQueryStringArgs&#x3D;function()&amp;#123;    &#x2F;&#x2F;取得没有开头问号的查询字符串        let qs&#x3D;(location.search.length&gt;0)?">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-25T12:47:05.000Z">
+<meta property="article:modified_time" content="2021-12-08T06:52:45.181Z">
+<meta property="article:author" content="小七">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://coloey.github.io/2021/11/25/BOM/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>BOM | 小七的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="小七的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小七的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">www.xiaoqi.cn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+    
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+    
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2021/11/25/BOM/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic2.zhimg.com/v2-3545844adcb0b37aea2dd8f9534066f7_r.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小七">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小七的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          BOM
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-25 20:47:05" itemprop="dateCreated datePublished" datetime="2021-11-25T20:47:05+08:00">2021-11-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-08 14:52:45" itemprop="dateModified" datetime="2021-12-08T14:52:45+08:00">2021-12-08</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="BOM"><a href="#BOM" class="headerlink" title="BOM"></a>BOM</h1><h2 id="location对象"><a href="#location对象" class="headerlink" title="location对象"></a>location对象</h2><p>提供当前窗口加载文档的信息，以及通常的导航功能，它既是window的属性也是document的属性。</p>
+<h3 id="查询字符串"><a href="#查询字符串" class="headerlink" title="查询字符串"></a>查询字符串</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> getQueryStringArgs=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//取得没有开头问号的查询字符串</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> qs=(location.search.length&gt;<span class="number">0</span>)?location.search.substring(<span class="number">1</span>):<span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">let</span> args=&#123;&#125;;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> item <span class="keyword">of</span>(qs.split(<span class="string">&#x27;&amp;&#x27;</span>).map(<span class="function"><span class="params">kv</span>=&gt;</span>kv.split(<span class="string">&#x27;=&#x27;</span>))))&#123;</span><br><span class="line">        <span class="keyword">let</span> name=item[<span class="number">0</span>];</span><br><span class="line">            value=item[<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">if</span>(name.length)&#123;</span><br><span class="line">            args[name]=value;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> args;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//qs=&quot;?q=javaScript&amp;num=10&quot;;</span></span><br><span class="line"><span class="keyword">let</span> args=getQueryStringArgs();</span><br><span class="line">alert(args[<span class="string">&quot;q&quot;</span>]);</span><br><span class="line">alert(args[<span class="string">&#x27;num&#x27;</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>使用USLSearchParams检查和修改查询字符串</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> qs=<span class="string">&quot;?q=javaScript&amp;num=10&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> searchParams=<span class="keyword">new</span> URLSearchParams(qs);</span><br><span class="line">alert(searchParams.toString());</span><br><span class="line">searchParams.has(<span class="string">&quot;num&quot;</span>);</span><br><span class="line">searchParams.get(<span class="string">&quot;num&quot;</span>);</span><br><span class="line">searchParams.set(<span class="string">&quot;page&quot;</span>,<span class="string">&quot;3&quot;</span>);</span><br><span class="line">alert(searchParams.toString());</span><br><span class="line">searchParams.delete(<span class="string">&quot;q&quot;</span>);</span><br><span class="line">alert(searchParams.toString());</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> param <span class="keyword">of</span> searchParams)&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(param);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="操作地址"><a href="#操作地址" class="headerlink" title="操作地址"></a>操作地址</h3><p>通过修改location对象修改浏览器地址，使用assign方法传进一个URL,会导航到新URL同时在浏览器历史记录增加一条记录，下面三种方法功能相同</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location.assign(<span class="string">&quot;http://www.wrox.com&quot;</span>);</span><br><span class="line"><span class="built_in">window</span>.location=<span class="string">&quot;http://www.wrox.com&quot;</span>;</span><br><span class="line">location.href=<span class="string">&quot;http://www.wrox.com&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>通过修改location属性可以修改当前加载的页面,hash,search,hostname,pathname.port属性被设置为新值后会修改当前的URL</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//假设当前URL为http://www.wrox.com/WileyCDA/</span></span><br><span class="line">location.assign(<span class="string">&quot;http://www.wrox.com/WileyCDA&quot;</span>);</span><br><span class="line"><span class="comment">//把URL修改为http://www.wrox.com/WileyCDA/#section1</span></span><br><span class="line">location.hash=<span class="string">&quot;#section1&quot;</span>;</span><br><span class="line"><span class="comment">//把URL修改为http://www.wrox.com/WileyCDA/?q=javascript</span></span><br><span class="line">location.search=<span class="string">&quot;?q=javascript&quot;</span>;</span><br><span class="line"><span class="comment">//把URL修改为http://www.somewhere.com/WileyCDA/</span></span><br><span class="line">location.hostname=<span class="string">&quot;www.somewhere.com&quot;</span>;</span><br><span class="line"><span class="comment">//把URL修改为http://www.somewhere.com/mydir/</span></span><br><span class="line">location.pathname=<span class="string">&quot;mydir&quot;</span>;</span><br><span class="line"><span class="comment">//把URL修改为http://www.somewhere.com:8080/WileyCDA/</span></span><br><span class="line">location.port=<span class="number">8080</span>;</span><br></pre></td></tr></table></figure>
+
+<p>以上的修改会在浏览器中增加记录，点击后退即可导航到前一个界面，不希望增加历史记录可以使用replace()方法，reload()可以重新加载当前页面，如果页面自从上次请求后没有修改过，则浏览器可能会从缓存中加载页面，如果想强制从服务器中加载，必须传入true</p>
+<h2 id="history对象"><a href="#history对象" class="headerlink" title="history对象"></a>history对象</h2><p>history用来导航历史记录，同时不会暴露用户访问过的URL。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">history.go(-<span class="number">1</span>);<span class="comment">//后退一页</span></span><br><span class="line">history.go(<span class="number">1</span>);<span class="comment">//前进一页</span></span><br><span class="line">history.go(<span class="string">&quot;wrox.com&quot;</span>)<span class="comment">//导航到最近的wrox.com页面</span></span><br><span class="line"><span class="comment">//go有两个简写方法：back()和forward()</span></span><br><span class="line">history.back();<span class="comment">//后退一页</span></span><br><span class="line">history.forward()<span class="comment">//前进一页</span></span><br><span class="line"><span class="comment">//history的length属性记录历史记录有多少条目</span></span><br><span class="line"><span class="keyword">if</span>(history.length==<span class="number">1</span>)&#123;<span class="comment">//这是用户窗口第一个页面&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="navigator对象"><a href="#navigator对象" class="headerlink" title="navigator对象"></a>navigator对象</h2><p>navigator对象通常用来确定浏览器的类型</p>
+<h3 id="检测插件"><a href="#检测插件" class="headerlink" title="检测插件"></a>检测插件</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasPlugin</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">    name=name.toLowerCase();</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> plugin <span class="keyword">of</span> <span class="built_in">window</span>.navigator.plugins)&#123;</span><br><span class="line">        <span class="keyword">if</span>(plugin.name.toLowerCase().indexOf(name)&gt;-<span class="number">1</span>)&#123;<span class="keyword">return</span> <span class="literal">true</span>;&#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//alert(hasPlugin(&quot;Flash&quot;));</span></span><br><span class="line"><span class="comment">//alert(hasPlugin(&quot;QuickTime&quot;));</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasIEPlugin</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        <span class="keyword">new</span> ActiveXObject(name);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;<span class="keyword">catch</span>(ex)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//在所有浏览器中检测插件</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasFlash</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> result=hasPlugin(<span class="string">&quot;Flash&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span>(!result)&#123;</span><br><span class="line">        result=hasIEPlugin(<span class="string">&quot;ShockwaveFlash.ShockwaveFlash&quot;</span>);</span><br><span class="line">    &#125;<span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasQuickTime</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> res=hasPlugin(<span class="string">&quot;QuickTime&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span>(!res)&#123;</span><br><span class="line">        res=hasIEPlugin(<span class="string">&quot;QuickTime.QuickTime&quot;</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">alert(hasFlash());</span><br><span class="line">alert(hasQuickTime());</span><br></pre></td></tr></table></figure>
+
+<h3 id="注册处理程序"><a href="#注册处理程序" class="headerlink" title="注册处理程序"></a>注册处理程序</h3><p>registerProtocolHandler()方法可以把一个网站注册处理为某种特定类型信息应用程序，传入3个参数：要处理的协议（“mailto或ftp),处理该协议的URL，以及应用名称</p>
+<p>例如，把一个Web应用程序注册为默认客户端</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.registerProtocolHandler(<span class="string">&quot;mailto&quot;</span>,<span class="string">&quot;http://www.somemailclient.com?cmd=%s&quot;</span>,<span class="string">&quot;Some Mail Client&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/25/HTML+CSS/" rel="prev" title="HTML+CSS">
+      <i class="fa fa-chevron-left"></i> HTML+CSS
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#BOM"><span class="nav-number">1.</span> <span class="nav-text">BOM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#location%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.1.</span> <span class="nav-text">location对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">1.1.1.</span> <span class="nav-text">查询字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E5%9C%B0%E5%9D%80"><span class="nav-number">1.1.2.</span> <span class="nav-text">操作地址</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#history%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.2.</span> <span class="nav-text">history对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#navigator%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.3.</span> <span class="nav-text">navigator对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%B5%8B%E6%8F%92%E4%BB%B6"><span class="nav-number">1.3.1.</span> <span class="nav-text">检测插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E5%86%8C%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F"><span class="nav-number">1.3.2.</span> <span class="nav-text">注册处理程序</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小七"
+      src="https://pic2.zhimg.com/v2-3545844adcb0b37aea2dd8f9534066f7_r.jpg?source=1940ef5c">
+  <p class="site-author-name" itemprop="name">小七</p>
+  <div class="site-description" itemprop="description">欢迎来到我的世界!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Coloey" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Coloey" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/487336863@qq.com" title="E-Mail → 487336863@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+    
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小七</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+</body>
+</html>
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
