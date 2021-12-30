@@ -32,6 +32,38 @@
       </categories>
   </entry>
   <entry>
+    <title>DOM扩展</title>
+    <url>/2021/11/25/DOM%E6%89%A9%E5%B1%95/</url>
+    <content><![CDATA[<h1 id="Selectors-API"><a href="#Selectors-API" class="headerlink" title="Selectors API"></a>Selectors API</h1><h2 id="querySelector"><a href="#querySelector" class="headerlink" title="querySelector()"></a>querySelector()</h2><p>接收CSS选择符参数，返回匹配模式的第一个后代元素，如果没有匹配项则返回null</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> body=<span class="built_in">document</span>.querySelector(<span class="string">&quot;body&quot;</span>);</span><br><span class="line"><span class="comment">//取得id名为myDiv的元素</span></span><br><span class="line"><span class="keyword">let</span> myDiv=<span class="built_in">document</span>.querySelector(<span class="string">&quot;#myDiv&quot;</span>);</span><br><span class="line"><span class="comment">//取得类名为“selector&quot;的第一个元素</span></span><br><span class="line"><span class="keyword">let</span> selected=<span class="built_in">document</span>.querySelector(<span class="string">&quot;.selected&quot;</span>);</span><br><span class="line"><span class="comment">//取得类名为&quot;button&quot;的图片</span></span><br><span class="line"><span class="keyword">let</span> img=<span class="built_in">document</span>.querySelector(<span class="string">&quot;img.button&quot;</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="querySelectorAll"><a href="#querySelectorAll" class="headerlink" title="querySelectorAll()"></a>querySelectorAll()</h2><p>接收一个查询参数，返回所有匹配的节点，即一个NodeList的静态实例</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//取得id为&#x27;myDiv&#x27;的&lt;div&gt;元素中的所有&lt;em&gt;元素</span></span><br><span class="line"><span class="keyword">let</span> ems=<span class="built_in">document</span>.getElementByid(<span class="string">&#x27;myDiv&#x27;</span>).querySelectorAll(<span class="string">&quot;em&quot;</span>);</span><br><span class="line"><span class="comment">//取得所有类名中包含&#x27;selected&#x27;的元素</span></span><br><span class="line"><span class="keyword">let</span> selecteds=<span class="built_in">document</span>.querySelectorAll(<span class="string">&quot;.selected&quot;</span>);</span><br><span class="line"><span class="comment">//取得所有是&lt;p&gt;元素子元素的&lt;strong&gt;元素</span></span><br><span class="line"><span class="keyword">let</span> strongs=<span class="built_in">document</span>.querySelectorAll(<span class="string">&quot;p strong&quot;</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> strong <span class="keyword">of</span> strongs)&#123;</span><br><span class="line">    strong.className=<span class="string">&quot;important&quot;</span>;</span><br><span class="line">    <span class="comment">//strong.item(i).className=&quot;important&quot;;</span></span><br><span class="line">    <span class="comment">//strong[i].className=&quot;important&quot;;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="HTML5"><a href="#HTML5" class="headerlink" title="HTML5"></a>HTML5</h1><h2 id="getElementsByClassName"><a href="#getElementsByClassName" class="headerlink" title="getElementsByClassName()"></a>getElementsByClassName()</h2><p>接收一个参数，即包含一个或多个类名的字符串，返回类名中包含相应类的元素的NodeList</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//取得所有类名中包含&#x27;username&#x27;和&#x27;current&#x27;元素</span></span><br><span class="line"><span class="keyword">let</span> allCurrentUsernames=<span class="built_in">document</span>.getElementsByClassName(<span class="string">&quot;username current&quot;</span>);</span><br><span class="line"><span class="comment">//取得id为“myDiv&quot;的元素子树中所有包含&#x27;selected’类的元素</span></span><br><span class="line"><span class="keyword">let</span> selected=<span class="built_in">document</span>.getElementById(<span class="string">&quot;myDiv&quot;</span>).getElementsByClassName(<span class="string">&quot;selected&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这个方法返回以调用它的对象为根元素的子树中所有匹配的元素，在document上调用getElementsByClassName()返回文档中所有匹配的元素，而在特定元素中调用getElementsByClassName()返回该元素后代中匹配的元素</p>
+<h2 id="classList属性"><a href="#classList属性" class="headerlink" title="classList属性"></a>classList属性</h2><ul>
+<li><p>add(value)</p>
+</li>
+<li><p>contains(value)</p>
+</li>
+<li><p>remove(value)</p>
+</li>
+<li><p>toggle(value)：如果类名列表中已经存在指定的value，则删除，如果不存在，添加</p>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">div.classList.remove(<span class="string">&quot;disabled&quot;</span>);</span><br><span class="line">div.classList.add(<span class="string">&quot;current&quot;</span>);</span><br><span class="line"><span class="comment">//检测类名</span></span><br><span class="line"><span class="keyword">if</span>(div.classList.contains(<span class="string">&quot;bd&quot;</span>)&amp;&amp;!div.classList.contains(<span class="string">&quot;disabled&quot;</span>))&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="焦点管理"><a href="#焦点管理" class="headerlink" title="焦点管理"></a>焦点管理</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> button=<span class="built_in">document</span>.getElementById(<span class="string">&quot;myButton&quot;</span>);</span><br><span class="line">button.focus();</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">document</span>.activeElement===button);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">document</span>.hasFocus());<span class="comment">//true文档已经拥有焦点</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+  </entry>
+  <entry>
     <title>DOM编程</title>
     <url>/2021/12/12/DOM-DOM%E7%BC%96%E7%A8%8B/</url>
     <content><![CDATA[<h1 id="DOM编程"><a href="#DOM编程" class="headerlink" title="DOM编程"></a>DOM编程</h1><h2 id="动态脚本"><a href="#动态脚本" class="headerlink" title="动态脚本"></a>动态脚本</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loadScriptString</span>(<span class="params">code</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> script=<span class="built_in">document</span>.createElement(<span class="string">&quot;script&quot;</span>);</span><br><span class="line">    script.type=<span class="string">&quot;text/javascript&quot;</span>;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        script.appendChild(<span class="built_in">document</span>.createTextNode(code));<span class="comment">//旧版本的IE浏览器可能出问题</span></span><br><span class="line">    &#125;<span class="keyword">catch</span>(ex)&#123;</span><br><span class="line">        script.text=code;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">document</span>.body.appendChild(script);</span><br><span class="line">&#125;</span><br><span class="line">loadScriptString(<span class="string">&quot;function sayHi()&#123;alert(&#x27;hi&#x27;);&#125;&quot;</span>);</span><br></pre></td></tr></table></figure>
@@ -290,6 +322,23 @@
       </categories>
   </entry>
   <entry>
+    <title>富文本</title>
+    <url>/2021/12/13/%E5%AF%8C%E6%96%87%E6%9C%AC/</url>
+    <content><![CDATA[<h1 id="富文本编辑"><a href="#富文本编辑" class="headerlink" title="富文本编辑"></a>富文本编辑</h1><p>在空白 HTML 文件中嵌入一个iframe。通过 designMode 属性，可以将这个空白文档变成可以编辑的，实际编辑的则是<body>元素<br>的 HTML。designMode 属性有两个可能的值：”off”（默认值）和”on”。设置为”on”时</p>
+<h1 id="富文本交互"><a href="#富文本交互" class="headerlink" title="富文本交互"></a>富文本交互</h1><p>使用 document.execCommand()。这个方法在文档上执行既定<br>的命令，可以实现大多数格式化任务。document.execCommand()可以接收 3 个参数：要执行的命令、表示浏览器是否为命令提供用户界面的布尔值和执行命令必需的值</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 在内嵌窗格中切换粗体文本样式</span></span><br><span class="line">frames[<span class="string">&quot;richedit&quot;</span>].document.execCommand(<span class="string">&quot;bold&quot;</span>, <span class="literal">false</span>, <span class="literal">null</span>);</span><br><span class="line"><span class="comment">// 在内嵌窗格中切换斜体文本样式</span></span><br><span class="line">frames[<span class="string">&quot;richedit&quot;</span>].document.execCommand(<span class="string">&quot;italic&quot;</span>, <span class="literal">false</span>, <span class="literal">null</span>);</span><br><span class="line"><span class="comment">// 在内嵌窗格中创建指向 www.wrox.com 的链接</span></span><br><span class="line">frames[<span class="string">&quot;richedit&quot;</span>].document.execCommand(<span class="string">&quot;createlink&quot;</span>, <span class="literal">false</span>,</span><br><span class="line"><span class="string">&quot;http://www.wrox.com&quot;</span>);</span><br><span class="line"><span class="comment">// 在内嵌窗格中为内容添加&lt;h1&gt;标签</span></span><br><span class="line">frames[<span class="string">&quot;richedit&quot;</span>].document.execCommand(<span class="string">&quot;formatblock&quot;</span>, <span class="literal">false</span>, <span class="string">&quot;&lt;h1&gt;&quot;</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="富文本选择"><a href="#富文本选择" class="headerlink" title="富文本选择"></a>富文本选择</h1><p>在内嵌窗格中使用 getSelection()方法，可以获得富文本编辑器的选区。这个方法暴露在document 和 window 对象上，返回表示当前选中文本的 Selection 对象</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> selection = frames[<span class="string">&quot;richedit&quot;</span>].getSelection();</span><br><span class="line"><span class="comment">// 取得选中的文本</span></span><br><span class="line"><span class="keyword">let</span> selectedText = selection.toString();</span><br><span class="line"><span class="comment">// 取得表示选区的范围</span></span><br><span class="line"><span class="keyword">let</span> range = selection.getRangeAt(<span class="number">0</span>);</span><br><span class="line"><span class="comment">// 高亮选中的文本</span></span><br><span class="line"><span class="keyword">let</span> span = frames[<span class="string">&quot;richedit&quot;</span>].document.createElement(<span class="string">&quot;span&quot;</span>);</span><br><span class="line">span.style.backgroundColor = <span class="string">&quot;yellow&quot;</span>;</span><br><span class="line">range.surroundContents(span);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="通过表单提交富文本"><a href="#通过表单提交富文本" class="headerlink" title="通过表单提交富文本"></a>通过表单提交富文本</h1><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">form.addEventListener(<span class="string">&quot;submit&quot;</span>,<span class="function">(<span class="params">event</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> target=event.target;</span><br><span class="line">   target.elements[<span class="string">&quot;comments&quot;</span>].value=frames[<span class="string">&quot;richedit&quot;</span>].document.body.innerHTML;<span class="comment">//使用内嵌窗格 </span></span><br><span class="line">    <span class="comment">//target.elements[&quot;comments&quot;].value=document.getElementById(&quot;richedit&quot;).innerHTML;//使用contenteditable</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+  </entry>
+  <entry>
     <title>HTML+CSS</title>
     <url>/2021/11/25/HTML+CSS/</url>
     <content><![CDATA[<h2 id="定位："><a href="#定位：" class="headerlink" title="定位："></a><strong>定位</strong>：</h2><h3 id="定位总结："><a href="#定位总结：" class="headerlink" title="定位总结："></a><strong>定位总结：</strong></h3><ol>
@@ -479,55 +528,6 @@
 ]]></content>
       <categories>
         <category>HTML+CSS</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>富文本</title>
-    <url>/2021/12/13/%E5%AF%8C%E6%96%87%E6%9C%AC/</url>
-    <content><![CDATA[<h1 id="富文本编辑"><a href="#富文本编辑" class="headerlink" title="富文本编辑"></a>富文本编辑</h1><p>在空白 HTML 文件中嵌入一个iframe。通过 designMode 属性，可以将这个空白文档变成可以编辑的，实际编辑的则是<body>元素<br>的 HTML。designMode 属性有两个可能的值：”off”（默认值）和”on”。设置为”on”时</p>
-<h1 id="富文本交互"><a href="#富文本交互" class="headerlink" title="富文本交互"></a>富文本交互</h1><p>使用 document.execCommand()。这个方法在文档上执行既定<br>的命令，可以实现大多数格式化任务。document.execCommand()可以接收 3 个参数：要执行的命令、表示浏览器是否为命令提供用户界面的布尔值和执行命令必需的值</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 在内嵌窗格中切换粗体文本样式</span></span><br><span class="line">frames[<span class="string">&quot;richedit&quot;</span>].document.execCommand(<span class="string">&quot;bold&quot;</span>, <span class="literal">false</span>, <span class="literal">null</span>);</span><br><span class="line"><span class="comment">// 在内嵌窗格中切换斜体文本样式</span></span><br><span class="line">frames[<span class="string">&quot;richedit&quot;</span>].document.execCommand(<span class="string">&quot;italic&quot;</span>, <span class="literal">false</span>, <span class="literal">null</span>);</span><br><span class="line"><span class="comment">// 在内嵌窗格中创建指向 www.wrox.com 的链接</span></span><br><span class="line">frames[<span class="string">&quot;richedit&quot;</span>].document.execCommand(<span class="string">&quot;createlink&quot;</span>, <span class="literal">false</span>,</span><br><span class="line"><span class="string">&quot;http://www.wrox.com&quot;</span>);</span><br><span class="line"><span class="comment">// 在内嵌窗格中为内容添加&lt;h1&gt;标签</span></span><br><span class="line">frames[<span class="string">&quot;richedit&quot;</span>].document.execCommand(<span class="string">&quot;formatblock&quot;</span>, <span class="literal">false</span>, <span class="string">&quot;&lt;h1&gt;&quot;</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="富文本选择"><a href="#富文本选择" class="headerlink" title="富文本选择"></a>富文本选择</h1><p>在内嵌窗格中使用 getSelection()方法，可以获得富文本编辑器的选区。这个方法暴露在document 和 window 对象上，返回表示当前选中文本的 Selection 对象</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> selection = frames[<span class="string">&quot;richedit&quot;</span>].getSelection();</span><br><span class="line"><span class="comment">// 取得选中的文本</span></span><br><span class="line"><span class="keyword">let</span> selectedText = selection.toString();</span><br><span class="line"><span class="comment">// 取得表示选区的范围</span></span><br><span class="line"><span class="keyword">let</span> range = selection.getRangeAt(<span class="number">0</span>);</span><br><span class="line"><span class="comment">// 高亮选中的文本</span></span><br><span class="line"><span class="keyword">let</span> span = frames[<span class="string">&quot;richedit&quot;</span>].document.createElement(<span class="string">&quot;span&quot;</span>);</span><br><span class="line">span.style.backgroundColor = <span class="string">&quot;yellow&quot;</span>;</span><br><span class="line">range.surroundContents(span);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="通过表单提交富文本"><a href="#通过表单提交富文本" class="headerlink" title="通过表单提交富文本"></a>通过表单提交富文本</h1><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">form.addEventListener(<span class="string">&quot;submit&quot;</span>,<span class="function">(<span class="params">event</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> target=event.target;</span><br><span class="line">   target.elements[<span class="string">&quot;comments&quot;</span>].value=frames[<span class="string">&quot;richedit&quot;</span>].document.body.innerHTML;<span class="comment">//使用内嵌窗格 </span></span><br><span class="line">    <span class="comment">//target.elements[&quot;comments&quot;].value=document.getElementById(&quot;richedit&quot;).innerHTML;//使用contenteditable</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>JavaScript</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>DOM扩展</title>
-    <url>/2021/11/25/DOM%E6%89%A9%E5%B1%95/</url>
-    <content><![CDATA[<h1 id="Selectors-API"><a href="#Selectors-API" class="headerlink" title="Selectors API"></a>Selectors API</h1><h2 id="querySelector"><a href="#querySelector" class="headerlink" title="querySelector()"></a>querySelector()</h2><p>接收CSS选择符参数，返回匹配模式的第一个后代元素，如果没有匹配项则返回null</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> body=<span class="built_in">document</span>.querySelector(<span class="string">&quot;body&quot;</span>);</span><br><span class="line"><span class="comment">//取得id名为myDiv的元素</span></span><br><span class="line"><span class="keyword">let</span> myDiv=<span class="built_in">document</span>.querySelector(<span class="string">&quot;#myDiv&quot;</span>);</span><br><span class="line"><span class="comment">//取得类名为“selector&quot;的第一个元素</span></span><br><span class="line"><span class="keyword">let</span> selected=<span class="built_in">document</span>.querySelector(<span class="string">&quot;.selected&quot;</span>);</span><br><span class="line"><span class="comment">//取得类名为&quot;button&quot;的图片</span></span><br><span class="line"><span class="keyword">let</span> img=<span class="built_in">document</span>.querySelector(<span class="string">&quot;img.button&quot;</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="querySelectorAll"><a href="#querySelectorAll" class="headerlink" title="querySelectorAll()"></a>querySelectorAll()</h2><p>接收一个查询参数，返回所有匹配的节点，即一个NodeList的静态实例</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//取得id为&#x27;myDiv&#x27;的&lt;div&gt;元素中的所有&lt;em&gt;元素</span></span><br><span class="line"><span class="keyword">let</span> ems=<span class="built_in">document</span>.getElementByid(<span class="string">&#x27;myDiv&#x27;</span>).querySelectorAll(<span class="string">&quot;em&quot;</span>);</span><br><span class="line"><span class="comment">//取得所有类名中包含&#x27;selected&#x27;的元素</span></span><br><span class="line"><span class="keyword">let</span> selecteds=<span class="built_in">document</span>.querySelectorAll(<span class="string">&quot;.selected&quot;</span>);</span><br><span class="line"><span class="comment">//取得所有是&lt;p&gt;元素子元素的&lt;strong&gt;元素</span></span><br><span class="line"><span class="keyword">let</span> strongs=<span class="built_in">document</span>.querySelectorAll(<span class="string">&quot;p strong&quot;</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> strong <span class="keyword">of</span> strongs)&#123;</span><br><span class="line">    strong.className=<span class="string">&quot;important&quot;</span>;</span><br><span class="line">    <span class="comment">//strong.item(i).className=&quot;important&quot;;</span></span><br><span class="line">    <span class="comment">//strong[i].className=&quot;important&quot;;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="HTML5"><a href="#HTML5" class="headerlink" title="HTML5"></a>HTML5</h1><h2 id="getElementsByClassName"><a href="#getElementsByClassName" class="headerlink" title="getElementsByClassName()"></a>getElementsByClassName()</h2><p>接收一个参数，即包含一个或多个类名的字符串，返回类名中包含相应类的元素的NodeList</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//取得所有类名中包含&#x27;username&#x27;和&#x27;current&#x27;元素</span></span><br><span class="line"><span class="keyword">let</span> allCurrentUsernames=<span class="built_in">document</span>.getElementsByClassName(<span class="string">&quot;username current&quot;</span>);</span><br><span class="line"><span class="comment">//取得id为“myDiv&quot;的元素子树中所有包含&#x27;selected’类的元素</span></span><br><span class="line"><span class="keyword">let</span> selected=<span class="built_in">document</span>.getElementById(<span class="string">&quot;myDiv&quot;</span>).getElementsByClassName(<span class="string">&quot;selected&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>这个方法返回以调用它的对象为根元素的子树中所有匹配的元素，在document上调用getElementsByClassName()返回文档中所有匹配的元素，而在特定元素中调用getElementsByClassName()返回该元素后代中匹配的元素</p>
-<h2 id="classList属性"><a href="#classList属性" class="headerlink" title="classList属性"></a>classList属性</h2><ul>
-<li><p>add(value)</p>
-</li>
-<li><p>contains(value)</p>
-</li>
-<li><p>remove(value)</p>
-</li>
-<li><p>toggle(value)：如果类名列表中已经存在指定的value，则删除，如果不存在，添加</p>
-</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">div.classList.remove(<span class="string">&quot;disabled&quot;</span>);</span><br><span class="line">div.classList.add(<span class="string">&quot;current&quot;</span>);</span><br><span class="line"><span class="comment">//检测类名</span></span><br><span class="line"><span class="keyword">if</span>(div.classList.contains(<span class="string">&quot;bd&quot;</span>)&amp;&amp;!div.classList.contains(<span class="string">&quot;disabled&quot;</span>))&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="焦点管理"><a href="#焦点管理" class="headerlink" title="焦点管理"></a>焦点管理</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> button=<span class="built_in">document</span>.getElementById(<span class="string">&quot;myButton&quot;</span>);</span><br><span class="line">button.focus();</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">document</span>.activeElement===button);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">document</span>.hasFocus());<span class="comment">//true文档已经拥有焦点</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>JavaScript</category>
       </categories>
   </entry>
   <entry>
