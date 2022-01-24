@@ -1,6 +1,218 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>watch和computed区别</title>
+    <url>/Coloey.github.io/2022/01/24/watch%E5%92%8Ccomputed%E5%8C%BA%E5%88%AB/</url>
+    <content><![CDATA[<h1 id="computed和watch的区别"><a href="#computed和watch的区别" class="headerlink" title="computed和watch的区别:"></a>computed和watch的区别:</h1><p>1 computed能完成的功能watch也能完成</p>
+<p>2 watch能完成的功能computed不一定能完成，例如watch能完成异步操作</p>
+<p>PS：</p>
+<p>1 所有被Vue管理的函数要写成普通函数，这样new Vue的实例的时候this才能绑定到新创建的vm或组件实例对象</p>
+<p>2 所有不被Vue管理的函数比如（定时器的回调函数，ajax的回调函数和Promise的回调函数）最好写成箭头函数，箭头函数的this绑定会继承外层函数的this绑定</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Vue.createApp(&#123;</span><br><span class="line">	data()&#123;</span><br><span class="line">		return &#123;</span><br><span class="line">		firstName:&quot;张&quot;,</span><br><span class="line">		lastName:&quot;三&quot;,</span><br><span class="line">		fullName:&quot;张三&quot;</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	watch:&#123;</span><br><span class="line">		firstName(val)&#123;</span><br><span class="line">			setTimeout(()=&gt;&#123;</span><br><span class="line">			this.fullName=val+this.lastName&#125;,1000)</span><br><span class="line">		&#125;,</span><br><span class="line">		lastName(val)&#123;</span><br><span class="line">			setTimeout(()=&gt;&#123;</span><br><span class="line">			this.fullName=thia.firstName+val&#125;,1000)</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Vue</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>computed</title>
+    <url>/Coloey.github.io/2022/01/23/computed/</url>
+    <content><![CDATA[<h1 id="计算属性"><a href="#计算属性" class="headerlink" title="计算属性"></a>计算属性</h1><p>1 定义： 要用的属性不存在，要通过已有的属性计算得来</p>
+<p>2 原理： 底层借助了Object.defineproperty()方法提供的getter和setter。</p>
+<p>3 get函数什么时候执行</p>
+<p>(1) 初次读取时会执行一次</p>
+<p>(2)当依赖的数据发生改变时会被再次调用</p>
+<p>4 优势：与methods相比。内部有缓存机制，效率更高，调试方便</p>
+<p>5 计算属性最终会出现在vm中，直接读取使用即可</p>
+<p>如果计算属性要被修改，那必须写set函数去响应修改，且set中要引起计算时依赖的数据发生改变</p>
+<p>简写：函数</p>
+]]></content>
+      <categories>
+        <category>Vue</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>事件处理</title>
+    <url>/Coloey.github.io/2022/01/23/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86/</url>
+    <content><![CDATA[<h1 id="事件的基本使用："><a href="#事件的基本使用：" class="headerlink" title="事件的基本使用："></a>事件的基本使用：</h1><ol>
+<li><p>使用v-on:xxx或@xxx绑定事件，其中xxx是事件名</p>
+</li>
+<li><p>事件的回调需要配置在methods对象中，最终会在vm上</p>
+</li>
+<li><p>methods中配置的函数，不要用箭头函数，否则this就不是vm</p>
+</li>
+<li><p>methods中配置的函数，都是被Vue管理的函数，this的指向是vm或组件实例对象</p>
+</li>
+<li><p>@click=”demo”和@click=”demo($event)”效果一致，但后者可以传参</p>
+</li>
+</ol>
+<h1 id="事件修饰符"><a href="#事件修饰符" class="headerlink" title="事件修饰符"></a>事件修饰符</h1><p>prevent:阻止默认事件</p>
+<p>stop：阻止事件冒泡</p>
+<p>once:事件只触发一次</p>
+<h1 id="键盘事件"><a href="#键盘事件" class="headerlink" title="键盘事件"></a>键盘事件</h1><p>1 Vue常用按键别名：</p>
+<p>回车：enter</p>
+<p>删除：delete</p>
+<p>退出：esc</p>
+<p>空格：space</p>
+<p>换行：tab(特殊，必须配合keydown使用)</p>
+<p>上：up</p>
+<p>下:down</p>
+<p>左:left</p>
+<p>右:right</p>
+<p>2 Vue未提供别名的按键，可以使用按键原始的key值去绑定，但注意要转为keb-case(短横线命名)</p>
+<p>3 系统修饰符(用法特殊):ctrl,alt,shift,meta</p>
+<p>(1)配合keyup使用：按下修饰键的同时再按下其他键，随后释放其他键，事件才被触发</p>
+<p>(2)配合keydown使用：正常触发事件</p>
+<p>4 也可以使用keyCode去指定具体的键</p>
+<p>5 Vue.config.keyCode自定义键名=键码，可以定制按键别名</p>
+]]></content>
+      <categories>
+        <category>Vue</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>数据代理</title>
+    <url>/Coloey.github.io/2022/01/23/%E6%95%B0%E6%8D%AE%E4%BB%A3%E7%90%86/</url>
+    <content><![CDATA[<ol>
+<li><p>Vue中的数据代理：通过vm对象来代理data对象中属性的操作（读或写</p>
+</li>
+<li><p>Vue中数据代理的好处：更加方便操作data中的数据</p>
+</li>
+<li><p>基本原理</p>
+<p>​    通过Object.defineProperty()把data对象中的所有属性添加到vm上中，为每一个添加到vm上的属性都指定一个getter()setter()函数，在getter()setter()函数；里面去操作data中对应的数据</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> const vm=Vue.createApp(&#123;</span><br><span class="line">            data()&#123;</span><br><span class="line">                return&#123;</span><br><span class="line">                    name:&#x27;Ann&#x27;,</span><br><span class="line">                    address:&#x27;06404&#x27;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">vm</span><br><span class="line">&#123;</span><br><span class="line">...</span><br><span class="line">_data&#123;</span><br><span class="line">	 name:&#x27;Ann&#x27;,</span><br><span class="line">     address:&#x27;06404&#x27;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">name:</span><br><span class="line">address://Object.defineProperty()</span><br><span class="line">Object.defineProperty(vm,&#x27;name&#x27;,&#123;</span><br><span class="line">	value:&#x27;Ann&#x27;</span><br><span class="line">	enumerable:</span><br><span class="line">	writable:</span><br><span class="line">	configurable://默认为false,控制属性是否可以被删除</span><br><span class="line"></span><br><span class="line">	get()&#123;</span><br><span class="line">		return vm.name</span><br><span class="line">	&#125;</span><br><span class="line">	set(value)&#123;</span><br><span class="line">		name=value</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br><span class="line">Object.defineProperty(vm,&#x27;address&#x27;&#123;</span><br><span class="line">	value:&#x27;06404&#x27;</span><br><span class="line">	enumerable:</span><br><span class="line">	writable:</span><br><span class="line">	configurable://默认为false,控制属性是否可以被删除</span><br><span class="line">	get()&#123;</span><br><span class="line">		return vm.address</span><br><span class="line">	&#125;</span><br><span class="line">	set(value)&#123;</span><br><span class="line">		adress=value;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Vue</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>MVVM</title>
+    <url>/Coloey.github.io/2022/01/23/MVVM/</url>
+    <content><![CDATA[<h1 id="MVVM"><a href="#MVVM" class="headerlink" title="MVVM"></a>MVVM</h1><ol>
+<li><p>M:模型(Model) data中的数据</p>
+</li>
+<li><p>V：视图(View) 模板代码</p>
+</li>
+<li><p>VM:视图模型（ViewModel):Vue实例</p>
+</li>
+</ol>
+<p>data中的所有属性最后都出现在vm身上</p>
+<p>vm上的所有属性及Vue原型上的所有属性，在Vue模板中都可以直接使用</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">View</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">const vm=Vue.createApp(&#123;//vm:VM</span><br><span class="line">	data()&#123;</span><br><span class="line">		return&#123;</span><br><span class="line">		Model</span><br><span class="line">		&#125;	</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Vue</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>数据绑定</title>
+    <url>/Coloey.github.io/2022/01/23/%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A/</url>
+    <content><![CDATA[<h1 id="数据绑定"><a href="#数据绑定" class="headerlink" title="数据绑定"></a>数据绑定</h1><h3 id="1-单向绑定"><a href="#1-单向绑定" class="headerlink" title="1. 单向绑定"></a>1. 单向绑定</h3><p>v-bind:数据只能从data流向页面</p>
+<h3 id="2-双向绑定"><a href="#2-双向绑定" class="headerlink" title="2.双向绑定"></a>2.双向绑定</h3><p>v-model:数据不仅能从data流向页面，还能从页面流向data</p>
+<p>v-model:value的value可以简写为v-model,因为v-model默认收集的就是value值</p>
+]]></content>
+      <categories>
+        <category>Vue</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>模板语法</title>
+    <url>/Coloey.github.io/2022/01/23/%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<h1 id="Vue-模板语法"><a href="#Vue-模板语法" class="headerlink" title="Vue 模板语法"></a>Vue 模板语法</h1><h3 id="1-插值语法"><a href="#1-插值语法" class="headerlink" title="1 插值语法"></a>1 插值语法</h3><p>功能：用于解析标签体内容</p>
+<p>写法：，xxx是js表达式，直接读取js中的所有data属性</p>
+<h3 id="2-指令语法"><a href="#2-指令语法" class="headerlink" title="2 指令语法"></a>2 指令语法</h3><p>功能： 用于解析标签（包括标签属性，标签内容等）</p>
+<p>举例：v-bind:href=”xxx”,简写为:href=”xxx”,xxx同样可以写js表达式，且可以直接读取到data里的所有属性</p>
+<p>写法：v-xxx</p>
+]]></content>
+      <categories>
+        <category>Vue</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>高阶函数</title>
+    <url>/Coloey.github.io/2022/01/17/%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0/</url>
+    <content><![CDATA[<h1 id="高阶函数模板"><a href="#高阶函数模板" class="headerlink" title="高阶函数模板"></a>高阶函数模板</h1><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">HoF0</span>(<span class="params">fn</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> fn.apply(<span class="built_in">this</span>,args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Once"><a href="#Once" class="headerlink" title="Once"></a>Once</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">once</span>(<span class="params">fn</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">..args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(fn)&#123;</span><br><span class="line">            <span class="keyword">const</span> ret=fn.apply(<span class="built_in">this</span>,args);</span><br><span class="line">            fn=<span class="literal">null</span>;</span><br><span class="line">            <span class="keyword">return</span> ret;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Throttle"><a href="#Throttle" class="headerlink" title="Throttle"></a>Throttle</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttle</span>(<span class="params">fn,time=<span class="number">500</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timer;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(timer==<span class="literal">null</span>)&#123;</span><br><span class="line">            fn.apply(<span class="built_in">this</span>.args);</span><br><span class="line">            timer=<span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">                timer=<span class="literal">null</span>;</span><br><span class="line">            &#125;,time)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">btn.onclick=throttle(<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">    circle.innerHTML=<span class="built_in">parseInt</span>(circle.innerHTML)+<span class="number">1</span>;</span><br><span class="line">    circle.className=<span class="string">&#x27;fade&#x27;</span>;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>circle.className=<span class="string">&#x27;&#x27;</span>,<span class="number">250</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Debouce"><a href="#Debouce" class="headerlink" title="Debouce"></a>Debouce</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">debouce</span>(<span class="params">fn,dur</span>)</span>&#123;</span><br><span class="line">    dur=dur||<span class="number">100</span>;</span><br><span class="line">    <span class="keyword">var</span> timer;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">clearTimeout</span>(timer);</span><br><span class="line">        timer=setTimeOut(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">            fn.apply(<span class="built_in">this</span>,<span class="built_in">arguments</span>);</span><br><span class="line">        &#125;,dur);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="iterative"><a href="#iterative" class="headerlink" title="iterative"></a>iterative</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">iterative</span>(<span class="params">fn</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">subject,...rest</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(isIterable(subject))&#123;</span><br><span class="line">            <span class="keyword">const</span> ret=[];</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">let</span> obj <span class="keyword">of</span> subject)&#123;</span><br><span class="line">                ret.push(fn.apply(<span class="built_in">this</span>,[obj,...rest]));</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> ret;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> fn.apply(<span class="built_in">this</span>,[subject,...rest]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>过程抽象</p>
+<p>HOF </p>
+<p>装饰器</p>
+<p>命令式/声明式</p>
+<h1 id="洗牌算法："><a href="#洗牌算法：" class="headerlink" title="洗牌算法："></a>洗牌算法：</h1><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>*<span class="title">draw</span>(<span class="params">cards</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> c=[...cards];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> i=c.length;i&gt;<span class="number">0</span>;i--)&#123;</span><br><span class="line">        <span class="keyword">const</span> pIdx=<span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random()*i);</span><br><span class="line">        [c[pIdx],c[i-<span class="number">1</span>]]=[c[i-<span class="number">1</span>],c[pIdx]];</span><br><span class="line">        <span class="keyword">yield</span> c[i-<span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">generate</span>(<span class="params">amount,count</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(count&lt;=<span class="number">1</span>)<span class="keyword">return</span> [amount];</span><br><span class="line">    <span class="keyword">const</span> cards=<span class="built_in">Array</span>(amount-<span class="number">1</span>).fill(<span class="number">0</span>).map(<span class="function">(<span class="params">_,i</span>)=&gt;</span>i+<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">const</span> pick=draw(cards);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="number">0</span>;i&lt;count;i++)&#123;</span><br><span class="line">        result.push(pick.next().value);</span><br><span class="line">    &#125;</span><br><span class="line">    result.sort(<span class="function">(<span class="params">a,b</span>)=&gt;</span>a-b);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> i=count-<span class="number">1</span>;i&gt;<span class="number">0</span>;i--)&#123;</span><br><span class="line">        result[i]=result[i]-result[i-<span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+  </entry>
+  <entry>
+    <title>CSS组合</title>
+    <url>/Coloey.github.io/2022/01/17/%E5%B8%83%E5%B1%80/</url>
+    <content><![CDATA[<h1 id="组合："><a href="#组合：" class="headerlink" title="组合："></a>组合：</h1><p>直接组合： AB 满足A同时满足B eg:input:focus</p>
+<p>后代组合：A B 选中B，如果它是A的子孙 eg:nav a</p>
+<p>亲子组合：A&gt;B 选中B如果它是A的子元素 eg:section&gt;p</p>
+<p>兄弟选择器 A<del>B 选中B如果它在A后且和A同级 eg:h2</del>p</p>
+<p>相邻选择器： A+B 选中B，如果它紧跟在A后面 eg:h2+p</p>
+]]></content>
+      <categories>
+        <category>HTML+CSS</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>watch</title>
+    <url>/Coloey.github.io/2022/01/15/watch/</url>
+    <content><![CDATA[<h1 id="watch"><a href="#watch" class="headerlink" title="watch()"></a>watch()</h1><p>监视属性watch：</p>
+<p>1 当被监视的属性变化时（也可以监视计算属性），回调函数自动调用，进行相关操作</p>
+<p>2 监视的属性必须存在才能好进行监视</p>
+<p>3 监视的两种写法：</p>
+<p>（1）在Vue.createApp时传入watch配置</p>
+<p>（2）通过vm.$watch监视</p>
+<p>4 深度监视</p>
+<p>（1）Vue中的watch默认不监视对象内部值的改变（一层）</p>
+<p>（2）配置deep为true,可以检测对象内部值改变（多层）</p>
+<p>监视多级结构中某个属性的变化：’number.a’</p>
+<p>监视多级结构中所有属性第1变化，用deep:true</p>
+<p>PS：（1）Vue自身可以检测对象内部值的改变但是Vue提供的watch默认不可以</p>
+<p>（2）使用watch时根据数据的具体结构，决定是否采用深度监视</p>
+<p>vm.$watch(expOrFn,callback,[options])</p>
+<ul>
+<li>expOrFn:{string/Function}</li>
+<li>callback:{Function/Object}</li>
+<li>options:{Object}<ol>
+<li> deep:{boolean}</li>
+<li>immediate:{boolean}</li>
+</ol>
+</li>
+</ul>
+<p>返回值：unwatch函数</p>
+<p>用处：观察Vue实例上的一个表达式或者一个函数计算结果的变化，回调函数得到的参数为新值和旧值。表达式只接受简单的键路径，对于复杂表达式，用函数取代</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//HTML</span></span><br><span class="line">&lt;div id=<span class="string">&quot;app&quot;</span>&gt;</span><br><span class="line">        &#123;&#123;a&#125;&#125;,&#123;&#123;b&#125;&#125;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"><span class="comment">//键路径</span></span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="javascript"></span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="keyword">var</span> vm=<span class="keyword">new</span> Vue(&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            <span class="attr">el</span>:<span class="string">&quot;#app&quot;</span>,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            <span class="attr">data</span>:&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">               <span class="attr">a</span>:&#123;<span class="attr">value1</span>:<span class="string">&#x27;hello&#x27;</span>&#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">               <span class="attr">b</span>:&#123;<span class="attr">value2</span>:<span class="string">&#x27;beautiful&#x27;</span>&#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        </span></span></span><br><span class="line"><span class="javascript"><span class="xml">        &#125;);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">       vm.$watch(<span class="string">&#x27;b.value2&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params">newVal,oldVal</span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">           <span class="built_in">console</span>.log(newVal,oldVal);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">       &#125;);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">       vm.b.value2=<span class="string">&#x27;bind&#x27;</span>;<span class="comment">//bind beautiful</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">       <span class="comment">//修改对象内部的值但是侦听的是对象，对其属性或元素的更改不会触发侦听器，因为他们引用相同对象</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml"> vm.$watch(<span class="string">&#x27;a&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params">newVal,oldVal</span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">           <span class="built_in">console</span>.log(newVal,oldVal);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">       &#125;);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">       vm.a.value1=<span class="string">&#x27;hei&#x27;</span>;<span class="comment">//没有侦听到</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="comment">//为了发现对象内部值的变化，可以在选项参数中指定 deep: true。这个选项同样适用于监听数组变更。</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">       vm.$watch(<span class="string">&#x27;a&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params">newVal,oldVal</span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">           <span class="built_in">console</span>.log(newVal,oldVal);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">       &#125;,&#123;<span class="attr">deep</span>:<span class="literal">true</span>&#125;);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">       vm.a.value1=<span class="string">&#x27;hei&#x27;</span>;<span class="comment">//</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="comment">//在选项参数中指定 immediate: true 将立即以表达式的当前值触发回调</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">       vm.$watch(<span class="string">&#x27;a&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params">newVal,oldVal</span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">           <span class="built_in">console</span>.log(newVal,oldVal);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">       &#125;,&#123;<span class="attr">immediate</span>:<span class="literal">true</span>&#125;);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">       vm.a=&#123;&#125;<span class="comment">//&#123;_ob_:Observer&#125;undefined &#123;_ob_:Observer&#125;&#123;_ob_:Observer&#125;</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>在带有immediate选项时不能在第一次回调时取消侦听给定的property</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> unwatch=vm.$watch(</span><br><span class="line">          <span class="string">&#x27;a&#x27;</span>,</span><br><span class="line">          <span class="function"><span class="keyword">function</span>(<span class="params">newVal,oldVal</span>)</span>&#123;</span><br><span class="line">           <span class="built_in">console</span>.log(newVal,oldVal);</span><br><span class="line">           unwatch()</span><br><span class="line">          &#125;,&#123;<span class="attr">immediate</span>:<span class="literal">true</span>&#125;</span><br><span class="line">      )<span class="comment">//报错</span></span><br></pre></td></tr></table></figure>
+
+<p>要在回调函数里调用一个取消侦听的函数应该先检查其函数的可用性</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> unwatch=<span class="literal">null</span>;</span><br><span class="line">       unwatch=vm.$watch(</span><br><span class="line">           <span class="string">&#x27;a&#x27;</span>,</span><br><span class="line">           <span class="function"><span class="keyword">function</span>(<span class="params">newVal,oldVal</span>)</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(newVal,oldVal);</span><br><span class="line">            <span class="keyword">if</span>(unwatch)&#123;unwatch();&#125;</span><br><span class="line">           &#125;,&#123;<span class="attr">immediate</span>:<span class="literal">true</span>&#125;</span><br><span class="line">       )</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Vue</category>
+      </categories>
+      <tags>
+        <tag>watch</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>addLoadEvent</title>
     <url>/Coloey.github.io/2022/01/10/addLoadEvent/</url>
     <content><![CDATA[<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addLoadEvent</span>(<span class="params">func</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">var</span> oldonload=<span class="built_in">window</span>.onload;</span><br><span class="line">       <span class="keyword">if</span>(<span class="keyword">typeof</span> oldonload!=<span class="string">&#x27;function&#x27;</span>)&#123;</span><br><span class="line">           <span class="built_in">window</span>.onload=func;<span class="comment">//如果处理函数还没有绑定任何函数，就添加新函数</span></span><br><span class="line">       &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">           <span class="built_in">window</span>.onload=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">               oldonload();</span><br><span class="line">               func();</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
