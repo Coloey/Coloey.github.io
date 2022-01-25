@@ -6,7 +6,7 @@
   <link href="https://coloey.github.io/atom.xml" rel="self"/>
   
   <link href="https://coloey.github.io/"/>
-  <updated>2022-01-24T07:01:04.225Z</updated>
+  <updated>2022-01-25T01:50:03.806Z</updated>
   <id>https://coloey.github.io/</id>
   
   <author>
@@ -17,13 +17,62 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Node.js基础</title>
+    <link href="https://coloey.github.io/2022/01/24/Node-js%E5%9F%BA%E7%A1%80/"/>
+    <id>https://coloey.github.io/2022/01/24/Node-js%E5%9F%BA%E7%A1%80/</id>
+    <published>2022-01-24T13:57:44.000Z</published>
+    <updated>2022-01-25T01:50:03.806Z</updated>
+    
+    <content type="html"><![CDATA[<p>Node.js运行时结构：</p><p>1 异步IO</p><p>当Node.js执行I/O操作时，会在响应返回后恢复操作，而不是阻止线程并占用额外内存等待</p><p>2 单线程</p><p>实际JS线程+uv线程池+V8任务线程池+V8inspector线程</p><p>优点：不用考虑多线程同步问题，也就不需要锁，同时还能比较高效的利用系统资源</p><p>缺点：阻塞会产生负面影响，解决方法：多进程或多线程</p><p>3 跨平台</p><p>Node.js跨平台+JS无需编译环境（Web跨平台，诊断工具跨平台）</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Node.js运行时结构：&lt;/p&gt;
+&lt;p&gt;1 异步IO&lt;/p&gt;
+&lt;p&gt;当Node.js执行I/O操作时，会在响应返回后恢复操作，而不是阻止线程并占用额外内存等待&lt;/p&gt;
+&lt;p&gt;2 单线程&lt;/p&gt;
+&lt;p&gt;实际JS线程+uv线程池+V8任务线程池+V8inspector线程&lt;/</summary>
+      
+    
+    
+    
+    <category term="Node.js" scheme="https://coloey.github.io/categories/Node-js/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Vue监视数据原理</title>
+    <link href="https://coloey.github.io/2022/01/24/Vue%E7%9B%91%E8%A7%86%E6%95%B0%E6%8D%AE%E5%8E%9F%E7%90%86/"/>
+    <id>https://coloey.github.io/2022/01/24/Vue%E7%9B%91%E8%A7%86%E6%95%B0%E6%8D%AE%E5%8E%9F%E7%90%86/</id>
+    <published>2022-01-24T10:24:05.000Z</published>
+    <updated>2022-01-25T01:45:04.281Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Vue监视数据原理"><a href="#Vue监视数据原理" class="headerlink" title="Vue监视数据原理"></a>Vue监视数据原理</h1><p>1 Vue会监视data中所有层次的数据（递归）</p><p>2 如何监视对象中的数据？</p><p>通过setter实现监视，且要在new Vue的时候就传入要监测的数据。</p><p>（1）对象中后追加的属性，Vue默认不做响应式处理</p><p>（2）如需给后续添加的属性左响应式，请使用下面的API:</p><p>​    Vue.set(target,propertyName/index,value):target不允许是Vue实例或者vm中的data对象</p><p> vm.$set(target,propertyName/index,value)</p><p>3 如何监测数组中的数据？</p><p>通过包裹数组更新元素的方法实现，本质做了两件事：</p><p>（1） 调用原生对应的方法对数组进行更新</p><p>（2） 重新解析模板，进而更新页面</p><p>4 在Vue中修改数组中的某个元素一定要用如下方法：</p><p>（1）使用这些API：push(),shift(),unshift(),splice(),sort(),reverse()</p><p>（2）Vue.set()或vm.$set()</p><p>非变更方法，例如 <code>filter()</code>、<code>concat()</code> 和 <code>slice()</code>。它们不会变更原始数组，而<strong>总是返回一个新数组</strong>。当使用非变更方法时，可以用新数组替换旧数组：</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;Vue监视数据原理&quot;&gt;&lt;a href=&quot;#Vue监视数据原理&quot; class=&quot;headerlink&quot; title=&quot;Vue监视数据原理&quot;&gt;&lt;/a&gt;Vue监视数据原理&lt;/h1&gt;&lt;p&gt;1 Vue会监视data中所有层次的数据（递归）&lt;/p&gt;
+&lt;p&gt;2 如何监视对象中的</summary>
+      
+    
+    
+    
+    <category term="Vue" scheme="https://coloey.github.io/categories/Vue/"/>
+    
+    
+  </entry>
+  
+  <entry>
     <title>key作用与原理</title>
     <link href="https://coloey.github.io/2022/01/24/key%E4%BD%9C%E7%94%A8%E4%B8%8E%E5%8E%9F%E7%90%86/"/>
     <id>https://coloey.github.io/2022/01/24/key%E4%BD%9C%E7%94%A8%E4%B8%8E%E5%8E%9F%E7%90%86/</id>
     <published>2022-01-24T05:48:50.000Z</published>
     <updated>2022-01-24T07:01:04.225Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="key的内部原理"><a href="#key的内部原理" class="headerlink" title="key的内部原理"></a>key的内部原理</h1><p>1 虚拟DOM中key的作用：</p><p>key是虚拟DOM对象的标识，当数据发生变化时，Vue会根据【新数据】生成【新的虚拟DOM】，随后Vue进行【新虚拟DOM】和【旧虚拟DOM】的对比，对比规则如下：</p><p>2 对比规则：</p><p>（1）旧虚拟DOM中找到与新虚拟DOM相同的key：</p><ul><li><p> 若虚拟DOM中内容不变，则直接使用之前的真实DOM</p></li><li><p>若虚拟DOM中内容变了，则生成新的真实DOM，随后替换页面中的真实    DOM    </p></li></ul><p>（2）旧虚拟DOM中未找到与新虚拟DOM相同的key，创建新的真实DOM，随后渲染到页面</p><p>3 用index作为key可能会引发的问题：</p><p>（1）若对数据进行逆序添加，逆序删除等操作：</p><p>会产生没有必要的真实DOM更新==&gt;界面效果没问题，但是效率低</p><p>（2）如果结构中还包含输入类DOM：</p><p>会产生错误的DOM更新==&gt;界面有问题</p><p>4 开发中如何选择key?</p><p>(1)最好使用每条数据的唯一标识作为key,比如id,身份证号，手机号等唯一值</p><p>(2)如果不存在对数据的逆序添加，逆序删除等破坏顺序的操作，仅用于渲染列表用于展示，使用index作为key是没有问题的</p><p><img src="image-20220124150028215.png" alt="image-20220124150028215"></p><p><img src="image-20220124150059555.png" alt="image-20220124150059555"></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="key的内部原理"><a href="#key的内部原理" class="headerlink" title="key的内部原理"></a>key的内部原理</h1><p>1 虚拟DOM中key的作用：</p><p>key是虚拟DOM对象的标识，当数据发生变化时，Vue会根据【新数据】生成【新的虚拟DOM】，随后Vue进行【新虚拟DOM】和【旧虚拟DOM】的对比，对比规则如下：</p><p>2 对比规则：</p><p>（1）旧虚拟DOM中找到与新虚拟DOM相同的key：</p><ul><li><p> 若虚拟DOM中内容不变，则直接使用之前的真实DOM</p></li><li><p>若虚拟DOM中内容变了，则生成新的真实DOM，随后替换页面中的真实    DOM    </p></li></ul><p>（2）旧虚拟DOM中未找到与新虚拟DOM相同的key，创建新的真实DOM，随后渲染到页面</p><p>3 用index作为key可能会引发的问题：</p><p>（1）若对数据进行逆序添加，逆序删除等操作：</p><p>会产生没有必要的真实DOM更新==&gt;界面效果没问题，但是效率低</p><p>（2）如果结构中还包含输入类DOM：</p><p>会产生错误的DOM更新==&gt;界面有问题</p><p>4 开发中如何选择key?</p><p>(1)最好使用每条数据的唯一标识作为key,比如id,身份证号，手机号等唯一值</p><p>(2)如果不存在对数据的逆序添加，逆序删除等破坏顺序的操作，仅用于渲染列表用于展示，使用index作为key是没有问题的</p><p><img src="/2022/01/24/key%E4%BD%9C%E7%94%A8%E4%B8%8E%E5%8E%9F%E7%90%86/image-20220124150028215.png" alt="image-20220124150028215"></p><p><img src="/2022/01/24/key%E4%BD%9C%E7%94%A8%E4%B8%8E%E5%8E%9F%E7%90%86/image-20220124150059555.png" alt="image-20220124150059555"></p>]]></content>
     
     
       
@@ -160,9 +209,9 @@
     <link href="https://coloey.github.io/2022/01/23/%E6%95%B0%E6%8D%AE%E4%BB%A3%E7%90%86/"/>
     <id>https://coloey.github.io/2022/01/23/%E6%95%B0%E6%8D%AE%E4%BB%A3%E7%90%86/</id>
     <published>2022-01-23T09:50:13.000Z</published>
-    <updated>2022-01-23T10:34:59.366Z</updated>
+    <updated>2022-01-24T10:26:42.258Z</updated>
     
-    <content type="html"><![CDATA[<ol><li><p>Vue中的数据代理：通过vm对象来代理data对象中属性的操作（读或写</p></li><li><p>Vue中数据代理的好处：更加方便操作data中的数据</p></li><li><p>基本原理</p><p>​    通过Object.defineProperty()把data对象中的所有属性添加到vm上中，为每一个添加到vm上的属性都指定一个getter()setter()函数，在getter()setter()函数；里面去操作data中对应的数据</p></li></ol><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"> const vm=Vue.createApp(&#123;</span><br><span class="line">            data()&#123;</span><br><span class="line">                return&#123;</span><br><span class="line">                    name:&#x27;Ann&#x27;,</span><br><span class="line">                    address:&#x27;06404&#x27;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">vm</span><br><span class="line">&#123;</span><br><span class="line">...</span><br><span class="line">_data&#123;</span><br><span class="line"> name:&#x27;Ann&#x27;,</span><br><span class="line">     address:&#x27;06404&#x27;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">name:</span><br><span class="line">address://Object.defineProperty()</span><br><span class="line">Object.defineProperty(vm,&#x27;name&#x27;,&#123;</span><br><span class="line">value:&#x27;Ann&#x27;</span><br><span class="line">enumerable:</span><br><span class="line">writable:</span><br><span class="line">configurable://默认为false,控制属性是否可以被删除</span><br><span class="line"></span><br><span class="line">get()&#123;</span><br><span class="line">return vm.name</span><br><span class="line">&#125;</span><br><span class="line">set(value)&#123;</span><br><span class="line">name=value</span><br><span class="line">&#125;</span><br><span class="line">&#125;)</span><br><span class="line">Object.defineProperty(vm,&#x27;address&#x27;&#123;</span><br><span class="line">value:&#x27;06404&#x27;</span><br><span class="line">enumerable:</span><br><span class="line">writable:</span><br><span class="line">configurable://默认为false,控制属性是否可以被删除</span><br><span class="line">get()&#123;</span><br><span class="line">return vm.address</span><br><span class="line">&#125;</span><br><span class="line">set(value)&#123;</span><br><span class="line">adress=value;</span><br><span class="line">&#125;</span><br><span class="line">&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    <content type="html"><![CDATA[<ol><li><p>Vue中的数据代理：通过vm对象来代理data对象中属性的操作（读或写</p></li><li><p>Vue中数据代理的好处：更加方便操作data中的数据</p></li><li><p>基本原理</p><p>​    通过Object.defineProperty()把data对象中的所有属性添加到vm上中，为每一个添加到vm上的属性都指定一个getter()setter()函数，在getter()setter()函数；里面去操作data中对应的数据</p></li></ol><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"> const vm=Vue.createApp(&#123;</span><br><span class="line">            data()&#123;</span><br><span class="line">                return&#123;</span><br><span class="line">                    name:&#x27;Ann&#x27;,</span><br><span class="line">                    address:&#x27;06404&#x27;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">vm</span><br><span class="line">&#123;</span><br><span class="line">...</span><br><span class="line">_data&#123;</span><br><span class="line"> name:(...),</span><br><span class="line">     address:(...),   </span><br><span class="line">&#125;</span><br><span class="line">name:(...)</span><br><span class="line">address:(...)//Object.defineProperty()</span><br><span class="line">Object.defineProperty(vm,&#x27;name&#x27;,&#123;</span><br><span class="line">value:_data.name.get()</span><br><span class="line">enumerable:</span><br><span class="line">writable:</span><br><span class="line">configurable://默认为false,控制属性是否可以被删除</span><br><span class="line"></span><br><span class="line">get()&#123;</span><br><span class="line">return _data.name.get()</span><br><span class="line">&#125;</span><br><span class="line">set(value)&#123;</span><br><span class="line">_data.name.set(value)</span><br><span class="line">&#125;</span><br><span class="line">&#125;)</span><br><span class="line">Object.defineProperty(vm,&#x27;address&#x27;,&#123;</span><br><span class="line">value:_data.address.get()</span><br><span class="line">enumerable:</span><br><span class="line">writable:</span><br><span class="line">configurable://默认为false,控制属性是否可以被删除</span><br><span class="line">get()&#123;</span><br><span class="line">return _data.address.get()</span><br><span class="line">&#125;</span><br><span class="line">set(value)&#123;</span><br><span class="line">_data.address.set(value);</span><br><span class="line">&#125;</span><br><span class="line">&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
     
     
       
@@ -424,52 +473,6 @@
       
       
     <summary type="html">&lt;h1 id=&quot;JavaScript字符表示&quot;&gt;&lt;a href=&quot;#JavaScript字符表示&quot; class=&quot;headerlink&quot; title=&quot;JavaScript字符表示&quot;&gt;&lt;/a&gt;JavaScript字符表示&lt;/h1&gt;&lt;p&gt;JavaScript 字符串由 16 位码元</summary>
-      
-    
-    
-    
-    <category term="JavaScript" scheme="https://coloey.github.io/categories/JavaScript/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>媒体查询</title>
-    <link href="https://coloey.github.io/2022/01/03/%E5%AA%92%E4%BD%93%E6%9F%A5%E8%AF%A2/"/>
-    <id>https://coloey.github.io/2022/01/03/%E5%AA%92%E4%BD%93%E6%9F%A5%E8%AF%A2/</id>
-    <published>2022-01-03T09:42:17.000Z</published>
-    <updated>2022-01-03T12:40:52.057Z</updated>
-    
-    <content type="html"><![CDATA[<p>媒体查询常被用于以下目的：</p><ul><li><p>有条件的通过 <a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/@media"><code>@media</code></a> 和 <a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/@import"><code>@import</code></a> <a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/At-rule">at-rules</a> 用<a href="https://developer.mozilla.org/en-US/docs/Web/CSS">CSS</a> 装饰样式。</p></li><li><p>用<code>media=</code> 属性为<style>,<link>,<source>和其他<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTML">HTML</a>元素指定特定的媒体类型。</p></li></ul><h1 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h1><p>媒体类型和任意数量的媒体特性表达式构成。</p><p>当媒体类型（如果指定）与在其上显示文档的设备匹配并且所有媒体功能表达式都计算为true时，媒体查询将计算为true。 涉及未知媒体类型的查询始终为false。</p><h2 id="媒体类型"><a href="#媒体类型" class="headerlink" title="媒体类型"></a>媒体类型</h2><p>描述设备的一般类别。除非使用 <code>not</code> 或 <code>only</code> 逻辑操作符，媒体类型是可选的，并且会（隐式地）应用 <code>all</code> 类型。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">all</span><br></pre></td></tr></table></figure><p>适用于所有设备。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print</span><br></pre></td></tr></table></figure><p>适用于在打印预览模式下在屏幕上查看的分页材料和文档。 （有关特定于这些格式的格式问题的信息，请参阅<a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/Paged_Media">分页媒体</a>。）</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">screen</span><br></pre></td></tr></table></figure><p>主要用于屏幕。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">speech</span><br></pre></td></tr></table></figure><p>主要用于语音合成器。</p><h3 id="定位媒体类型"><a href="#定位媒体类型" class="headerlink" title="定位媒体类型"></a>定位媒体类型</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@media</span> screen, print &#123; ... &#125;</span><br><span class="line"><span class="comment">/*用两个媒体查询来同时定位屏幕和打印设备*/</span></span><br></pre></td></tr></table></figure><h2 id="媒体特性"><a href="#媒体特性" class="headerlink" title="媒体特性"></a>媒体特性</h2><p>描述了 <a href="https://developer.mozilla.org/zh-CN/docs/Glossary/User_agent">user agent</a>、输出设备，或是浏览环境的具体特征。媒体特性表达式是完全可选的，它负责测试这些特性或特征是否存在、值为多少。每条媒体特性表达式都必须用括号括起来。</p><h3 id="逻辑操作符"><a href="#逻辑操作符" class="headerlink" title="逻辑操作符"></a>逻辑操作符</h3><p> <code>not</code>, <code>and</code>, 和 <code>only</code> 可用于联合构造复杂的媒体查询，您还可以通过用逗号分隔多个媒体查询，将它们组合为一个规则。</p><h4 id="and"><a href="#and" class="headerlink" title="and"></a><code>and</code></h4><p> <code>and</code> 操作符用于将多个媒体查询规则组合成单条媒体查询，当每个查询规则都为真时则该条媒体查询为真，它还用于将媒体功能与媒体类型结合在一起。</p><h4 id="not"><a href="#not" class="headerlink" title="not"></a><code>not</code></h4><p><code>not</code>运算符用于否定媒体查询，如果不满足这个条件则返回true，否则返回false。 如果出现在以逗号分隔的查询列表中，它将仅否定应用了该查询的特定查询。 如果使用not运算符，则还必须指定媒体类型。</p><p><strong>注意：</strong>在Level 3中，<code>not</code>关键字不能用于否定单个媒体功能表达式，而只能用于否定整个媒体查询。</p><h4 id="only"><a href="#only" class="headerlink" title="only"></a><code>only</code></h4><p><code>only</code>运算符仅在整个查询匹配时才用于应用样式，并且对于防止较早的浏览器应用所选样式很有用。 当不使用<code>only</code>时，旧版本的浏览器会将<code>screen and (max-width: 500px)</code>简单地解释为<code>screen</code>，忽略查询的其余部分，并将其样式应用于所有屏幕。 如果使用<code>only</code>运算符，则<em>还必须指定</em>媒体类型。</p><h4 id="逗号"><a href="#逗号" class="headerlink" title=", (逗号)"></a><code>,</code> (逗号)</h4><p>逗号用于将多个媒体查询合并为一个规则。 逗号分隔列表中的每个查询都与其他查询分开处理。 因此，如果列表中的任何查询为true，则整个media语句均返回true。 换句话说，列表的行为类似于逻辑或<code>or</code>运算符。</p><h3 id="定位媒体特性"><a href="#定位媒体特性" class="headerlink" title="定位媒体特性"></a>定位媒体特性</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*当用户的主要输入机制（例如鼠标）可以悬停在元素上*/</span></span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">hover</span>: <span class="attribute">hover</span>) &#123; ... &#125;</span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">max-width</span>: <span class="number">12450px</span>) &#123; ... &#125;</span><br><span class="line"><span class="comment">/*CSS将适用于任何带有彩色屏幕的设备*/</span></span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">color</span>) &#123; ... &#125;</span><br><span class="line"><span class="comment">/*限制为带有屏幕的设备,宽度至少为30 em的横向的设备*/</span></span><br><span class="line"><span class="keyword">@media</span> screen <span class="keyword">and</span> (<span class="attribute">min-width</span>: <span class="number">30em</span>) <span class="keyword">and</span> (<span class="attribute">orientation</span>: landscape) &#123; ... &#125;</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;媒体查询常被用于以下目的：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;有条件的通过 &lt;a href=&quot;https://developer.mozilla.org/zh-CN/docs/Web/CSS/@media&quot;&gt;&lt;code&gt;@media&lt;/code&gt;&lt;/a&gt; 和 &lt;a href=</summary>
-      
-    
-    
-    
-    <category term="HTML+CSS" scheme="https://coloey.github.io/categories/HTML-CSS/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>toggle</title>
-    <link href="https://coloey.github.io/2022/01/03/toggle/"/>
-    <id>https://coloey.github.io/2022/01/03/toggle/</id>
-    <published>2022-01-03T01:47:27.000Z</published>
-    <updated>2022-01-03T12:40:32.389Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="DOMTokenList-toggle"><a href="#DOMTokenList-toggle" class="headerlink" title="DOMTokenList.toggle()"></a>DOMTokenList.toggle()</h1><p>DOMTokenList接口的toggle()方法从列表中删除一个给定的标记并返回false,如果标记不存在，则添加并且函数返回true</p><blockquote><p>tokenList.toggle(token,force);</p></blockquote><h4 id="参数："><a href="#参数：" class="headerlink" title="参数："></a>参数：</h4><p>token:标记列表中你想探查并切换的DOMSring</p><p>force(可选):Boolean值，设置后会将方法变成单向操作，如果设置为false，则会删除标记列表中匹配的给定标记，且不会再添加，如设置为true，则将在标记中添加给定标记，且不会再度删除</p><h4 id="返回值："><a href="#返回值：" class="headerlink" title="返回值："></a>返回值：</h4><p>为布尔值</p><h1 id="eg"><a href="#eg" class="headerlink" title="eg"></a>eg</h1><p>HTML</p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;a b&quot;</span>&gt;</span>classList is &#x27;a b&#x27;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure><p>JavaScript</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> span = <span class="built_in">document</span>.querySelector(<span class="string">&quot;span&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> classes = span.classList;</span><br><span class="line">span.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> result = classes.toggle(<span class="string">&quot;c&quot;</span>);</span><br><span class="line">  <span class="keyword">if</span>(result) &#123;</span><br><span class="line">    span.textContent = <span class="string">&quot;&#x27;c&#x27; added; classList is now &#x27;&quot;</span> + classes + <span class="string">&quot;&#x27;.&quot;</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    span.textContent = <span class="string">&quot;&#x27;c&#x27; removed; classList is now &#x27;&quot;</span> + classes + <span class="string">&quot;&#x27;.&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;DOMTokenList-toggle&quot;&gt;&lt;a href=&quot;#DOMTokenList-toggle&quot; class=&quot;headerlink&quot; title=&quot;DOMTokenList.toggle()&quot;&gt;&lt;/a&gt;DOMTokenList.toggle()&lt;/h1&gt;&lt;</summary>
       
     
     
