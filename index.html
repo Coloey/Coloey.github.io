@@ -182,6 +182,586 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/29/%E6%8F%92%E6%A7%BD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/29/%E6%8F%92%E6%A7%BD/" class="post-title-link" itemprop="url">插槽</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-29 23:41:20 / 修改时间：23:58:25" itemprop="dateCreated datePublished" datetime="2022-01-29T23:41:20+08:00">2022-01-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>1 作用：</p>
+<p>让父组件可以向子组件指定位置插入html结构，是一种组件间的通信方式，适用于父组件=&gt;子组件</p>
+<p>2 使用方式</p>
+<p>（1）默认插槽</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">父组件：</span><br><span class="line">	&lt;Category&gt;</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">            html结构</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">	&lt;/Category&gt;</span><br><span class="line">子组件：</span><br><span class="line">	&lt;template&gt;</span><br><span class="line">		&lt;div&gt;</span><br><span class="line">            &lt;slot&gt;插槽默认内容&lt;/slot&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">	&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>2 具名插槽</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">父组件：</span><br><span class="line">	&lt;Category&gt;</span><br><span class="line">         &lt;template #header&gt;</span><br><span class="line">			&lt;div&gt;</span><br><span class="line">                html结构</span><br><span class="line">            &lt;/div&gt;</span><br><span class="line">        &lt;/template&gt;</span><br><span class="line">        &lt;template slot=&quot;center&quot;&gt;</span><br><span class="line">			&lt;div&gt;</span><br><span class="line">                html结构</span><br><span class="line">            &lt;/div&gt;</span><br><span class="line">        &lt;/template&gt;</span><br><span class="line">        &lt;template v-slot:footer&gt;</span><br><span class="line">			&lt;div&gt;</span><br><span class="line">                html结构</span><br><span class="line">            &lt;/div&gt;</span><br><span class="line"></span><br><span class="line">        &lt;/template&gt;</span><br><span class="line">	&lt;/Category&gt;</span><br><span class="line">子组件：</span><br><span class="line">	&lt;template&gt;</span><br><span class="line">		&lt;div&gt;</span><br><span class="line">            &lt;slot name=&quot;center&quot;&gt;插槽默认内容&lt;/slot&gt;</span><br><span class="line">            &lt;slot name=&quot;footer&quot;&gt;插槽默认内容&lt;/slot&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">	&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>3 作用域插槽</p>
+<p>理解：数据在组件的自身，但根据数据生成的结构需要组件的使用者决定，(games数据在Category组件中，但使用数据所遍历的结构由App组件决定)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">父组件：</span><br><span class="line">&lt;Category title=&quot;游戏&quot;&gt;</span><br><span class="line">    &lt;template v-slot=&quot;&#123;games&#125;&quot;&gt;</span><br><span class="line">         &lt;ul&gt;</span><br><span class="line">        &lt;li v-for=&quot;(game,index) in games&quot; :key=&quot;index&quot;&gt;</span><br><span class="line">            &#123;&#123;game&#125;&#125;</span><br><span class="line">        &lt;/li&gt;</span><br><span class="line">    &lt;/ul&gt;     </span><br><span class="line">    &lt;/template&gt;</span><br><span class="line">&lt;/Category&gt;</span><br><span class="line">&lt;Category title=&quot;游戏&quot;&gt;</span><br><span class="line">    &lt;template v-slot=&quot;&#123;games&#125;&quot;&gt;</span><br><span class="line">         &lt;ol&gt;</span><br><span class="line">        &lt;li v-for=&quot;(game,index) in games&quot; :key=&quot;index&quot;&gt;</span><br><span class="line">            &#123;&#123;game&#125;&#125;</span><br><span class="line">        &lt;/li&gt;</span><br><span class="line">    &lt;/ol&gt;     </span><br><span class="line">    &lt;/template&gt;</span><br><span class="line">&lt;/Category&gt;</span><br><span class="line">子组件：</span><br><span class="line">&lt;template&gt;</span><br><span class="line">&lt;div&gt;</span><br><span class="line">    &lt;h3&gt;&#123;&#123;title&#125;&#125;分类&lt;/h3&gt;</span><br><span class="line">    &lt;slot :games=&quot;games&quot;&gt;&lt;/slot&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">  </span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">import &#123;reactive&#125; from &quot;vue&quot;</span><br><span class="line">export default &#123;</span><br><span class="line">    name:&#x27;Category&#x27;,</span><br><span class="line">    props:[&#x27;title&#x27;],</span><br><span class="line">    setup()&#123;</span><br><span class="line">        let games=reactive([&#x27;红色警戒&#x27;,&#x27;超级玛丽&#x27;,&#x27;穿越火线&#x27;,&#x27;魂斗罗&#x27;])</span><br><span class="line">        return&#123;</span><br><span class="line">            games</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/27/ref%E5%87%BD%E6%95%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/27/ref%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">ref函数</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-27 15:38:53" itemprop="dateCreated datePublished" datetime="2022-01-27T15:38:53+08:00">2022-01-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-29 23:40:38" itemprop="dateModified" datetime="2022-01-29T23:40:38+08:00">2022-01-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="ref函数："><a href="#ref函数：" class="headerlink" title="ref函数："></a>ref函数：</h1><p>作用：定义一个响应式函数</p>
+<p>语法：const xxx=ref(initValue)</p>
+<p>创建一个包含响应式数据的引用对象（reference对象，简称ref对象)</p>
+<p>JS中操作数据：xxx.value</p>
+<p>模板中读取数据，不需要.value,直接<div></div></p>
+<p>Ps:</p>
+<p>接收的数据类型可以是：基本类型也可以是对象类型</p>
+<p>基本类型的数据：响应式依然是靠Object.defineProperty()的get与set完成</p>
+<p>对象基本类型的数据：内部是求助了Vue3中的一个新函数——reactive函数</p>
+<h2 id="ref与reactive对比："><a href="#ref与reactive对比：" class="headerlink" title="ref与reactive对比："></a>ref与reactive对比：</h2><h3 id="定义数据角度："><a href="#定义数据角度：" class="headerlink" title="定义数据角度："></a>定义数据角度：</h3><p>ref用来定义：基本类型数据</p>
+<p>reactive用来定义：对象（或数组类型数据）</p>
+<p>PS：ref也可以用来定义对象（或数组）类型数据，它内部会自动通过reactive转为代理对象</p>
+<h3 id="从原理角度对比："><a href="#从原理角度对比：" class="headerlink" title="从原理角度对比："></a>从原理角度对比：</h3><p>ref通过Object.defineProperty()的getter和setter来实现响应式（数据劫持）</p>
+<p>reactive通过使用Proxy来实现响应式，并通过Reflect操作源对象内部的数据</p>
+<h3 id="使用角度对比："><a href="#使用角度对比：" class="headerlink" title="使用角度对比："></a>使用角度对比：</h3><p>ref定义的数据，操作数据需要通过.value,读取数据时模板直接读取不需要.value</p>
+<p>reactive定义的数据操作数据与读取数据均不需要.value</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/27/props/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/27/props/" class="post-title-link" itemprop="url">props</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-27 12:14:42 / 修改时间：13:34:36" itemprop="dateCreated datePublished" datetime="2022-01-27T12:14:42+08:00">2022-01-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>配置项:props</p>
+<p>功能：让组件接收外部传来的数据</p>
+<p>（1）传递数据：</p>
+<p>第一种方式（只接收）：props:[‘name’]</p>
+<p>第二种方式（限制类型）：props:{name:String}</p>
+<p>第三种方式（限制类型，限制必要性，指定默认值）：</p>
+<p>props:{</p>
+<p>​    name:{</p>
+<p>​        type:String,//类型</p>
+<p>​        required:true,//必要性</p>
+<p>​        dedault:’老王’//默认值</p>
+<p>​    }</p>
+<p>}</p>
+<p>Ps:props是只读的，vue底层会监视你对props的修改，如果进行了修改，就会发出警告，若业务需求确实需要修改，那么请复制props的内容到data中一份，然后修改data中的数</p>
+<p>eg:data(){</p>
+<p>return{</p>
+<p>myName:this.myName</p>
+<p>}</p>
+<p>}</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/26/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E9%92%A9%E5%AD%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/26/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E9%92%A9%E5%AD%90/" class="post-title-link" itemprop="url">生命周期钩子</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-26 10:13:45 / 修改时间：10:20:22" itemprop="dateCreated datePublished" datetime="2022-01-26T10:13:45+08:00">2022-01-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>beforeCreate,created,beforeMount,mounted,beforeUpdated,updated,beforeUnmount,unmounted</p>
+<h1 id="常用生命周期钩子"><a href="#常用生命周期钩子" class="headerlink" title="常用生命周期钩子:"></a>常用生命周期钩子:</h1><p>mounted:发送ajax请求，启动定时器，绑定自定义事件，订阅消息等【初始化操作】</p>
+<p>beforeUnmount:清除定时器，解绑自定义事件，取消订阅消息等【收尾工作】</p>
+<p>关于销毁实例：</p>
+<p>1销毁后借助Vue开发者工具看不到任何信息</p>
+<p>2 销毁后自定义事件失效，但原生DOM事件依然有效</p>
+<p>3 一般不会在beforeUnmount操作数据，因为即使操作数据，也不会触发更新流程了</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/25/%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E4%BB%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/25/%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E4%BB%A4/" class="post-title-link" itemprop="url">自定义指令</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-25 17:14:32 / 修改时间：17:39:59" itemprop="dateCreated datePublished" datetime="2022-01-25T17:14:32+08:00">2022-01-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="自定义指令"><a href="#自定义指令" class="headerlink" title="自定义指令"></a>自定义指令</h1><h2 id="1-语法："><a href="#1-语法：" class="headerlink" title="1.语法："></a>1.语法：</h2><h3 id="（1）-局部指令："><a href="#（1）-局部指令：" class="headerlink" title="（1） 局部指令："></a>（1） 局部指令：</h3><p>​    directives:{指令名：配置对象}或 directives：{指令名:回调函数}</p>
+<h3 id="（2）全局指令："><a href="#（2）全局指令：" class="headerlink" title="（2）全局指令："></a>（2）全局指令：</h3><p>Vue.directive(指令名，配置对象)或Vue.directive(指令名，回调函数)</p>
+<h2 id="2-配置对象中常用的回调"><a href="#2-配置对象中常用的回调" class="headerlink" title="2.配置对象中常用的回调"></a>2.配置对象中常用的回调</h2><p><code>created</code>：在绑定元素的 attribute 或事件监听器被应用之前调用。在指令需要附加在普通的 <code>v-on</code> 事件监听器调用前的事件监听器中时，这很有用。` </p>
+<p><code>beforeMount</code>：当指令第一次绑定到元素并且在挂载父组件之前调用。<code>mounted</code>：指令与元素成功绑定时使用</p>
+<p><code>updated</code>:在包含组件的 VNode <strong>及其子组件的 VNode</strong> 更新后调用。</p>
+<p><code>beforeUpdate</code>：在更新包含组件的 VNode 之前调用。</p>
+<p><code>beforeUnmount</code>：在卸载绑定元素的父组件之前调用</p>
+<p><code>unmounted</code>：当指令与元素解除绑定且父组件已卸载时，只调用一次。</p>
+<p>PS:指令定义时不加v-,，但是使用时要加v-</p>
+<p>指令名如果是多个单词要用kebab-case命名方式，不要用camelCase命名</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"> &lt;div id=&quot;root&quot;&gt;</span><br><span class="line">        &lt;h3&gt;&#123;&#123;name&#125;&#125;&lt;/h3&gt;</span><br><span class="line">        &lt;h3&gt;当前n:&lt;span v-text=&quot;n&quot;&gt;&#123;&#123;n&#125;&#125;&lt;/span&gt;&lt;/h3&gt;</span><br><span class="line">        &lt;h3&gt;放大10倍后的n：&lt;span v-big=&quot;n&quot;&gt;&#123;&#123;n&#125;&#125;&lt;/span&gt;&lt;/h3&gt;</span><br><span class="line">        &lt;button @click=&quot;n++&quot;&gt;点我n+1&lt;/button&gt;</span><br><span class="line">        &lt;br&gt;</span><br><span class="line">        &lt;input type=&quot;text&quot; v-fbind:value=&quot;n&quot;&gt;</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line">&lt;script src=&quot;https://unpkg.com/vue@next&quot;&gt;&lt;/script&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">        Vue.createApp(&#123;</span><br><span class="line">            data()&#123;</span><br><span class="line">                return&#123;</span><br><span class="line">                    name:&quot;ann&quot;,</span><br><span class="line">                    n:1</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            directives: &#123;</span><br><span class="line">                //v-big被调用：指令与元素成功绑定时（一上来） 指令所在模板重新编译时</span><br><span class="line">                big(element,binding)&#123;</span><br><span class="line">                   element.innerText=binding.value*10</span><br><span class="line">                   </span><br><span class="line">                &#125;,</span><br><span class="line">               /*fbind(element,binding)&#123;</span><br><span class="line">                    element.value=binding.value</span><br><span class="line">                    element.focus()</span><br><span class="line">                &#125;,*/</span><br><span class="line">               fbind:&#123;</span><br><span class="line">                   // 当被绑定的元素挂载到 DOM 中时……</span><br><span class="line">                    mounted(element,binding)&#123;</span><br><span class="line">                        console.log(this)</span><br><span class="line">                        element.value=binding.value</span><br><span class="line">                        element.focus()</span><br><span class="line"></span><br><span class="line">                    &#125;,</span><br><span class="line">                    updated(element,binding)&#123;</span><br><span class="line">                        element.value=binding.value</span><br><span class="line"></span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).mount(&quot;#root&quot;)</span><br><span class="line"></span><br><span class="line">    &lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/25/%E5%86%85%E7%BD%AE%E6%8C%87%E4%BB%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/25/%E5%86%85%E7%BD%AE%E6%8C%87%E4%BB%A4/" class="post-title-link" itemprop="url">内置指令</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-25 13:58:47 / 修改时间：15:45:44" itemprop="dateCreated datePublished" datetime="2022-01-25T13:58:47+08:00">2022-01-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="v-html"><a href="#v-html" class="headerlink" title="v-html:"></a>v-html:</h1><p>1 作用：向指定节点中渲染包含html的内容</p>
+<p>2 与插值语法的区别：</p>
+<p>（1）v-html会替换掉节点中所有内容，则不会</p>
+<p>（2）v-html可以识别html结构</p>
+<p>3 严重注意：v-html有安全性问题</p>
+<p>（1）在网站上动态渲染任意HTML非常危险，容易导致XSS攻击</p>
+<p>（2）一定要在可信内容上使用v-html，永远不要用在用户提交的内容上</p>
+<h1 id="v-cloak-没有值"><a href="#v-cloak-没有值" class="headerlink" title="v-cloak(没有值)"></a>v-cloak(没有值)</h1><p>1 本质是一个特殊属性，Vue实例创建完毕并接管容器后，会删掉v-cloak属性</p>
+<p>2 使用css配合一个v-clock可以解决网速慢时页面展示出的问题</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;style&gt;</span><br><span class="line">        [v-cloak]&#123;</span><br><span class="line">            display:none</span><br><span class="line">        &#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line"> &lt;h2 v-cloak&gt;&#123;&#123;name&#125;&#125;&lt;/h2&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">        &lt;script&gt;&lt;/script&gt;//延迟5秒的服务器</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">        Vue.createApp(&#123;</span><br><span class="line">            data()&#123;</span><br><span class="line">                return&#123;</span><br><span class="line">                    name:&#x27;Ann&#x27;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<h1 id="v-once"><a href="#v-once" class="headerlink" title="v-once:"></a>v-once:</h1><ol>
+<li>v-once 节点在初次动态渲染后，就被视为静态内容</li>
+<li> 以后数据改变不会引起v-once所在结构的更新，可以用于优化性能</li>
+</ol>
+<h1 id="v-pre"><a href="#v-pre" class="headerlink" title="v-pre:"></a>v-pre:</h1><p>1.跳过其所在节点的编译过程</p>
+<p>2.可利用它跳过没有使用指令语法，插值语法的节点，加快编译</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/25/%E6%94%B6%E9%9B%86%E8%A1%A8%E5%8D%95%E6%95%B0%E6%8D%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/25/%E6%94%B6%E9%9B%86%E8%A1%A8%E5%8D%95%E6%95%B0%E6%8D%AE/" class="post-title-link" itemprop="url">收集表单数据</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-25 11:09:55 / 修改时间：14:30:01" itemprop="dateCreated datePublished" datetime="2022-01-25T11:09:55+08:00">2022-01-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>收集表单数据：</p>
+<p><input type="text">,v-model收集的死是value值，用户输入的是value值</p>
+<p><input type="radio">,v-model收集的是value值，且给标签配置value值</p>
+<input type="checkbox">
+
+<p>(1）没有配置input的value属性，收集的是checked(true/false)</p>
+<p>(2)配置input的value属性：</p>
+<p>若v-model的初始值是非数组，收集的是checked(true/false)</p>
+<p>若v-model的初始值是数组，收集的是value组成的数组</p>
+<p>PS：</p>
+<p>v-model有三个修饰符：</p>
+<p>lazy:失去焦点再收集数据</p>
+<p>number:把输入的字符串转为有效数字</p>
+<p>trim: 输入首尾空格过滤</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/24/Node-js%E5%9F%BA%E7%A1%80/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -439,576 +1019,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/24/%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/24/%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93/" class="post-title-link" itemprop="url">条件渲染</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-01-24 13:22:02 / 修改时间：13:48:38" itemprop="dateCreated datePublished" datetime="2022-01-24T13:22:02+08:00">2022-01-24</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="条件渲染"><a href="#条件渲染" class="headerlink" title="条件渲染"></a>条件渲染</h1><p>1 v-if:</p>
-<p>写法：</p>
-<p>(1). v-if=”表达式”</p>
-<p>(2) v-else-if=”表达式”</p>
-<p>(3) v-else</p>
-<p>适用于：切换频率较低的情景</p>
-<p>特点：不展示的DOM元素直接被移除</p>
-<p>注意：v-if和v-else-if,v-else一起使用时要求结构不能被打断</p>
-<p>2 v-show</p>
-<p>写法： v-show=”表达式”</p>
-<p>适用于：切换频率较高的场景</p>
-<p>特点：不展示的DOM元素未被移除，使用display=none隐藏掉</p>
-<p>PS：</p>
-<p>1 使用v-if时，元素可能无法获取到，而使用v-show一定可以获取到</p>
-<p>2 v-if可以和template配合使用</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/24/%E7%BB%91%E5%AE%9Aclass%E6%A0%B7%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/24/%E7%BB%91%E5%AE%9Aclass%E6%A0%B7%E5%BC%8F/" class="post-title-link" itemprop="url">绑定class样式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-01-24 11:39:15 / 修改时间：13:18:30" itemprop="dateCreated datePublished" datetime="2022-01-24T11:39:15+08:00">2022-01-24</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="绑定class样式"><a href="#绑定class样式" class="headerlink" title="绑定class样式"></a>绑定class样式</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"> &lt;div id=&quot;demo&quot;&gt;</span><br><span class="line">        &lt;!-- 绑定class样式--字符串写法，适用于样式类名不确定。需要动态确定 --&gt;</span><br><span class="line">        &lt;div class=&quot;basic&quot; :class=&quot;mood&quot; @click=&quot;changeMood&quot;&gt;&#123;&#123;name&#125;&#125;&lt;/div&gt;</span><br><span class="line">        &lt;!-- 绑定class样式--数组写法，适用于：要绑定的样式个数不确定，名字也不确定 --&gt;</span><br><span class="line">        &lt;div class=&quot;basic&quot; :class=&quot;classArr&quot;&gt;&#123;&#123;name&#125;&#125;&lt;/div&gt;</span><br><span class="line">        &lt;!-- 绑定class样式--对象写法，适用于：要绑定的样式个数确定，名字也确定，但要动态决定用不用 --&gt;</span><br><span class="line">        &lt;div class=&quot;basic&quot; :class=&quot;classObj&quot;&gt;&#123;&#123;name&#125;&#125;&lt;/div&gt;</span><br><span class="line"></span><br><span class="line"> &lt;/div&gt;</span><br><span class="line">&lt;script src=&quot;https://unpkg.com/vue@next&quot;&gt;&lt;/script&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">        Vue.config.productionTip = false</span><br><span class="line">        Vue.createApp(&#123;</span><br><span class="line">            data()&#123;</span><br><span class="line">                return&#123;</span><br><span class="line">                    name:&#x27;Ann&#x27;,</span><br><span class="line">                    mood:&#x27;normal&#x27;,</span><br><span class="line">                    classArr:[&#x27;c1&#x27;,&#x27;c2&#x27;,&#x27;c3&#x27;],</span><br><span class="line">                    classObj:&#123;</span><br><span class="line">                        &#x27;c1&#x27;:false,</span><br><span class="line">                        &#x27;c2&#x27;:false,</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            methods:&#123;</span><br><span class="line">                changeMood()&#123;</span><br><span class="line">                    const arr=[&#x27;happy&#x27;,&#x27;sad&#x27;,&#x27;normal&#x27;]</span><br><span class="line">                    this.mood=arr[Math.floor(Math.random()*3)]</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;).mount(&#x27;#demo&#x27;)</span><br><span class="line">    &lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<h1 id="绑定style样式"><a href="#绑定style样式" class="headerlink" title="绑定style样式"></a>绑定style样式</h1><p>1 :style=”{fontSize: xxx}”,其中xxx是动态值</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/24/watch%E5%92%8Ccomputed%E5%8C%BA%E5%88%AB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/24/watch%E5%92%8Ccomputed%E5%8C%BA%E5%88%AB/" class="post-title-link" itemprop="url">watch和computed区别</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-01-24 10:41:52 / 修改时间：10:55:41" itemprop="dateCreated datePublished" datetime="2022-01-24T10:41:52+08:00">2022-01-24</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="computed和watch的区别"><a href="#computed和watch的区别" class="headerlink" title="computed和watch的区别:"></a>computed和watch的区别:</h1><p>1 computed能完成的功能watch也能完成</p>
-<p>2 watch能完成的功能computed不一定能完成，例如watch能完成异步操作</p>
-<p>PS：</p>
-<p>1 所有被Vue管理的函数要写成普通函数，这样new Vue的实例的时候this才能绑定到新创建的vm或组件实例对象</p>
-<p>2 所有不被Vue管理的函数比如（定时器的回调函数，ajax的回调函数和Promise的回调函数）最好写成箭头函数，箭头函数的this绑定会继承外层函数的this绑定</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Vue.createApp(&#123;</span><br><span class="line">	data()&#123;</span><br><span class="line">		return &#123;</span><br><span class="line">		firstName:&quot;张&quot;,</span><br><span class="line">		lastName:&quot;三&quot;,</span><br><span class="line">		fullName:&quot;张三&quot;</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	watch:&#123;</span><br><span class="line">		firstName(val)&#123;</span><br><span class="line">			setTimeout(()=&gt;&#123;</span><br><span class="line">			this.fullName=val+this.lastName&#125;,1000)</span><br><span class="line">		&#125;,</span><br><span class="line">		lastName(val)&#123;</span><br><span class="line">			setTimeout(()=&gt;&#123;</span><br><span class="line">			this.fullName=thia.firstName+val&#125;,1000)</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/23/computed/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/23/computed/" class="post-title-link" itemprop="url">computed</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-01-23 22:45:11 / 修改时间：23:30:48" itemprop="dateCreated datePublished" datetime="2022-01-23T22:45:11+08:00">2022-01-23</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="计算属性"><a href="#计算属性" class="headerlink" title="计算属性"></a>计算属性</h1><p>1 定义： 要用的属性不存在，要通过已有的属性计算得来</p>
-<p>2 原理： 底层借助了Object.defineproperty()方法提供的getter和setter。</p>
-<p>3 get函数什么时候执行</p>
-<p>(1) 初次读取时会执行一次</p>
-<p>(2)当依赖的数据发生改变时会被再次调用</p>
-<p>4 优势：与methods相比。内部有缓存机制，效率更高，调试方便</p>
-<p>5 计算属性最终会出现在vm中，直接读取使用即可</p>
-<p>如果计算属性要被修改，那必须写set函数去响应修改，且set中要引起计算时依赖的数据发生改变</p>
-<p>简写：函数</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/23/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/23/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86/" class="post-title-link" itemprop="url">事件处理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-01-23 18:35:27 / 修改时间：22:23:07" itemprop="dateCreated datePublished" datetime="2022-01-23T18:35:27+08:00">2022-01-23</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="事件的基本使用："><a href="#事件的基本使用：" class="headerlink" title="事件的基本使用："></a>事件的基本使用：</h1><ol>
-<li><p>使用v-on:xxx或@xxx绑定事件，其中xxx是事件名</p>
-</li>
-<li><p>事件的回调需要配置在methods对象中，最终会在vm上</p>
-</li>
-<li><p>methods中配置的函数，不要用箭头函数，否则this就不是vm</p>
-</li>
-<li><p>methods中配置的函数，都是被Vue管理的函数，this的指向是vm或组件实例对象</p>
-</li>
-<li><p>@click=”demo”和@click=”demo($event)”效果一致，但后者可以传参</p>
-</li>
-</ol>
-<h1 id="事件修饰符"><a href="#事件修饰符" class="headerlink" title="事件修饰符"></a>事件修饰符</h1><p>prevent:阻止默认事件</p>
-<p>stop：阻止事件冒泡</p>
-<p>once:事件只触发一次</p>
-<h1 id="键盘事件"><a href="#键盘事件" class="headerlink" title="键盘事件"></a>键盘事件</h1><p>1 Vue常用按键别名：</p>
-<p>回车：enter</p>
-<p>删除：delete</p>
-<p>退出：esc</p>
-<p>空格：space</p>
-<p>换行：tab(特殊，必须配合keydown使用)</p>
-<p>上：up</p>
-<p>下:down</p>
-<p>左:left</p>
-<p>右:right</p>
-<p>2 Vue未提供别名的按键，可以使用按键原始的key值去绑定，但注意要转为keb-case(短横线命名)</p>
-<p>3 系统修饰符(用法特殊):ctrl,alt,shift,meta</p>
-<p>(1)配合keyup使用：按下修饰键的同时再按下其他键，随后释放其他键，事件才被触发</p>
-<p>(2)配合keydown使用：正常触发事件</p>
-<p>4 也可以使用keyCode去指定具体的键</p>
-<p>5 Vue.config.keyCode自定义键名=键码，可以定制按键别名</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/23/%E6%95%B0%E6%8D%AE%E4%BB%A3%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/23/%E6%95%B0%E6%8D%AE%E4%BB%A3%E7%90%86/" class="post-title-link" itemprop="url">数据代理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-01-23 17:50:13" itemprop="dateCreated datePublished" datetime="2022-01-23T17:50:13+08:00">2022-01-23</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-24 18:26:42" itemprop="dateModified" datetime="2022-01-24T18:26:42+08:00">2022-01-24</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ol>
-<li><p>Vue中的数据代理：通过vm对象来代理data对象中属性的操作（读或写</p>
-</li>
-<li><p>Vue中数据代理的好处：更加方便操作data中的数据</p>
-</li>
-<li><p>基本原理</p>
-<p>​    通过Object.defineProperty()把data对象中的所有属性添加到vm上中，为每一个添加到vm上的属性都指定一个getter()setter()函数，在getter()setter()函数；里面去操作data中对应的数据</p>
-</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"> const vm=Vue.createApp(&#123;</span><br><span class="line">            data()&#123;</span><br><span class="line">                return&#123;</span><br><span class="line">                    name:&#x27;Ann&#x27;,</span><br><span class="line">                    address:&#x27;06404&#x27;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">vm</span><br><span class="line">&#123;</span><br><span class="line">...</span><br><span class="line">_data&#123;</span><br><span class="line">	 name:(...),</span><br><span class="line">     address:(...),   </span><br><span class="line">	&#125;</span><br><span class="line">name:(...)</span><br><span class="line">address:(...)//Object.defineProperty()</span><br><span class="line">Object.defineProperty(vm,&#x27;name&#x27;,&#123;</span><br><span class="line">	value:_data.name.get()</span><br><span class="line">	enumerable:</span><br><span class="line">	writable:</span><br><span class="line">	configurable://默认为false,控制属性是否可以被删除</span><br><span class="line"></span><br><span class="line">	get()&#123;</span><br><span class="line">		return _data.name.get()</span><br><span class="line">	&#125;</span><br><span class="line">	set(value)&#123;</span><br><span class="line">		_data.name.set(value)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br><span class="line">Object.defineProperty(vm,&#x27;address&#x27;,&#123;</span><br><span class="line">	value:_data.address.get()</span><br><span class="line">	enumerable:</span><br><span class="line">	writable:</span><br><span class="line">	configurable://默认为false,控制属性是否可以被删除</span><br><span class="line">	get()&#123;</span><br><span class="line">		return _data.address.get()</span><br><span class="line">	&#125;</span><br><span class="line">	set(value)&#123;</span><br><span class="line">		_data.address.set(value);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/23/MVVM/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/23/MVVM/" class="post-title-link" itemprop="url">MVVM</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-01-23 16:23:36 / 修改时间：17:48:20" itemprop="dateCreated datePublished" datetime="2022-01-23T16:23:36+08:00">2022-01-23</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="MVVM"><a href="#MVVM" class="headerlink" title="MVVM"></a>MVVM</h1><ol>
-<li><p>M:模型(Model) data中的数据</p>
-</li>
-<li><p>V：视图(View) 模板代码</p>
-</li>
-<li><p>VM:视图模型（ViewModel):Vue实例</p>
-</li>
-</ol>
-<p>data中的所有属性最后都出现在vm身上</p>
-<p>vm上的所有属性及Vue原型上的所有属性，在Vue模板中都可以直接使用</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">View</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">const vm=Vue.createApp(&#123;//vm:VM</span><br><span class="line">	data()&#123;</span><br><span class="line">		return&#123;</span><br><span class="line">		Model</span><br><span class="line">		&#125;	</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1080,7 +1090,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-count">40</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1141,7 +1151,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共23.5k字</span>
+  <span class="post-count">博客全站共25.6k字</span>
 </div>
         
 
