@@ -6,7 +6,7 @@
   <link href="https://coloey.github.io/atom.xml" rel="self"/>
   
   <link href="https://coloey.github.io/"/>
-  <updated>2022-01-30T07:53:02.198Z</updated>
+  <updated>2022-02-06T15:07:41.991Z</updated>
   <id>https://coloey.github.io/</id>
   
   <author>
@@ -15,6 +15,145 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>路由参数</title>
+    <link href="https://coloey.github.io/2022/02/06/%E8%B7%AF%E7%94%B1%E5%8F%82%E6%95%B0/"/>
+    <id>https://coloey.github.io/2022/02/06/%E8%B7%AF%E7%94%B1%E5%8F%82%E6%95%B0/</id>
+    <published>2022-02-06T08:51:25.000Z</published>
+    <updated>2022-02-06T15:07:41.991Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="query参数："><a href="#query参数：" class="headerlink" title="query参数："></a>query参数：</h1><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">li</span> <span class="attr">v-for</span>=<span class="string">&#x27;m in messageList&#x27;</span> <span class="attr">:key</span>=<span class="string">&#x27;m.id&#x27;</span>&gt;</span></span><br><span class="line">          <span class="comment">&lt;!-- 通过query传递参数 --&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">router-link</span> <span class="attr">:to</span>=<span class="string">&quot;</span></span></span><br><span class="line"><span class="string"><span class="tag">          &#123;</span></span></span><br><span class="line"><span class="string"><span class="tag">              name:&#x27;messageDetail&#x27;,</span></span></span><br><span class="line"><span class="string"><span class="tag">              query:&#123;id:m.id,title:m.title&#125;</span></span></span><br><span class="line"><span class="string"><span class="tag">          &#125;&quot;</span>&gt;</span>&#123;&#123;m.title&#125;&#125;<span class="tag">&lt;/<span class="name">router-link</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br></pre></td></tr></table></figure><h1 id="params参数"><a href="#params参数" class="headerlink" title="params参数:"></a>params参数:</h1><p>1 配置路由声明接收param参数</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">path</span>:<span class="string">&#x27;/home&#x27;</span>,</span><br><span class="line">            <span class="attr">component</span>:Home,</span><br><span class="line">            <span class="attr">children</span>:[</span><br><span class="line">                &#123;<span class="attr">path</span>:<span class="string">&#x27;news&#x27;</span>,</span><br><span class="line">                <span class="attr">component</span>:News&#125;,</span><br><span class="line">                &#123;<span class="attr">path</span>:<span class="string">&#x27;message&#x27;</span>,</span><br><span class="line">                <span class="attr">component</span>:Message, </span><br><span class="line">                <span class="attr">children</span>:[</span><br><span class="line">                    &#123;<span class="attr">path</span>:<span class="string">&#x27;detail/:id/:title&#x27;</span>,<span class="attr">name</span>:<span class="string">&#x27;messageDetail&#x27;</span>,<span class="attr">component</span>:Detail&#125;<span class="comment">//使用占位符声明接收params参数</span></span><br><span class="line">                ]&#125;</span><br><span class="line">            ]&#125;,</span><br></pre></td></tr></table></figure><p>2 传递参数</p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">li</span> <span class="attr">v-for</span>=<span class="string">&#x27;m in messageList&#x27;</span> <span class="attr">:key</span>=<span class="string">&#x27;m.id&#x27;</span>&gt;</span></span><br><span class="line">         <span class="comment">&lt;!--跳转并携带params参数，to的字符写法--!&gt;</span></span><br><span class="line"><span class="comment">         &lt;router-link :to=&quot;`/home/message/detail/$&#123;m.id&#125;/$&#123;m.title&#125;`&quot;&gt;&#123;&#123;m.title&#125;&#125;&lt;/router-link&gt; </span></span><br><span class="line"><span class="comment">         &lt;!-- 对象写法只能写name不能写path --&gt;</span></span><br><span class="line">          <span class="comment">&lt;!-- &lt;router-link :to=&quot;</span></span><br><span class="line"><span class="comment">          &#123;name:&#x27;messageDetail&#x27;,</span></span><br><span class="line"><span class="comment">          params:&#123;id:m.id,title:m.title&#125;</span></span><br><span class="line"><span class="comment">          </span></span><br><span class="line"><span class="comment">              &#125;&quot;&gt;&#123;&#123;m.title&#125;&#125;&lt;/router-link&gt; --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br></pre></td></tr></table></figure><p>注意：路由携带params参数时，若使用to的对象写法，则不能使用path配置项，必须使用name配置项</p><h1 id="props配置"><a href="#props配置" class="headerlink" title="props配置"></a>props配置</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//props第一种写法，值为对象，该对象中的key-value都会以props的形式传给Detail组件</span></span><br><span class="line"><span class="attr">props</span>:&#123;<span class="attr">a</span>:<span class="number">1</span>,<span class="attr">b</span>:<span class="string">&#x27;hello&#x27;</span>&#125;,</span><br><span class="line"><span class="comment">//props的第二种写法，值为布尔值，若布尔值为真，就会把该路由组件收到的所有params参数以props的形式传给Detail组件</span></span><br><span class="line"><span class="attr">props</span>:<span class="literal">true</span>,</span><br><span class="line"><span class="comment">//第三种写法，值为函数</span></span><br><span class="line"><span class="function"><span class="title">props</span>(<span class="params">$route</span>)</span>&#123;</span><br><span class="line"><span class="keyword">return</span> &#123;<span class="attr">id</span>:$route.query.id,<span class="attr">title</span>:$route.query.title&#125;</span><br><span class="line">&#125;,</span><br><span class="line"><span class="comment">//解构赋值</span></span><br><span class="line"><span class="function"><span class="title">props</span>(<span class="params">&#123;query&#125;</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="attr">id</span>:query.id,<span class="attr">title</span>:query.title&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>Detail组件接收参数：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    <span class="attr">name</span>:<span class="string">&#x27;Detail&#x27;</span>,</span><br><span class="line">    <span class="attr">props</span>:[<span class="string">&#x27;id&#x27;</span>,<span class="string">&#x27;title&#x27;</span>],</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;query参数：&quot;&gt;&lt;a href=&quot;#query参数：&quot; class=&quot;headerlink&quot; title=&quot;query参数：&quot;&gt;&lt;/a&gt;query参数：&lt;/h1&gt;&lt;figure class=&quot;highlight html&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td cla</summary>
+      
+    
+    
+    
+    <category term="Vue" scheme="https://coloey.github.io/categories/Vue/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Vue3事件总线</title>
+    <link href="https://coloey.github.io/2022/02/02/Vue3%E4%BA%8B%E4%BB%B6%E6%80%BB%E7%BA%BF/"/>
+    <id>https://coloey.github.io/2022/02/02/Vue3%E4%BA%8B%E4%BB%B6%E6%80%BB%E7%BA%BF/</id>
+    <published>2022-02-02T08:17:38.000Z</published>
+    <updated>2022-02-02T08:38:36.586Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="全局事件总线"><a href="#全局事件总线" class="headerlink" title="全局事件总线"></a>全局事件总线</h1><p>一种组件间的通信方式，适用于任意组件间的通信。</p><p>安装全局事件总线：</p><ol><li><p>引入/编写事件库</p></li><li><p>在入口文件中挂载</p></li><li><p>在组件中引入并使用</p><p>安装：npm install –save vue3-eventbus</p><p>挂载：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//App.vue</span><br><span class="line">import eventBus from &#x27;vue3-eventbus&#x27;</span><br><span class="line">app.use(eventBus)</span><br></pre></td></tr></table></figure><p>使用：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//Button.vue</span><br><span class="line">import bus from &#x27;vue3-eventbus&#x27;</span><br><span class="line">export default &#123;</span><br><span class="line">setup()&#123;</span><br><span class="line">bus.emit(&#x27;foo&#x27;,&#123;a:&#x27;b&#x27;&#125;)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><h1 id="消息订阅预发布（pubsub"><a href="#消息订阅预发布（pubsub" class="headerlink" title="消息订阅预发布（pubsub)"></a>消息订阅预发布（pubsub)</h1><ol><li><p>安装pubsub:npm install pubsub-js</p></li><li><p>引入：import pubsub from “pubsub-js”</p></li><li><p>接收数据，A组件想接收数据，则在A组件中订阅消息，订阅回调留在A组件自身。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">methods()&#123;</span><br><span class="line">demo(data)&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">mounted()&#123;</span><br><span class="line">this.pid=pubsub.subscribe(&#x27;xxx&#x27;,(msg,data)=&gt;&#123;</span><br><span class="line"></span><br><span class="line">&#125;)//订阅消息</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ol start="4"><li>提供数据：pubsub.publish(‘xxx’,数据)</li><li>最好在beforeDestroy钩子中，用Pubsub.unsubscribe(pid)取消订阅</li></ol></li></ol></li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;全局事件总线&quot;&gt;&lt;a href=&quot;#全局事件总线&quot; class=&quot;headerlink&quot; title=&quot;全局事件总线&quot;&gt;&lt;/a&gt;全局事件总线&lt;/h1&gt;&lt;p&gt;一种组件间的通信方式，适用于任意组件间的通信。&lt;/p&gt;
+&lt;p&gt;安装全局事件总线：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;</summary>
+      
+    
+    
+    
+    <category term="Vue" scheme="https://coloey.github.io/categories/Vue/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>customRef</title>
+    <link href="https://coloey.github.io/2022/02/01/customRef/"/>
+    <id>https://coloey.github.io/2022/02/01/customRef/</id>
+    <published>2022-02-01T08:55:59.000Z</published>
+    <updated>2022-02-01T09:03:45.036Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">setup()&#123;</span><br><span class="line">        function myRef(value,delay=500)&#123;</span><br><span class="line">            let timeout</span><br><span class="line">            return customRef((track,trigger)=&gt;&#123;</span><br><span class="line">                return &#123;</span><br><span class="line">                    get()&#123;</span><br><span class="line">                        console.log(`有人从myRef中读取了数据:$&#123;value&#125;`)</span><br><span class="line">                        track()//通知Vue追踪value的变化（提前和get商量一下，让它认为这个value是可用的）</span><br><span class="line">                        return value</span><br><span class="line">                    &#125;,</span><br><span class="line">                    set(newValue)&#123;</span><br><span class="line">                        clearTimeout(timeout)</span><br><span class="line">                        console.log(`有人从myRef中修改了数据:$&#123;newValue&#125;`)</span><br><span class="line">                        timeout=setTimeout(()=&gt;&#123;</span><br><span class="line">                            value=newValue</span><br><span class="line">                            trigger()//通知Vue重新解析模板</span><br><span class="line">                        &#125;,delay)</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">        let val=myRef(&quot;hello&quot;)</span><br><span class="line"></span><br><span class="line">        return &#123;</span><br><span class="line">            val</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">       </span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span c</summary>
+      
+    
+    
+    
+    <category term="Vue" scheme="https://coloey.github.io/categories/Vue/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>shallowReactive和shallowRef</title>
+    <link href="https://coloey.github.io/2022/01/31/shallowReactive%E5%92%8CshallowRef/"/>
+    <id>https://coloey.github.io/2022/01/31/shallowReactive%E5%92%8CshallowRef/</id>
+    <published>2022-01-31T08:41:52.000Z</published>
+    <updated>2022-02-01T07:57:53.734Z</updated>
+    
+    <content type="html"><![CDATA[<p>shallowReactive:只处理对象最外层属性的响应式（浅响应式）</p><p>shallowRef:只处理基本数据类型的响应式，不进行对象的响应式处理</p><p>什么时候使用？</p><p>如果有一个对象数据，结构比较深，但变化时只是外层属性变化==&gt;shallowReactive</p><p>如果有一个对象数据，后续功能不会修改该对象中的属性，而是生新的对象来替换==&gt;shallowRef</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;shallowReactive:只处理对象最外层属性的响应式（浅响应式）&lt;/p&gt;
+&lt;p&gt;shallowRef:只处理基本数据类型的响应式，不进行对象的响应式处理&lt;/p&gt;
+&lt;p&gt;什么时候使用？&lt;/p&gt;
+&lt;p&gt;如果有一个对象数据，结构比较深，但变化时只是外层属性变化==&amp;gt;</summary>
+      
+    
+    
+    
+    <category term="Vue" scheme="https://coloey.github.io/categories/Vue/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>toRef</title>
+    <link href="https://coloey.github.io/2022/01/31/toRef/"/>
+    <id>https://coloey.github.io/2022/01/31/toRef/</id>
+    <published>2022-01-31T07:49:20.000Z</published>
+    <updated>2022-02-01T07:57:57.787Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="toRef"><a href="#toRef" class="headerlink" title="toRef:"></a>toRef:</h1><p>作用：创建一个ref对象，其value值指向另一个对象中的某个属性</p><p>语法：const name=toRef(person,’name’)</p><p>应用：要将响应式对象中的某个属性单独提供给外部使用时</p><p>扩展:toRefs与toRef功能一致，但可以批量创建多个ref对象，语法：toRefs(person),将响应式对象转换为普通对象，其中结果对象的每个 property 都是指向原始对象相应 property 的 <a href="https://v3.cn.vuejs.org/api/refs-api.html#ref"><code>ref</code></a>。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">  setup()&#123;</span><br><span class="line">        let person=reactive(&#123;</span><br><span class="line">            firstName:&quot;张&quot;,</span><br><span class="line">            lastName:&quot;三&quot;,</span><br><span class="line">            fullName:&#x27;&#x27;,</span><br><span class="line">            job:&#123;</span><br><span class="line">                one:&#x27;doctor&#x27;,</span><br><span class="line">                tow:&#x27;teacher&#x27;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;)</span><br><span class="line">        person.fullName=computed(&#123;</span><br><span class="line">            get()&#123;</span><br><span class="line">                return person.firstName+&#x27;-&#x27;+person.lastName</span><br><span class="line"></span><br><span class="line">            &#125;,</span><br><span class="line">            set(value)&#123;</span><br><span class="line">                const nameArr=value.split(&#x27;-&#x27;)</span><br><span class="line">                person.firstName=nameArr[0]</span><br><span class="line">                person.lastName=nameArr[1]</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        return &#123;</span><br><span class="line">            person,</span><br><span class="line">            firstName:toRef(person,&#x27;firstName&#x27;),</span><br><span class="line">            lastName:toRef(person,&#x27;lastName&#x27;),</span><br><span class="line">            one:toRef(person.job,&#x27;one&#x27;),</span><br><span class="line">            fullName:toRef(person,&#x27;fullName&#x27;)</span><br><span class="line">           </span><br><span class="line">        &#125;</span><br><span class="line">//toRefs:</span><br><span class="line">/*return &#123;</span><br><span class="line">            person,</span><br><span class="line">            ...toRefs(person),</span><br><span class="line">           </span><br><span class="line">           </span><br><span class="line">        &#125;*/</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;toRef&quot;&gt;&lt;a href=&quot;#toRef&quot; class=&quot;headerlink&quot; title=&quot;toRef:&quot;&gt;&lt;/a&gt;toRef:&lt;/h1&gt;&lt;p&gt;作用：创建一个ref对象，其value值指向另一个对象中的某个属性&lt;/p&gt;
+&lt;p&gt;语法：const name=t</summary>
+      
+    
+    
+    
+    <category term="Vue" scheme="https://coloey.github.io/categories/Vue/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>watchEffect</title>
+    <link href="https://coloey.github.io/2022/01/30/watchEffect/"/>
+    <id>https://coloey.github.io/2022/01/30/watchEffect/</id>
+    <published>2022-01-30T15:44:30.000Z</published>
+    <updated>2022-01-30T15:51:06.817Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="watch和watchEffect区别："><a href="#watch和watchEffect区别：" class="headerlink" title="watch和watchEffect区别："></a>watch和watchEffect区别：</h1><p>watch:既要指明监视的属性，也要指明监视的回调</p><p>watchEffect:不用指明监视哪个属性，监视的回调中用到哪个属性就监视哪个属性</p><p>watchEffect有点像computed:</p><p>但computed注重的是计算出来的值即回调函数的返回值，所以必须要写返回值</p><p>而watch注重的是过程即回调函数的函数体，所以不用写返回值</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//watchEffect指定的回调函数中用到的数据只要发生变化，则直接重新执行回调</span><br><span class="line">let sum=ref(1)</span><br><span class="line">        let msg=ref(&quot;你好呀&quot;)</span><br><span class="line">         watchEffect(()=&gt;&#123;</span><br><span class="line">            const x1=sum.value</span><br><span class="line">            const x2=person.firstName</span><br><span class="line">            console.log(&#x27;watchEffect的回调被调用了&#x27;,x1,x2)</span><br><span class="line">        &#125;)</span><br><span class="line">       </span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;watch和watchEffect区别：&quot;&gt;&lt;a href=&quot;#watch和watchEffect区别：&quot; class=&quot;headerlink&quot; title=&quot;watch和watchEffect区别：&quot;&gt;&lt;/a&gt;watch和watchEffect区别：&lt;/h1&gt;&lt;</summary>
+      
+    
+    
+    
+    <category term="Vue" scheme="https://coloey.github.io/categories/Vue/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>二分查找</title>
@@ -69,9 +208,9 @@
     <link href="https://coloey.github.io/2022/01/27/ref%E5%87%BD%E6%95%B0/"/>
     <id>https://coloey.github.io/2022/01/27/ref%E5%87%BD%E6%95%B0/</id>
     <published>2022-01-27T07:38:53.000Z</published>
-    <updated>2022-01-29T15:40:38.766Z</updated>
+    <updated>2022-02-01T09:52:15.436Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="ref函数："><a href="#ref函数：" class="headerlink" title="ref函数："></a>ref函数：</h1><p>作用：定义一个响应式函数</p><p>语法：const xxx=ref(initValue)</p><p>创建一个包含响应式数据的引用对象（reference对象，简称ref对象)</p><p>JS中操作数据：xxx.value</p><p>模板中读取数据，不需要.value,直接<div></div></p><p>Ps:</p><p>接收的数据类型可以是：基本类型也可以是对象类型</p><p>基本类型的数据：响应式依然是靠Object.defineProperty()的get与set完成</p><p>对象基本类型的数据：内部是求助了Vue3中的一个新函数——reactive函数</p><h2 id="ref与reactive对比："><a href="#ref与reactive对比：" class="headerlink" title="ref与reactive对比："></a>ref与reactive对比：</h2><h3 id="定义数据角度："><a href="#定义数据角度：" class="headerlink" title="定义数据角度："></a>定义数据角度：</h3><p>ref用来定义：基本类型数据</p><p>reactive用来定义：对象（或数组类型数据）</p><p>PS：ref也可以用来定义对象（或数组）类型数据，它内部会自动通过reactive转为代理对象</p><h3 id="从原理角度对比："><a href="#从原理角度对比：" class="headerlink" title="从原理角度对比："></a>从原理角度对比：</h3><p>ref通过Object.defineProperty()的getter和setter来实现响应式（数据劫持）</p><p>reactive通过使用Proxy来实现响应式，并通过Reflect操作源对象内部的数据</p><h3 id="使用角度对比："><a href="#使用角度对比：" class="headerlink" title="使用角度对比："></a>使用角度对比：</h3><p>ref定义的数据，操作数据需要通过.value,读取数据时模板直接读取不需要.value</p><p>reactive定义的数据操作数据与读取数据均不需要.value</p>]]></content>
+    <content type="html"><![CDATA[<h1 id="ref函数："><a href="#ref函数：" class="headerlink" title="ref函数："></a>ref函数：</h1><p>作用：定义一个响应式函数</p><p>语法：const xxx=ref(initValue)</p><p>创建一个包含响应式数据的引用对象（reference对象，简称ref对象)</p><p>JS中操作数据：xxx.value</p><p>模板中读取数据，不需要.value,直接<div></div></p><p>Ps:</p><p>接收的数据类型可以是：基本类型也可以是对象类型</p><p>基本类型的数据：响应式依然是靠Object.defineProperty()的get与set完成</p><p>对象基本类型的数据：内部是求助了Vue3中的一个新函数——reactive函数</p><h2 id="ref与reactive对比："><a href="#ref与reactive对比：" class="headerlink" title="ref与reactive对比："></a>ref与reactive对比：</h2><h3 id="定义数据角度："><a href="#定义数据角度：" class="headerlink" title="定义数据角度："></a>定义数据角度：</h3><p>ref用来定义：基本类型数据</p><p>reactive用来定义：对象（或数组类型数据）</p><p>PS：ref也可以用来定义对象（或数组）类型数据，它内部会自动通过reactive转为代理对象</p><h3 id="从原理角度对比："><a href="#从原理角度对比：" class="headerlink" title="从原理角度对比："></a>从原理角度对比：</h3><p>ref通过Object.defineProperty()的getter和setter来实现响应式（数据劫持）</p><p>reactive通过使用Proxy来实现响应式，并通过Reflect操作源对象内部的数据</p><h3 id="使用角度对比："><a href="#使用角度对比：" class="headerlink" title="使用角度对比："></a>使用角度对比：</h3><p>ref定义的数据，操作数据需要通过.value,读取数据时模板直接读取不需要.value</p><p>reactive定义的数据操作数据与读取数据均不需要.value</p><h1 id="响应式数据的判断"><a href="#响应式数据的判断" class="headerlink" title="响应式数据的判断"></a>响应式数据的判断</h1><p>isRef:检查一个值是否为一个ref对象</p><p>isReactive:检查一个对象是否由reactive创建的响应式代理</p><p>isReadonly:检查一个对象是否由readonly创建的只读代理</p><p>isProxy:检查一个对象是否由reactive或者readonly方法创建的代理</p>]]></content>
     
     
       
@@ -341,150 +480,6 @@
       
       
     <summary type="html">&lt;h1 id=&quot;computed和watch的区别&quot;&gt;&lt;a href=&quot;#computed和watch的区别&quot; class=&quot;headerlink&quot; title=&quot;computed和watch的区别:&quot;&gt;&lt;/a&gt;computed和watch的区别:&lt;/h1&gt;&lt;p&gt;1 comput</summary>
-      
-    
-    
-    
-    <category term="Vue" scheme="https://coloey.github.io/categories/Vue/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>computed</title>
-    <link href="https://coloey.github.io/2022/01/23/computed/"/>
-    <id>https://coloey.github.io/2022/01/23/computed/</id>
-    <published>2022-01-23T14:45:11.000Z</published>
-    <updated>2022-01-23T15:30:48.226Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="计算属性"><a href="#计算属性" class="headerlink" title="计算属性"></a>计算属性</h1><p>1 定义： 要用的属性不存在，要通过已有的属性计算得来</p><p>2 原理： 底层借助了Object.defineproperty()方法提供的getter和setter。</p><p>3 get函数什么时候执行</p><p>(1) 初次读取时会执行一次</p><p>(2)当依赖的数据发生改变时会被再次调用</p><p>4 优势：与methods相比。内部有缓存机制，效率更高，调试方便</p><p>5 计算属性最终会出现在vm中，直接读取使用即可</p><p>如果计算属性要被修改，那必须写set函数去响应修改，且set中要引起计算时依赖的数据发生改变</p><p>简写：函数</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;计算属性&quot;&gt;&lt;a href=&quot;#计算属性&quot; class=&quot;headerlink&quot; title=&quot;计算属性&quot;&gt;&lt;/a&gt;计算属性&lt;/h1&gt;&lt;p&gt;1 定义： 要用的属性不存在，要通过已有的属性计算得来&lt;/p&gt;
-&lt;p&gt;2 原理： 底层借助了Object.definepro</summary>
-      
-    
-    
-    
-    <category term="Vue" scheme="https://coloey.github.io/categories/Vue/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>事件处理</title>
-    <link href="https://coloey.github.io/2022/01/23/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86/"/>
-    <id>https://coloey.github.io/2022/01/23/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86/</id>
-    <published>2022-01-23T10:35:27.000Z</published>
-    <updated>2022-01-23T14:23:07.968Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="事件的基本使用："><a href="#事件的基本使用：" class="headerlink" title="事件的基本使用："></a>事件的基本使用：</h1><ol><li><p>使用v-on:xxx或@xxx绑定事件，其中xxx是事件名</p></li><li><p>事件的回调需要配置在methods对象中，最终会在vm上</p></li><li><p>methods中配置的函数，不要用箭头函数，否则this就不是vm</p></li><li><p>methods中配置的函数，都是被Vue管理的函数，this的指向是vm或组件实例对象</p></li><li><p>@click=”demo”和@click=”demo($event)”效果一致，但后者可以传参</p></li></ol><h1 id="事件修饰符"><a href="#事件修饰符" class="headerlink" title="事件修饰符"></a>事件修饰符</h1><p>prevent:阻止默认事件</p><p>stop：阻止事件冒泡</p><p>once:事件只触发一次</p><h1 id="键盘事件"><a href="#键盘事件" class="headerlink" title="键盘事件"></a>键盘事件</h1><p>1 Vue常用按键别名：</p><p>回车：enter</p><p>删除：delete</p><p>退出：esc</p><p>空格：space</p><p>换行：tab(特殊，必须配合keydown使用)</p><p>上：up</p><p>下:down</p><p>左:left</p><p>右:right</p><p>2 Vue未提供别名的按键，可以使用按键原始的key值去绑定，但注意要转为keb-case(短横线命名)</p><p>3 系统修饰符(用法特殊):ctrl,alt,shift,meta</p><p>(1)配合keyup使用：按下修饰键的同时再按下其他键，随后释放其他键，事件才被触发</p><p>(2)配合keydown使用：正常触发事件</p><p>4 也可以使用keyCode去指定具体的键</p><p>5 Vue.config.keyCode自定义键名=键码，可以定制按键别名</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;事件的基本使用：&quot;&gt;&lt;a href=&quot;#事件的基本使用：&quot; class=&quot;headerlink&quot; title=&quot;事件的基本使用：&quot;&gt;&lt;/a&gt;事件的基本使用：&lt;/h1&gt;&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;使用v-on:xxx或@xxx绑定事件，其中xxx是事件名&lt;/p&gt;
-&lt;/l</summary>
-      
-    
-    
-    
-    <category term="Vue" scheme="https://coloey.github.io/categories/Vue/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>数据代理</title>
-    <link href="https://coloey.github.io/2022/01/23/%E6%95%B0%E6%8D%AE%E4%BB%A3%E7%90%86/"/>
-    <id>https://coloey.github.io/2022/01/23/%E6%95%B0%E6%8D%AE%E4%BB%A3%E7%90%86/</id>
-    <published>2022-01-23T09:50:13.000Z</published>
-    <updated>2022-01-24T10:26:42.258Z</updated>
-    
-    <content type="html"><![CDATA[<ol><li><p>Vue中的数据代理：通过vm对象来代理data对象中属性的操作（读或写</p></li><li><p>Vue中数据代理的好处：更加方便操作data中的数据</p></li><li><p>基本原理</p><p>​    通过Object.defineProperty()把data对象中的所有属性添加到vm上中，为每一个添加到vm上的属性都指定一个getter()setter()函数，在getter()setter()函数；里面去操作data中对应的数据</p></li></ol><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"> const vm=Vue.createApp(&#123;</span><br><span class="line">            data()&#123;</span><br><span class="line">                return&#123;</span><br><span class="line">                    name:&#x27;Ann&#x27;,</span><br><span class="line">                    address:&#x27;06404&#x27;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">vm</span><br><span class="line">&#123;</span><br><span class="line">...</span><br><span class="line">_data&#123;</span><br><span class="line"> name:(...),</span><br><span class="line">     address:(...),   </span><br><span class="line">&#125;</span><br><span class="line">name:(...)</span><br><span class="line">address:(...)//Object.defineProperty()</span><br><span class="line">Object.defineProperty(vm,&#x27;name&#x27;,&#123;</span><br><span class="line">value:_data.name.get()</span><br><span class="line">enumerable:</span><br><span class="line">writable:</span><br><span class="line">configurable://默认为false,控制属性是否可以被删除</span><br><span class="line"></span><br><span class="line">get()&#123;</span><br><span class="line">return _data.name.get()</span><br><span class="line">&#125;</span><br><span class="line">set(value)&#123;</span><br><span class="line">_data.name.set(value)</span><br><span class="line">&#125;</span><br><span class="line">&#125;)</span><br><span class="line">Object.defineProperty(vm,&#x27;address&#x27;,&#123;</span><br><span class="line">value:_data.address.get()</span><br><span class="line">enumerable:</span><br><span class="line">writable:</span><br><span class="line">configurable://默认为false,控制属性是否可以被删除</span><br><span class="line">get()&#123;</span><br><span class="line">return _data.address.get()</span><br><span class="line">&#125;</span><br><span class="line">set(value)&#123;</span><br><span class="line">_data.address.set(value);</span><br><span class="line">&#125;</span><br><span class="line">&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Vue中的数据代理：通过vm对象来代理data对象中属性的操作（读或写&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Vue中数据代理的好处：更加方便操作data中的数据&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;基本原理&lt;/p&gt;
-&lt;p&gt;​    通过Object.defin</summary>
-      
-    
-    
-    
-    <category term="Vue" scheme="https://coloey.github.io/categories/Vue/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>MVVM</title>
-    <link href="https://coloey.github.io/2022/01/23/MVVM/"/>
-    <id>https://coloey.github.io/2022/01/23/MVVM/</id>
-    <published>2022-01-23T08:23:36.000Z</published>
-    <updated>2022-01-23T09:48:20.724Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="MVVM"><a href="#MVVM" class="headerlink" title="MVVM"></a>MVVM</h1><ol><li><p>M:模型(Model) data中的数据</p></li><li><p>V：视图(View) 模板代码</p></li><li><p>VM:视图模型（ViewModel):Vue实例</p></li></ol><p>data中的所有属性最后都出现在vm身上</p><p>vm上的所有属性及Vue原型上的所有属性，在Vue模板中都可以直接使用</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">View</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">const vm=Vue.createApp(&#123;//vm:VM</span><br><span class="line">data()&#123;</span><br><span class="line">return&#123;</span><br><span class="line">Model</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;MVVM&quot;&gt;&lt;a href=&quot;#MVVM&quot; class=&quot;headerlink&quot; title=&quot;MVVM&quot;&gt;&lt;/a&gt;MVVM&lt;/h1&gt;&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;M:模型(Model) data中的数据&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;V：视图(View) 模板代码</summary>
-      
-    
-    
-    
-    <category term="Vue" scheme="https://coloey.github.io/categories/Vue/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>数据绑定</title>
-    <link href="https://coloey.github.io/2022/01/23/%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A/"/>
-    <id>https://coloey.github.io/2022/01/23/%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A/</id>
-    <published>2022-01-23T07:57:58.000Z</published>
-    <updated>2022-01-23T08:05:06.352Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="数据绑定"><a href="#数据绑定" class="headerlink" title="数据绑定"></a>数据绑定</h1><h3 id="1-单向绑定"><a href="#1-单向绑定" class="headerlink" title="1. 单向绑定"></a>1. 单向绑定</h3><p>v-bind:数据只能从data流向页面</p><h3 id="2-双向绑定"><a href="#2-双向绑定" class="headerlink" title="2.双向绑定"></a>2.双向绑定</h3><p>v-model:数据不仅能从data流向页面，还能从页面流向data</p><p>v-model:value的value可以简写为v-model,因为v-model默认收集的就是value值</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;数据绑定&quot;&gt;&lt;a href=&quot;#数据绑定&quot; class=&quot;headerlink&quot; title=&quot;数据绑定&quot;&gt;&lt;/a&gt;数据绑定&lt;/h1&gt;&lt;h3 id=&quot;1-单向绑定&quot;&gt;&lt;a href=&quot;#1-单向绑定&quot; class=&quot;headerlink&quot; title=&quot;1. 单向</summary>
-      
-    
-    
-    
-    <category term="Vue" scheme="https://coloey.github.io/categories/Vue/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>模板语法</title>
-    <link href="https://coloey.github.io/2022/01/23/%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/"/>
-    <id>https://coloey.github.io/2022/01/23/%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/</id>
-    <published>2022-01-23T07:36:44.000Z</published>
-    <updated>2022-01-23T07:52:52.618Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="Vue-模板语法"><a href="#Vue-模板语法" class="headerlink" title="Vue 模板语法"></a>Vue 模板语法</h1><h3 id="1-插值语法"><a href="#1-插值语法" class="headerlink" title="1 插值语法"></a>1 插值语法</h3><p>功能：用于解析标签体内容</p><p>写法：，xxx是js表达式，直接读取js中的所有data属性</p><h3 id="2-指令语法"><a href="#2-指令语法" class="headerlink" title="2 指令语法"></a>2 指令语法</h3><p>功能： 用于解析标签（包括标签属性，标签内容等）</p><p>举例：v-bind:href=”xxx”,简写为:href=”xxx”,xxx同样可以写js表达式，且可以直接读取到data里的所有属性</p><p>写法：v-xxx</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;Vue-模板语法&quot;&gt;&lt;a href=&quot;#Vue-模板语法&quot; class=&quot;headerlink&quot; title=&quot;Vue 模板语法&quot;&gt;&lt;/a&gt;Vue 模板语法&lt;/h1&gt;&lt;h3 id=&quot;1-插值语法&quot;&gt;&lt;a href=&quot;#1-插值语法&quot; class=&quot;headerli</summary>
       
     
     
