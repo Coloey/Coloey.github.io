@@ -1,6 +1,718 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>前后端身份认证</title>
+    <url>/2022/03/21/%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/</url>
+    <content><![CDATA[<p>不同身份认证方案：</p>
+<p>服务端渲染推荐使用Session认证机制</p>
+<p>前后端分离推荐使用JWT认证机制</p>
+<p>Session认证机制</p>
+<p>Cooike:</p>
+<p>Cookie是存储在用户浏览器中一段不超过4kb的字符串，它由一个名称（Name),y一个值(Value)和几个用于控制Cookie有效期，安全性，使用范围的可选属性组成</p>
+<p>不同域名下的Cookie各自独立，每当客户端发起请求时，会自动把当前域名下所有未过期的Cookie一同发送到服务器。</p>
+<p>Cookie的几大特性：</p>
+<p>自动发送</p>
+<p>域名独立</p>
+<p>过期时限</p>
+<p>4kb限制</p>
+<p>Cookie在身份认证中的作用：</p>
+<p>客户端第一次请求服务器时，服务器通过响应头的形式，向客户端发送一个身份认证的Cookie，客户端会自动将Cookie保存在浏览器中，随后，当客户端浏览器每次请求服务器时浏览器会自动将身份认证相关的Cookie，通过请求头的形式发送给服务器，服务器即可验证客户端身份</p>
+<p>Cookie具有不安全性</p>
+<p>由于Cookie是存储在浏览器中的，因此浏览器也提供了读写Cookie的API，因此Cookie很容易被伪造，不具有安全性，因此Cookie不能存放重要隐私数据</p>
+<p>Session工作原理：</p>
+<p><img src="/2022/03/21/%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/Session.jpg" alt="Session"></p>
+<p>Session认证需要配合Cookie实现，由于Cookie默认不支持跨域访问，所以当涉及前端跨域请求后端接口时需要做额外配置。因此当前端请求后端接口不涉及跨域请求时推荐使用Session身份认证机制，否则使用JWT认证</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> session=<span class="built_in">require</span>(<span class="string">&#x27;express-session&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> cors=<span class="built_in">require</span>(<span class="string">&#x27;cors&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> bodyParser=<span class="built_in">require</span>(<span class="string">&#x27;body-parser&#x27;</span>)</span><br><span class="line"><span class="comment">//var formParser=require(&#x27;express-formidable&#x27;)</span></span><br><span class="line"><span class="keyword">const</span> app=express();</span><br><span class="line">app.use(cors());</span><br><span class="line">app.use(</span><br><span class="line">    session(&#123;</span><br><span class="line">        <span class="attr">secret</span>:<span class="string">&#x27;xiaoqi&#x27;</span>,</span><br><span class="line">        <span class="attr">resave</span>:<span class="literal">false</span>,</span><br><span class="line">        <span class="attr">saveUninitialized</span>:<span class="literal">true</span></span><br><span class="line">    &#125;)</span><br><span class="line">)</span><br><span class="line"><span class="comment">//托管静态页面</span></span><br><span class="line">app.use(express.static(<span class="string">&#x27;./pages&#x27;</span>));</span><br><span class="line"><span class="comment">//自定义解析Post提交过来的表单数据</span></span><br><span class="line">app.use(bodyParser.urlencoded(&#123;<span class="attr">extended</span>:<span class="literal">false</span>&#125;))</span><br><span class="line">app.use(bodyParser.json())</span><br><span class="line"><span class="comment">//登录API接口</span></span><br><span class="line">app.post(<span class="string">&#x27;/api/login&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//判断用户提交的登录信息是否正确</span></span><br><span class="line">    <span class="built_in">console</span>.log(req.body)</span><br><span class="line">    <span class="keyword">if</span>(req.body.username!==<span class="string">&quot;admin&quot;</span>||req.body.password!==<span class="string">&quot;888888&quot;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> res.send(&#123;<span class="attr">status</span>:<span class="number">1</span>,<span class="attr">msg</span>:<span class="string">&#x27;登录失败&#x27;</span>&#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//登录成功则把信息存储在Session中</span></span><br><span class="line">    <span class="built_in">console</span>.log(req.body);</span><br><span class="line">    req.session.user=req.body;<span class="comment">//用户登录信息</span></span><br><span class="line">    req.session.islogin=<span class="literal">true</span>;<span class="comment">//用户登录状态</span></span><br><span class="line">    res.send(&#123;<span class="attr">status</span>:<span class="number">0</span>,<span class="attr">msg</span>:<span class="string">&#x27;登录成功&#x27;</span>&#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//获取用户姓名的接口</span></span><br><span class="line">app.get(<span class="string">&#x27;/api/username&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//从Session中获取用户姓名响应给客户端</span></span><br><span class="line">    <span class="keyword">if</span>(!req.session.islogin)&#123;</span><br><span class="line">        <span class="keyword">return</span> res.send(&#123;<span class="attr">status</span>:<span class="number">1</span>,<span class="attr">msg</span>:<span class="string">&#x27;fail&#x27;</span>&#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    res.send(&#123;</span><br><span class="line">        <span class="attr">status</span>:<span class="number">0</span>,</span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;success&#x27;</span>,</span><br><span class="line">        <span class="attr">username</span>:req.session.user.username,</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//退出登录的接口</span></span><br><span class="line">app.post(<span class="string">&#x27;/api/logout&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//清空当前客户端的session信息</span></span><br><span class="line">    req.session.destroy()</span><br><span class="line">    res.send(&#123;</span><br><span class="line">        <span class="attr">status</span>:<span class="number">0</span>,</span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;退出登录成功&#x27;</span></span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">80</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;运行在http://127.0.0.1&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>JWT认证机制：</p>
+<p>工作原理</p>
+<p><img src="/2022/03/21/%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/jwt.jpg" alt="jwt"></p>
+<p>jwt组成部分：</p>
+<p>头部.有效荷载.签名</p>
+<p>Header.PayLoad.Signature</p>
+<p>客户端收到服务器返回的JWT后，通常会将它存储在localStorage或者sessionStorage中，此后客户端每次与服务端通信，都要带上这个JWT的字符串，进行身份认证，推荐把JWT放在Http请求头的Authorization字段中</p>
+<blockquote>
+<p>Authorization：Bearer <token></token></p>
+</blockquote>
+<p>在Express中使用JWT</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> app=express();</span><br><span class="line"><span class="keyword">const</span> cors=<span class="built_in">require</span>(<span class="string">&#x27;cors&#x27;</span>);</span><br><span class="line"><span class="comment">//导入用于生成jwt字符串的包</span></span><br><span class="line"><span class="keyword">const</span> jwt=<span class="built_in">require</span>(<span class="string">&#x27;jsonwebtoken&#x27;</span>);</span><br><span class="line"><span class="comment">//导入用于将客户端发送过来的JWT字符串解析还原成JSON对象的包</span></span><br><span class="line"><span class="keyword">const</span> expressJWT=<span class="built_in">require</span>(<span class="string">&quot;express-jwt&quot;</span>);</span><br><span class="line"><span class="comment">//秘钥的本质是字符串</span></span><br><span class="line"><span class="keyword">const</span> secretkey=<span class="string">&#x27;xiaochunzuishuai^_^&#x27;</span>;</span><br><span class="line"><span class="comment">//以/api/开头的不用权限，配置成功了express-jwt这个中间件，就可以把解析出来的用户信息挂载到req.user上</span></span><br><span class="line">app.use(expressJWT(&#123;</span><br><span class="line">    <span class="attr">secret</span>:secretkey,</span><br><span class="line">    <span class="attr">algorithms</span>: [<span class="string">&#x27;HS256&#x27;</span>],</span><br><span class="line">    &#125;).unless(&#123;<span class="attr">path</span>:[<span class="regexp">/^\/api\//</span>]&#125;))</span><br><span class="line"><span class="keyword">const</span> bodyParser=<span class="built_in">require</span>(<span class="string">&#x27;body-parser&#x27;</span>)</span><br><span class="line">app.use(cors());</span><br><span class="line"></span><br><span class="line"><span class="comment">//托管静态页面</span></span><br><span class="line">app.use(express.static(<span class="string">&#x27;./pages&#x27;</span>));</span><br><span class="line"><span class="comment">//自定义解析Post提交过来的表单数据</span></span><br><span class="line">app.use(bodyParser.urlencoded(&#123;<span class="attr">extended</span>:<span class="literal">false</span>&#125;))</span><br><span class="line">app.use(bodyParser.json())</span><br><span class="line"><span class="comment">//登录API接口</span></span><br><span class="line">app.post(<span class="string">&#x27;/api/login&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//判断用户提交的登录信息是否正确</span></span><br><span class="line">   <span class="keyword">const</span> userInfo=req.body;</span><br><span class="line">    <span class="keyword">if</span>(userInfo.username!==<span class="string">&quot;admin&quot;</span>||userInfo.password!==<span class="string">&quot;888888&quot;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> res.send(&#123;<span class="attr">status</span>:<span class="number">1</span>,<span class="attr">msg</span>:<span class="string">&#x27;登录失败&#x27;</span>&#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//登录成功生成JWT字符串，通过token属性响应给客户端</span></span><br><span class="line">    res.send(&#123;</span><br><span class="line">        <span class="attr">satus</span>:<span class="number">0</span>,</span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;success&#x27;</span>,</span><br><span class="line">        <span class="comment">//不要把密码加密到token字符串中</span></span><br><span class="line">        <span class="attr">token</span>:jwt.sign(&#123;<span class="attr">username</span>:userInfo.username&#125;,secretkey,&#123;<span class="attr">expiresIn</span>:<span class="string">&#x27;100s&#x27;</span>&#125;),</span><br><span class="line">        <span class="attr">data</span>:req.user</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//有权限的接口,配置成功了express-jwt这个中间件，有权限的接口就可以通过req.user获取解析出来的用户信息</span></span><br><span class="line">app.get(<span class="string">&#x27;/admin/getInfo&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    res.send(&#123;</span><br><span class="line">        <span class="attr">status</span>:<span class="number">0</span>,</span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;success&#x27;</span>,</span><br><span class="line">        <span class="attr">data</span>:req.user</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//退出登录的接口</span></span><br><span class="line">app.post(<span class="string">&#x27;/api/logout&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    res.send(&#123;</span><br><span class="line">        <span class="attr">status</span>:<span class="number">0</span>,</span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;退出登录成功&#x27;</span></span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//配置全局错误处理中间件</span></span><br><span class="line">app.use(<span class="function">(<span class="params">err,req,res,next</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//token解析失败导致的错误,Token过期或不合法</span></span><br><span class="line">    <span class="keyword">if</span>(err.name===<span class="string">&#x27;UnauthorizedError&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> res.send(&#123;<span class="attr">status</span>:<span class="number">401</span>,<span class="attr">message</span>:<span class="string">&#x27;无效的token&#x27;</span>&#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//其他原因导致的错误</span></span><br><span class="line">    res.send(&#123;<span class="attr">status</span>:<span class="number">500</span>,<span class="attr">message</span>:<span class="string">&#x27;未知错误&#x27;</span>&#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">80</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;运行在http://127.0.0.1&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Node</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Web开发模式</title>
+    <url>/2022/03/21/Web%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F/</url>
+    <content><![CDATA[<h1 id="Web开发模式："><a href="#Web开发模式：" class="headerlink" title="Web开发模式："></a>Web开发模式：</h1><h2 id="服务端渲染的Web开发模式"><a href="#服务端渲染的Web开发模式" class="headerlink" title="服务端渲染的Web开发模式"></a>服务端渲染的Web开发模式</h2><p>服务器发送给客户端的HTML页面是通在服务器通过字符串的拼接动态生成的。因此客户端不需要通过Ajax技术额外请求页面的数据</p>
+<p>优点：</p>
+<ol>
+<li>前端耗时少，因为服务端通过动态生成HTML内容，浏览器只需要直接渲染页面即可，尤其是移动端，更省电</li>
+<li>有利于SEO，服务器响应的是完整的HTML页面，所以爬虫更容易获取信息，有利于SEO</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>占用服务器资源，如果请求较多，会对服务器造成一定压力</li>
+<li>不利于前后端分离，开发效率低。使用服务端渲染，则无法进行分工合作，尤其对于前端复杂的项目，不利于羡慕高效开发</li>
+</ol>
+<h2 id="前后端分离的Web开发模式："><a href="#前后端分离的Web开发模式：" class="headerlink" title="前后端分离的Web开发模式："></a>前后端分离的Web开发模式：</h2><p>依赖于Ajax技术，后端负责接口开发，前端使用Ajav=x调用接口的开发模式</p>
+<p>优点：</p>
+<ol>
+<li>开发体验好，前端专注于UI开发，后端专注于接口开发</li>
+<li>用户体验好，Ajax技术的应用，提高用户的体验，轻松实现局部页面刷新</li>
+<li>减轻服务端的渲染压力，页面最终是在浏览器中生成的</li>
+</ol>
+<p>缺点：</p>
+<p>不利于SEO，完整的HTML页面需要在客户端动态拼接，所有爬虫无法提取页面有效信息，解决方法：利用Vue,React等前端框架的SSR技术解决</p>
+<h2 id="如何选择Web开发模式："><a href="#如何选择Web开发模式：" class="headerlink" title="如何选择Web开发模式："></a>如何选择Web开发模式：</h2><ul>
+<li>看业务场景</li>
+<li>主要功能是展示页面且没有复杂交互并且需要良好的SEO，用服务端渲染</li>
+<li>后台管理项目等交互性强用前后端分离</li>
+<li>一般两者都会一起用</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Node</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>FormData</title>
+    <url>/2022/03/21/FormData/</url>
+    <content><![CDATA[<h1 id="表单，FormData-对象"><a href="#表单，FormData-对象" class="headerlink" title="表单，FormData 对象"></a>表单，FormData 对象</h1><h5 id="目录-隐藏"><a href="#目录-隐藏" class="headerlink" title="目录 [隐藏]"></a>目录 [隐藏]</h5><ul>
+<li><a href="https://wangdoc.com/javascript/bom/form.html#%E8%A1%A8%E5%8D%95%E6%A6%82%E8%BF%B0">表单概述</a></li>
+<li>FormData 对象<ul>
+<li><a href="https://wangdoc.com/javascript/bom/form.html#%E6%A6%82%E8%BF%B0">概述</a></li>
+<li><a href="https://wangdoc.com/javascript/bom/form.html#%E5%AE%9E%E4%BE%8B%E6%96%B9%E6%B3%95">实例方法</a></li>
+</ul>
+</li>
+<li>表单的内置验证<ul>
+<li><a href="https://wangdoc.com/javascript/bom/form.html#%E8%87%AA%E5%8A%A8%E6%A0%A1%E9%AA%8C">自动校验</a></li>
+<li><a href="https://wangdoc.com/javascript/bom/form.html#checkvalidity">checkValidity()</a></li>
+<li><a href="https://wangdoc.com/javascript/bom/form.html#willvalidate-%E5%B1%9E%E6%80%A7">willValidate 属性</a></li>
+<li><a href="https://wangdoc.com/javascript/bom/form.html#validationmessage-%E5%B1%9E%E6%80%A7">validationMessage 属性</a></li>
+<li><a href="https://wangdoc.com/javascript/bom/form.html#setcustomvalidity">setCustomValidity()</a></li>
+<li><a href="https://wangdoc.com/javascript/bom/form.html#validity-%E5%B1%9E%E6%80%A7">validity 属性</a></li>
+<li><a href="https://wangdoc.com/javascript/bom/form.html#%E8%A1%A8%E5%8D%95%E7%9A%84-novalidate-%E5%B1%9E%E6%80%A7">表单的 novalidate 属性</a></li>
+</ul>
+</li>
+<li><a href="https://wangdoc.com/javascript/bom/form.html#enctype-%E5%B1%9E%E6%80%A7">enctype 属性</a></li>
+<li><a href="https://wangdoc.com/javascript/bom/form.html#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0">文件上传</a></li>
+<li><a href="https://wangdoc.com/javascript/bom/form.html#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5">参考链接</a></li>
+</ul>
+<h2 id="表单概述"><a href="#表单概述" class="headerlink" title="表单概述"></a>表单概述</h2><p>表单（<code>&lt;form&gt;</code>）用来收集用户提交的数据，发送到服务器。比如，用户提交用户名和密码，让服务器验证，就要通过表单。表单提供多种控件，让开发者使用，具体的控件种类和用法请参考 HTML 语言的教程。本章主要介绍 JavaScript 与表单的交互。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;form action=&quot;/handling-page&quot; method=&quot;post&quot;&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;label for=&quot;name&quot;&gt;用户名：&lt;/label&gt;</span><br><span class="line">    &lt;input type=&quot;text&quot; id=&quot;name&quot; name=&quot;user_name&quot; /&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;label for=&quot;passwd&quot;&gt;密码：&lt;/label&gt;</span><br><span class="line">    &lt;input type=&quot;password&quot; id=&quot;passwd&quot; name=&quot;user_passwd&quot; /&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;input type=&quot;submit&quot; id=&quot;submit&quot; name=&quot;submit_button&quot; value=&quot;提交&quot; /&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码就是一个简单的表单，包含三个控件：用户名输入框、密码输入框和提交按钮。</p>
+<p>用户点击“提交”按钮，每一个控件都会生成一个键值对，键名是控件的<code>name</code>属性，键值是控件的<code>value</code>属性，键名和键值之间由等号连接。比如，用户名输入框的<code>name</code>属性是<code>user_name</code>，<code>value</code>属性是用户输入的值，假定是“张三”，提交到服务器的时候，就会生成一个键值对<code>user_name=张三</code>。</p>
+<p>所有的键值对都会提交到服务器。但是，提交的数据格式跟<code>&lt;form&gt;</code>元素的<code>method</code>属性有关。该属性指定了提交数据的 HTTP 方法。如果是 GET 方法，所有键值对会以 URL 的查询字符串形式，提交到服务器，比如<code>/handling-page?user_name=张三&amp;user_passwd=123&amp;submit_button=提交</code>。下面就是 GET 请求的 HTTP 头信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">GET /handling-page?user_name=张三&amp;user_passwd=123&amp;submit_button=提交</span><br><span class="line">Host: example.com</span><br></pre></td></tr></table></figure>
+
+<p>如果是 POST 方法，所有键值对会连接成一行，作为 HTTP 请求的数据体发送到服务器，比如<code>user_name=张三&amp;user_passwd=123&amp;submit_button=提交</code>。下面就是 POST 请求的头信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">POST /handling-page HTTP/1.1</span><br><span class="line">Host: example.com</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 74</span><br><span class="line"></span><br><span class="line">user_name=张三&amp;user_passwd=123&amp;submit_button=提交</span><br></pre></td></tr></table></figure>
+
+<p>注意，实际提交的时候，只要键值不是 URL 的合法字符（比如汉字“张三”和“提交”），浏览器会自动对其进行编码。</p>
+<p>点击<code>submit</code>控件，就可以提交表单。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;form&gt;</span><br><span class="line">  &lt;input type=&quot;submit&quot; value=&quot;提交&quot;&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<p>上面表单就包含一个<code>submit</code>控件，点击这个控件，浏览器就会把表单数据向服务器提交。</p>
+<p>注意，表单里面的<code>&lt;button&gt;</code>元素如果没有用<code>type</code>属性指定类型，那么默认就是<code>submit</code>控件。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;form&gt;</span><br><span class="line">  &lt;button&gt;提交&lt;/button&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<p>上面表单的<code>&lt;button&gt;</code>元素，点击以后也会提交表单。</p>
+<p>除了点击<code>submit</code>控件提交表单，还可以用表单元素的<code>submit()</code>方法，通过脚本提交表单。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">formElement.submit();</span><br></pre></td></tr></table></figure>
+
+<p>表单元素的<code>reset()</code>方法可以重置所有控件的值（重置为默认值）。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">formElement.reset()</span><br></pre></td></tr></table></figure>
+
+<h2 id="FormData-对象"><a href="#FormData-对象" class="headerlink" title="FormData 对象"></a>FormData 对象</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>表单数据以键值对的形式向服务器发送，这个过程是浏览器自动完成的。但是有时候，我们希望通过脚本完成这个过程，构造或编辑表单的键值对，然后通过脚本发送给服务器。浏览器原生提供了 FormData 对象来完成这项工作。</p>
+<p><code>FormData()</code>首先是一个构造函数，用来生成表单的实例。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var formdata = new FormData(form);</span><br></pre></td></tr></table></figure>
+
+<p><code>FormData()</code>构造函数的参数是一个 DOM 的表单元素，构造函数会自动处理表单的键值对。这个参数是可选的，如果省略该参数，就表示一个空的表单。</p>
+<p>下面是一个表单。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;form id=&quot;myForm&quot; name=&quot;myForm&quot;&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;label for=&quot;username&quot;&gt;用户名：&lt;/label&gt;</span><br><span class="line">    &lt;input type=&quot;text&quot; id=&quot;username&quot; name=&quot;username&quot;&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;label for=&quot;useracc&quot;&gt;账号：&lt;/label&gt;</span><br><span class="line">    &lt;input type=&quot;text&quot; id=&quot;useracc&quot; name=&quot;useracc&quot;&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;label for=&quot;userfile&quot;&gt;上传文件：&lt;/label&gt;</span><br><span class="line">    &lt;input type=&quot;file&quot; id=&quot;userfile&quot; name=&quot;userfile&quot;&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;input type=&quot;submit&quot; value=&quot;Submit!&quot;&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<p>我们用<code>FormData()</code>处理上面这个表单。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var myForm = document.getElementById(&#x27;myForm&#x27;);</span><br><span class="line">var formData = new FormData(myForm);</span><br><span class="line"></span><br><span class="line">// 获取某个控件的值</span><br><span class="line">formData.get(&#x27;username&#x27;) // &quot;&quot;</span><br><span class="line"></span><br><span class="line">// 设置某个控件的值</span><br><span class="line">formData.set(&#x27;username&#x27;, &#x27;张三&#x27;);</span><br><span class="line"></span><br><span class="line">formData.get(&#x27;username&#x27;) // &quot;张三&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="实例方法"><a href="#实例方法" class="headerlink" title="实例方法"></a>实例方法</h3><p>FormData 提供以下实例方法。</p>
+<ul>
+<li><code>FormData.get(key)</code>：获取指定键名对应的键值，参数为键名。如果有多个同名的键值对，则返回第一个键值对的键值。</li>
+<li><code>FormData.getAll(key)</code>：返回一个数组，表示指定键名对应的所有键值。如果有多个同名的键值对，数组会包含所有的键值。</li>
+<li><code>FormData.set(key, value)</code>：设置指定键名的键值，参数为键名。如果键名不存在，会添加这个键值对，否则会更新指定键名的键值。如果第二个参数是文件，还可以使用第三个参数，表示文件名。</li>
+<li><code>FormData.delete(key)</code>：删除一个键值对，参数为键名。</li>
+<li><code>FormData.append(key, value)</code>：添加一个键值对。如果键名重复，则会生成两个相同键名的键值对。如果第二个参数是文件，还可以使用第三个参数，表示文件名。</li>
+<li><code>FormData.has(key)</code>：返回一个布尔值，表示是否具有该键名的键值对。</li>
+<li><code>FormData.keys()</code>：返回一个遍历器对象，用于<code>for...of</code>循环遍历所有的键名。</li>
+<li><code>FormData.values()</code>：返回一个遍历器对象，用于<code>for...of</code>循环遍历所有的键值。</li>
+<li><code>FormData.entries()</code>：返回一个遍历器对象，用于<code>for...of</code>循环遍历所有的键值对。如果直接用<code>for...of</code>循环遍历 FormData 实例，默认就会调用这个方法。</li>
+</ul>
+<p>下面是<code>get()</code>、<code>getAll()</code>、<code>set()</code>、<code>append()</code>方法的例子。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var formData = new FormData();</span><br><span class="line"></span><br><span class="line">formData.set(&#x27;username&#x27;, &#x27;张三&#x27;);</span><br><span class="line">formData.append(&#x27;username&#x27;, &#x27;李四&#x27;);</span><br><span class="line">formData.get(&#x27;username&#x27;) // &quot;张三&quot;</span><br><span class="line">formData.getAll(&#x27;username&#x27;) // [&quot;张三&quot;, &quot;李四&quot;]</span><br><span class="line"></span><br><span class="line">formData.append(&#x27;userpic[]&#x27;, myFileInput.files[0], &#x27;user1.jpg&#x27;);</span><br><span class="line">formData.append(&#x27;userpic[]&#x27;, myFileInput.files[1], &#x27;user2.jpg&#x27;);</span><br></pre></td></tr></table></figure>
+
+<p>下面是遍历器的例子。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var formData = new FormData();</span><br><span class="line">formData.append(&#x27;key1&#x27;, &#x27;value1&#x27;);</span><br><span class="line">formData.append(&#x27;key2&#x27;, &#x27;value2&#x27;);</span><br><span class="line"></span><br><span class="line">for (var key of formData.keys()) &#123;</span><br><span class="line">  console.log(key);</span><br><span class="line">&#125;</span><br><span class="line">// &quot;key1&quot;</span><br><span class="line">// &quot;key2&quot;</span><br><span class="line"></span><br><span class="line">for (var value of formData.values()) &#123;</span><br><span class="line">  console.log(value);</span><br><span class="line">&#125;</span><br><span class="line">// &quot;value1&quot;</span><br><span class="line">// &quot;value2&quot;</span><br><span class="line"></span><br><span class="line">for (var pair of formData.entries()) &#123;</span><br><span class="line">  console.log(pair[0] + &#x27;: &#x27; + pair[1]);</span><br><span class="line">&#125;</span><br><span class="line">// key1: value1</span><br><span class="line">// key2: value2</span><br><span class="line"></span><br><span class="line">// 等同于遍历 formData.entries()</span><br><span class="line">for (var pair of formData) &#123;</span><br><span class="line">  console.log(pair[0] + &#x27;: &#x27; + pair[1]);</span><br><span class="line">&#125;</span><br><span class="line">// key1: value1</span><br><span class="line">// key2: value2</span><br></pre></td></tr></table></figure>
+
+<h2 id="表单的内置验证"><a href="#表单的内置验证" class="headerlink" title="表单的内置验证"></a>表单的内置验证</h2><h3 id="自动校验"><a href="#自动校验" class="headerlink" title="自动校验"></a>自动校验</h3><p>表单提交的时候，浏览器允许开发者指定一些条件，它会自动验证各个表单控件的值是否符合条件。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;!-- 必填 --&gt;</span><br><span class="line">&lt;input required&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 必须符合正则表达式 --&gt;</span><br><span class="line">&lt;input pattern=&quot;banana|cherry&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 字符串长度必须为6个字符 --&gt;</span><br><span class="line">&lt;input minlength=&quot;6&quot; maxlength=&quot;6&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 数值必须在1到10之间 --&gt;</span><br><span class="line">&lt;input type=&quot;number&quot; min=&quot;1&quot; max=&quot;10&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 必须填入 Email 地址 --&gt;</span><br><span class="line">&lt;input type=&quot;email&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 必须填入 URL --&gt;</span><br><span class="line">&lt;input type=&quot;URL&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果一个控件通过验证，它就会匹配<code>:valid</code>的 CSS 伪类，浏览器会继续进行表单提交的流程。如果没有通过验证，该控件就会匹配<code>:invalid</code>的 CSS 伪类，浏览器会终止表单提交，并显示一个错误信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">input:invalid &#123;</span><br><span class="line">  border-color: red;</span><br><span class="line">&#125;</span><br><span class="line">input,</span><br><span class="line">input:valid &#123;</span><br><span class="line">  border-color: #ccc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="checkValidity"><a href="#checkValidity" class="headerlink" title="checkValidity()"></a>checkValidity()</h3><p>除了提交表单的时候，浏览器自动校验表单，还可以手动触发表单的校验。表单元素和表单控件都有<code>checkValidity()</code>方法，用于手动触发校验。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// 触发整个表单的校验</span><br><span class="line">form.checkValidity()</span><br><span class="line"></span><br><span class="line">// 触发单个表单控件的校验</span><br><span class="line">formControl.checkValidity()</span><br></pre></td></tr></table></figure>
+
+<p><code>checkValidity()</code>方法返回一个布尔值，<code>true</code>表示通过校验，<code>false</code>表示没有通过校验。因此，提交表单可以封装为下面的函数。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">function submitForm(action) &#123;</span><br><span class="line">  var form = document.getElementById(&#x27;form&#x27;);</span><br><span class="line">  form.action = action;</span><br><span class="line">  if (form.checkValidity()) &#123;</span><br><span class="line">    form.submit();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="willValidate-属性"><a href="#willValidate-属性" class="headerlink" title="willValidate 属性"></a>willValidate 属性</h3><p>控件元素的<code>willValidate</code>属性是一个布尔值，表示该控件是否会在提交时进行校验。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// HTML 代码如下</span><br><span class="line">// &lt;form novalidate&gt;</span><br><span class="line">//   &lt;input id=&quot;name&quot; name=&quot;name&quot; required /&gt;</span><br><span class="line">// &lt;/form&gt;</span><br><span class="line"></span><br><span class="line">var input = document.querySelector(&#x27;#name&#x27;);</span><br><span class="line">input.willValidate // true</span><br></pre></td></tr></table></figure>
+
+<h3 id="validationMessage-属性"><a href="#validationMessage-属性" class="headerlink" title="validationMessage 属性"></a>validationMessage 属性</h3><p>控件元素的<code>validationMessage</code>属性返回一个字符串，表示控件不满足校验条件时，浏览器显示的提示文本。以下两种情况，该属性返回空字符串。</p>
+<ul>
+<li>该控件不会在提交时自动校验</li>
+<li>该控件满足校验条件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// HTML 代码如下</span><br><span class="line">// &lt;form&gt;&lt;input type=&quot;text&quot; required&gt;&lt;/form&gt;</span><br><span class="line">document.querySelector(&#x27;form input&#x27;).validationMessage</span><br><span class="line">// &quot;请填写此字段。&quot;</span><br></pre></td></tr></table></figure>
+
+<p>下面是另一个例子。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var myInput = document.getElementById(&#x27;myinput&#x27;);</span><br><span class="line">if (!myInput.checkValidity()) &#123;</span><br><span class="line">  document.getElementById(&#x27;prompt&#x27;).innerHTML = myInput.validationMessage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="setCustomValidity"><a href="#setCustomValidity" class="headerlink" title="setCustomValidity()"></a>setCustomValidity()</h3><p>控件元素的<code>setCustomValidity()</code>方法用来定制校验失败时的报错信息。它接受一个字符串作为参数，该字符串就是定制的报错信息。如果参数为空字符串，则上次设置的报错信息被清除。</p>
+<p>这个方法可以替换浏览器内置的表单验证报错信息，参数就是要显示的报错信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;form action=&quot;somefile.php&quot;&gt;</span><br><span class="line">  &lt;input</span><br><span class="line">    type=&quot;text&quot;</span><br><span class="line">    name=&quot;username&quot;</span><br><span class="line">    placeholder=&quot;Username&quot;</span><br><span class="line">    pattern=&quot;[a-z]&#123;1,15&#125;&quot;</span><br><span class="line">    id=&quot;username&quot;</span><br><span class="line">  &gt;</span><br><span class="line">  &lt;input type=&quot;submit&quot;&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<p>上面的表单输入框，要求只能输入小写字母，且不得超过15个字符。如果输入不符合要求（比如输入“ABC”），提交表单的时候，Chrome 浏览器会弹出报错信息“Please match the requested format.”，禁止表单提交。下面使用<code>setCustomValidity()</code>方法替换掉报错信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var input = document.getElementById(&#x27;username&#x27;);</span><br><span class="line">input.oninvalid = function (event) &#123;</span><br><span class="line">  event.target.setCustomValidity(</span><br><span class="line">    &#x27;用户名必须是小写字母，不能为空，最长不超过15个字符&#x27;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>setCustomValidity()</code>方法是在<code>invalid</code>事件的监听函数里面调用。该方法也可以直接调用，这时如果参数不为空字符串，浏览器就会认为该控件没有通过校验，就会立刻显示该方法设置的报错信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/* HTML 代码如下</span><br><span class="line">&lt;form&gt;</span><br><span class="line">  &lt;p&gt;&lt;input type=&quot;file&quot; id=&quot;fs&quot;&gt;&lt;/p&gt;</span><br><span class="line">  &lt;p&gt;&lt;input type=&quot;submit&quot;&gt;&lt;/p&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">*/</span><br><span class="line"></span><br><span class="line">document.getElementById(&#x27;fs&#x27;).onchange = checkFileSize;</span><br><span class="line"></span><br><span class="line">function checkFileSize() &#123;</span><br><span class="line">  var fs = document.getElementById(&#x27;fs&#x27;);</span><br><span class="line">  var files = fs.files;</span><br><span class="line">  if (files.length &gt; 0) &#123;</span><br><span class="line">     if (files[0].size &gt; 75 * 1024) &#123;</span><br><span class="line">       fs.setCustomValidity(&#x27;文件不能大于 75KB&#x27;);</span><br><span class="line">       return;</span><br><span class="line">     &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  fs.setCustomValidity(&#x27;&#x27;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码一旦发现文件大于 75KB，就会设置校验失败，同时给出自定义的报错信息。然后，点击提交按钮时，就会显示报错信息。这种校验失败是不会自动消除的，所以如果所有文件都符合条件，要将报错信息设为空字符串，手动消除校验失败的状态。</p>
+<h3 id="validity-属性"><a href="#validity-属性" class="headerlink" title="validity 属性"></a>validity 属性</h3><p>控件元素的属性<code>validity</code>属性返回一个<code>ValidityState</code>对象，包含当前校验状态的信息。</p>
+<p>该对象有以下属性，全部为只读属性。</p>
+<ul>
+<li><code>ValidityState.badInput</code>：布尔值，表示浏览器是否不能将用户的输入转换成正确的类型，比如用户在数值框里面输入字符串。</li>
+<li><code>ValidityState.customError</code>：布尔值，表示是否已经调用<code>setCustomValidity()</code>方法，将校验信息设置为一个非空字符串。</li>
+<li><code>ValidityState.patternMismatch</code>：布尔值，表示用户输入的值是否不满足模式的要求。</li>
+<li><code>ValidityState.rangeOverflow</code>：布尔值，表示用户输入的值是否大于最大范围。</li>
+<li><code>ValidityState.rangeUnderflow</code>：布尔值，表示用户输入的值是否小于最小范围。</li>
+<li><code>ValidityState.stepMismatch</code>：布尔值，表示用户输入的值不符合步长的设置（即不能被步长值整除）。</li>
+<li><code>ValidityState.tooLong</code>：布尔值，表示用户输入的字数超出了最长字数。</li>
+<li><code>ValidityState.tooShort</code>：布尔值，表示用户输入的字符少于最短字数。</li>
+<li><code>ValidityState.typeMismatch</code>：布尔值，表示用户填入的值不符合类型要求（主要是类型为 Email 或 URL 的情况）。</li>
+<li><code>ValidityState.valid</code>：布尔值，表示用户是否满足所有校验条件。</li>
+<li><code>ValidityState.valueMissing</code>：布尔值，表示用户没有填入必填的值。</li>
+</ul>
+<p>下面是一个例子。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var input = document.getElementById(&#x27;myinput&#x27;);</span><br><span class="line">if (input.validity.valid) &#123;</span><br><span class="line">  console.log(&#x27;通过校验&#x27;);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">  console.log(&#x27;校验失败&#x27;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面是另外一个例子。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var txt = &#x27;&#x27;;</span><br><span class="line">if (document.getElementById(&#x27;myInput&#x27;).validity.rangeOverflow) &#123;</span><br><span class="line">  txt = &#x27;数值超过上限&#x27;;</span><br><span class="line">&#125;</span><br><span class="line">document.getElementById(&#x27;prompt&#x27;).innerHTML = txt;</span><br></pre></td></tr></table></figure>
+
+<p>如果想禁止浏览器弹出表单验证的报错信息，可以监听<code>invalid</code>事件。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var input = document.getElementById(&#x27;username&#x27;);</span><br><span class="line">var form  = document.getElementById(&#x27;form&#x27;);</span><br><span class="line"></span><br><span class="line">var elem = document.createElement(&#x27;div&#x27;);</span><br><span class="line">elem.id  = &#x27;notify&#x27;;</span><br><span class="line">elem.style.display = &#x27;none&#x27;;</span><br><span class="line">form.appendChild(elem);</span><br><span class="line"></span><br><span class="line">input.addEventListener(&#x27;invalid&#x27;, function (event) &#123;</span><br><span class="line">  event.preventDefault();</span><br><span class="line">  if (!event.target.validity.valid) &#123;</span><br><span class="line">    elem.textContent   = &#x27;用户名必须是小写字母&#x27;;</span><br><span class="line">    elem.className     = &#x27;error&#x27;;</span><br><span class="line">    elem.style.display = &#x27;block&#x27;;</span><br><span class="line">    input.className    = &#x27;invalid animated shake&#x27;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">input.addEventListener(&#x27;input&#x27;, function(event)&#123;</span><br><span class="line">  if ( &#x27;block&#x27; === elem.style.display ) &#123;</span><br><span class="line">    input.className = &#x27;&#x27;;</span><br><span class="line">    elem.style.display = &#x27;none&#x27;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，一旦发生<code>invalid</code>事件（表单验证失败），<code>event.preventDefault()</code>用来禁止浏览器弹出默认的验证失败提示，然后设置定制的报错提示框。</p>
+<h3 id="表单的-novalidate-属性"><a href="#表单的-novalidate-属性" class="headerlink" title="表单的 novalidate 属性"></a>表单的 novalidate 属性</h3><p>表单元素的 HTML 属性<code>novalidate</code>，可以关闭浏览器的自动校验。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;form novalidate&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这个属性也可以在脚本里设置。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">form.noValidate = true;</span><br></pre></td></tr></table></figure>
+
+<p>如果表单元素没有设置<code>novalidate</code>属性，那么提交按钮（<code>&lt;button&gt;</code>或<code>&lt;input&gt;</code>元素）的<code>formnovalidate</code>属性也有同样的作用。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;form&gt;</span><br><span class="line">  &lt;input type=&quot;submit&quot; value=&quot;submit&quot; formnovalidate&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="enctype-属性"><a href="#enctype-属性" class="headerlink" title="enctype 属性"></a>enctype 属性</h2><p>表单能够用四种编码，向服务器发送数据。编码格式由表单的<code>enctype</code>属性决定。</p>
+<p>假定表单有两个字段，分别是<code>foo</code>和<code>baz</code>，其中<code>foo</code>字段的值等于<code>bar</code>，<code>baz</code>字段的值是一个分为两行的字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">The first line.</span><br><span class="line">The second line.</span><br></pre></td></tr></table></figure>
+
+<p>下面四种格式，都可以将这个表单发送到服务器。</p>
+<p><strong>（1）GET 方法</strong></p>
+<p>如果表单使用<code>GET</code>方法发送数据，<code>enctype</code>属性无效。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;form</span><br><span class="line">  action=&quot;register.php&quot;</span><br><span class="line">  method=&quot;get&quot;</span><br><span class="line">  onsubmit=&quot;AJAXSubmit(this); return false;&quot;</span><br><span class="line">&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<p>数据将以 URL 的查询字符串发出。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">?foo=bar&amp;baz=The%20first%20line.%0AThe%20second%20line.</span><br></pre></td></tr></table></figure>
+
+<p><strong>（2）application/x-www-form-urlencoded</strong></p>
+<p>如果表单用<code>POST</code>方法发送数据，并省略<code>enctype</code>属性，那么数据以<code>application/x-www-form-urlencoded</code>格式发送（因为这是默认值）。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;form</span><br><span class="line">  action=&quot;register.php&quot;</span><br><span class="line">  method=&quot;post&quot;</span><br><span class="line">  onsubmit=&quot;AJAXSubmit(this); return false;&quot;</span><br><span class="line">&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<p>发送的 HTTP 请求如下。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">foo=bar&amp;baz=The+first+line.%0D%0AThe+second+line.%0D%0A</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，数据体里面的<code>%0D%0A</code>代表换行符（<code>\r\n</code>）。</p>
+<p><strong>（3）text/plain</strong></p>
+<p>如果表单使用<code>POST</code>方法发送数据，<code>enctype</code>属性为<code>text/plain</code>，那么数据将以纯文本格式发送。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;form</span><br><span class="line">  action=&quot;register.php&quot;</span><br><span class="line">  method=&quot;post&quot;</span><br><span class="line">  enctype=&quot;text/plain&quot;</span><br><span class="line">  onsubmit=&quot;AJAXSubmit(this); return false;&quot;</span><br><span class="line">&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<p>发送的 HTTP 请求如下。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Content-Type: text/plain</span><br><span class="line"></span><br><span class="line">foo=bar</span><br><span class="line">baz=The first line.</span><br><span class="line">The second line.</span><br></pre></td></tr></table></figure>
+
+<p><strong>（4）multipart/form-data</strong></p>
+<p>如果表单使用<code>POST</code>方法，<code>enctype</code>属性为<code>multipart/form-data</code>，那么数据将以混合的格式发送。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;form</span><br><span class="line">  action=&quot;register.php&quot;</span><br><span class="line">  method=&quot;post&quot;</span><br><span class="line">  enctype=&quot;multipart/form-data&quot;</span><br><span class="line">  onsubmit=&quot;AJAXSubmit(this); return false;&quot;</span><br><span class="line">&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<p>发送的 HTTP 请求如下。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Content-Type: multipart/form-data; boundary=---------------------------314911788813839</span><br><span class="line"></span><br><span class="line">-----------------------------314911788813839</span><br><span class="line">Content-Disposition: form-data; name=&quot;foo&quot;</span><br><span class="line"></span><br><span class="line">bar</span><br><span class="line">-----------------------------314911788813839</span><br><span class="line">Content-Disposition: form-data; name=&quot;baz&quot;</span><br><span class="line"></span><br><span class="line">The first line.</span><br><span class="line">The second line.</span><br><span class="line"></span><br><span class="line">-----------------------------314911788813839--</span><br></pre></td></tr></table></figure>
+
+<p>这种格式也是文件上传的格式。</p>
+<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><p>用户上传文件，也是通过表单。具体来说，就是通过文件输入框选择本地文件，提交表单的时候，浏览器就会把这个文件发送到服务器。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;input type=&quot;file&quot; id=&quot;file&quot; name=&quot;myFile&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>此外，还需要将表单<code>&lt;form&gt;</code>元素的<code>method</code>属性设为<code>POST</code>，<code>enctype</code>属性设为<code>multipart/form-data</code>。其中，<code>enctype</code>属性决定了 HTTP 头信息的<code>Content-Type</code>字段的值，默认情况下这个字段的值是<code>application/x-www-form-urlencoded</code>，但是文件上传的时候要改成<code>multipart/form-data</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;form method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;label for=&quot;file&quot;&gt;选择一个文件&lt;/label&gt;</span><br><span class="line">    &lt;input type=&quot;file&quot; id=&quot;file&quot; name=&quot;myFile&quot; multiple&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;input type=&quot;submit&quot; id=&quot;submit&quot; name=&quot;submit_button&quot; value=&quot;上传&quot; /&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<p>上面的 HTML 代码中，file 控件的<code>multiple</code>属性，指定可以一次选择多个文件；如果没有这个属性，则一次只能选择一个文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var fileSelect = document.getElementById(&#x27;file&#x27;);</span><br><span class="line">var files = fileSelect.files;</span><br></pre></td></tr></table></figure>
+
+<p>然后，新建一个 FormData 实例对象，模拟发送到服务器的表单数据，把选中的文件添加到这个对象上面。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var formData = new FormData();</span><br><span class="line"></span><br><span class="line">for (var i = 0; i &lt; files.length; i++) &#123;</span><br><span class="line">  var file = files[i];</span><br><span class="line"></span><br><span class="line">  // 只上传图片文件</span><br><span class="line">  if (!file.type.match(&#x27;image.*&#x27;)) &#123;</span><br><span class="line">    continue;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  formData.append(&#x27;photos[]&#x27;, file, file.name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后，使用 Ajax 向服务器上传文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var xhr = new XMLHttpRequest();</span><br><span class="line"></span><br><span class="line">xhr.open(&#x27;POST&#x27;, &#x27;handler.php&#x27;, true);</span><br><span class="line"></span><br><span class="line">xhr.onload = function () &#123;</span><br><span class="line">  if (xhr.status !== 200) &#123;</span><br><span class="line">    console.log(&#x27;An error occurred!&#x27;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">xhr.send(formData);</span><br></pre></td></tr></table></figure>
+
+<p>除了发送 FormData 实例，也可以直接 AJAX 发送文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var file = document.getElementById(&#x27;test-input&#x27;).files[0];</span><br><span class="line">var xhr = new XMLHttpRequest();</span><br><span class="line"></span><br><span class="line">xhr.open(&#x27;POST&#x27;, &#x27;myserver/uploads&#x27;);</span><br><span class="line">xhr.setRequestHeader(&#x27;Content-Type&#x27;, file.type);</span><br><span class="line">xhr.send(file);</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ul>
+<li><a href="https://webdesign.tutsplus.com/tutorials/html5-form-validation-with-the-pattern-attribute--cms-25145">HTML5 Form Validation With the “pattern” Attribute</a>, Thoriq Firdaus</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Node</category>
+        <category>HTML5</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>axios发送请求时后台接收的req.body为空</title>
+    <url>/2022/03/21/axios%E5%8F%91%E9%80%81%E8%AF%B7%E6%B1%82%E6%97%B6%E5%90%8E%E5%8F%B0%E6%8E%A5%E6%94%B6%E7%9A%84req-body%E4%B8%BA%E7%A9%BA/</url>
+    <content><![CDATA[<p>首先，先了解一下关于http协议里定义的四种常见数据的post方法，分别是：<br>application/www-form-ulrencoded<br>multipart/form-data<br>application/json<br>text/xml</p>
+<p>Express依赖bodyParser对请求的包体进行解析。默认支持application/json,application/www-form-urlencoded,multipart/form-data.单数对xml没有支持。需要自己代码来实现</p>
+<p>用axios post请求提交数据的时候需要清楚发送请求的类型是哪种，后台用相应的方法解析</p>
+<p>1 使用FormData提交表单数据</p>
+<p>坑一：使用FormData时一定要在先绑定submit事件，在submit事件触发时发送axios post请求,否则获取不到formData里面的值</p>
+<p>坑二:axios请求里面如果直接使用data:formData，浏览器会自动帮我们加上 <code>Content-Type: multipart/form-data</code> ，因此请求要这样设置：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> form = <span class="built_in">document</span>.getElementById(<span class="string">&quot;myForm&quot;</span>);</span><br><span class="line">       <span class="comment">// 用表单来初始化</span></span><br><span class="line">       <span class="keyword">var</span> formData = <span class="keyword">new</span> FormData(form);</span><br><span class="line">       <span class="comment">// 我们可以根据name来访问表单中的字段</span></span><br><span class="line">       <span class="keyword">var</span> username = formData.get(<span class="string">&quot;username&quot;</span>); <span class="comment">// 获取名字</span></span><br><span class="line">       <span class="keyword">var</span> password = formData.get(<span class="string">&quot;password&quot;</span>); <span class="comment">// 获取密码</span></span><br><span class="line">       axios(&#123;</span><br><span class="line">           <span class="attr">method</span>:<span class="string">&quot;post&quot;</span>,</span><br><span class="line">           <span class="attr">url</span>:<span class="string">&#x27;http://127.0.0.1/api/login&#x27;</span>,</span><br><span class="line">           <span class="attr">data</span>:&#123;</span><br><span class="line">               <span class="attr">username</span>:username,</span><br><span class="line">               <span class="attr">password</span>:password</span><br><span class="line">           &#125;</span><br><span class="line">            </span><br><span class="line">       &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>这样默认Content-type：application/json,</p>
+<p>如果表单属性过多，可以先用一个对象接收：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> form = <span class="built_in">document</span>.getElementById(<span class="string">&quot;myForm&quot;</span>);</span><br><span class="line">        <span class="comment">// 用表单来初始化</span></span><br><span class="line">        <span class="keyword">var</span> formData = <span class="keyword">new</span> FormData(form);</span><br><span class="line">        <span class="comment">// 我们可以根据name来访问表单中的字段</span></span><br><span class="line">        <span class="keyword">let</span> myFormData=&#123;&#125;;</span><br><span class="line">        <span class="comment">//如果表单属性过多可以先遍历</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">let</span> pair <span class="keyword">of</span> formData.entries())&#123;</span><br><span class="line">            myFormData[pair[<span class="number">0</span>]]=pair[<span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        axios(&#123;</span><br><span class="line">            <span class="attr">method</span>:<span class="string">&quot;post&quot;</span>,</span><br><span class="line">            <span class="attr">url</span>:<span class="string">&#x27;http://127.0.0.1/api/login&#x27;</span>,</span><br><span class="line">            <span class="attr">data</span>:myFormData</span><br><span class="line">             </span><br><span class="line">        &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>后台接收使用中间件body-parser解析表单体数据</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> session=<span class="built_in">require</span>(<span class="string">&#x27;express-session&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> cors=<span class="built_in">require</span>(<span class="string">&#x27;cors&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> bodyParser=<span class="built_in">require</span>(<span class="string">&#x27;body-parser&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> app=express();</span><br><span class="line">app.use(cors());</span><br><span class="line">app.use(</span><br><span class="line">    session(&#123;</span><br><span class="line">        <span class="attr">secret</span>:<span class="string">&#x27;xiaoqi&#x27;</span>,</span><br><span class="line">        <span class="attr">resave</span>:<span class="literal">false</span>,</span><br><span class="line">        <span class="attr">saveUninitialized</span>:<span class="literal">true</span></span><br><span class="line">    &#125;)</span><br><span class="line">)</span><br><span class="line"><span class="comment">//托管静态页面</span></span><br><span class="line">app.use(express.static(<span class="string">&#x27;./pages&#x27;</span>));</span><br><span class="line"><span class="comment">//自定义解析Post提交过来的表单数据</span></span><br><span class="line">app.use(bodyParser.urlencoded(&#123;<span class="attr">extended</span>:<span class="literal">false</span>&#125;))</span><br><span class="line">app.use(bodyParser.json())</span><br><span class="line"><span class="comment">//登录API接口</span></span><br><span class="line">app.post(<span class="string">&#x27;/api/login&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//判断用户提交的登录信息是否正确</span></span><br><span class="line">    <span class="comment">//console.log(req.body)</span></span><br><span class="line">    <span class="keyword">if</span>(req.body.username!==<span class="string">&quot;admin&quot;</span>||req.body.password!==<span class="string">&quot;888888&quot;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> res.send(&#123;<span class="attr">status</span>:<span class="number">1</span>,<span class="attr">msg</span>:<span class="string">&#x27;登录失败&#x27;</span>&#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//登录成功则把信息存储在Session中</span></span><br><span class="line">    <span class="built_in">console</span>.log(req.body);</span><br><span class="line">    req.session.user=req.body;<span class="comment">//用户登录信息</span></span><br><span class="line">    req.session.islogin=<span class="literal">true</span>;<span class="comment">//用户登录状态</span></span><br><span class="line">    res.send(&#123;<span class="attr">status</span>:<span class="number">0</span>,<span class="attr">msg</span>:<span class="string">&#x27;登录成功&#x27;</span>&#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//获取用户姓名的接口</span></span><br><span class="line">app.get(<span class="string">&#x27;/api/username&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//从Session中获取用户姓名响应给客户端</span></span><br><span class="line">    <span class="keyword">if</span>(!req.session.islogin)&#123;</span><br><span class="line">        <span class="keyword">return</span> res.send(&#123;<span class="attr">status</span>:<span class="number">1</span>,<span class="attr">msg</span>:<span class="string">&#x27;fail&#x27;</span>&#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    res.send(&#123;</span><br><span class="line">        <span class="attr">status</span>:<span class="number">0</span>,</span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;success&#x27;</span>,</span><br><span class="line">        <span class="attr">username</span>:req.session.user.username,</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//退出登录的接口</span></span><br><span class="line">app.post(<span class="string">&#x27;/api/logout&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//清空当前客户端的session信息</span></span><br><span class="line">    req.session.destroy()</span><br><span class="line">    res.send(&#123;</span><br><span class="line">        <span class="attr">status</span>:<span class="number">0</span>,</span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;退出登录成功&#x27;</span></span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">80</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;运行在http://127.0.0.1&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Node</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>node连接MySql报错ER_NOT_SUPPORTED_AUTH_MODE</title>
+    <url>/2022/03/20/node%E8%BF%9E%E6%8E%A5MySql%E6%8A%A5%E9%94%99ER-NOT-SUPPORTED-AUTH-MODE/</url>
+    <content><![CDATA[<h1 id="报错信息"><a href="#报错信息" class="headerlink" title="报错信息"></a>报错信息</h1><p>本人系统安装的是mysql-installer-community-8.0.18.0.msi这个版本，然后我本地使用node-mysql去连接数据库。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> mysql=<span class="built_in">require</span>(<span class="string">&#x27;mysql&#x27;</span>)</span><br><span class="line"><span class="comment">//建立MYSQL与数据库的联系</span></span><br><span class="line"><span class="keyword">const</span> db=mysql.createPool(&#123;</span><br><span class="line">    <span class="attr">host</span>:<span class="string">&#x27;127.0.0.1&#x27;</span>,<span class="comment">//数据库的ip地址</span></span><br><span class="line">    <span class="attr">user</span>:<span class="string">&#x27;root&#x27;</span>,</span><br><span class="line">    <span class="attr">password</span>:<span class="string">&#x27;123456&#x27;</span>,</span><br><span class="line">    <span class="attr">database</span>:<span class="string">&#x27;my_db_01&#x27;</span>,<span class="comment">//指定要操作哪个数据库</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//测试mysql能否正常工作</span></span><br><span class="line">db.query(<span class="string">&#x27;select 1&#x27;</span>,<span class="function">(<span class="params">err,result</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//mysql工作期间报错</span></span><br><span class="line">    <span class="keyword">if</span>(err)<span class="keyword">return</span> <span class="built_in">console</span>.log(err.message)</span><br><span class="line">    <span class="comment">//能成功执行SQL语句</span></span><br><span class="line">    <span class="built_in">console</span>.log(result);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>运行db.js</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">PS D:\Vue-chat\Server&gt; node db.js</span><br><span class="line">ER_NOT_SUPPORTED_AUTH_MODE: Client does not support authentication protocol requested by server; consider upgrading MySQL client</span><br></pre></td></tr></table></figure>
+
+<h1 id="报错原因"><a href="#报错原因" class="headerlink" title="报错原因"></a>报错原因</h1><p>mysql8.0以上加密方式，Node还不支持。</p>
+<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>第一步谷歌<br>查到了 <a href="https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-authentication-protocol-requested-by-server">https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-authentication-protocol-requested-by-server</a><br>这个答案，和我报错的步骤基本一样，按照这个进行操作，登录MySql Command Line Client使用这个</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql&gt; alter user &#x27;root&#x27;@&#x27;localhost&#x27; identified with mysql_native_password by &#x27;123456&#x27;;</span><br><span class="line">Query OK, 0 rows affected (0.27 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">Query OK, 0 rows affected (0.08 sec)</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Node</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>git遇到的坑</title>
+    <url>/2022/03/18/git%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91/</url>
+    <content><![CDATA[<p>解决用git push origin master时出现的问题<br>不知道小伙伴们在使用git push origin master时有没有遇到下面的问题，今天我遇到了，原因一般是相同的，下面详细分析一下</p>
+<p>报错内容：<br>To github.com:<em><strong>/</strong></em><br>! [rejected] master -&gt; master (non-fast-forward)<br>error: failed to push some refs to ‘<a href="mailto:&#x67;&#x69;&#116;&#x40;&#103;&#x69;&#x74;&#x68;&#x75;&#98;&#46;&#x63;&#111;&#109;">&#x67;&#x69;&#116;&#x40;&#103;&#x69;&#x74;&#x68;&#x75;&#98;&#46;&#x63;&#111;&#109;</a>:***/***’<br>hint: Updates were rejected because the tip of your current branch is behind<br>hint: its remote counterpart. Integrate the remote changes (e.g.<br>hint: ‘git pull …’) before pushing again.<br>hint: See the ‘Note about fast-forwards’ in ‘git push –help’ for details.</p>
+<p>大致翻译为：<br>错误：无法将一些引用推送到’<a href="mailto:&#x67;&#x69;&#116;&#64;&#103;&#x69;&#116;&#x68;&#117;&#x62;&#46;&#x63;&#x6f;&#x6d;">&#x67;&#x69;&#116;&#64;&#103;&#x69;&#116;&#x68;&#117;&#x62;&#46;&#x63;&#x6f;&#x6d;</a>：****** / Demo.git’<br>提示：由于当前分支的尖端位于其远程对应的后面，因此更新被拒绝。 合并远程更改（例如’git pull’），然后再次推送。 有关详细信息，请参见“ git push –help”中的“关于fast-forwards的注意事项”。</p>
+<p>这个报错的原因是因为远程repository和本地的repository有冲突，下面有3种解决办法：</p>
+<p>按上面报错内容中所给的提示先用git pull之后再用git push<br>$ git pull origin master<br>$ git push origin master</p>
+<p>使用强制push的方法，但是这会使远程修改丢失，一般是不可取的，尤其是多人协作开发的时候<br>$ git push origin master -f</p>
+<p>如果不想merge远程和本地修改，可以先创建新的分支，然后再push<br>$ git branch [name]<br>$ git push origin [name]</p>
+]]></content>
+      <categories>
+        <category>git</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>vim</title>
+    <url>/2022/03/18/vim/</url>
+    <content><![CDATA[<p>Vim可以分为三种模式，分别为：</p>
+<blockquote>
+<p>命令行模式（Command mode）</p>
+<p>插入模式（Insert mode）</p>
+<p>底行模式（Lastline mode）</p>
+</blockquote>
+<p><strong>命令行模式</strong></p>
+<blockquote>
+<p>控制屏幕光标的移动，字符、字或行的删除，移动复制某区段及进入Insert mode下，或者到 last line mode。</p>
+</blockquote>
+<p><strong>插入模式</strong></p>
+<blockquote>
+<p>只有在Insert mode下，才可以做文字输入，按「ESC」键可回到命令行模式。</p>
+</blockquote>
+<p><strong>底行模式</strong></p>
+<blockquote>
+<p>将文件保存或退出vim，也可以设置编辑环境，如寻找字符串、列出行号……等。</p>
+</blockquote>
+<p><strong>不过，一般我们在使用时把vi简化成两个模式，就是将底行模式（last line mode）也算入命令行模式command mode）。</strong></p>
+<hr>
+<h4 id="5-Vim的基本操作"><a href="#5-Vim的基本操作" class="headerlink" title="5. Vim的基本操作"></a>5. Vim的基本操作</h4><p><strong>a) 进入Vim</strong></p>
+<p>在系统光标提示符后，输入vim及文件名后，回车，进入Vim编辑画面。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/4496284-bd8c3655e34df86f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/734/format/webp" alt="img"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/4496284-7389372474e9c632.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/733/format/webp" alt="img"></p>
+<blockquote>
+<p>特别注意，进入vim之后，是处于「命令行模式（command mode）」，要切换到「插入模式（Insert mode）」才能够输入文字。</p>
+</blockquote>
+<p><strong>b) 切换至插入模式（Insert mode）编辑文件</strong></p>
+<p>在<strong>「命令行模式（command mode）」</strong>下<strong>按一下字母「i」就可以进入「插入模式（Insert mode）」</strong>，这时候你就可以开始输入文字了。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/4496284-a1a7aeded64e57f2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/731/format/webp" alt="img"></p>
+<p><strong>c) 插入模式（Insert mode）切换到命令行模式（Command mode）</strong></p>
+<p>在插入模式下，按一下「ESC」键即可。</p>
+<p><strong>d) 退出vim及保存文件</strong> </p>
+<p>在命令行模式（Command mode）下，按冒号「:」键，进入底行模式（Last Line mode）</p>
+<p>常见底行模式下的命令行：</p>
+<blockquote>
+<p>:w filename 文件以filename为文件名保存</p>
+<p>:wq 文件存盘并退出vim</p>
+<p>:q 文件不存盘并退出vim</p>
+<p>:q! 文件不存盘强制退出vim</p>
+</blockquote>
+<hr>
+<h4 id="6-命令行模式下的功能键（部分）"><a href="#6-命令行模式下的功能键（部分）" class="headerlink" title="6. 命令行模式下的功能键（部分）"></a><strong>6. 命令行模式下的功能键（部分）</strong></h4><p><strong>a) 从命令行模式切换为插入模式的三种方式</strong></p>
+<blockquote>
+<p>「 i 」：从当前光标位置进入插入模式</p>
+<p>「 a 」：从当前光标位置的下一个字符进入插入模式</p>
+<p>「 o 」：从当前光标位置的下一行进入插入模式</p>
+</blockquote>
+<p><strong>b) 从插入模式切换为命令行模式</strong></p>
+<blockquote>
+<p>按「ESC」键 </p>
+</blockquote>
+<p><strong>c) 移动光标</strong></p>
+<blockquote>
+<p>vi可以直接用键盘上的光标来上下左右移动，但正规的vi是用小写英文字母「h」、「j」、「k」、「l」，分别控制光标左、下、上、右移一格。</p>
+</blockquote>
+<p><strong>d) 行尾追加</strong></p>
+<blockquote>
+<p>不管光标在该行的什么位置，直接按大写字母「A」即可</p>
+</blockquote>
+<p><strong>e) 删除单词</strong></p>
+<blockquote>
+<p>dw：把光标停留在需要删除的单词前面，依次按下「d」「w」，即可</p>
+<p>de：把光标停留在需要删除的单词前面（无视单词前面的空格），依次按下「d」「e」，即可</p>
+</blockquote>
+<p><strong>f) 从当前光标处删除到行末</strong></p>
+<blockquote>
+<p>把光标停留在需要删除的句子前面，依次按下「d」「$」，即可</p>
+</blockquote>
+<p><strong>g) 快速跳转到行首</strong></p>
+<blockquote>
+<p>按下数字「0」，即可</p>
+</blockquote>
+<p><strong>h) 使用计数以删除单词</strong></p>
+<blockquote>
+<p>示例：this ABC DE line FGHI JK LMN OP of words is Q RS TUV cleaned up.</p>
+<p>依次将鼠标定位到ABC前，按「d」「2」「w」，可以删除：ABC DE</p>
+<p>将鼠标定位到FGHI前，按「d」「4」「w」，可以删除：FGHI JK LMN OP</p>
+<p>将鼠标定位到Q前，按「d」「3」「w」，可以删除：Q RS TUV</p>
+<p>得到句子：</p>
+<p>this line of words is cleaned up.</p>
+</blockquote>
+<p><strong>i) 删除当前行</strong></p>
+<blockquote>
+<p>鉴于删除当前行这一操作的高频性，vim设计者简化了快捷键，按「d」「d」即可。</p>
+<p>连续删除两行，从当前行开始，则为：「2」「d」「d」</p>
+</blockquote>
+<p><strong>j) 撤销更改</strong></p>
+<blockquote>
+<p>a. 按小写字母「u」，撤销上一步的更改操作；</p>
+<p>b. 按大写字母「U」，撤销整行的更改操作；</p>
+<p>c. 「Ctrl+R」撤销上一步「撤销操作」。</p>
+</blockquote>
+<p><strong>k) 将刚删除的内容置入其他行</strong></p>
+<blockquote>
+<p>之前刚刚删除的内容，会放入Vim编辑器的寄存器中。基于如此原理，可以将之认为成Windows操作系统的「剪切」操作。</p>
+<p>先在想删除的行，按「d」「d」，进行删除操作；</p>
+<p>再在想插入那行的前一行按「p」键即可。</p>
+</blockquote>
+<p><strong>l) 替换</strong></p>
+<blockquote>
+<p>将光标放到需要改的字符前，先按「r」键，再输入想更改的字符即可。</p>
+</blockquote>
+<p><strong>m) 跳转</strong></p>
+<blockquote>
+<p>顶部跳转命令：先按「Control」+「g」键，在终端底部调出一栏，然后输入「g」「g」即可；</p>
+<p>底部跳转命令：先按「Control」+「g」键，在终端底部调出一栏，然后输入大写字母「g」即可；</p>
+<p>特定行跳转命令：直接输入行号，然后输入大写字母「g」即可。</p>
+</blockquote>
+<p><strong>n) 查找命令</strong></p>
+<p>字符串查找：</p>
+<blockquote>
+<p>输入英文斜杠「/」，后面紧接需要搜索的字符串即可。</p>
+<p>查找下一个相同字符串，就紧接着按小写字母「n」；</p>
+<p>查找上一个相同字符串，就紧接着按大写字母「N」。</p>
+</blockquote>
+<p>配对括号查找：</p>
+<blockquote>
+<p>在编程语言里，配对括号「 ( 」「 ) 」「 { 」「 } 」很常见，当定位到一个配对括号的一半时（注意光标要定位在该括号之前），按「%」，即可自动跳转到与之匹配的第一个配对括号处。</p>
+</blockquote>
+<p><strong>o) 替换字符串</strong></p>
+<p>当前行替换命令</p>
+<blockquote>
+<p>在标准命令行模式下，光标定位到当前行，按英文冒号「 ：」，再输入s/oldstring/newstring/g 回车，即可。</p>
+<p>完整语句为：</p>
+<p><strong>:s/dogg/dog/g</strong></p>
+</blockquote>
+<p>特定几行替换命令</p>
+<blockquote>
+<p>在标准命令行模式下，按英文冒号「 ：」，再输入#,#s/oldstring/newstring/g 回车，即可（其中#代表特定的首尾两行的行号）。</p>
+<p>完整语句为：</p>
+<p>**<em>*:*<em>5,8s/dogg/dog/g</em></em></p>
+</blockquote>
+<p>全文替换命令</p>
+<blockquote>
+<p>在标准命令行模式下，按英文冒号「 ：」，再输入%s/oldstring/newstring/g 回车，即可（其中#代表特定的首尾两行的行号）。</p>
+<p>完整语句为：</p>
+<p><strong><em>*:*</em>%s/dogg/dog/g</strong></p>
+</blockquote>
+<p>全文替换命令（每个匹配项替换前需确认）</p>
+<blockquote>
+<p>在标准命令行模式下，按英文冒号「 ：」，再输入%s/oldstring/newstring/gc 回车，即可（其中#代表特定的首尾两行的行号）。</p>
+<p>完整语句为：</p>
+<p><strong><em>*:*</em>%s/dogg/dog/gc</strong></p>
+</blockquote>
+<p>作者：饥人谷_李维超<br>链接：<a href="https://www.jianshu.com/p/8b679b35c9d5">https://www.jianshu.com/p/8b679b35c9d5</a><br>来源：简书<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。Vim可以分为三种模式，分别为：</p>
+<blockquote>
+<p>命令行模式（Command mode）</p>
+<p>插入模式（Insert mode）</p>
+<p>底行模式（Lastline mode）</p>
+</blockquote>
+<p><strong>命令行模式</strong></p>
+<blockquote>
+<p>控制屏幕光标的移动，字符、字或行的删除，移动复制某区段及进入Insert mode下，或者到 last line mode。</p>
+</blockquote>
+<p><strong>插入模式</strong></p>
+<blockquote>
+<p>只有在Insert mode下，才可以做文字输入，按「ESC」键可回到命令行模式。</p>
+</blockquote>
+<p><strong>底行模式</strong></p>
+<blockquote>
+<p>将文件保存或退出vim，也可以设置编辑环境，如寻找字符串、列出行号……等。</p>
+</blockquote>
+<p><strong>不过，一般我们在使用时把vi简化成两个模式，就是将底行模式（last line mode）也算入命令行模式command mode）。</strong></p>
+<hr>
+<h4 id="5-Vim的基本操作-1"><a href="#5-Vim的基本操作-1" class="headerlink" title="5. Vim的基本操作"></a>5. Vim的基本操作</h4><p><strong>a) 进入Vim</strong></p>
+<p>在系统光标提示符后，输入vim及文件名后，回车，进入Vim编辑画面。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/4496284-bd8c3655e34df86f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/734/format/webp" alt="img"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/4496284-7389372474e9c632.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/733/format/webp" alt="img"></p>
+<blockquote>
+<p>特别注意，进入vim之后，是处于「命令行模式（command mode）」，要切换到「插入模式（Insert mode）」才能够输入文字。</p>
+</blockquote>
+<p><strong>b) 切换至插入模式（Insert mode）编辑文件</strong></p>
+<p>在<strong>「命令行模式（command mode）」</strong>下<strong>按一下字母「i」就可以进入「插入模式（Insert mode）」</strong>，这时候你就可以开始输入文字了。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/4496284-a1a7aeded64e57f2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/731/format/webp" alt="img"></p>
+<p><strong>c) 插入模式（Insert mode）切换到命令行模式（Command mode）</strong></p>
+<p>在插入模式下，按一下「ESC」键即可。</p>
+<p><strong>d) 退出vim及保存文件</strong> </p>
+<p>在命令行模式（Command mode）下，按冒号「:」键，进入底行模式（Last Line mode）</p>
+<p>常见底行模式下的命令行：</p>
+<blockquote>
+<p>:w filename 文件以filename为文件名保存</p>
+<p>:wq 文件存盘并退出vim</p>
+<p>:q 文件不存盘并退出vim</p>
+<p>:q! 文件不存盘强制退出vim</p>
+</blockquote>
+<hr>
+<h4 id="6-命令行模式下的功能键（部分）-1"><a href="#6-命令行模式下的功能键（部分）-1" class="headerlink" title="6. 命令行模式下的功能键（部分）"></a><strong>6. 命令行模式下的功能键（部分）</strong></h4><p><strong>a) 从命令行模式切换为插入模式的三种方式</strong></p>
+<blockquote>
+<p>「 i 」：从当前光标位置进入插入模式</p>
+<p>「 a 」：从当前光标位置的下一个字符进入插入模式</p>
+<p>「 o 」：从当前光标位置的下一行进入插入模式</p>
+</blockquote>
+<p><strong>b) 从插入模式切换为命令行模式</strong></p>
+<blockquote>
+<p>按「ESC」键 </p>
+</blockquote>
+<p><strong>c) 移动光标</strong></p>
+<blockquote>
+<p>vi可以直接用键盘上的光标来上下左右移动，但正规的vi是用小写英文字母「h」、「j」、「k」、「l」，分别控制光标左、下、上、右移一格。</p>
+</blockquote>
+<p><strong>d) 行尾追加</strong></p>
+<blockquote>
+<p>不管光标在该行的什么位置，直接按大写字母「A」即可</p>
+</blockquote>
+<p><strong>e) 删除单词</strong></p>
+<blockquote>
+<p>dw：把光标停留在需要删除的单词前面，依次按下「d」「w」，即可</p>
+<p>de：把光标停留在需要删除的单词前面（无视单词前面的空格），依次按下「d」「e」，即可</p>
+</blockquote>
+<p><strong>f) 从当前光标处删除到行末</strong></p>
+<blockquote>
+<p>把光标停留在需要删除的句子前面，依次按下「d」「$」，即可</p>
+</blockquote>
+<p><strong>g) 快速跳转到行首</strong></p>
+<blockquote>
+<p>按下数字「0」，即可</p>
+</blockquote>
+<p><strong>h) 使用计数以删除单词</strong></p>
+<blockquote>
+<p>示例：this ABC DE line FGHI JK LMN OP of words is Q RS TUV cleaned up.</p>
+<p>依次将鼠标定位到ABC前，按「d」「2」「w」，可以删除：ABC DE</p>
+<p>将鼠标定位到FGHI前，按「d」「4」「w」，可以删除：FGHI JK LMN OP</p>
+<p>将鼠标定位到Q前，按「d」「3」「w」，可以删除：Q RS TUV</p>
+<p>得到句子：</p>
+<p>this line of words is cleaned up.</p>
+</blockquote>
+<p><strong>i) 删除当前行</strong></p>
+<blockquote>
+<p>鉴于删除当前行这一操作的高频性，vim设计者简化了快捷键，按「d」「d」即可。</p>
+<p>连续删除两行，从当前行开始，则为：「2」「d」「d」</p>
+</blockquote>
+<p><strong>j) 撤销更改</strong></p>
+<blockquote>
+<p>a. 按小写字母「u」，撤销上一步的更改操作；</p>
+<p>b. 按大写字母「U」，撤销整行的更改操作；</p>
+<p>c. 「Ctrl+R」撤销上一步「撤销操作」。</p>
+</blockquote>
+<p><strong>k) 将刚删除的内容置入其他行</strong></p>
+<blockquote>
+<p>之前刚刚删除的内容，会放入Vim编辑器的寄存器中。基于如此原理，可以将之认为成Windows操作系统的「剪切」操作。</p>
+<p>先在想删除的行，按「d」「d」，进行删除操作；</p>
+<p>再在想插入那行的前一行按「p」键即可。</p>
+</blockquote>
+<p><strong>l) 替换</strong></p>
+<blockquote>
+<p>将光标放到需要改的字符前，先按「r」键，再输入想更改的字符即可。</p>
+</blockquote>
+<p><strong>m) 跳转</strong></p>
+<blockquote>
+<p>顶部跳转命令：先按「Control」+「g」键，在终端底部调出一栏，然后输入「g」「g」即可；</p>
+<p>底部跳转命令：先按「Control」+「g」键，在终端底部调出一栏，然后输入大写字母「g」即可；</p>
+<p>特定行跳转命令：直接输入行号，然后输入大写字母「g」即可。</p>
+</blockquote>
+<p><strong>n) 查找命令</strong></p>
+<p>字符串查找：</p>
+<blockquote>
+<p>输入英文斜杠「/」，后面紧接需要搜索的字符串即可。</p>
+<p>查找下一个相同字符串，就紧接着按小写字母「n」；</p>
+<p>查找上一个相同字符串，就紧接着按大写字母「N」。</p>
+</blockquote>
+<p>配对括号查找：</p>
+<blockquote>
+<p>在编程语言里，配对括号「 ( 」「 ) 」「 { 」「 } 」很常见，当定位到一个配对括号的一半时（注意光标要定位在该括号之前），按「%」，即可自动跳转到与之匹配的第一个配对括号处。</p>
+</blockquote>
+<p><strong>o) 替换字符串</strong></p>
+<p>当前行替换命令</p>
+<blockquote>
+<p>在标准命令行模式下，光标定位到当前行，按英文冒号「 ：」，再输入s/oldstring/newstring/g 回车，即可。</p>
+<p>完整语句为：</p>
+<p><strong>:s/dogg/dog/g</strong></p>
+</blockquote>
+<p>特定几行替换命令</p>
+<blockquote>
+<p>在标准命令行模式下，按英文冒号「 ：」，再输入#,#s/oldstring/newstring/g 回车，即可（其中#代表特定的首尾两行的行号）。</p>
+<p>完整语句为：</p>
+<p>**<em>*:*<em>5,8s/dogg/dog/g</em></em></p>
+</blockquote>
+<p>全文替换命令</p>
+<blockquote>
+<p>在标准命令行模式下，按英文冒号「 ：」，再输入%s/oldstring/newstring/g 回车，即可（其中#代表特定的首尾两行的行号）。</p>
+<p>完整语句为：</p>
+<p><strong><em>*:*</em>%s/dogg/dog/g</strong></p>
+</blockquote>
+<p>全文替换命令（每个匹配项替换前需确认）</p>
+<blockquote>
+<p>在标准命令行模式下，按英文冒号「 ：」，再输入%s/oldstring/newstring/gc 回车，即可（其中#代表特定的首尾两行的行号）。</p>
+<p>完整语句为：</p>
+<p><strong><em>*:*</em>%s/dogg/dog/gc</strong></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>vim</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>JSONP解决跨域问题</title>
+    <url>/2022/03/14/JSONP%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p>概念：</p>
+<p>浏览器通过<script>标签的src属性，请求服务器上的数据，同时服务器返回一个函数的调用，这种请求数据的方式·叫做JSONP</p>
+<p>如果项目中已经配置了CORS跨域资源共享，为防止冲突,必须在配置CORS中间件之前声明JSONP的接口，否则JSONP接口会被处理成开启了CORS的接口</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>)</span><br><span class="line"><span class="comment">//创建web服务器</span></span><br><span class="line"><span class="keyword">const</span> app=express()</span><br><span class="line"><span class="comment">//导入路由模块</span></span><br><span class="line"><span class="keyword">const</span> apirouter=<span class="built_in">require</span>(<span class="string">&#x27;./apirouter&#x27;</span>)</span><br><span class="line"><span class="comment">//在配置cors中间件之前定义JSONP的接口</span></span><br><span class="line">app.get(<span class="string">&#x27;/api/jsonp&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//1 得到客户端请求的回调函数名称</span></span><br><span class="line">    <span class="keyword">const</span> funcName=req.query.callback</span><br><span class="line">    <span class="comment">//2 定义发送到客户端的JSON格式数据对象</span></span><br><span class="line">    <span class="keyword">const</span> data=&#123;<span class="attr">name</span>:<span class="string">&#x27;zs&#x27;</span>,<span class="attr">age</span>:<span class="number">20</span>&#125;</span><br><span class="line">    <span class="comment">//3 拼接一个函数调用的字符串</span></span><br><span class="line">    <span class="keyword">const</span> scriptStr=<span class="string">`<span class="subst">$&#123;funcName&#125;</span>(<span class="subst">$&#123;<span class="built_in">JSON</span>.stringify(data)&#125;</span>)`</span></span><br><span class="line">    <span class="comment">//4 把拼接的字符串响应给客户端的&lt;script&gt;标签进行解析执行</span></span><br><span class="line">    res.send(scriptStr)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line">app.use(express.urlencoded(&#123;<span class="attr">extended</span>:<span class="literal">false</span>&#125;))</span><br><span class="line"><span class="comment">//在路由之前配置cors中间件</span></span><br><span class="line"><span class="keyword">const</span> cors=<span class="built_in">require</span>(<span class="string">&#x27;cors&#x27;</span>)</span><br><span class="line">app.use(cors())</span><br><span class="line"></span><br><span class="line"><span class="comment">//将路由模块注册为全局中间件</span></span><br><span class="line">app.use(<span class="string">&#x27;/api&#x27;</span>,apirouter)</span><br><span class="line">app.listen(<span class="number">80</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;运行在http://127.0.0.1&#x27;</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>发请求：HTML</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;X-UA-Compatible&quot;</span> <span class="attr">content</span>=<span class="string">&quot;IE=edge&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.staticfile.org/jquery/1.10.0/jquery.min.js&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;btnJsonp&quot;</span>&gt;</span>Jsonp<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">        $(<span class="string">&#x27;#btnJsonp&#x27;</span>).on(<span class="string">&#x27;click&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            $.ajax(&#123;</span></span><br><span class="line"><span class="javascript">                <span class="attr">type</span>:<span class="string">&#x27;GET&#x27;</span>,</span></span><br><span class="line"><span class="javascript">                <span class="attr">url</span>:<span class="string">&#x27;http://127.0.0.1/api/jsonp&#x27;</span>,</span></span><br><span class="line"><span class="javascript">                <span class="attr">dataType</span>:<span class="string">&#x27;jsonp&#x27;</span>,</span></span><br><span class="line"><span class="javascript">                <span class="attr">success</span>:<span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                    <span class="built_in">console</span>.log(res)</span></span><br><span class="line"><span class="javascript">                &#125;</span></span><br><span class="line"><span class="javascript">            &#125;)</span></span><br><span class="line"><span class="javascript">        &#125;)</span></span><br><span class="line"><span class="javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+</script></p>]]></content>
+      <categories>
+        <category>Node</category>
+        <category>Express</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>基于cors解决跨域问题</title>
+    <url>/2022/03/14/%E5%9F%BA%E4%BA%8Ecors%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">apirouter.js:</span><br><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>)</span><br><span class="line"><span class="comment">//创建web服务器实例</span></span><br><span class="line"><span class="keyword">const</span> router=express.Router()</span><br><span class="line"><span class="comment">//挂载对应路由</span></span><br><span class="line">router.get(<span class="string">&#x27;/get&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    res.send(&#123;</span><br><span class="line">        <span class="attr">status</span>:<span class="number">0</span>,<span class="comment">//0表示成功，1表示失败</span></span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;Get请求成功&#x27;</span>,</span><br><span class="line">        <span class="attr">data</span>:req.query</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//定义post接口</span></span><br><span class="line">router.post(<span class="string">&#x27;/post&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    res.send(&#123;</span><br><span class="line">        <span class="attr">status</span>:<span class="number">0</span>,<span class="comment">//0表示成功，1表示失败</span></span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;Post请求成功&#x27;</span>,</span><br><span class="line">        <span class="attr">data</span>:req.body</span><br><span class="line">        </span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//定义delete接口</span></span><br><span class="line">router.delete(<span class="string">&#x27;/delete&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    res.send(&#123;  </span><br><span class="line">        <span class="attr">status</span>:<span class="number">0</span>,<span class="comment">//0表示成功，1表示失败</span></span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;Delete请求成功&#x27;</span>,</span><br><span class="line">        </span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">module</span>.exports=router</span><br></pre></td></tr></table></figure>
+
+<p>Get ,Post,Delete接口</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>)</span><br><span class="line"><span class="comment">//创建web服务器</span></span><br><span class="line"><span class="keyword">const</span> app=express()</span><br><span class="line"><span class="comment">//导入路由模块</span></span><br><span class="line"><span class="keyword">const</span> apirouter=<span class="built_in">require</span>(<span class="string">&#x27;./apirouter&#x27;</span>)</span><br><span class="line">app.use(express.urlencoded(&#123;<span class="attr">extended</span>:<span class="literal">false</span>&#125;))</span><br><span class="line"><span class="comment">//在路由之前配置cors中间件,解决跨域问题</span></span><br><span class="line"><span class="keyword">const</span> cors=<span class="built_in">require</span>(<span class="string">&#x27;cors&#x27;</span>)</span><br><span class="line">app.use(cors())</span><br><span class="line"></span><br><span class="line"><span class="comment">//将路由模块注册为全局中间件</span></span><br><span class="line">app.use(<span class="string">&#x27;/api&#x27;</span>,apirouter)</span><br><span class="line">app.listen(<span class="number">80</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;运行在http://127.0.0.1&#x27;</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="解决接口跨域问题"><a href="#解决接口跨域问题" class="headerlink" title="解决接口跨域问题"></a>解决接口跨域问题</h1><p>CORS(主流方案)</p>
+<p>JSONP（有缺陷：只支持Get请求）</p>
+<h1 id="什么是CORS"><a href="#什么是CORS" class="headerlink" title="什么是CORS"></a>什么是CORS</h1><p>CORS(Cross-Origin Resource Sharing,跨域资源共享)，由一系列Http响应头组成，这些Http响应头决定浏览器是否阻止前端JS代码跨域获取资源。</p>
+<p>浏览器的同源安全策略默认会阻止网页“跨域”获取资源，但如果接口服务器配置了CORS相关的HTTP响应头，就可以解决浏览器端的跨域访问限制。</p>
+<p>浏览器：网页==》跨域请求   接口服务器（配置Access-Control-Allow-*相关响应头）</p>
+<p>​                    《==  响应</p>
+<h1 id="CORS响应头部"><a href="#CORS响应头部" class="headerlink" title="CORS响应头部"></a>CORS响应头部</h1><h3 id="Access-Control-Allow-Origin"><a href="#Access-Control-Allow-Origin" class="headerlink" title="Access-Control-Allow-Origin"></a>Access-Control-Allow-Origin</h3><p>响应头部可以携带一个Access-Control-Allow-Origin字段，语法如下：</p>
+<blockquote>
+<p>Access-Control-Allow-Origin:<origin>|*</origin></p>
+</blockquote>
+<p>其中origin参数指定了允许访问该资源的外域URL</p>
+<p>例如：下面字段只允许访问来自<a href="http://itcast.cn的请求/">http://itcast.cn的请求</a></p>
+<blockquote>
+<p>res.setHeader(‘Access-Control-Allow-Origin’,’<a href="http://itcast.cn&/#39;">http://itcast.cn&#39;</a>)</p>
+</blockquote>
+<p>*通配符表示允许来自任何域的请求</p>
+<h3 id="Access-Control-Allow-Headers"><a href="#Access-Control-Allow-Headers" class="headerlink" title="Access-Control-Allow-Headers"></a>Access-Control-Allow-Headers</h3><p>默认情况下，CORS仅支持客户端向服务器发送9个请求头：</p>
+<p>Accept,Accept-Language,Content-Language,DPR,Downlink,Save-Data,Viewport-Width,Width,Content-Type(仅限于text-plain,multipart/form-data,application/x-www-form-urlencoded三者之一)</p>
+<p>如果向服务器发送了额外的请求头信息，则需要在服务器端，通过Access-Control-Allow-Headers对额外的请求头进行声明，否则这次请求会失败</p>
+<p>例如，允许客户端向服务器发送Content-Type请求头和X-Custom-Header请求头</p>
+<blockquote>
+<p>res.setHeader(‘Access-Control-Allow-Header’,’Content-Type’,’X-Custom-Header’)</p>
+</blockquote>
+<p>Access-Control-Allow-Methods</p>
+<p>默认情况下，CORS仅支持客户端发起GET,POST,HEAD请求。如果客户端希望通过PUT,DELETE等方式请求服务器的资源，则需要在服务器端，通过Access-Control-Allow-Methods来指明实际请求所允许的HTTP方法</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">res.setHeader(<span class="string">&#x27;Access-Control-Allow-Methods&#x27;</span>,<span class="string">&#x27;POST,GET,DELETE,HEAD&#x27;</span>)</span><br><span class="line"><span class="comment">//允许所有HTTP请求方法</span></span><br><span class="line">res.setHeader(<span class="string">&#x27;Access-Control-Allow-Methods&#x27;</span>,<span class="string">&#x27;*&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="请求类型"><a href="#请求类型" class="headerlink" title="请求类型"></a>请求类型</h1><h3 id="简单请求"><a href="#简单请求" class="headerlink" title="简单请求"></a>简单请求</h3><p>满足两个条件即为简单请求：</p>
+<p>1 请求方式为GET,POST,HEAD三者之一</p>
+<p>2 HTTP头部信息不超过以下几种字段：无定义头部字段，Accept,Accept-Language,Content-Language,Save-Data,Viewport-Width,Width,Content-Type(仅限于text-plain,multipart/form-data,application/x-www-form-urlencoded三者之一)</p>
+<p>特点：客户端与服务器只发生一次请求</p>
+<h3 id="预检请求"><a href="#预检请求" class="headerlink" title="预检请求"></a>预检请求</h3><p>1 请求方式为GET,POST,HEAD之外的请求方法</p>
+<p>2 请求头中包含自定义头部字段</p>
+<p>3 向服务器发送了application/jso格式的数据</p>
+<p>在浏览器服务器的正式通信之前，浏览器会先发送OPTION请求进行预检，以获知该服务器是否允许该实际请求，这一次OPTION称为预检请求，服务器成功响应预检请求后才会发送真正的请求并且携带真正的数据。</p>
+<p>特点：客户端与服务器只发生两次请求</p>
+<h1 id="CORS注意事项"><a href="#CORS注意事项" class="headerlink" title="CORS注意事项"></a>CORS注意事项</h1><p>1 CORS主要在服务器端进行配置，客户端浏览器无需做任何额外的配置，即可请求开启CORS的接口</p>
+<p>2 CORS在浏览器中有兼容性，只有支持XMLHttpRequest Level2的浏览器才能正常访问开启了CORS的服务端接口（IE10+,Chrome4+等）</p>
+]]></content>
+      <categories>
+        <category>Node</category>
+        <category>Express</category>
+      </categories>
+  </entry>
+  <entry>
     <title>自定义表单中间件</title>
     <url>/2022/03/13/%E8%87%AA%E5%AE%9A%E4%B9%89%E8%A1%A8%E5%8D%95%E4%B8%AD%E9%97%B4%E4%BB%B6/</url>
     <content><![CDATA[<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>)</span><br><span class="line"><span class="comment">//创建web服务器实例</span></span><br><span class="line"><span class="keyword">const</span> app=express()</span><br><span class="line"><span class="comment">//导入处理查询字符串的querystring,通过这个模块提供的parse()函数，可以查询字符串，解析成对象的格式</span></span><br><span class="line"><span class="comment">//const qs=require(&#x27;querystring&#x27;)</span></span><br><span class="line"><span class="keyword">const</span> customBodyParser=<span class="built_in">require</span>(<span class="string">&#x27;./custom-body-parser&#x27;</span>)</span><br><span class="line">app.use(customBodyParser)</span><br><span class="line">app.post(<span class="string">&#x27;/user&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    res.send(req.body)</span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">80</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;express server running at http://127.0.0.1&#x27;</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
@@ -480,8 +1192,8 @@
 <p>4 开发中如何选择key?</p>
 <p>(1)最好使用每条数据的唯一标识作为key,比如id,身份证号，手机号等唯一值</p>
 <p>(2)如果不存在对数据的逆序添加，逆序删除等破坏顺序的操作，仅用于渲染列表用于展示，使用index作为key是没有问题的</p>
-<p><img src="/2022/01/24/key%E4%BD%9C%E7%94%A8%E4%B8%8E%E5%8E%9F%E7%90%86/image-20220124150028215.png" alt="image-20220124150028215"></p>
-<p><img src="/2022/01/24/key%E4%BD%9C%E7%94%A8%E4%B8%8E%E5%8E%9F%E7%90%86/image-20220124150059555.png" alt="image-20220124150059555"></p>
+<p><img src="/2022/01/24/key%E4%BD%9C%E7%94%A8%E4%B8%8E%E5%8E%9F%E7%90%86/id_key.png" alt="id_key"></p>
+<p><img src="/2022/01/24/key%E4%BD%9C%E7%94%A8%E4%B8%8E%E5%8E%9F%E7%90%86/index_key.png" alt="index_key"></p>
 ]]></content>
       <categories>
         <category>Vue</category>
