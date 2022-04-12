@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"coloey.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="开发环境中使用source map当 webpack 打包源代码时，可能会很难追踪到 error(错误) 和 warning(警告) 在源代码中的原始位置。例如，如果将三个源文件（a.js, b.js 和 c.js）打包到一个 bundle（bundle.js）中，而其中一个源文件包含一个错误，那么堆栈跟踪就会直接指向到 bundle.js。你可能需要准确地知道错误来自于哪个源文件，所以这种提示这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="开发环境">
+<meta property="og:url" content="https://coloey.github.io/2022/04/11/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/index.html">
+<meta property="og:site_name" content="小柒">
+<meta property="og:description" content="开发环境中使用source map当 webpack 打包源代码时，可能会很难追踪到 error(错误) 和 warning(警告) 在源代码中的原始位置。例如，如果将三个源文件（a.js, b.js 和 c.js）打包到一个 bundle（bundle.js）中，而其中一个源文件包含一个错误，那么堆栈跟踪就会直接指向到 bundle.js。你可能需要准确地知道错误来自于哪个源文件，所以这种提示这">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-11T06:51:43.000Z">
+<meta property="article:modified_time" content="2022-04-11T11:53:09.615Z">
+<meta property="article:author" content="小柒">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://coloey.github.io/2022/04/11/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>开发环境 | 小柒</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="小柒" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小柒</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">www.xiaoqi.cn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/11/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h1 class="post-title" itemprop="name headline">
+          开发环境
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-11 14:51:43 / 修改时间：19:53:09" itemprop="dateCreated datePublished" datetime="2022-04-11T14:51:43+08:00">2022-04-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/webpack/" itemprop="url" rel="index"><span itemprop="name">webpack</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="开发环境中使用source-map"><a href="#开发环境中使用source-map" class="headerlink" title="开发环境中使用source map"></a>开发环境中使用source map</h1><p>当 webpack 打包源代码时，可能会很难追踪到 error(错误) 和 warning(警告) 在源代码中的原始位置。例如，如果将三个源文件（<code>a.js</code>, <code>b.js</code> 和 <code>c.js</code>）打包到一个 bundle（<code>bundle.js</code>）中，而其中一个源文件包含一个错误，那么堆栈跟踪就会直接指向到 <code>bundle.js</code>。你可能需要准确地知道错误来自于哪个源文件，所以这种提示这通常不会提供太多帮助。</p>
+<p>为了更容易地追踪 error 和 warning，JavaScript 提供了 <a target="_blank" rel="noopener" href="http://blog.teamtreehouse.com/introduction-source-maps">source maps</a> 功能，可以将编译后的代码映射回原始源代码。如果一个错误来自于 <code>b.js</code>，source map 就会明确的告诉你。</p>
+<p>source map 有许多 <a target="_blank" rel="noopener" href="https://webpack.docschina.org/configuration/devtool">可用选项</a>，请务必仔细阅读它们，以便可以根据需要进行配置。</p>
+<p>对于本指南，我们将使用 <code>inline-source-map</code> 选项，这有助于解释说明示例意图（此配置仅用于示例，不要用于生产环境）：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path=<span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> HtmlWebpackPlugin=<span class="built_in">require</span>(<span class="string">&quot;html-webpack-plugin&quot;</span>)</span><br><span class="line"><span class="built_in">module</span>.exports=&#123;</span><br><span class="line">    <span class="attr">entry</span>:&#123;</span><br><span class="line">       <span class="attr">index</span>: <span class="string">&#x27;./src/index.js&#x27;</span>,</span><br><span class="line">       <span class="attr">print</span>:<span class="string">&#x27;./src/print.js&#x27;</span></span><br><span class="line"></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">output</span>:&#123;</span><br><span class="line">        <span class="attr">filename</span>:<span class="string">&#x27;[name]bundle.js&#x27;</span>,</span><br><span class="line">        <span class="attr">path</span>:path.resolve(__dirname,<span class="string">&#x27;dist&#x27;</span>),</span><br><span class="line">        <span class="attr">clean</span>:<span class="literal">true</span>,</span><br><span class="line">        <span class="attr">publicPath</span>:<span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">module</span>:&#123;</span><br><span class="line">        <span class="attr">rules</span>:[</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">test</span>: <span class="regexp">/\.css$/i</span>,</span><br><span class="line">                use:[<span class="string">&#x27;style-loader&#x27;</span>,<span class="string">&#x27;css-loader&#x27;</span>],</span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">test</span>:<span class="regexp">/\.(png|jpg|jpeg|svg|gif)$/i</span>,</span><br><span class="line">                type:<span class="string">&#x27;asset/resource&#x27;</span></span><br><span class="line"></span><br><span class="line">            &#125;,</span><br><span class="line">            </span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">devtool</span>:<span class="string">&#x27;inline-source-map&#x27;</span>,</span><br><span class="line">    <span class="attr">devServer</span>:&#123;</span><br><span class="line">        <span class="attr">static</span>:<span class="string">&#x27;./dist&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">plugins</span>:[</span><br><span class="line">        <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">            <span class="attr">title</span>:<span class="string">&#x27;Development&#x27;</span>,</span><br><span class="line">        &#125;)</span><br><span class="line"></span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">mode</span>:<span class="string">&#x27;development&#x27;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="选择开发工具"><a href="#选择开发工具" class="headerlink" title="选择开发工具"></a>选择开发工具</h1><p>webpack 提供几种可选方式，帮助你在代码发生变化后自动编译代码：</p>
+<ol>
+<li>webpack’s <a target="_blank" rel="noopener" href="https://webpack.docschina.org/configuration/watch/#watch">Watch Mode</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/webpack/webpack-dev-server">webpack-dev-server</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/webpack/webpack-dev-middleware">webpack-dev-middleware</a></li>
+</ol>
+<p>多数场景中，你可能需要使用 <code>webpack-dev-server</code>，但是不妨探讨一下以上的所有选项。</p>
+<h2 id="使用watch-mode"><a href="#使用watch-mode" class="headerlink" title="使用watch mode"></a>使用watch mode</h2><p>你可以指示 webpack “watch” 依赖图中所有文件的更改。如果其中一个文件被更新，代码将被重新编译，所以你不必再去手动运行整个构建。</p>
+<p>我们添加一个用于启动 webpack watch mode 的 npm scripts：</p>
+<p><strong>package.json</strong></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   &quot;name&quot;: &quot;webpack-demo&quot;,</span><br><span class="line">   &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line">   &quot;description&quot;: &quot;&quot;,</span><br><span class="line">   &quot;private&quot;: true,</span><br><span class="line">   &quot;scripts&quot;: &#123;</span><br><span class="line">     &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,</span><br><span class="line"><span class="addition">+    &quot;watch&quot;: &quot;webpack --watch&quot;,</span></span><br><span class="line">     &quot;build&quot;: &quot;webpack&quot;</span><br><span class="line">   &#125;,</span><br><span class="line">   &quot;keywords&quot;: [],</span><br><span class="line">   &quot;author&quot;: &quot;&quot;,</span><br><span class="line">   &quot;license&quot;: &quot;ISC&quot;,</span><br><span class="line">   &quot;devDependencies&quot;: &#123;</span><br><span class="line">     &quot;html-webpack-plugin&quot;: &quot;^4.5.0&quot;,</span><br><span class="line">     &quot;webpack&quot;: &quot;^5.4.0&quot;,</span><br><span class="line">     &quot;webpack-cli&quot;: &quot;^4.2.0&quot;</span><br><span class="line">   &#125;,</span><br><span class="line">   &quot;dependencies&quot;: &#123;</span><br><span class="line">     &quot;lodash&quot;: &quot;^4.17.20&quot;</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在，你可以在命令行中运行 <code>npm run watch</code>，然后就会看到 webpack 是如何编译代码。</p>
+<p>唯一的缺点是，为了看到修改后的实际效果，<strong>你需要刷新浏览器</strong>。如果能够自动刷新浏览器就更好了，因此接下来我们会尝试通过 <code>webpack-dev-server</code> 实现此功能。</p>
+<h2 id="webpack-dev-server"><a href="#webpack-dev-server" class="headerlink" title="webpack-dev-server"></a>webpack-dev-server</h2><p><code>webpack-dev-server</code> 为你提供了一个基本的 web server，并且具有 live reloading(实时重新加载) 功能。设置如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev webpack-dev-server</span><br></pre></td></tr></table></figure>
+
+<p>修改配置文件，告知 dev server，从什么位置查找文件：</p>
+<p><strong>webpack.config.js</strong></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"> const path = require(&#x27;path&#x27;);</span><br><span class="line"> const HtmlWebpackPlugin = require(&#x27;html-webpack-plugin&#x27;);</span><br><span class="line"></span><br><span class="line"> module.exports = &#123;</span><br><span class="line">   mode: &#x27;development&#x27;,</span><br><span class="line">   entry: &#123;</span><br><span class="line">     index: &#x27;./src/index.js&#x27;,</span><br><span class="line">     print: &#x27;./src/print.js&#x27;,</span><br><span class="line">   &#125;,</span><br><span class="line">   devtool: &#x27;inline-source-map&#x27;,</span><br><span class="line"><span class="addition">+  devServer: &#123;</span></span><br><span class="line"><span class="addition">+    static: &#x27;./dist&#x27;,</span></span><br><span class="line"><span class="addition">+  &#125;,</span></span><br><span class="line">   plugins: [</span><br><span class="line">     new HtmlWebpackPlugin(&#123;</span><br><span class="line">       title: &#x27;Development&#x27;,</span><br><span class="line">     &#125;),</span><br><span class="line">   ],</span><br><span class="line">   output: &#123;</span><br><span class="line">     filename: &#x27;[name].bundle.js&#x27;,</span><br><span class="line">     path: path.resolve(__dirname, &#x27;dist&#x27;),</span><br><span class="line">     clean: true,</span><br><span class="line">   &#125;,</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>以上配置告知 <code>webpack-dev-server</code>，将 <code>dist</code> 目录下的文件 serve 到 <code>localhost:8080</code> 下。（译注：serve，将资源作为 server 的可访问文件）</p>
+<p>我们添加一个可以直接运行 dev server 的 script：</p>
+<p><strong>package.json</strong></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&quot;scripts&quot;: &#123;</span><br><span class="line">     &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,</span><br><span class="line">     &quot;watch&quot;: &quot;webpack --watch&quot;,</span><br><span class="line"><span class="addition">+    &quot;start&quot;: &quot;webpack serve --open&quot;,</span></span><br><span class="line">     &quot;build&quot;: &quot;webpack&quot;</span><br><span class="line">   &#125;,</span><br></pre></td></tr></table></figure>
+
+<p>现在，在命令行中运行 <code>npm start</code>，我们会看到浏览器自动加载页面。如果你更改任何源文件并保存它们，web server 将在编译代码后自动重新加载</p>
+<h2 id="webpack-dev-middleware"><a href="#webpack-dev-middleware" class="headerlink" title="webpack-dev-middleware"></a>webpack-dev-middleware</h2><p><code>webpack-dev-middleware</code> 是一个封装器(wrapper)，它可以把 webpack 处理过的文件发送到一个 server。<code>webpack-dev-server</code> 在内部使用了它，然而它也可以作为一个单独的 package 来使用，以便根据需求进行更多自定义设置。下面是一个 webpack-dev-middleware 配合 express server 的示例。</p>
+<p>首先，安装 <code>express</code> 和 <code>webpack-dev-middleware</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev express webpack-dev-middleware</span><br></pre></td></tr></table></figure>
+
+<p>调整webpack.config,js</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"> const path = require(&#x27;path&#x27;);</span><br><span class="line"> const HtmlWebpackPlugin = require(&#x27;html-webpack-plugin&#x27;);</span><br><span class="line"></span><br><span class="line"> module.exports = &#123;</span><br><span class="line">   mode: &#x27;development&#x27;,</span><br><span class="line">   entry: &#123;</span><br><span class="line">     index: &#x27;./src/index.js&#x27;,</span><br><span class="line">     print: &#x27;./src/print.js&#x27;,</span><br><span class="line">   &#125;,</span><br><span class="line">   devtool: &#x27;inline-source-map&#x27;,</span><br><span class="line">   devServer: &#123;</span><br><span class="line">     static: &#x27;./dist&#x27;,</span><br><span class="line">   &#125;,</span><br><span class="line">   plugins: [</span><br><span class="line">     new HtmlWebpackPlugin(&#123;</span><br><span class="line">       title: &#x27;Development&#x27;,</span><br><span class="line">     &#125;),</span><br><span class="line">   ],</span><br><span class="line">   output: &#123;</span><br><span class="line">     filename: &#x27;[name].bundle.js&#x27;,</span><br><span class="line">     path: path.resolve(__dirname, &#x27;dist&#x27;),</span><br><span class="line">     clean: true,</span><br><span class="line"><span class="addition">+    publicPath: &#x27;/&#x27;,</span></span><br><span class="line">   &#125;,</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>我们将会在 server 脚本使用 <code>publicPath</code>，以确保文件资源能够正确地 serve 在 <code>http://localhost:3000</code> 下，稍后我们会指定 port number(端口号)。接下来是设置自定义 <code>express</code> server：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> webpack-demo</span><br><span class="line">  |- package.json</span><br><span class="line">  |- package-lock.json</span><br><span class="line">  |- webpack.config.js</span><br><span class="line"><span class="addition">+ |- server.js</span></span><br><span class="line">  |- /dist</span><br><span class="line">  |- /src</span><br><span class="line">    |- index.js</span><br><span class="line">    |- print.js</span><br><span class="line">  |- /node_modules</span><br></pre></td></tr></table></figure>
+
+<p><strong>server.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> webpackDevMiddleware = <span class="built_in">require</span>(<span class="string">&#x27;webpack-dev-middleware&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = express();</span><br><span class="line"><span class="keyword">const</span> config = <span class="built_in">require</span>(<span class="string">&#x27;./webpack.config.js&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> compiler = webpack(config);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 告知 express 使用 webpack-dev-middleware，</span></span><br><span class="line"><span class="comment">// 以及将 webpack.config.js 配置文件作为基础配置。</span></span><br><span class="line">app.use(</span><br><span class="line">  webpackDevMiddleware(compiler, &#123;</span><br><span class="line">    <span class="attr">publicPath</span>: config.output.publicPath,</span><br><span class="line">  &#125;)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将文件 serve 到 port 3000。</span></span><br><span class="line">app.listen(<span class="number">3000</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Example app listening on port 3000!\n&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>现在，添加一个 npm script，以使我们更方便地运行 server：</p>
+<p>package.json</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> &quot;scripts&quot;: &#123;</span><br><span class="line">     &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,</span><br><span class="line">     &quot;watch&quot;: &quot;webpack --watch&quot;,</span><br><span class="line">     &quot;start&quot;: &quot;webpack serve --open&quot;,</span><br><span class="line"><span class="addition">+    &quot;server&quot;: &quot;node server.js&quot;,</span></span><br><span class="line">     &quot;build&quot;: &quot;webpack&quot;</span><br><span class="line">   &#125;,</span><br></pre></td></tr></table></figure>
+
+<p>现在，在 terminal(终端) 中执行 <code>npm run server</code></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/04/11/Vue%E4%B8%AD%E5%B0%81%E8%A3%85axios%E8%AF%B7%E6%B1%82/" rel="prev" title="Vue中封装axios请求">
+      <i class="fa fa-chevron-left"></i> Vue中封装axios请求
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/04/11/http%E8%AF%B7%E6%B1%82%E9%A6%96%E9%83%A8%E5%AD%97%E6%AE%B5/" rel="next" title="http请求首部字段">
+      http请求首部字段 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E4%B8%AD%E4%BD%BF%E7%94%A8source-map"><span class="nav-number">1.</span> <span class="nav-text">开发环境中使用source map</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7"><span class="nav-number">2.</span> <span class="nav-text">选择开发工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8watch-mode"><span class="nav-number">2.1.</span> <span class="nav-text">使用watch mode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#webpack-dev-server"><span class="nav-number">2.2.</span> <span class="nav-text">webpack-dev-server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#webpack-dev-middleware"><span class="nav-number">2.3.</span> <span class="nav-text">webpack-dev-middleware</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小柒"
+      src="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+  <p class="site-author-name" itemprop="name">小柒</p>
+  <div class="site-description" itemprop="description">欢迎来到我的世界!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">73</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小柒</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_pv">
+    本站访问量:<span id="busuanzi_value_site_pv"></span>次
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_uv">
+    本站总访客量：<span id="busuanzi_value_site_uv"></span>人
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共52.9k字</span>
+</div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 动态背景 -->
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="../source/js/src/clicklove.js"></script>
+</body>
+</html>
