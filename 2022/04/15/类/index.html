@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"coloey.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="类构造函数方法名constructor会告诉解释器在使用new操作符创建类的新实例时，应该调用这个函数，构造函数的定义不是必须的，不定义构造函数相当于将构造函数定义为空函数 使用new调用类的构造函数会执行如下操作： 在内存中创建一个新对象 这个新对象内部的[[Prototype]]即__proto__指针被赋值为构造函数的prototype属性 构造函数内部的this被赋值为这个新对象（即thi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="类">
+<meta property="og:url" content="https://coloey.github.io/2022/04/15/%E7%B1%BB/index.html">
+<meta property="og:site_name" content="小柒">
+<meta property="og:description" content="类构造函数方法名constructor会告诉解释器在使用new操作符创建类的新实例时，应该调用这个函数，构造函数的定义不是必须的，不定义构造函数相当于将构造函数定义为空函数 使用new调用类的构造函数会执行如下操作： 在内存中创建一个新对象 这个新对象内部的[[Prototype]]即__proto__指针被赋值为构造函数的prototype属性 构造函数内部的this被赋值为这个新对象（即thi">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-15T02:03:02.000Z">
+<meta property="article:modified_time" content="2022-04-15T14:21:17.594Z">
+<meta property="article:author" content="小柒">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://coloey.github.io/2022/04/15/%E7%B1%BB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>类 | 小柒</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="小柒" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小柒</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">www.xiaoqi.cn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/15/%E7%B1%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h1 class="post-title" itemprop="name headline">
+          类
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-15 10:03:02 / 修改时间：22:21:17" itemprop="dateCreated datePublished" datetime="2022-04-15T10:03:02+08:00">2022-04-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="类构造函数"><a href="#类构造函数" class="headerlink" title="类构造函数"></a>类构造函数</h1><p>方法名constructor会告诉解释器在使用new操作符创建类的新实例时，应该调用这个函数，构造函数的定义不是必须的，不定义构造函数相当于将构造函数定义为空函数</p>
+<h2 id="使用new调用类的构造函数会执行如下操作："><a href="#使用new调用类的构造函数会执行如下操作：" class="headerlink" title="使用new调用类的构造函数会执行如下操作："></a>使用new调用类的构造函数会执行如下操作：</h2><ul>
+<li>在内存中创建一个新对象</li>
+<li><strong>这个新对象内部的[[Prototype]]即__proto__指针被赋值为构造函数的prototype属性</strong></li>
+<li>构造函数内部的this被赋值为这个新对象（即this指向新对象）</li>
+<li>执行构造函数内部的代码（给新对象添加属性）</li>
+<li>如果构造函数返回非空对象，则返回该对象；否则，返回刚创建的新对象</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">let</span> p1=<span class="keyword">new</span> Person();</span><br><span class="line">        <span class="built_in">console</span>.log(p1.__proto__===Person.prototype);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>默认情况下，类构造函数会在执行后返回this对象，构造函数返回的对象会被用作实例化的对象，如果没用引用新创建的this对象，那么这个对象会被销毁。不过，如果，返回的不是this对象，而是其他对象，那么这个对象不会通过instanceof操作符检测出跟类有关联。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">          <span class="function"><span class="title">constructor</span>(<span class="params">override</span>)</span>&#123;</span><br><span class="line">              <span class="built_in">this</span>.foo=<span class="string">&quot;foo&quot;</span>;</span><br><span class="line">              <span class="keyword">if</span>(override)&#123;</span><br><span class="line">                  <span class="keyword">return</span> &#123;</span><br><span class="line">                      <span class="attr">bar</span>:<span class="string">&quot;bar&quot;</span></span><br><span class="line">                  &#125;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">let</span> p1=<span class="keyword">new</span> Person(),p2=<span class="keyword">new</span> Person(<span class="literal">true</span>);</span><br><span class="line">      <span class="built_in">console</span>.log(p1)</span><br><span class="line">      <span class="built_in">console</span>.log(p1 <span class="keyword">instanceof</span> Person);</span><br><span class="line">      <span class="built_in">console</span>.log(p2);<span class="comment">//没有引用构造函数创建的this对象，对象被销毁而返回的其他对象与类没有关系</span></span><br><span class="line">      <span class="built_in">console</span>.log(p2 <span class="keyword">instanceof</span> Person)</span><br></pre></td></tr></table></figure>
+
+<h2 id="类构造函数与普通构造函数区别"><a href="#类构造函数与普通构造函数区别" class="headerlink" title="类构造函数与普通构造函数区别"></a>类构造函数与普通构造函数区别</h2><p>调用类构造函数必须使用new操作符，而普通构造函数如果不使用new调用，那么就会以全局的this作为内部对象，调用类构造函数<strong>没有使用new则会抛出错误</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> p3=Person();<span class="comment">//TypeError</span></span><br></pre></td></tr></table></figure>
+
+<p>类构造函数在实例化后，可以在实例上引用它</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;&#125;</span><br><span class="line"><span class="keyword">let</span> p1=<span class="keyword">new</span> Person();</span><br><span class="line"><span class="comment">//使用对类构造函数的引用创建一个新实例</span></span><br><span class="line"><span class="keyword">let</span> p2=<span class="keyword">new</span> p1.constructor();</span><br></pre></td></tr></table></figure>
+
+<h2 id="把类当成特殊的函数"><a href="#把类当成特殊的函数" class="headerlink" title="把类当成特殊的函数"></a>把类当成特殊的函数</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;&#125;</span><br><span class="line"><span class="built_in">console</span>.log(Person);<span class="comment">//class Person&#123;&#125;</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> Person)<span class="comment">//function</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>类标识符有prototype属性，而这个原型也有一个constructor属性指向类自身</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line"></span><br><span class="line">       &#125;</span><br><span class="line">       <span class="built_in">console</span>.log(Person===Person.prototype.constructor);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>使用instanceof检查一个对象和类构造函数，以确定对象是不是类的实例。</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> p=<span class="keyword">new</span> Person();</span><br><span class="line"><span class="built_in">console</span>.log(p <span class="keyword">instanceof</span> Person)<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>类本身具有和普通构造函数一样的行为，在类的上下文中，类本身使用new调用时就被当做构造函数，<strong>类中的constructor方法不会被当做构造函数，</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line"></span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">let</span> p1=<span class="keyword">new</span> Person();</span><br><span class="line">       <span class="built_in">console</span>.log(p1 <span class="keyword">instanceof</span> Person);<span class="comment">//true</span></span><br><span class="line">       <span class="built_in">console</span>.log(p1.constructor=== Person);<span class="comment">//true</span></span><br><span class="line">       <span class="built_in">console</span>.log(p1 <span class="keyword">instanceof</span> Person.constructor)<span class="comment">//false</span></span><br><span class="line">       <span class="keyword">let</span> p2=<span class="keyword">new</span> Person.constructor();</span><br><span class="line">       <span class="built_in">console</span>.log(p2 <span class="keyword">instanceof</span> Person)<span class="comment">//false</span></span><br><span class="line">       <span class="built_in">console</span>.log(p2 .constructor=== Person);<span class="comment">//false</span></span><br><span class="line">       <span class="built_in">console</span>.log(p2 <span class="keyword">instanceof</span> Person.constructor)<span class="comment">//true</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="实例，原型和类成员"><a href="#实例，原型和类成员" class="headerlink" title="实例，原型和类成员"></a>实例，原型和类成员</h1><h2 id="实例成员"><a href="#实例成员" class="headerlink" title="实例成员"></a>实例成员</h2><p>每次通过new调用类标识符时都会执行类构造函数，可以为新创建的实例this添加自有属性。<strong>每个实例都对应一个唯一的成员对象，所有成员都不会在原型上共享</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">           <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">               <span class="built_in">this</span>.name=<span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">&#x27;Jack&#x27;</span>);</span><br><span class="line">               <span class="built_in">this</span>.sayName=<span class="function">()=&gt;</span><span class="built_in">console</span>.log(<span class="built_in">this</span>.name);</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="function"><span class="title">sayAge</span>(<span class="params">age</span>)</span>&#123;</span><br><span class="line">               <span class="built_in">console</span>.log(age)</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">let</span> p1=<span class="keyword">new</span> Person(),p2=<span class="keyword">new</span> Person();</span><br><span class="line">       <span class="built_in">console</span>.log(p1.name===p2.name)<span class="comment">//false</span></span><br><span class="line">       <span class="built_in">console</span>.log(p1.sayAge(<span class="number">18</span>)===p2.sayAge(<span class="number">19</span>))<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="原型方法"><a href="#原型方法" class="headerlink" title="原型方法"></a>原型方法</h2><p>为了在实例间共享方法，类定义语法在类块中定义的方法作为原型方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">//在类块中定义的所有内容都会定义在类的原型上</span></span><br><span class="line"><span class="built_in">console</span>.log(p1.sayAge===Person.prototype.sayAge);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>可以把方法定义在类构造函数或者类块中，<strong>但不能在类块给原型添加原始值或对象作为成员数据</strong>,但是可以在类块外部手动添加成员数据</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Person.greeting=<span class="string">&quot;My name is&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>类方法等同于对象属性因此可以使用字符串，符号或计算的值作为键,</p>
+<p>也支持获取和设置访问器</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> symbolKey=<span class="built_in">Symbol</span>(<span class="string">&#x27;symbolkey&#x27;</span>);</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span>()</span>&#123;</span><br><span class="line">    <span class="function"><span class="title">stringKey</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;invoked stringKey&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    [symbolKey]()&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;invoked symbolKey&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="string">&#x27;computed&#x27;</span>+<span class="string">&#x27;Key&#x27;</span>]()&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;invoked computedKey&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">set</span> <span class="title">name</span>(<span class="params">newvalue</span>)&#123;</span><br><span class="line">        <span class="built_in">this</span>.name_=newName;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">get</span> <span class="title">name</span>()&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.name_</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> p=<span class="keyword">new</span> Person()</span><br><span class="line">p.stringKey();</span><br><span class="line">p[symbolKey]();</span><br><span class="line">p.computedKey();</span><br><span class="line">p.name=<span class="string">&#x27;jake&#x27;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(p.name);<span class="comment">//Jake</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="静态类方法"><a href="#静态类方法" class="headerlink" title="静态类方法"></a>静态类方法</h2><p>这些方法通常用于执行<strong>不特定于实例的操作，也不要求存在类的实例</strong></p>
+<p>与原型成员类似，静态成员每个类上只能有一个</p>
+<p>静态类成员在类定义中使用static关键字作为前缀，在静态成员中，this引用类自身，其他所有约定跟原型成员一样，静态类方法适合作为实例工厂</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">            <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                <span class="built_in">this</span>.name=<span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">&#x27;Jack&#x27;</span>);</span><br><span class="line">                <span class="built_in">this</span>.sayName=<span class="function">()=&gt;</span><span class="built_in">console</span>.log(<span class="built_in">this</span>.name);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="function"><span class="title">sayAge</span>(<span class="params">age</span>)</span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(age)</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">static</span> <span class="function"><span class="title">create</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> Person(<span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random()*<span class="number">100</span>))</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">console</span>.log(Person.create())<span class="comment">//Person &#123;name: String, sayName: ƒ&#125;name: String &#123;&#x27;Jack&#x27;&#125;sayName: ()=&gt;console.log(this.name)[[Prototype]]: Object</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="关于继承"><a href="#关于继承" class="headerlink" title="关于继承"></a>关于继承</h1><p>[]: <a target="_blank" rel="noopener" href="https://www.bookstack.cn/read/es6-3rd/spilt.1.docs-class-extends.md">https://www.bookstack.cn/read/es6-3rd/spilt.1.docs-class-extends.md</a></p>
+<h1 id="关于super"><a href="#关于super" class="headerlink" title="关于super"></a>关于super</h1><p>[]: <a target="_blank" rel="noopener" href="https://www.bookstack.cn/read/es6-3rd/spilt.3.docs-class-extends.md">https://www.bookstack.cn/read/es6-3rd/spilt.3.docs-class-extends.md</a></p>
+<h1 id="抽象基类"><a href="#抽象基类" class="headerlink" title="抽象基类"></a>抽象基类</h1><p>通过new.target<strong>保存通过new关键字调用的类或函数</strong>，<strong>在普通函数中调用new.target返回undefined</strong>,通过在实例化时检测new.target是不是抽象基类，可以阻止对抽象基类的实例化</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Vehicle</span></span>&#123;</span><br><span class="line">           <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">               <span class="built_in">console</span>.log(<span class="keyword">new</span>.target);</span><br><span class="line">               <span class="keyword">if</span>(<span class="keyword">new</span>.target===Vehicle)&#123;</span><br><span class="line">                   <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;Vehicle cannot be directly instantiated&#x27;</span>)</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="class"><span class="keyword">class</span> <span class="title">Bus</span> <span class="keyword">extends</span> <span class="title">Vehicle</span></span>&#123;&#125;</span><br><span class="line">       <span class="keyword">new</span> Bus();</span><br><span class="line">       <span class="keyword">new</span> Vehicle()<span class="comment">//testIframe.html:193 Uncaught Error: Vehicle cannot be directly instantiated</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="继承内置类型"><a href="#继承内置类型" class="headerlink" title="继承内置类型"></a>继承内置类型</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperArray</span> <span class="keyword">extends</span> <span class="title">Array</span></span>&#123;</span><br><span class="line">           <span class="function"><span class="title">shuffle</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">               <span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="built_in">this</span>.length-<span class="number">1</span>;i&gt;=<span class="number">0</span>;i--)&#123;</span><br><span class="line">                   <span class="keyword">let</span> j=<span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random(<span class="number">0</span>,i+<span class="number">1</span>));<span class="comment">//0-i+1向下取整</span></span><br><span class="line">                   [<span class="built_in">this</span>[i],<span class="built_in">this</span>[j]]=[<span class="built_in">this</span>[j],<span class="built_in">this</span>[i]]</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">let</span> a=<span class="keyword">new</span> SuperArray(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>);</span><br><span class="line">       a.shuffle()</span><br><span class="line">       <span class="built_in">console</span>.log(a);</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/04/15/async-%E5%92%8Cdefer/" rel="prev" title="async 和defer">
+      <i class="fa fa-chevron-left"></i> async 和defer
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/04/15/prototype-proto-%E4%B8%8Ecostructor/" rel="next" title="prototype,__proto__与costructor">
+      prototype,__proto__与costructor <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B1%BB%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">类构造函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8new%E8%B0%83%E7%94%A8%E7%B1%BB%E7%9A%84%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%BC%9A%E6%89%A7%E8%A1%8C%E5%A6%82%E4%B8%8B%E6%93%8D%E4%BD%9C%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">使用new调用类的构造函数会执行如下操作：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%B8%8E%E6%99%AE%E9%80%9A%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%8C%BA%E5%88%AB"><span class="nav-number">1.2.</span> <span class="nav-text">类构造函数与普通构造函数区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%8A%E7%B1%BB%E5%BD%93%E6%88%90%E7%89%B9%E6%AE%8A%E7%9A%84%E5%87%BD%E6%95%B0"><span class="nav-number">1.3.</span> <span class="nav-text">把类当成特殊的函数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E4%BE%8B%EF%BC%8C%E5%8E%9F%E5%9E%8B%E5%92%8C%E7%B1%BB%E6%88%90%E5%91%98"><span class="nav-number">2.</span> <span class="nav-text">实例，原型和类成员</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E4%BE%8B%E6%88%90%E5%91%98"><span class="nav-number">2.1.</span> <span class="nav-text">实例成员</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E5%9E%8B%E6%96%B9%E6%B3%95"><span class="nav-number">2.2.</span> <span class="nav-text">原型方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E7%B1%BB%E6%96%B9%E6%B3%95"><span class="nav-number">2.3.</span> <span class="nav-text">静态类方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E7%BB%A7%E6%89%BF"><span class="nav-number">3.</span> <span class="nav-text">关于继承</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8Esuper"><span class="nav-number">4.</span> <span class="nav-text">关于super</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8A%BD%E8%B1%A1%E5%9F%BA%E7%B1%BB"><span class="nav-number">5.</span> <span class="nav-text">抽象基类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%A7%E6%89%BF%E5%86%85%E7%BD%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">6.</span> <span class="nav-text">继承内置类型</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小柒"
+      src="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+  <p class="site-author-name" itemprop="name">小柒</p>
+  <div class="site-description" itemprop="description">欢迎来到我的世界!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">90</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小柒</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_pv">
+    本站访问量:<span id="busuanzi_value_site_pv"></span>次
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_uv">
+    本站总访客量：<span id="busuanzi_value_site_uv"></span>人
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共71.1k字</span>
+</div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 动态背景 -->
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="../source/js/src/clicklove.js"></script>
+</body>
+</html>
