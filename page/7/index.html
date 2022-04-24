@@ -182,6 +182,104 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/03/12/%E4%B8%AD%E9%97%B4%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/12/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="post-title-link" itemprop="url">中间件</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-12 15:57:20" itemprop="dateCreated datePublished" datetime="2022-03-12T15:57:20+08:00">2022-03-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-13 23:29:55" itemprop="dateModified" datetime="2022-03-13T23:29:55+08:00">2022-03-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Node/" itemprop="url" rel="index"><span itemprop="name">Node</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Node/Express/" itemprop="url" rel="index"><span itemprop="name">Express</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="使用express创建服务器，发起Get-Post请求"><a href="#使用express创建服务器，发起Get-Post请求" class="headerlink" title="使用express创建服务器，发起Get,Post请求"></a>使用express创建服务器，发起Get,Post请求</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>)</span><br><span class="line"><span class="comment">//创建web服务器实例</span></span><br><span class="line"><span class="keyword">const</span> app=express()</span><br><span class="line"><span class="comment">//监听客户端的get请求post请求,并向客户端响应请求</span></span><br><span class="line">app.get(<span class="string">&#x27;/user&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    res.send(&#123;<span class="attr">name</span>:<span class="string">&#x27;zs&#x27;</span>,<span class="attr">age</span>:<span class="number">20</span>,<span class="attr">gender</span>:<span class="string">&#x27;男&#x27;</span>&#125;)</span><br><span class="line">&#125;)</span><br><span class="line">app.post(<span class="string">&#x27;/user&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    res.send(<span class="string">&#x27;请求成功&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//获取请求参数</span></span><br><span class="line">app.get(<span class="string">&quot;/&quot;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//req.query可以获取到客户端发送过来的查询参数向客户端响应一个查询参数</span></span><br><span class="line">    <span class="built_in">console</span>.log(req.query)</span><br><span class="line">    res.send(req.query)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//获取到URL中的动态参数</span></span><br><span class="line">app.get(<span class="string">&quot;/user/:id/:username&quot;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(req.params)</span><br><span class="line">    res.send(req.params)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">//启动服务器</span></span><br><span class="line">app.listen(<span class="number">80</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;express server running at http://127.0.0.1&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="托管静态资源"><a href="#托管静态资源" class="headerlink" title="托管静态资源"></a>托管静态资源</h2><p>express.static()：创建一个静态资源服务器，通过如下代码可以将public目录下的图片，CSS文件，JavaScript文件对外开放访问</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>)</span><br><span class="line"><span class="comment">//创建web服务器实例</span></span><br><span class="line"><span class="keyword">const</span> app=express()</span><br><span class="line"><span class="comment">//托管多个静态资源目录,express.static会根据目录的添加顺序查找所需文件，http://127.0.0.1,public不出现在路径中</span></span><br><span class="line">app.use(express.static(<span class="string">&#x27;public&#x27;</span>))</span><br><span class="line">app.use(express.static(<span class="string">&#x27;files&#x27;</span>))</span><br><span class="line"><span class="comment">//希望挂载前缀</span></span><br><span class="line">ap.use(<span class="string">&#x27;/public&#x27;</span>,express.static(<span class="string">&#x27;public&#x27;</span>,))<span class="comment">//打开的是http://127.0.0.1/public，如果希望public出现在路径中则将访问前缀写public</span></span><br><span class="line"><span class="comment">//启动服务器</span></span><br><span class="line">app.listen(<span class="number">80</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;express server running at http://127.0.0.1&#x27;</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="中间件"><a href="#中间件" class="headerlink" title="中间件"></a>中间件</h2><h3 id="中间件的作用："><a href="#中间件的作用：" class="headerlink" title="中间件的作用："></a>中间件的作用：</h3><p>多个中间件之间共享一份req和res,基于这种特性可以在上游的中间件中，统一为req或res对象添加自定义顶点属性或方法，供下游的中间件或路由进行使用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&quot;express&quot;</span>)</span><br><span class="line"><span class="keyword">const</span> app=express()</span><br><span class="line"><span class="comment">//中间件的作用：共享req,res</span></span><br><span class="line">app.use(<span class="function">(<span class="params">req,res,next</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> time=<span class="built_in">Date</span>.now()</span><br><span class="line">    req.startTime=time</span><br><span class="line">    next()</span><br><span class="line">&#125;)</span><br><span class="line">app.get(<span class="string">&#x27;/&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    res.send(<span class="string">&#x27;Home page&#x27;</span>+req.startTime)</span><br><span class="line">&#125;)</span><br><span class="line">app.get(<span class="string">&#x27;/user&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    res.send(<span class="string">&#x27;User page&#x27;</span>+req.startTime)</span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">80</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;http://127.0.0.1&#x27;</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="中间件分类："><a href="#中间件分类：" class="headerlink" title="中间件分类："></a>中间件分类：</h3><p>[]: <a target="_blank" rel="noopener" href="http://expressjs.com/en/guide/using-middleware.html">http://expressjs.com/en/guide/using-middleware.html</a></p>
+<p><strong>错误级别的中间件要注册在所有路由之后</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&quot;express&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> app=express()</span><br><span class="line">app.get(<span class="string">&#x27;/&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">   <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;服务器发生错误&#x27;</span>)</span><br><span class="line">   res.send(<span class="string">&#x27;Home page&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//错误级别中间件必须注册在所有路由之后</span></span><br><span class="line">app.use(<span class="function">(<span class="params">err,req,res,next</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.error(err.message)</span><br><span class="line">    res.send(<span class="string">&#x27;Something broke:&#x27;</span>+err.message)</span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">80</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;http://127.0.0.1&#x27;</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="使用中间件的注意事项"><a href="#使用中间件的注意事项" class="headerlink" title="使用中间件的注意事项"></a>使用中间件的注意事项</h3><ul>
+<li>要在路由之前注册中间件</li>
+<li>客户端发送过来的请求，可以连续调用多个中间件进行处理</li>
+<li>执行完中间件的业务代码，要记得调用next（）函数</li>
+<li>连续调用的多个中间件时，多个中间件间共享req和res对象</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/03/01/Web%E5%92%8C%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E4%B8%AD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E7%9A%84%E5%B7%AE%E5%88%AB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -904,81 +1002,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/30/watchEffect/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/30/watchEffect/" class="post-title-link" itemprop="url">watchEffect</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-01-30 23:44:30 / 修改时间：23:51:06" itemprop="dateCreated datePublished" datetime="2022-01-30T23:44:30+08:00">2022-01-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="watch和watchEffect区别："><a href="#watch和watchEffect区别：" class="headerlink" title="watch和watchEffect区别："></a>watch和watchEffect区别：</h1><p>watch:既要指明监视的属性，也要指明监视的回调</p>
-<p>watchEffect:不用指明监视哪个属性，监视的回调中用到哪个属性就监视哪个属性</p>
-<p>watchEffect有点像computed:</p>
-<p>但computed注重的是计算出来的值即回调函数的返回值，所以必须要写返回值</p>
-<p>而watch注重的是过程即回调函数的函数体，所以不用写返回值</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//watchEffect指定的回调函数中用到的数据只要发生变化，则直接重新执行回调</span><br><span class="line">		let sum=ref(1)</span><br><span class="line">        let msg=ref(&quot;你好呀&quot;)</span><br><span class="line">         watchEffect(()=&gt;&#123;</span><br><span class="line">            const x1=sum.value</span><br><span class="line">            const x2=person.firstName</span><br><span class="line">            console.log(&#x27;watchEffect的回调被调用了&#x27;,x1,x2)</span><br><span class="line">        &#125;)</span><br><span class="line">       </span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1050,7 +1073,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">111</span>
+          <span class="site-state-item-count">112</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
