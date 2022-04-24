@@ -182,6 +182,95 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/30/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/30/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" class="post-title-link" itemprop="url">二分查找</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-30 15:37:59 / 修改时间：15:53:02" itemprop="dateCreated datePublished" datetime="2022-01-30T15:37:59+08:00">2022-01-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>大家写二分法经常写乱，主要是因为<strong>对区间的定义没有想清楚，区间的定义就是不变量</strong>。要在二分查找的过程中，保持不变量，就是在while寻找中每一次边界的处理都要坚持根据区间的定义来操作，这就是<strong>循环不变量</strong>规则。</p>
+<p>写二分法，区间的定义一般为两种，左闭右闭即[left, right]，或者左闭右开即[left, right)。</p>
+<p>下面我用这两种区间的定义分别讲解两种不同的二分写法。</p>
+<h1 id="二分法第一种写法"><a href="#二分法第一种写法" class="headerlink" title="二分法第一种写法"></a>二分法第一种写法</h1><p>第一种写法，我们定义 target 是在一个在左闭右闭的区间里，<strong>也就是[left, right] （这个很重要非常重要）</strong>。</p>
+<p>区间的定义这就决定了二分法的代码应该如何写，<strong>因为定义target在[left, right]区间，所以有如下两点：</strong></p>
+<ul>
+<li><p>while (left &lt;= right) 要使用 &lt;= ，因为left == right是有意义的，所以使用 &lt;=</p>
+</li>
+<li><p>if (nums[middle] &gt; target) right 要赋值为 middle - 1，因为当前这个nums[middle]一定不是target，那么接下来要查找的左区间结束下标位置就是 middle - 1</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 版本一</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">search</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt;&amp; nums, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> left = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> right = nums.<span class="built_in">size</span>() - <span class="number">1</span>; <span class="comment">// 定义target在左闭右闭的区间里，[left, right]</span></span><br><span class="line">        <span class="keyword">while</span> (left &lt;= right) &#123; <span class="comment">// 当left==right，区间[left, right]依然有效，所以用 &lt;=</span></span><br><span class="line">            <span class="keyword">int</span> middle = left + ((right - left) / <span class="number">2</span>);<span class="comment">// 防止溢出 等同于(left + right)/2</span></span><br><span class="line">            <span class="keyword">if</span> (nums[middle] &gt; target) &#123;</span><br><span class="line">                right = middle - <span class="number">1</span>; <span class="comment">// target 在左区间，所以[left, middle - 1]</span></span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[middle] &lt; target) &#123;</span><br><span class="line">                left = middle + <span class="number">1</span>; <span class="comment">// target 在右区间，所以[middle + 1, right]</span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123; <span class="comment">// nums[middle] == target</span></span><br><span class="line">                <span class="keyword">return</span> middle; <span class="comment">// 数组中找到目标值，直接返回下标</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 未找到目标值</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="二分法第二种写法"><a href="#二分法第二种写法" class="headerlink" title="二分法第二种写法"></a>二分法第二种写法</h1><p>如果说定义 target 是在一个在左闭右开的区间里，也就是[left, right) ，那么二分法的边界处理方式则截然不同。</p>
+<p>有如下两点：</p>
+<ul>
+<li>while (left &lt; right)，这里使用 &lt; ,因为left == right在区间[left, right)是没有意义的</li>
+<li>if (nums[middle] &gt; target) right 更新为 middle，因为当前nums[middle]不等于target，去左区间继续寻找，而寻找区间是左闭右开区间，所以right更新为middle，即：下一个查询区间不会去比较nums[middle]</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 版本二</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">search</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt;&amp; nums, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> left = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> right = nums.<span class="built_in">size</span>(); <span class="comment">// 定义target在左闭右开的区间里，即：[left, right)</span></span><br><span class="line">        <span class="keyword">while</span> (left &lt; right) &#123; <span class="comment">// 因为left == right的时候，在[left, right)是无效的空间，所以使用 &lt;</span></span><br><span class="line">            <span class="keyword">int</span> middle = left + ((right - left) &gt;&gt; <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">if</span> (nums[middle] &gt; target) &#123;</span><br><span class="line">                right = middle; <span class="comment">// target 在左区间，在[left, middle)中</span></span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[middle] &lt; target) &#123;</span><br><span class="line">                left = middle + <span class="number">1</span>; <span class="comment">// target 在右区间，在[middle + 1, right)中</span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123; <span class="comment">// nums[middle] == target</span></span><br><span class="line">                <span class="keyword">return</span> middle; <span class="comment">// 数组中找到目标值，直接返回下标</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 未找到目标值</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/29/%E6%8F%92%E6%A7%BD/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -934,105 +1023,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/24/key%E4%BD%9C%E7%94%A8%E4%B8%8E%E5%8E%9F%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/24/key%E4%BD%9C%E7%94%A8%E4%B8%8E%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">key作用与原理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-01-24 13:48:50" itemprop="dateCreated datePublished" datetime="2022-01-24T13:48:50+08:00">2022-01-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-21 14:52:14" itemprop="dateModified" datetime="2022-03-21T14:52:14+08:00">2022-03-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="key的内部原理"><a href="#key的内部原理" class="headerlink" title="key的内部原理"></a>key的内部原理</h1><p>1 虚拟DOM中key的作用：</p>
-<p>key是虚拟DOM对象的标识，当数据发生变化时，Vue会根据【新数据】生成【新的虚拟DOM】，随后Vue进行【新虚拟DOM】和【旧虚拟DOM】的对比，对比规则如下：</p>
-<p>2 对比规则：</p>
-<p>（1）旧虚拟DOM中找到与新虚拟DOM相同的key：</p>
-<ul>
-<li><p> 若虚拟DOM中内容不变，则直接使用之前的真实DOM</p>
-</li>
-<li><p>若虚拟DOM中内容变了，则生成新的真实DOM，随后替换页面中的真实    DOM    </p>
-</li>
-</ul>
-<p>（2）旧虚拟DOM中未找到与新虚拟DOM相同的key，创建新的真实DOM，随后渲染到页面</p>
-<p>3 用index作为key可能会引发的问题：</p>
-<p>（1）若对数据进行逆序添加，逆序删除等操作：</p>
-<p>会产生没有必要的真实DOM更新==&gt;界面效果没问题，但是效率低</p>
-<p>（2）如果结构中还包含输入类DOM：</p>
-<p>会产生错误的DOM更新==&gt;界面有问题</p>
-<p>4 开发中如何选择key?</p>
-<p>(1)最好使用每条数据的唯一标识作为key,比如id,身份证号，手机号等唯一值</p>
-<p>(2)如果不存在对数据的逆序添加，逆序删除等破坏顺序的操作，仅用于渲染列表用于展示，使用index作为key是没有问题的</p>
-<p><img src="/2022/01/24/key%E4%BD%9C%E7%94%A8%E4%B8%8E%E5%8E%9F%E7%90%86/id_key.png" alt="id_key"></p>
-<p><img src="/2022/01/24/key%E4%BD%9C%E7%94%A8%E4%B8%8E%E5%8E%9F%E7%90%86/index_key.png" alt="index_key"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1100,7 +1094,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">110</span>
+          <span class="site-state-item-count">111</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1161,7 +1155,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共254.9k字</span>
+  <span class="post-count">博客全站共256k字</span>
 </div>
         
 

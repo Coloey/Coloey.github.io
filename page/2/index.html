@@ -182,6 +182,103 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/20/wepack-proxy%E7%9A%84%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/20/wepack-proxy%E7%9A%84%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">wepack proxy的原理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-20 22:22:14 / 修改时间：22:28:58" itemprop="dateCreated datePublished" datetime="2022-04-20T22:22:14+08:00">2022-04-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="一、是什么"><a href="#一、是什么" class="headerlink" title="一、是什么"></a>一、是什么</h2><p><code>webpack proxy</code>，即<code>webpack</code>提供的代理服务</p>
+<p>基本行为就是接收客户端发送的请求后转发给其他服务器</p>
+<p>其目的是为了便于开发者在开发模式下解决跨域问题（浏览器安全策略限制）</p>
+<p>想要实现代理首先需要一个中间服务器，<code>webpack</code>中提供服务器的工具为<code>webpack-dev-server</code></p>
+<h4 id="webpack-dev-server"><a href="#webpack-dev-server" class="headerlink" title="webpack-dev-server"></a>webpack-dev-server</h4><p><code>webpack-dev-server</code>是 <code>webpack</code> 官方推出的一款开发工具，将自动编译和自动刷新浏览器等一系列对开发友好的功能全部集成在了一起</p>
+<p>目的是为了提高开发者日常的开发效率，<strong>只适用在开发阶段</strong></p>
+<p>关于配置方面，在<code>webpack</code>配置对象属性中通过<code>devServer</code>属性提供，如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="comment">// ./webpack.config.js</span></span><br><span class="line">2<span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"><span class="number">3</span></span><br><span class="line">4<span class="built_in">module</span>.exports = &#123;</span><br><span class="line"><span class="number">5</span>    <span class="comment">// ...</span></span><br><span class="line"><span class="number">6</span>    devServer: &#123;</span><br><span class="line"><span class="number">7</span>        contentBase: path.join(__dirname, <span class="string">&#x27;dist&#x27;</span>),</span><br><span class="line"><span class="number">8</span>        compress: <span class="literal">true</span>,</span><br><span class="line"><span class="number">9</span>        port: <span class="number">9000</span>,</span><br><span class="line"><span class="number">10</span>        proxy: &#123;</span><br><span class="line"><span class="number">11</span>            <span class="string">&#x27;/api&#x27;</span>: &#123;</span><br><span class="line"><span class="number">12</span>                target: <span class="string">&#x27;https://api.github.com&#x27;</span></span><br><span class="line"><span class="number">13</span>            &#125;</span><br><span class="line"><span class="number">14</span>        &#125;</span><br><span class="line"><span class="number">15</span>        <span class="comment">// ...</span></span><br><span class="line"><span class="number">16</span>    &#125;</span><br><span class="line"><span class="number">17</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>devServetr</code>里面<code>proxy</code>则是关于代理的配置，该属性为对象的形式，对象中每一个属性就是一个代理的规则匹配</p>
+<p>属性的名称是需要被代理的请求路径前缀，一般为了辨别都会设置前缀为<code> /api</code>，值为对应的代理匹配规则，对应如下：</p>
+<ul>
+<li>target：表示的是代理到的目标地址</li>
+<li>pathRewrite：默认情况下，我们的 /api-hy 也会被写入到URL中，如果希望删除，可以使用pathRewrite</li>
+<li>secure：默认情况下不接收转发到https的服务器上，如果希望支持，可以设置为false</li>
+<li>changeOrigin：它表示是否更新代理后请求的 headers 中host地址</li>
+</ul>
+<h2 id="二、工作原理"><a href="#二、工作原理" class="headerlink" title="二、工作原理"></a>二、工作原理</h2><p><code>proxy</code>工作原理实质上是利用<code>http-proxy-middleware</code> 这个<code>http</code>代理中间件，实现请求转发给其他服务器</p>
+<p>举个例子：</p>
+<p>在开发阶段，本地地址为<code>http://localhost:3000</code>，该浏览器发送一个前缀带有<code>/api</code>标识的请求到服务端获取数据，但响应这个请求的服务器只是将请求转发到另一台服务器中</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line">2<span class="keyword">const</span> proxy = <span class="built_in">require</span>(<span class="string">&#x27;http-proxy-middleware&#x27;</span>);</span><br><span class="line"><span class="number">3</span></span><br><span class="line">4<span class="keyword">const</span> app = express();</span><br><span class="line"><span class="number">5</span></span><br><span class="line">6app.use(<span class="string">&#x27;/api&#x27;</span>, proxy(&#123;<span class="attr">target</span>: <span class="string">&#x27;http://www.example.org&#x27;</span>, <span class="attr">changeOrigin</span>: <span class="literal">true</span>&#125;));</span><br><span class="line">7app.listen(<span class="number">3000</span>);</span><br><span class="line"><span class="number">8</span></span><br><span class="line"><span class="number">9</span><span class="comment">// http://localhost:3000/api/foo/bar -&gt; http://www.example.org/api/foo/bar</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="三、跨域"><a href="#三、跨域" class="headerlink" title="三、跨域"></a>三、跨域</h2><p>在开发阶段， <code>webpack-dev-server</code> 会启动一个本地开发服务器，所以我们的应用在开发阶段是独立运行在 <code>localhost </code>的一个端口上，而后端服务又是运行在另外一个地址上</p>
+<p>所以在开发阶段中，由于浏览器同源策略的原因，当本地访问后端就会出现跨域请求的问题</p>
+<p>通过设置<code>webpack proxy</code>实现代理请求后，相当于浏览器与服务端中添加一个代理者</p>
+<p>当本地发送请求的时候，代理服务器响应该请求，并将请求转发到目标服务器，目标服务器响应数据后再将数据返回给代理服务器，最终再由代理服务器将数据响应给本地</p>
+<p><img src="/2022/04/20/wepack-proxy%E7%9A%84%E5%8E%9F%E7%90%86/1-16504647760282.jpg" alt="img"></p>
+<p>在代理服务器传递数据给本地浏览器的过程中，两者同源，并不存在跨域行为，这时候浏览器就能正常接收数据</p>
+<p>注意：<strong>服务器与服务器之间请求数据并不会存在跨域行为，跨域行为是浏览器安全策略限制</strong></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/20/Object-defineProperty%E5%92%8CProxy%E5%8C%BA%E5%88%AB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1073,82 +1170,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/18/%E5%B0%8F%E6%95%B0%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/18/%E5%B0%8F%E6%95%B0%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">小数安全问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-18 12:04:53 / 修改时间：12:10:33" itemprop="dateCreated datePublished" datetime="2022-04-18T12:04:53+08:00">2022-04-18</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>二进制浮点数中0.1和0.2并不精确，它们相加的结果并非刚好等于0.3,所以结果为false,可以设置一个误差范围值，通常称为机器精度，对于javaScript来说，通常是2^-52</p>
-<p>从ES6开始，该值定义为Number.EPSILON</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">numberCloseEnoughToEqual</span>(<span class="params">n1,n2</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Math</span>.abs(n1-n2)&lt;<span class="built_in">Number</span>.EPSILON</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> a=<span class="number">0.1</span>+<span class="number">0.2</span>;</span><br><span class="line"><span class="keyword">var</span> b=<span class="number">0.3</span>;</span><br><span class="line"><span class="built_in">console</span>.log(numberCloseEnoughToEqual(a,b));</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1216,7 +1241,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">110</span>
+          <span class="site-state-item-count">111</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1277,7 +1302,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共254.9k字</span>
+  <span class="post-count">博客全站共256k字</span>
 </div>
         
 
