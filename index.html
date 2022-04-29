@@ -182,6 +182,123 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/29/DOM%E4%BA%8B%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/29/DOM%E4%BA%8B%E4%BB%B6/" class="post-title-link" itemprop="url">DOM事件</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-29 23:07:41 / 修改时间：23:56:47" itemprop="dateCreated datePublished" datetime="2022-04-29T23:07:41+08:00">2022-04-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Dom事件流</p>
+<p>DOM2事件流分为3个阶段：事件捕获，到达目标和事件冒泡，事件捕获最先发生，为提前拦截事件提供了可能，然后，实际的目标元素接收到事件后，最后一个阶段是冒泡，最迟要在这个阶段响应事件。</p>
+<p>实际目标（div元素）在补货阶段不会接收到事件，这是因为捕获阶段从document到html到body就结束，下一个阶段，即会在div元素上触发事件的‘到达目标阶段，通常在事处理中被认为是事件冒泡的第一部分，然后，冒泡阶段开始，事件反转传播到文档</p>
+<p><img src="/2022/04/29/DOM%E4%BA%8B%E4%BB%B6/1-16512452790681.png"></p>
+<p>事件处理程序</p>
+<p>HTML事件处理程序:</p>
+<p>这种交互能力是通过为onclick属性指定JavaScript代码值实现。</p>
+<p>showMessage()函数时单独在script元素中定义，也可以在外部文件定义，作为事件处理程序的代码可以访问全局作用域中的一切</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">showMessage</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;hello world&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"> &lt;/script&gt;</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&#x27;button&#x27;</span> <span class="attr">value</span>=<span class="string">&#x27;Click me&#x27;</span> <span class="attr">onclick</span>=<span class="string">&quot;showMessage()&quot;</span>/&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>DOM0事件处理程序</p>
+<p>每个元素（包括window和document）都有通常小写的事件处理程序属性，比如onclick,只要把这个属性赋值为一个函数即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> btn=<span class="built_in">document</span>.getElementById(<span class="string">&#x27;myBtn&#x27;</span>);</span><br><span class="line">btn.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.id)<span class="comment">//myBtn</span></span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>所赋函数被视为元素的方法，因此，事件处理程序会在元素的作用域中运行，即this等于元素</strong>以这种方式添加事件处理程序时注册在事件流的冒泡阶段</p>
+<p>通过将事件处理程序属性的值设置为null，可以移除通过Dom0添加的事件处理程序</p>
+<p>DOM2事件处理程序</p>
+<p>DOM2 Events为事件处理程序的赋值和移除定义了两个方法：addEventListener()和removeEventListener(),它们接收3个参数：事件名，事件处理函数和一个布尔值，true表示在捕获阶段调用事件处理程序，false(默认值)表示在冒泡阶段调用事件处理程序</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> btn=<span class="built_in">document</span>.getElementById(<span class="string">&quot;myBtn&quot;</span>)</span><br><span class="line">btn.addEventListener(<span class="string">&#x27;click&#x27;</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.id)</span><br><span class="line">&#125;,<span class="literal">false</span>)</span><br></pre></td></tr></table></figure>
+
+<p>使用DOM2的主要优势是<strong>可以为同一个事件添加多个事件处理程序</strong></p>
+<p>通过addEventListener()添加的事件处理程序通过removeEventListener()移除要传入与添加时同样的参数，因此无法使用addEventListener()添加的匿名函数移除</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> btn=<span class="built_in">document</span>.getElementById(<span class="string">&quot;myBtn&quot;</span>)</span><br><span class="line">btn.addEventListener(<span class="string">&#x27;click&#x27;</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.id)</span><br><span class="line">&#125;,<span class="literal">false</span>)</span><br><span class="line">btn.removeEventListener(<span class="string">&#x27;click&#x27;</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.id)</span><br><span class="line">&#125;,<span class="literal">false</span>)<span class="comment">//没有效果</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> handler=<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.id)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> btn=<span class="built_in">document</span>.getElementById(<span class="string">&quot;myBtn&quot;</span>)</span><br><span class="line">btn.addEventListener(<span class="string">&#x27;click&#x27;</span>,handler,<span class="literal">false</span>);</span><br><span class="line">btn.removeEventListener(<span class="string">&#x27;click&#x27;</span>,handler,<span class="literal">false</span>)<span class="comment">//有效果</span></span><br></pre></td></tr></table></figure>
+
+<p>事件对象</p>
+<p>DOM事件对象</p>
+<p>event对象时传给事件处理程序唯一参数</p>
+<p><img src="/2022/04/29/DOM%E4%BA%8B%E4%BB%B6/2-16512466375772.png" alt="2"></p>
+<p><img src="/2022/04/29/DOM%E4%BA%8B%E4%BB%B6/3-16512466722343.png"></p>
+<p>在事件处理程序内部，this对象始终等于currentTarget的值，而target只包含事件的实际目标，如果事件处理程序直接添加在了意图目标，则this,currentTarget,target的值一样</p>
+<p>如果添加在父结点上，则不一样</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.body.onclick=<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(e.currentTarget===<span class="built_in">document</span>.body);<span class="comment">//true</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>===<span class="built_in">document</span>.body)<span class="comment">//true</span></span><br><span class="line">    <span class="built_in">console</span>.log(e.target===<span class="built_in">document</span>.getElementById(<span class="string">&#x27;myBtn&#x27;</span>))<span class="comment">//true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>this和currentTarget等于document.body:它是注册事件处理程序的元素</li>
+<li>target属性等于按钮本身：按钮时click的真正目标</li>
+<li>由于按钮本身没有注册事件处理程序，因此click事件冒泡到document.body，触发了在它上面注册的处理程序</li>
+</ol>
+<p>type属性可以处理多个事件</p>
+<p>preventDefault()方法用于阻止特定事件的默认动作，比如链接的默认行为是在被单击时导航到href属性指定的URL，阻止这个导航可以在onclick事件处理程序中取消，通过preventDefault()取消默认行为，事件对象的cancleable属性被设为true</p>
+<p>stopPropagation()方法用于立即阻止事件流在DOM结构中传播，取消后序事件的捕获或冒泡。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> btn=<span class="built_in">document</span>.getElementById(<span class="string">&quot;myBtn&quot;</span>)</span><br><span class="line">btn.addEventListener(<span class="string">&#x27;click&#x27;</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.id)</span><br><span class="line">    event.stopPropagation();</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">document</span>.body.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;body click&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>由于click事件不会传播到document.body，因此onclick事件处理程序永远不会执行</p>
+<p>eventPhase用于确定事件流所处阶段，如果事件处理程序在捕获阶段被调用，则eventphase等于1，到达目标阶段为2，冒泡阶段为3</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> btn=<span class="built_in">document</span>.getElementById(<span class="string">&#x27;myBtn&#x27;</span>)</span><br><span class="line">btn.onclick=<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(e.eventPhase);<span class="comment">//2</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">document</span>.body.addEventListener(<span class="string">&#x27;click&#x27;</span>,<span class="function">(<span class="params">e</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(e.eventPhase);<span class="comment">//1</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">document</span>.body.onclick=<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(e.eventPhase);<span class="comment">//3</span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/29/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1069,141 +1186,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/24/%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84%E5%9B%9E%E6%B5%81%E5%92%8C%E9%87%8D%E7%BB%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/24/%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84%E5%9B%9E%E6%B5%81%E5%92%8C%E9%87%8D%E7%BB%98/" class="post-title-link" itemprop="url">浏览器的回流和重绘</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-24 15:35:30 / 修改时间：16:38:07" itemprop="dateCreated datePublished" datetime="2022-04-24T15:35:30+08:00">2022-04-24</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%B8%B2%E6%9F%93%E6%9C%BA%E5%88%B6/" itemprop="url" rel="index"><span itemprop="name">浏览器渲染机制</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h1><p>在HTML中，每个元素可以理解为一个盒子，在浏览器解析过程中，会涉及到回流和重绘：</p>
-<ul>
-<li>回流：布局引擎会根据各种样式计算每个盒子在页面上的大小与位置</li>
-<li>重绘：当计算好盒模型的位置，大小及其他属性后，浏览器根据每个盒子特性进行绘制</li>
-</ul>
-<p><img src="/2022/04/24/%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84%E5%9B%9E%E6%B5%81%E5%92%8C%E9%87%8D%E7%BB%98/2b56a950-9cdc-11eb-ab90-d9ae814b240d.png"></p>
-<ul>
-<li>解析HTML,生成DOM树，解析CSS，生成CSSOM树</li>
-<li>将DOM树和CSSOM树结合，生成渲染树Render Tree</li>
-<li>Layout(回流)：根据生成的渲染树，进行回流(Layout),得到节点的几何信息（位置，大小）</li>
-<li>Painting(重绘):根据渲染树以及回流得到的几何信息，得到节点的绝对像素</li>
-<li>Display:将像素发送给GPU，展示在页面上</li>
-</ul>
-<p>当我们对DOM的修改引发了DOM几何尺寸的变化（比如修改元素的宽、高或隐藏元素等）时，浏览器需要重新计算元素的几何属性，然后再将计算的结果绘制出来），即回流。</p>
-<p>当对DOM的修改导致样式变化（color或background-color)却为影响几何属性，浏览器不需要重新计算元素的几何苏醒，直接为该元素绘制新的样式，这里仅仅触发重绘。</p>
-<h1 id="如何触发"><a href="#如何触发" class="headerlink" title="如何触发"></a>如何触发</h1><p>要想减少回流和重绘的次数，首先要了解回流和重绘是如何触发的</p>
-<h2 id="回流触发时机"><a href="#回流触发时机" class="headerlink" title="回流触发时机"></a>回流触发时机</h2><p>回流这一阶段主要是计算节点的位置和几何信息，那么当页面布局和几何信息发生变化的时候，就需要回流，如下面情况：</p>
-<ul>
-<li>添加或删除可见的DOM元素</li>
-<li>元素的位置发生变化</li>
-<li>元素的尺寸发生变化（包括外边距，内边框，边框大小，高度，宽度等）</li>
-<li>内容发生变化，比如文本变化或图片被另一个不同尺寸的图片所替代</li>
-<li>页面一开始渲染（不可避免）</li>
-<li>浏览器的窗口尺寸变化（因为回流是根据视口的大小来计算元素的位置和大小）</li>
-</ul>
-<p>还有一些容易被忽略的操作：获取一些特定属性的值</p>
-<p>offsetTop,offsetLetf,offsetWidth,offsetHeight,scrollTop,scrollLeft,scrollWidth,scrollHeight,clientTop,clientLeft,clientWidth,clientHeight</p>
-<p>这些属性有一个共性，就是需要通过即时计算得到，因此浏览器为了获取这些值，也会进行回流，除此之外getComputedStyle方法的原理也一样</p>
-<h2 id="重绘触发时机："><a href="#重绘触发时机：" class="headerlink" title="重绘触发时机："></a>重绘触发时机：</h2><p>触发回流一定会触发重绘</p>
-<p>引起重绘·的一些其他行为：</p>
-<ul>
-<li>颜色修改</li>
-<li>阴影修改</li>
-</ul>
-<h2 id="浏览器优化机制"><a href="#浏览器优化机制" class="headerlink" title="浏览器优化机制"></a>浏览器优化机制</h2><p>由于每次重排都会造成额外的计算消耗，因此大多数浏览器会通过队列化修改并批量执行来优化重排过程，浏览器会将修改操作放入到队列里，直到过了一段时间或者操作达到了一个阈值，才清空队列</p>
-<p>当获取布局信息操作时，会强制队列刷新，包括前面讲到的offsetTop等方法都会返回最新的数据，因此浏览器不得不清空队列，触发回流重绘来返回正确的值</p>
-<h1 id="如何减少"><a href="#如何减少" class="headerlink" title="如何减少"></a>如何减少</h1><ul>
-<li>如果设定元素的样式，通过修改元素的class类型（尽可能在DOM树的最里层）</li>
-<li>避免设置多项内联样式</li>
-<li>应用元素的动画，使用position属性为fixed或absolute的元素</li>
-<li>避免使用table布局，table布局中每个元素的大小以及内容的改动，都会导致整个table的重新计算</li>
-<li>对于那些复杂动画，对其设置position:fixed/absolute,尽可能地使元素脱离文档流，从而减少对其他元素的影响</li>
-<li>使用css3硬件加速，可以让transform,opacity,filters这些动画不会引起回流重绘</li>
-<li>避免使用CSS的JavaScript表达式</li>
-</ul>
-<p>在使用JavaScript动态插入多个节点时，可以使用DocumentFragment,创建最后一次插入，就能避免多次的渲染性能</p>
-<p>例如，多次修改一个元素布局时，</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> el=<span class="built_in">document</span>.getElementById(<span class="string">&quot;el&quot;</span>)</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">    el.style.top=el.offsetTop+<span class="number">10</span>+<span class="string">&quot;px&quot;</span>;</span><br><span class="line">    el.style.left=el.offsetleft+<span class="number">10</span>+<span class="string">&quot;px&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>每次循环都需要获取多次<code>offset</code>属性，比较糟糕，可以使用变量的形式缓存起来，待计算完毕再提交给浏览器发出重计算请求</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> el=<span class="built_in">document</span>.getElementById(<span class="string">&quot;el&quot;</span>)</span><br><span class="line"><span class="comment">//先缓存offsetLeft和offsetTop的值</span></span><br><span class="line"><span class="keyword">let</span> offLeft=el.offsetLeft,offTop=el.offsetTop</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">	offLeft+=<span class="number">10</span></span><br><span class="line">	offTop+=<span class="number">10</span></span><br><span class="line">&#125;</span><br><span class="line">el.styel.left=offLeft+<span class="string">&quot;px&quot;</span>;</span><br><span class="line">el.style.top=offTop+<span class="string">&quot;px&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>我们还可避免修改样式，使用类名去合并样式</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> container=<span class="built_in">document</span>.getElementById(<span class="string">&quot;container&quot;</span>)</span><br><span class="line">container.style.width=<span class="string">&#x27;100px&#x27;</span></span><br><span class="line">container.style.height = <span class="string">&#x27;200px&#x27;</span></span><br><span class="line">container.style.border = <span class="string">&#x27;10px solid red&#x27;</span></span><br><span class="line">container.style.color = <span class="string">&#x27;red&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>使用类名去合并样式</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>&lt;style&gt;</span><br><span class="line"><span class="number">2</span>    .basic_style &#123;</span><br><span class="line"><span class="number">3</span>        width: 100px;</span><br><span class="line"><span class="number">4</span>        height: 200px;</span><br><span class="line"><span class="number">5</span>        border: 10px solid red;</span><br><span class="line"><span class="number">6</span>        color: red;</span><br><span class="line"><span class="number">7</span>    &#125;</span><br><span class="line"><span class="number">8</span>&lt;/style&gt;</span><br><span class="line"><span class="number">9</span>&lt;script&gt;</span><br><span class="line"><span class="number">10</span>    <span class="keyword">const</span> container = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;container&#x27;</span>)</span><br><span class="line"><span class="number">11</span>    container.classList.add(<span class="string">&#x27;basic_style&#x27;</span>)</span><br><span class="line"><span class="number">12</span>&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<p>前者每次单独操作，都去触发一次渲染树更改（新浏览器不会），</p>
-<p>都去触发一次渲染树更改，从而导致相应的回流与重绘过程</p>
-<p>合并之后，等于我们将所有的更改一次性发出</p>
-<p>我们还可以通过通过设置元素属性<code>display: none</code>，将其从页面上去掉，然后再进行后续操作，这些后续操作也不会触发回流与重绘，这个过程称为离线操作</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> container = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;container&#x27;</span>)</span><br><span class="line">container.style.width = <span class="string">&#x27;100px&#x27;</span></span><br><span class="line">container.style.height = <span class="string">&#x27;200px&#x27;</span></span><br><span class="line">container.style.border = <span class="string">&#x27;10px solid red&#x27;</span></span><br><span class="line">container.style.color = <span class="string">&#x27;red&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>离线操作后</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> container = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;container&#x27;</span>)</span><br><span class="line">container.style.display = <span class="string">&#x27;none&#x27;</span></span><br><span class="line">container.style.width = <span class="string">&#x27;100px&#x27;</span></span><br><span class="line">container.style.height = <span class="string">&#x27;200px&#x27;</span></span><br><span class="line">container.style.border = <span class="string">&#x27;10px solid red&#x27;</span></span><br><span class="line">container.style.color = <span class="string">&#x27;red&#x27;</span></span><br><span class="line">...（省略了许多类似的后续操作）</span><br><span class="line">container.style.display = <span class="string">&#x27;block&#x27;</span></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1275,7 +1257,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">118</span>
+          <span class="site-state-item-count">119</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1336,7 +1318,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共261k字</span>
+  <span class="post-count">博客全站共262.2k字</span>
 </div>
         
 
