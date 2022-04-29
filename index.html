@@ -182,6 +182,419 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/29/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/29/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/" class="post-title-link" itemprop="url">深拷贝与浅拷贝</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-29 18:16:43 / 修改时间：22:24:25" itemprop="dateCreated datePublished" datetime="2022-04-29T18:16:43+08:00">2022-04-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="一、数据类型存储"><a href="#一、数据类型存储" class="headerlink" title="一、数据类型存储"></a>一、数据类型存储</h2><p>前面文章我们讲到，<code>JavaScript</code>中存在两大数据类型：</p>
+<ul>
+<li>基本类型</li>
+<li>引用类型</li>
+</ul>
+<p>基本类型数据保存在在栈内存中</p>
+<p>引用类型数据保存在堆内存中，引用数据类型的变量是一个指向堆内存中实际对象的引用，存在栈中</p>
+<h2 id="二、浅拷贝"><a href="#二、浅拷贝" class="headerlink" title="二、浅拷贝"></a>二、浅拷贝</h2><p>浅拷贝，指的是创建新的数据，这个数据有着原始数据属性值的一份精确拷贝</p>
+<p>如果属性是基本类型，拷贝的就是基本类型的值。如果属性是引用类型，拷贝的就是内存地址</p>
+<p>即浅拷贝是拷贝一层，深层次的引用类型则共享内存地址</p>
+<p>下面简单实现一个浅拷贝</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shallowClone</span>(<span class="params">obj</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> newObj=&#123;&#125;;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> prop <span class="keyword">in</span> obj)&#123;</span><br><span class="line">        <span class="keyword">if</span>(obj.hasOwnProperty(prop))&#123;</span><br><span class="line">            newObj.prop=obj.prop;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> newObj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在<code>JavaScript</code>中，存在浅拷贝的现象有：</p>
+<ul>
+<li><code>Object.assign</code></li>
+<li><code>Array.prototype.slice()</code>, <code>Array.prototype.concat()</code></li>
+<li>使用拓展运算符实现的复制</li>
+</ul>
+<h3 id="Object-assign"><a href="#Object-assign" class="headerlink" title="Object.assign()"></a>Object.assign()</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">    <span class="attr">age</span>: <span class="number">18</span>,</span><br><span class="line">    <span class="attr">nature</span>: [<span class="string">&#x27;smart&#x27;</span>, <span class="string">&#x27;good&#x27;</span>],</span><br><span class="line">    <span class="attr">names</span>: &#123;</span><br><span class="line">        <span class="attr">name1</span>: <span class="string">&#x27;fx&#x27;</span>,</span><br><span class="line">        <span class="attr">name2</span>: <span class="string">&#x27;xka&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">love</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;fx is a great girl&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> newObj = <span class="built_in">Object</span>.assign(&#123;&#125;, fxObj);</span><br></pre></td></tr></table></figure>
+
+<h3 id="slice"><a href="#slice" class="headerlink" title="slice()"></a>slice()</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fxArr = [<span class="string">&quot;One&quot;</span>, <span class="string">&quot;Two&quot;</span>, <span class="string">&quot;Three&quot;</span>]</span><br><span class="line"><span class="keyword">const</span> fxArrs = fxArr.slice(<span class="number">0</span>)</span><br><span class="line">fxArrs[<span class="number">1</span>] = <span class="string">&quot;love&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(fxArr) <span class="comment">// [&quot;One&quot;, &quot;Two&quot;, &quot;Three&quot;]</span></span><br><span class="line"><span class="built_in">console</span>.log(fxArrs) <span class="comment">// [&quot;One&quot;, &quot;love&quot;, &quot;Three&quot;]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="concat"><a href="#concat" class="headerlink" title="concat()"></a>concat()</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fxArr = [<span class="string">&quot;One&quot;</span>, <span class="string">&quot;Two&quot;</span>, <span class="string">&quot;Three&quot;</span>]</span><br><span class="line"><span class="keyword">const</span> fxArrs = fxArr.concat()</span><br><span class="line">fxArrs[<span class="number">1</span>] = <span class="string">&quot;love&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(fxArr) <span class="comment">// [&quot;One&quot;, &quot;Two&quot;, &quot;Three&quot;]</span></span><br><span class="line"><span class="built_in">console</span>.log(fxArrs) <span class="comment">// [&quot;One&quot;, &quot;love&quot;, &quot;Three&quot;]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="拓展运算符"><a href="#拓展运算符" class="headerlink" title="拓展运算符"></a>拓展运算符</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fxArr = [<span class="string">&quot;One&quot;</span>, <span class="string">&quot;Two&quot;</span>, <span class="string">&quot;Three&quot;</span>]</span><br><span class="line"><span class="keyword">const</span> fxArrs = [...fxArr]</span><br><span class="line">fxArrs[<span class="number">1</span>] = <span class="string">&quot;love&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(fxArr) <span class="comment">// [&quot;One&quot;, &quot;Two&quot;, &quot;Three&quot;]</span></span><br><span class="line"><span class="built_in">console</span>.log(fxArrs) <span class="comment">// [&quot;One&quot;, &quot;love&quot;, &quot;Three&quot;]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="三、深拷贝"><a href="#三、深拷贝" class="headerlink" title="三、深拷贝"></a>三、深拷贝</h2><p>深拷贝开辟一个新的栈，两个对象属完成相同，但是对应两个不同的地址，修改一个对象的属性，不会改变另一个对象的属性</p>
+<p>常见的深拷贝方式有：</p>
+<ul>
+<li>_.cloneDeep()</li>
+<li>jQuery.extend()</li>
+<li>JSON.stringify()</li>
+<li>手写循环递归</li>
+</ul>
+<h3 id="cloneDeep"><a href="#cloneDeep" class="headerlink" title="_.cloneDeep()"></a>_.cloneDeep()</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> _ = <span class="built_in">require</span>(<span class="string">&#x27;lodash&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> obj1 = &#123;</span><br><span class="line">    <span class="attr">a</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">b</span>: &#123; <span class="attr">f</span>: &#123; <span class="attr">g</span>: <span class="number">1</span> &#125; &#125;,</span><br><span class="line">    <span class="attr">c</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> obj2 = _.cloneDeep(obj1);</span><br><span class="line"><span class="built_in">console</span>.log(obj1.b.f === obj2.b.f);<span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="jQuery-extend"><a href="#jQuery-extend" class="headerlink" title="jQuery.extend()"></a>jQuery.extend()</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> $ = <span class="built_in">require</span>(<span class="string">&#x27;jquery&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> obj1 = &#123;</span><br><span class="line">    <span class="attr">a</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">b</span>: &#123; <span class="attr">f</span>: &#123; <span class="attr">g</span>: <span class="number">1</span> &#125; &#125;,</span><br><span class="line">    <span class="attr">c</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> obj2 = $.extend(<span class="literal">true</span>, &#123;&#125;, obj1);</span><br><span class="line"><span class="built_in">console</span>.log(obj1.b.f === obj2.b.f); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="JSON-stringify"><a href="#JSON-stringify" class="headerlink" title="JSON.stringify()"></a>JSON.stringify()</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj2=<span class="built_in">JSON</span>.parse(<span class="built_in">JSON</span>.stringify(obj1));</span><br></pre></td></tr></table></figure>
+
+<p>但是这种方式存在弊端，会忽略<code>undefined</code>、<code>symbol</code>和<code>函数</code>,而且无法深拷贝循环引用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;A&#x27;</span>,</span><br><span class="line">    <span class="attr">name1</span>: <span class="literal">undefined</span>,</span><br><span class="line">    <span class="attr">name3</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;,</span><br><span class="line">    <span class="attr">name4</span>:  <span class="built_in">Symbol</span>(<span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> obj2 = <span class="built_in">JSON</span>.parse(<span class="built_in">JSON</span>.stringify(obj));</span><br><span class="line"><span class="built_in">console</span>.log(obj2); <span class="comment">// &#123;name: &quot;A&quot;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="循环递归"><a href="#循环递归" class="headerlink" title="循环递归"></a>循环递归</h3><p>这里用WeakMap原因：WeakMap的键名所引用的对象都是弱引用，即垃圾回收机制不将该引用考虑在内。因此，只要所引用的对象的其他引用都被清除，垃圾回收机制就会释放该对象所占用的内存。也就是说，一旦不再需要，WeakMap 里面的键名对象和所对应的键值对会自动消失，不用手动删除引用。</p>
+<p>关于WeakMap看</p>
+<p>[]: <a target="_blank" rel="noopener" href="https://www.bookstack.cn/read/es6-3rd/spilt.4.docs-set-map.md">https://www.bookstack.cn/read/es6-3rd/spilt.4.docs-set-map.md</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">//判断是否是对象</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isObject</span>(<span class="params">obj</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">typeof</span> obj===<span class="string">&#x27;object&#x27;</span>&amp;&amp;obj!==<span class="literal">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">deepClone</span>(<span class="params">obj,hash=<span class="keyword">new</span> <span class="built_in">WeakMap</span>()</span>)</span>&#123;<span class="comment">//使用哈希表解决循环检测，哈希表存储已经拷贝过的对象，当检测到对象已经存在于韩系表那直接返回该值</span></span><br><span class="line">    <span class="keyword">if</span>(!isObject(obj))<span class="keyword">return</span> obj;<span class="comment">//不是对象，是null或者undefined或者函数或者普通值直接返回，你不用继续递归</span></span><br><span class="line">    <span class="keyword">if</span>(hash.has(obj))<span class="keyword">return</span> has.get(obj);</span><br><span class="line">    <span class="keyword">const</span> cloneObj=<span class="keyword">typeof</span> cloneObj===<span class="string">&#x27;Array&#x27;</span>?[]:&#123;&#125;;</span><br><span class="line">    <span class="comment">//针对Symbol属性</span></span><br><span class="line">    <span class="keyword">const</span> symKeys=<span class="built_in">Object</span>.getOwnPropertySymbols(obj);</span><br><span class="line">    <span class="keyword">if</span>(symKeys.length)&#123;</span><br><span class="line">        symKeys.forEach(<span class="function"><span class="params">symKey</span>=&gt;</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(isObject(obj[symKey]))&#123;</span><br><span class="line">                deepClone(obj,hash);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                cloneObj[symKey]=obj[symKey]</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//其他keys</span></span><br><span class="line">    <span class="keyword">const</span> keys=<span class="built_in">Object</span>.getOwnProperty(obj);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> key <span class="keyword">in</span> keys)&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">Object</span>.prototype.hasOwnProperty.call(obj,key))&#123;<span class="comment">//如果对象原型上有这个键</span></span><br><span class="line">            <span class="keyword">if</span>(isObject(obj[key]))&#123;</span><br><span class="line">                deepClone(obj,hash);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                cloneObj[key]=obj[key];</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> cloneObj;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>前提为拷贝类型为引用类型的情况下：</p>
+<ul>
+<li>浅拷贝是拷贝一层，属性为对象时，浅拷贝是复制，两个对象指向同一个地址</li>
+<li>深拷贝是递归拷贝深层次，属性为对象时，深拷贝是新开栈，两个对象指向不同的地址</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/29/line-height%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/29/line-height%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">line-height原理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-29 14:06:50 / 修改时间：14:11:55" itemprop="dateCreated datePublished" datetime="2022-04-29T14:06:50+08:00">2022-04-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>一、line-height是什么<br>line-height 属性设置行间的距离（行高），说的直白一点，就是设置两段段文本之间的距离如果我们把一段文本的line-height设置为父容器的高度就可以实现文本垂直居中了。</p>
+<p>二、分析其原理<br>首先来看个图</p>
+<p><img src="/2022/04/29/line-height%E5%8E%9F%E7%90%86/1-16512126106971.png"></p>
+<p>如图，每一行文字，可看成由上间距、文本内容、下间距构成，根据行高的标准定义，行高等于两条基线之间的距离，即第一行的3-4+上下间距+第二行的1-2+2-3，因为css中每一行的上间距和下间距肯定是相等的，所以代换一下，行高就等于它本身的上间距+下间距+文本高度。因此，我们也可以把行高记为，行高就是一行的高度，这一行的高度中包含了上下两个间距和文本内容本身。而文本内容在每一行中都是居中的，所以利用这个原理，就可以实现垂直居中。</p>
+<p>看个例子：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">			<span class="selector-class">.container</span> &#123;</span></span><br><span class="line"><span class="css">				<span class="attribute">width</span>: <span class="number">100px</span>;</span></span><br><span class="line"><span class="css">				<span class="attribute">height</span>: <span class="number">200px</span>;</span></span><br><span class="line"><span class="css">				<span class="attribute">line-height</span>: <span class="number">200px</span>;</span></span><br><span class="line"><span class="css">				<span class="attribute">margin</span>: <span class="number">0</span> auto;				</span></span><br><span class="line"><span class="css">				<span class="attribute">border</span>: <span class="number">1px</span> solid red;</span></span><br><span class="line"><span class="css">			&#125;</span></span><br><span class="line"><span class="css">		</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">			哈哈哈</span><br><span class="line">		<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/04/29/line-height%E5%8E%9F%E7%90%86/2-16512127023202.png"></p>
+<p>如上图所示。本例子中，我们设置div的高度为200px，然后里面有一行文本，我们设置了行高为200px，设置完200px后，文字本身16px不会改变，变的是它的上间距和下间距。正如上图所描述的那样。我想到这，你就应该明白了line-height为什么可以使其垂直居中了。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/28/%E8%A7%A3%E5%86%B3canvas%E4%B8%AD%E8%8E%B7%E5%8F%96%E8%B7%A8%E5%9F%9F%E5%9B%BE%E7%89%87%E6%95%B0%E6%8D%AE%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/28/%E8%A7%A3%E5%86%B3canvas%E4%B8%AD%E8%8E%B7%E5%8F%96%E8%B7%A8%E5%9F%9F%E5%9B%BE%E7%89%87%E6%95%B0%E6%8D%AE%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">解决canvas中获取跨域图片数据问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-28 00:02:36 / 修改时间：16:15:03" itemprop="dateCreated datePublished" datetime="2022-04-28T00:02:36+08:00">2022-04-28</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="为什么-canvas-认为跨域图片数据为-污染的数据"><a href="#为什么-canvas-认为跨域图片数据为-污染的数据" class="headerlink" title="为什么 canvas 认为跨域图片数据为 污染的数据"></a>为什么 canvas 认为跨域图片数据为 污染的数据</h2><p>当请求跨域图片数据，而未满足跨域请求资源的条件时。如果canvas使用未经跨域允许的图片的原始数据，这些是不可信的数据，可能会暴露页面的数据。</p>
+<h2 id="请求图片资源-同域"><a href="#请求图片资源-同域" class="headerlink" title="请求图片资源 - 同域"></a>请求图片资源 - 同域</h2><p>Request Headers带有cookie。图片数据是被canvas信任的。</p>
+<h2 id="请求图片资源-跨域"><a href="#请求图片资源-跨域" class="headerlink" title="请求图片资源 - 跨域"></a>请求图片资源 - 跨域</h2><p>默认情况下，直接请求跨域图片。因为不符合跨域请求资源的条件，图片数据是不被canvas信任的。</p>
+<p>为了解决图片跨域资源共享的问题， <img> 元素提供了支持的属性：crossOrigin，该属性一共有两个值可选：anonymous 和 use-credentials，下面列举了两者的使用场景，以及满足的条件。</p>
+<p>(anonymous:匿名的)</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>anonymous</th>
+<th>use-credentials</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>用途</td>
+<td>匿名请求跨域图片资源，不会发送证书（比如cookie等）</td>
+<td>具名请求跨域图片资源，会携带证书数据</td>
+</tr>
+<tr>
+<td>Request Headers</td>
+<td>origin</td>
+<td>origin、cookie</td>
+</tr>
+<tr>
+<td>Response headers</td>
+<td>Access-Control-Allow-Origin</td>
+<td>Access-Control-Allow-Origin、Access-Control-Allow-Credentials</td>
+</tr>
+<tr>
+<td>所需条件</td>
+<td>Access-Control-Allow-Origin 字段值需要包含请求域。</td>
+<td>Access-Control-Allow-Origin 字段值需要包含请求域，且不能为通配符 *。Access-Control-Allow-Credentials 字段值需要为 true，表明允许请求发送证书数据。</td>
+</tr>
+</tbody></table>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> canvas=<span class="built_in">document</span>.createElement(<span class="string">&#x27;canvas&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> context=canvas.getContext(<span class="string">&#x27;2d&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> img=<span class="keyword">new</span> Image();</span><br><span class="line">img.crossOrigin=<span class="string">&#x27;anonymous&#x27;</span>;</span><br><span class="line">img.onload=<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    context.drawImage(<span class="built_in">this</span>,<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line">    context.getImageData(<span class="number">0</span>,<span class="number">0</span>,img.width,img.height);</span><br><span class="line">&#125;</span><br><span class="line">img.src=<span class="string">&quot;https://b.com/a.png&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/25/%E5%9B%BE%E7%89%87%E6%87%92%E5%8A%A0%E8%BD%BD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/25/%E5%9B%BE%E7%89%87%E6%87%92%E5%8A%A0%E8%BD%BD/" class="post-title-link" itemprop="url">图片懒加载</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-25 17:07:16" itemprop="dateCreated datePublished" datetime="2022-04-25T17:07:16+08:00">2022-04-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-27 23:41:55" itemprop="dateModified" datetime="2022-04-27T23:41:55+08:00">2022-04-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>实现图片懒加载</p>
+<p>懒加载是一种网页性能优化方式，提升用户体验，比如懒加载图片，进入页面时，我们只请求可视区域的图片资源</p>
+<p>总结：</p>
+<p>全部加载会影响用户体验</p>
+<p>浪费用户的流量，有些用户不想全部看完，全部加载会耗费大量流量</p>
+<p>实现方式：</p>
+<p>html实现</p>
+<p>最简单的实现方式给img标签加上 loading=”lazy”</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=<span class="string">&quot;./example.jpg&quot;</span> loading=<span class="string">&quot;lazy&quot;</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>js实现原理</p>
+<ul>
+<li>通过js监听页面的滚动</li>
+<li>使用js实现的原理主要是判断当前图片是否到了可视区域：</li>
+<li>拿到所有图片的dom</li>
+<li>遍历每个图片判断当前图片是否到达了可视区域范围</li>
+<li>如果到了就设置图片的src属性</li>
+<li>绑定window的scroll事件，对其进行事件监听</li>
+</ul>
+<p>在页面初始化时，img图片的src放在data-src属性上，当匀速处于可视区范围，就把data-src赋值给src属性，完成图片加载</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Lazyload<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">      <span class="selector-tag">img</span> &#123;</span></span><br><span class="line"><span class="css">        <span class="attribute">display</span>: block;</span></span><br><span class="line"><span class="css">        <span class="attribute">margin-bottom</span>: <span class="number">50px</span>;</span></span><br><span class="line"><span class="css">        <span class="attribute">height</span>: <span class="number">200px</span>;</span></span><br><span class="line"><span class="css">        <span class="attribute">width</span>: <span class="number">400px</span>;</span></span><br><span class="line"><span class="css">      &#125;</span></span><br><span class="line"><span class="css">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/1.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/2.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/3.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/4.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/5.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/6.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/7.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/8.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/9.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/10.jpg&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>先获取所有图片的dom,通过document.body.clientHeight获取可视区高度，<strong>在使用element.getBoundingClientRect()直接得到元素相对浏览器的top值</strong>，遍历每个图片判断图片是否到达了可视区域</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">lazyLoad</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> viewHeight=<span class="built_in">document</span>.body.clientHeight;<span class="comment">//获取可视区高度</span></span><br><span class="line">    <span class="keyword">let</span> imgs=<span class="built_in">document</span>.querySelectorAll(<span class="string">&quot;img[data-src]&quot;</span>)</span><br><span class="line">    imgs.forEach(<span class="function"><span class="params">item</span>=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(item.data-src==<span class="string">&#x27;&#x27;</span>)<span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">let</span> rect=item.getBoundingClientRect();</span><br><span class="line">        <span class="keyword">if</span>(rect.top&lt;viewHeight&amp;&amp;rect.bottom&gt;=<span class="number">0</span>)&#123;</span><br><span class="line">            item.src=item.data-src</span><br><span class="line">            item.removeAttribute(<span class="string">&#x27;data-src&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样存在性能问题，因为scroll事件会在很短事件内触发多次，严重影响页面性能，为了提高网页性能，我们需要一个节流函数来控制函数的多次触发，在一段时间内只执行一次回调</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttle</span>(<span class="params">fn,delay</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timer=<span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">fn,...args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">const</span> context=<span class="built_in">this</span>;</span><br><span class="line">        <span class="keyword">if</span>(!temer)&#123;</span><br><span class="line">            timer=<span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">                fn.apply(context,args);</span><br><span class="line">                timer=<span class="literal">null</span>;</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>scroll</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">&quot;scroll&quot;</span>,throttle(lazyload,<span class="number">200</span>))</span><br></pre></td></tr></table></figure>
+
+<h2 id="拓展：-IntersectionObserver"><a href="#拓展：-IntersectionObserver" class="headerlink" title="拓展： IntersectionObserver"></a>拓展： IntersectionObserver</h2><p>通过上面例子的实现，我们要实现懒加载都需要去监听 scroll 事件，尽管我们可以通过函数节流的方式来阻止高频率的执行函数，但是我们还是需要去计算 scrollTop，offsetHeight 等属性，有没有简单的不需要计算这些属性的方式呢，答案就是 <code>IntersectionObserver</code>。</p>
+<p><code>IntersectionObserver</code> 是一个比较新的 API，可以自动”观察”元素是否可见，Chrome 51+ 已经支持。由于可见（visible）的本质是，目标元素与视口产生一个交叉区，所以这个 API 叫做”交叉观察器”。我们来看一下它的用法</p>
+<p>[]: <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver">https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> imgs=<span class="built_in">document</span>.querySelectorAll(<span class="string">&quot;img[data-src]&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> config=&#123;</span><br><span class="line">    <span class="attr">rootMargin</span>:<span class="string">&#x27;0px&#x27;</span>,</span><br><span class="line">    <span class="attr">threshold</span>:<span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> observer=<span class="keyword">new</span> IntersectionObserver(<span class="function">(<span class="params">entries,self</span>)=&gt;</span>&#123;</span><br><span class="line">    entries.forEach(<span class="function">(<span class="params">entry</span>)=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(entry.isIntersecting)&#123;</span><br><span class="line">            <span class="keyword">let</span> img=entry.target;</span><br><span class="line">            <span class="keyword">let</span> realsrc=img.dataset.src;</span><br><span class="line">            <span class="keyword">if</span>(src)&#123;</span><br><span class="line">                img.src=realsrc;</span><br><span class="line">                img.removeAttribute(<span class="string">&#x27;data-src&#x27;</span>)</span><br><span class="line">            &#125;</span><br><span class="line">            self.unobserve(entry.target);<span class="comment">//解除观察</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;,config)</span><br><span class="line">imgs.forEach(<span class="function">(<span class="params">image</span>)=&gt;</span>&#123;</span><br><span class="line">    observer.observe(image)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/25/object-create-%E5%92%8Cnew%E5%8C%BA%E5%88%AB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -791,463 +1204,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/23/%E8%A7%A3%E5%86%B3%E7%9B%B8%E9%82%BBinline-block%E4%B9%8B%E9%97%B4%E7%9A%84%E9%97%B4%E9%9A%94/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/23/%E8%A7%A3%E5%86%B3%E7%9B%B8%E9%82%BBinline-block%E4%B9%8B%E9%97%B4%E7%9A%84%E9%97%B4%E9%9A%94/" class="post-title-link" itemprop="url">解决相邻inline-block之间的间隔</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-23 23:35:04 / 修改时间：23:44:17" itemprop="dateCreated datePublished" datetime="2022-04-23T23:35:04+08:00">2022-04-23</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>转载自 zhangxinxu from <a target="_blank" rel="noopener" href="http://www.zhangxinxu.com/">http://www.zhangxinxu.com</a></p>
-<h1 id="一、现象描述"><a href="#一、现象描述" class="headerlink" title="一、现象描述"></a>一、现象描述</h1><p>真正意义上的inline-block水平呈现的元素间，换行显示或空格分隔的情况下会有间距.</p>
-<p>我们使用CSS更改非inline-block水平元素为inline-block水平，也会有该问题：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">space <span class="selector-tag">a</span> &#123;</span><br><span class="line">    <span class="attribute">display</span>: inline-block;</span><br><span class="line">    <span class="attribute">padding</span>: .<span class="number">5em</span> <span class="number">1em</span>;</span><br><span class="line">    <span class="attribute">background-color</span>: <span class="number">#cad5eb</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;space&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;##&quot;</span>&gt;</span>惆怅<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;##&quot;</span>&gt;</span>淡定<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;##&quot;</span>&gt;</span>热血<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>这种表现是符合规范的应该有的表现。</p>
-<p>元素被当成行内元素排版的时候，<strong>元素之间的空白符</strong>（空格、回车换行等）都会被浏览器处理，根据white-space的处理方式（默认是normal，合并多余空白），原来HTML代码中的回车换行被转成一个空白符，在字体不为0的情况下，空白符占据一定宽度，所以inline-block的元素之间就出现了空隙。这些元素之间的间距会随着字体的大小而变化，当行内元素font-size:16px时，间距为8px。</p>
-<h1 id="二、方法之移除空格"><a href="#二、方法之移除空格" class="headerlink" title="二、方法之移除空格"></a>二、方法之移除空格</h1><p>元素间留白间距出现的原因就是标签段之间的空格，因此，去掉HTML中的空格，自然间距就木有了。考虑到代码可读性，显然连成一行的写法是不可取的，我们可以：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;space&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;##&quot;</span>&gt;</span>惆怅&lt;/a</span><br><span class="line">    &gt;<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;##&quot;</span>&gt;</span>淡定&lt;/a</span><br><span class="line">    &gt;<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;##&quot;</span>&gt;</span>热血<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class=&quot;space&quot;&gt;</span><br><span class="line">    &lt;a href=&quot;##&quot;&gt;惆怅&lt;/a&gt;&lt;!--</span><br><span class="line">    --&gt;&lt;a href=&quot;##&quot;&gt;淡定&lt;/a&gt;&lt;!--</span><br><span class="line">    --&gt;&lt;a href=&quot;##&quot;&gt;热血&lt;/a&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-
-<h2 id="使用margin负值"><a href="#使用margin负值" class="headerlink" title="使用margin负值"></a>使用margin负值</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1.space a &#123;</span><br><span class="line">2    display: inline-block;</span><br><span class="line">3    margin-right: -3px;</span><br><span class="line">4&#125;</span><br></pre></td></tr></table></figure>
-
-<p>margin负值的大小与上下文的字体和文字大小相关</p>
-<h2 id="使用font-size-0"><a href="#使用font-size-0" class="headerlink" title="使用font-size:0"></a>使用font-size:0</h2><p>类似下面的代码：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="selector-class">.space</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="attribute">font-size</span>: <span class="number">0</span>;</span><br><span class="line"><span class="number">3</span>&#125;</span><br><span class="line"><span class="number">4</span><span class="selector-class">.space</span> <span class="selector-tag">a</span> &#123;</span><br><span class="line"><span class="number">5</span>    <span class="attribute">font-size</span>: <span class="number">12px</span>;</span><br><span class="line"><span class="number">6</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这个方法，基本上可以解决大部分浏览器下inline-block元素之间的间距(IE7等浏览器有时候会有1像素的间距)。</p>
-<p>使用letter-spacing</p>
-<p>类似下面的代码：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="selector-class">.space</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="attribute">letter-spacing</span>: -<span class="number">3px</span>;</span><br><span class="line"><span class="number">3</span>&#125;</span><br><span class="line"><span class="number">4</span><span class="selector-class">.space</span> <span class="selector-tag">a</span> &#123;</span><br><span class="line"><span class="number">5</span>    <span class="attribute">letter-spacing</span>: <span class="number">0</span>;</span><br><span class="line"><span class="number">6</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="使用word-spacing"><a href="#使用word-spacing" class="headerlink" title="使用word-spacing"></a>使用word-spacing</h2><p>类似下面代码：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="selector-class">.space</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="attribute">word-spacing</span>: -<span class="number">6px</span>;</span><br><span class="line"><span class="number">3</span>&#125;</span><br><span class="line"><span class="number">4</span><span class="selector-class">.space</span> <span class="selector-tag">a</span> &#123;</span><br><span class="line"><span class="number">5</span>    <span class="attribute">word-spacing</span>: <span class="number">0</span>;</span><br><span class="line"><span class="number">6</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>一个是字符间距(<code>letter-spacing</code>)一个是单词间距(<code>word-spacing</code>)，大同小异。据我测试，<code>word-spacing</code>的负值只要大到一定程度，其兼容性上的差异就可以被忽略。因为，貌似，<code>word-spacing</code>即使负值很大，也不会发生重叠。</p>
-<p>与上面demo一样的效果，这里就不截图展示了。如果您使用Chrome浏览器，可能看到的是间距依旧存在。确实是有该问题，原因我是不清楚，不过我知道，可以添加<code>display: table;</code>或<code>display:inline-table;</code>让Chrome浏览器也变得乖巧。</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="selector-class">.space</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="attribute">display</span>: inline-table;</span><br><span class="line"><span class="number">3</span>    <span class="attribute">word-spacing</span>: -<span class="number">6px</span>;</span><br><span class="line"><span class="number">4</span>&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/23/%E5%AE%9E%E7%8E%B0flex%E7%9B%92%E5%AD%90%E6%9C%80%E5%90%8E%E4%B8%80%E8%A1%8C%E5%B7%A6%E5%AF%B9%E9%BD%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/23/%E5%AE%9E%E7%8E%B0flex%E7%9B%92%E5%AD%90%E6%9C%80%E5%90%8E%E4%B8%80%E8%A1%8C%E5%B7%A6%E5%AF%B9%E9%BD%90/" class="post-title-link" itemprop="url">实现flex盒子最后一行左对齐</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-23 18:03:51 / 修改时间：23:05:53" itemprop="dateCreated datePublished" datetime="2022-04-23T18:03:51+08:00">2022-04-23</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h1><p>在CSS flex布局中，justify-content属性可以控制列表的水平对齐方式，例如space-between值可以实现两端对齐。</p>
-<p>但是，如果最后一行的列表的个数不满，则就会出现最后一行没有完全垂直对齐的问题。</p>
-<p>解决：</p>
-<h1 id="每一行固定列数："><a href="#每一行固定列数：" class="headerlink" title="每一行固定列数："></a>每一行固定列数：</h1><h2 id="方法一：模拟space-between和间隙"><a href="#方法一：模拟space-between和间隙" class="headerlink" title="方法一：模拟space-between和间隙"></a>方法一：模拟space-between和间隙</h2><p>也就是我们不使用<code>justify-content:space-between</code>声明在模拟两端对齐效果。中间的gap间隙我们使用margin进行控制。</p>
-<p>例如：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">    <span class="selector-class">.container</span> &#123;</span></span><br><span class="line"><span class="css">        <span class="attribute">display</span>: flex;</span></span><br><span class="line"><span class="css">        <span class="attribute">flex-wrap</span>: wrap;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">    <span class="selector-class">.list</span> &#123;</span></span><br><span class="line"><span class="css">        <span class="attribute">width</span>: <span class="number">24%</span>;</span></span><br><span class="line"><span class="css">        <span class="attribute">height</span>: <span class="number">100px</span>;</span></span><br><span class="line"><span class="css">        <span class="attribute">background-color</span>: skyblue;</span></span><br><span class="line"><span class="css">        <span class="attribute">margin-top</span>: <span class="number">15px</span>;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">    <span class="selector-class">.list</span><span class="selector-pseudo">:not</span>(<span class="selector-pseudo">:nth-child</span>(<span class="number">4</span>n)) &#123;</span></span><br><span class="line"><span class="css">        <span class="comment">/* 100%-24%*4=4%,4%/3分配给不是4的倍数的盒子 */</span></span></span><br><span class="line"><span class="css">        <span class="attribute">margin-right</span>: <span class="built_in">calc</span>(<span class="number">4%</span>/<span class="number">3</span>)</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;list&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;list&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;list&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;list&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;list&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;list&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;list&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="方法二：根据个数最后一个元素动态margin"><a href="#方法二：根据个数最后一个元素动态margin" class="headerlink" title="方法二：根据个数最后一个元素动态margin"></a>方法二：根据个数最后一个元素动态margin</h2><p>由于每一列的数目都是固定的，因此，我们可以计算出不同个数列表应当多大的<code>margin</code>值才能保证完全左对齐。</p>
-<p>例如，假设每行4个元素，结果最后一行只有3个元素，则最后一个元素的<code>margin-right</code>大小是“列表宽度+间隙大小”的话，那最后3个元素也是可以完美左对齐的。</p>
-<p>然后，借助树结构伪类数量匹配技术，我们可以知道最后一行有几个元素。</p>
-<p>例如：</p>
-<ul>
-<li><code>.list:last-child:nth-child(4n - 1)</code>说明最后一行，要么3个元素，要么7个元素……</li>
-<li><code>.list:last-child:nth-child(4n - 2)</code>说明最后一行，要么2个元素，要么6个元素……</li>
-</ul>
-<p>在本例中，一行就4个元素，因此，我们可以有如下CSS设置：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">        <span class="attribute">display</span>: flex;</span><br><span class="line">        <span class="attribute">flex-wrap</span>: wrap;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="selector-class">.list</span> &#123;</span><br><span class="line">        <span class="attribute">width</span>: <span class="number">24%</span>;</span><br><span class="line">        <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">        <span class="attribute">background-color</span>: skyblue;</span><br><span class="line">        <span class="attribute">margin-top</span>: <span class="number">15px</span>;</span><br><span class="line">        <span class="comment">/* 每个的margin-right默认为4%/3 */</span></span><br><span class="line">        <span class="attribute">margin-right</span>: <span class="built_in">calc</span>(<span class="number">4%</span>/<span class="number">4</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/* 最后一行3个 则最后一个的margin-right特殊设置*/</span></span><br><span class="line">    <span class="selector-class">.list</span><span class="selector-pseudo">:last-child</span><span class="selector-pseudo">:nth-child</span>(<span class="number">4</span>n-<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="attribute">margin-right</span>: <span class="built_in">calc</span>(<span class="number">24%</span>+<span class="number">4%</span>/<span class="number">3</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/* 最后一行两个 */</span></span><br><span class="line">    <span class="selector-class">.list</span><span class="selector-pseudo">:last-child</span><span class="selector-pseudo">:nth-child</span>(<span class="number">4</span>n-<span class="number">2</span>)&#123;</span><br><span class="line">        <span class="attribute">margin-right</span>: <span class="built_in">calc</span>(<span class="number">48%</span>+<span class="number">8%</span>/<span class="number">3</span>) ;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="子项宽度不固定"><a href="#子项宽度不固定" class="headerlink" title="子项宽度不固定"></a>子项宽度不固定</h1><h2 id="最后一项margin-right-auto"><a href="#最后一项margin-right-auto" class="headerlink" title="最后一项margin-right:auto"></a>最后一项margin-right:auto</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">    <span class="attribute">display</span>:flex;</span><br><span class="line">    <span class="attribute">justify-content</span>: space-between;</span><br><span class="line">    <span class="attribute">flex-wrap</span>: wrap;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.list</span> &#123;</span><br><span class="line">    bacground-<span class="attribute">color</span>: skyblue;</span><br><span class="line">    <span class="attribute">margin</span>: <span class="number">10px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*最后一项margin-right:auto,让margin-right占据剩余空间*/</span></span><br><span class="line"><span class="selector-class">.list</span><span class="selector-pseudo">:last-child</span> &#123;</span><br><span class="line">    <span class="attribute">margin-right</span>:auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="创建伪元素占据剩余空间"><a href="#创建伪元素占据剩余空间" class="headerlink" title="创建伪元素占据剩余空间"></a>创建伪元素占据剩余空间</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">        <span class="attribute">display</span>: flex;</span><br><span class="line">        <span class="attribute">justify-content</span>: space-between;</span><br><span class="line">        <span class="attribute">flex-wrap</span>: wrap;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="selector-class">.list</span> &#123;</span><br><span class="line">        <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">        <span class="attribute">background-color</span>: skyblue;</span><br><span class="line">        <span class="attribute">margin</span>: <span class="number">10px</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="selector-class">.container</span><span class="selector-pseudo">::after</span> &#123;</span><br><span class="line">        <span class="attribute">content</span>:<span class="string">&#x27;&#x27;</span>;</span><br><span class="line">        <span class="attribute">flex</span>:<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="如果每一行列数不固定"><a href="#如果每一行列数不固定" class="headerlink" title="如果每一行列数不固定"></a>如果每一行列数不固定</h1><p>如果每一行的列数不固定，则上面的这些方法均不适用，需要使用其他技巧来实现最后一行左对齐。</p>
-<p>这个方法其实很简单，也很好理解，就是使用足够的空白标签进行填充占位，具体的占位数量是由最多列数的个数决定的，例如这个布局最多7列，那我们可以使用7个空白标签进行填充占位，最多10列，那我们需要使用10个空白标签。</p>
-<p>如下HTML示意：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">2    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;list&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">3    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;list&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">4    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;list&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">5    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;list&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">6    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;list&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">7    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;list&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">8    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;list&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">9    <span class="tag">&lt;<span class="name">i</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span><span class="tag">&lt;<span class="name">i</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span><span class="tag">&lt;<span class="name">i</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span><span class="tag">&lt;<span class="name">i</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span><span class="tag">&lt;<span class="name">i</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line">10<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>相关CSS如下，实现的关键就是占位的<code>&lt;i&gt;</code>元素宽度和<code>margin</code>大小设置得和<code>.list</code>列表元素一样即可，其他样式都不需要写。</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="selector-class">.container</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="attribute">display</span>: flex;</span><br><span class="line"><span class="number">3</span>    <span class="attribute">justify-content</span>: space-between;</span><br><span class="line"><span class="number">4</span>    <span class="attribute">flex-wrap</span>: wrap;</span><br><span class="line"><span class="number">5</span>    <span class="attribute">margin-right</span>: -<span class="number">10px</span>;</span><br><span class="line"><span class="number">6</span>&#125;</span><br><span class="line"><span class="number">7</span><span class="selector-class">.list</span> &#123;</span><br><span class="line"><span class="number">8</span>    <span class="attribute">width</span>: <span class="number">100px</span>; <span class="attribute">height</span>:<span class="number">100px</span>;</span><br><span class="line"><span class="number">9</span>    <span class="attribute">background-color</span>: skyblue;</span><br><span class="line"><span class="number">10</span>    <span class="attribute">margin</span>: <span class="number">15px</span> <span class="number">10px</span> <span class="number">0</span> <span class="number">0</span>;</span><br><span class="line"><span class="number">11</span>&#125;</span><br><span class="line"><span class="number">12</span><span class="comment">/* 和列表一样的宽度和margin值 */</span></span><br><span class="line"><span class="number">13</span><span class="selector-class">.container</span> &gt; <span class="selector-tag">i</span> &#123;</span><br><span class="line"><span class="number">14</span>    <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line"><span class="number">15</span>    <span class="attribute">margin-right</span>: <span class="number">10px</span>;</span><br><span class="line"><span class="number">16</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>由于<code>&lt;i&gt;</code>元素高度为0，因此，并不会影响垂直方向上的布局呈现。</p>
-<h1 id="如果列数不固定HTML又不能调整"><a href="#如果列数不固定HTML又不能调整" class="headerlink" title="如果列数不固定HTML又不能调整"></a>如果列数不固定HTML又不能调整</h1><p>然而有时候，由于客观原因，前端重构人员没有办法去调整html结构，同时布局的列表个数又不固定，这个时候该如何实现我们最后一行左对齐效果呢？</p>
-<p>我们不妨可以试试使用Grid布局。</p>
-<p>Grid布局天然有gap间隙，且天然格子对齐排布，因此，实现最后一行左对齐可以认为是天生的效果。</p>
-<p>CSS代码如下：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;style&gt;</span><br><span class="line">    <span class="selector-class">.container</span> &#123;</span><br><span class="line">        <span class="attribute">display</span>: grid;</span><br><span class="line">        <span class="attribute">justify-content</span>: space-between;</span><br><span class="line">        grid-template-<span class="attribute">columns</span>: <span class="built_in">repeat</span>(auto-fill,<span class="number">100px</span>);</span><br><span class="line">        grid-gap: <span class="number">10px</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="selector-class">.list</span> &#123;</span><br><span class="line">        <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">        <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">        <span class="attribute">background-color</span>: skyblue;</span><br><span class="line">        <span class="attribute">margin-top</span>: <span class="number">5px</span>;</span><br><span class="line">    &#125;   </span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
-
-<h1 id="这几种实现方法点评"><a href="#这几种实现方法点评" class="headerlink" title="这几种实现方法点评"></a>这几种实现方法点评</h1><p>首先最后一行需要左对齐的布局更适合使用CSS grid布局实现，但是，<code>repeat()</code>函数兼容性有些要求，IE浏览器并不支持。如果项目需要兼容IE，则此方法需要斟酌。</p>
-<p>然后，适用范围最广的方法是使用空的元素进行占位，此方法不仅适用于列表个数不固定的场景，对于列表个数固定的场景也可以使用这个方法。但是有些人代码洁癖，看不惯这种空的占位的html标签，则可以试试一开始的两个方法，一是动态计算margin，模拟两端对齐，另外一个是根据列表的个数，动态控制最后一个列表元素的margin值实现左对齐。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/23/%E5%AE%9E%E7%8E%B0%E6%B0%B4%E5%B9%B3%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/23/%E5%AE%9E%E7%8E%B0%E6%B0%B4%E5%B9%B3%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD/" class="post-title-link" itemprop="url">实现水平垂直居中</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-23 17:10:33 / 修改时间：21:59:01" itemprop="dateCreated datePublished" datetime="2022-04-23T17:10:33+08:00">2022-04-23</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>我们在布局一个页面时，通常都会用到水平居中和垂直居中，处理水平居中很好处理，不外乎就是设定margin:0 auto;或是text-align:center;,就可以轻松解决掉水平居中的问题，但一直以来最麻烦对齐问题就是「垂直居中」，以下将介绍几种单纯利用CSS垂直居中的方式，只需要理解背后的原理就可以轻松应用。</p>
-<p>下面为公共代码：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;box&quot;</span>&gt;</span></span><br><span class="line">2    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;small&quot;</span>&gt;</span>small<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">3<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">1.box &#123;</span><br><span class="line">2    width: 300px;</span><br><span class="line">3    height: 300px;</span><br><span class="line">4    background: #ddd;</span><br><span class="line">5&#125;</span><br><span class="line">6.small &#123;</span><br><span class="line">7    background: red;</span><br><span class="line">8&#125;</span><br><span class="line">9</span><br></pre></td></tr></table></figure>
-
-<h2 id="absolute-margin实现"><a href="#absolute-margin实现" class="headerlink" title="absolute + margin实现"></a>absolute + margin实现</h2><p>方法一：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="selector-class">.box</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="attribute">position</span>: relative;</span><br><span class="line"><span class="number">3</span>&#125;</span><br><span class="line"><span class="number">4</span><span class="selector-class">.small</span> &#123;</span><br><span class="line"><span class="number">5</span>    <span class="attribute">position</span>: absolute;</span><br><span class="line"><span class="number">6</span>    <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line"><span class="number">7</span>    <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line"><span class="number">8</span>    <span class="attribute">margin</span>: -<span class="number">50px</span> <span class="number">0</span> <span class="number">0</span> -<span class="number">50px</span>;</span><br><span class="line"><span class="number">9</span>    <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line"><span class="number">10</span>    <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line"><span class="number">11</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>方法二：</p>
-<p>margin:auto会自动去计算子元素和父元素之间的边距，并设为居中。所以就会实现上下左右都居中。</p>
-<p>1.在普通内容流中，margin:auto的效果等同于margin:0 auto,左右会去极端剩余空间平均分配，而上下默认都为0；</p>
-<p>2.position:absolute使绝对定位块跳出了内容流，内容流中的其余部分渲染时绝对定位部分不进行渲染。</p>
-<p>3.为块区域设置top: 0; left: 0; bottom: 0; right: 0;将给浏览器重新分配一个边界框，此时该块将填充其父元素的所有可用空间，<strong>所以margin 垂直方向上有了可分配的空间。</strong></p>
-<p>4.再设置margin 垂直方向上下为auto，即可实现垂直居中。（注意高度得设置）。</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="selector-class">.box</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="attribute">position</span>: relative;</span><br><span class="line"><span class="number">3</span>&#125;</span><br><span class="line"><span class="number">4</span><span class="selector-class">.small</span> &#123;</span><br><span class="line"><span class="number">5</span>    <span class="attribute">position</span>: absolute;</span><br><span class="line"><span class="number">6</span>    <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line"><span class="number">7</span>    <span class="attribute">right</span>: <span class="number">0</span>;</span><br><span class="line"><span class="number">8</span>    <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line"><span class="number">9</span>    <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line"><span class="number">10</span>    <span class="attribute">margin</span>: auto;</span><br><span class="line"><span class="number">11</span>    <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line"><span class="number">12</span>    <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line"><span class="number">13</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="absolute-calc-实现"><a href="#absolute-calc-实现" class="headerlink" title="absolute + calc 实现"></a>absolute + calc 实现</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="selector-class">.box</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="attribute">position</span>: relative;</span><br><span class="line"><span class="number">3</span>&#125;</span><br><span class="line"><span class="number">4</span><span class="selector-class">.small</span> &#123;</span><br><span class="line"><span class="number">5</span>    <span class="attribute">position</span>: absolute;</span><br><span class="line"><span class="number">6</span>    <span class="attribute">top</span>: <span class="built_in">calc</span>(<span class="number">50%</span> - <span class="number">50px</span>);</span><br><span class="line"><span class="number">7</span>    <span class="attribute">left</span>: <span class="built_in">calc</span>(<span class="number">50%</span> - <span class="number">50px</span>);</span><br><span class="line"><span class="number">8</span>    <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line"><span class="number">9</span>    <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line"><span class="number">10</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="absolute-transform-实现"><a href="#absolute-transform-实现" class="headerlink" title="absolute + transform 实现"></a>absolute + transform 实现</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="selector-class">.box</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="attribute">position</span>: relative;</span><br><span class="line"><span class="number">3</span>&#125;</span><br><span class="line"><span class="number">4</span><span class="selector-class">.small</span> &#123;</span><br><span class="line"><span class="number">5</span>    <span class="attribute">position</span>: absolute;</span><br><span class="line"><span class="number">6</span>    <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line"><span class="number">7</span>    <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line"><span class="number">8</span>    <span class="attribute">transform</span>: <span class="built_in">translate3d</span>(-<span class="number">50%</span>,-<span class="number">50%</span>,<span class="number">0</span>);</span><br><span class="line"><span class="number">9</span>    <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line"><span class="number">10</span>    <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line"><span class="number">11</span>&#125;</span><br><span class="line"><span class="number">12</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="转行内元素"><a href="#转行内元素" class="headerlink" title="转行内元素"></a>转行内元素</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">    <span class="attribute">line-height</span>:<span class="number">300px</span>;</span><br><span class="line">    <span class="attribute">text-align</span>: center;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.small</span> &#123;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">6px</span> <span class="number">10px</span>;</span><br><span class="line">    <span class="attribute">display</span>:inline-block;</span><br><span class="line">    <span class="attribute">font-size</span>:<span class="number">16px</span>;</span><br><span class="line">    vertical-aligin: middle;</span><br><span class="line">    <span class="attribute">line-height</span>: <span class="number">16px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="vertical-align"><a href="#vertical-align" class="headerlink" title="vertical-align:"></a>vertical-align:</h2><p>在W3C官方中对 vertical-align做了下面的解释：<br>This property affects the vertical positioning inside a line box of the boxes generated by an inline-level element.<br>事实上，一个Box中由很多行很多元素组成，<strong>vertical-align只作用于在同一行内的元素，它的垂直并不是相对于整个Box而言的</strong>。如果把 vertical-align:middle 放到一个单元格元素，即table的td元素中，它的垂直居中显示是没任何问题的，因为它表示相对于改行的垂直高度居中显示。而在我设定的div块中并不只存在一行，因此它无法识别默认显示在顶部。</p>
-<p>为了解决这个问题，我找到了两种方法。一个是我们可以设置<span>元素style中的 <strong>line-heght 值为其父元素<div>的height值</div></strong>，这样 vertical-align:middle 就会使<span>元素内容垂直居中。   另外还有种方法，就是将要<strong>设置垂直居中的元素的父元素style属性添加 display:table-cell 将其作为单元格显示，</strong>这样使用 vertical-align:middle 也可以实现垂直居中</span></span></p>
-<h2 id="转行内元素并且使用table-cell"><a href="#转行内元素并且使用table-cell" class="headerlink" title="转行内元素并且使用table-cell"></a>转行内元素并且使用table-cell</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">       <span class="attribute">display</span>: table-cell;</span><br><span class="line">       <span class="attribute">height</span>: <span class="number">300px</span>;</span><br><span class="line">       <span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">       <span class="attribute">text-align</span>: center;</span><br><span class="line">       <span class="attribute">background</span>: green;</span><br><span class="line">       <span class="attribute">vertical-align</span>: middle;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="selector-class">.small</span> &#123;</span><br><span class="line">       <span class="attribute">padding</span>: <span class="number">6px</span> <span class="number">10px</span>; </span><br><span class="line">       <span class="attribute">display</span>:inline-block;</span><br><span class="line">       <span class="attribute">background-color</span>: aliceblue;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="flex"><a href="#flex" class="headerlink" title="flex"></a>flex</h2><p>方法一：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="selector-class">.box</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="attribute">display</span>: flex;</span><br><span class="line"><span class="number">3</span>    <span class="attribute">justify-content</span>: center;</span><br><span class="line"><span class="number">4</span>    <span class="attribute">align-items</span>: center;</span><br><span class="line"><span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>方法二：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="selector-class">.box</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="attribute">display</span>: flex;</span><br><span class="line"><span class="number">3</span>    <span class="attribute">justify-content</span>: center;</span><br><span class="line"><span class="number">4</span>&#125;</span><br><span class="line"><span class="number">5</span><span class="selector-class">.small</span> &#123;</span><br><span class="line"><span class="number">6</span>    <span class="attribute">align-self</span>: center;</span><br><span class="line"><span class="number">7</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="grid布局"><a href="#grid布局" class="headerlink" title="grid布局"></a>grid布局</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">        <span class="attribute">display</span>: grid;</span><br><span class="line">        <span class="attribute">height</span>: <span class="number">300px</span>;</span><br><span class="line">        <span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">        justify-items: center;</span><br><span class="line">        <span class="attribute">align-items</span>: center;</span><br><span class="line">        <span class="attribute">background-color</span>: <span class="number">#000</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="selector-class">.small</span> &#123;</span><br><span class="line">       <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">       <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">        <span class="attribute">background-color</span>: <span class="number">#fff</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
-
-<p>方法二：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="selector-class">.box</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="attribute">display</span>: grid;</span><br><span class="line"><span class="number">3</span>&#125;</span><br><span class="line"><span class="number">4</span><span class="selector-class">.small</span> &#123;</span><br><span class="line"><span class="number">5</span>    justify-self: center;</span><br><span class="line"><span class="number">6</span>    <span class="attribute">align-self</span>: center;</span><br><span class="line"><span class="number">7</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>方法三：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="selector-class">.box</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="attribute">display</span>: grid;</span><br><span class="line"><span class="number">3</span>    justify-items: center;</span><br><span class="line"><span class="number">4</span>&#125;</span><br><span class="line"><span class="number">5</span><span class="selector-class">.small</span> &#123;</span><br><span class="line"><span class="number">6</span>    <span class="attribute">align-self</span>: center;</span><br><span class="line"><span class="number">7</span>&#125;</span><br><span class="line"><span class="number">8</span></span><br></pre></td></tr></table></figure>
-
-<p>方法四：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">复制<span class="number">1</span><span class="selector-class">.box</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="attribute">display</span>: grid;</span><br><span class="line"><span class="number">3</span>    <span class="attribute">align-items</span>: center;</span><br><span class="line"><span class="number">4</span>&#125;</span><br><span class="line"><span class="number">5</span><span class="selector-class">.small</span> &#123;</span><br><span class="line"><span class="number">6</span>    justify-self: center;</span><br><span class="line"><span class="number">7</span>&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/23/BFC/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/23/BFC/" class="post-title-link" itemprop="url">BFC</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-23 11:15:31 / 修改时间：11:24:47" itemprop="dateCreated datePublished" datetime="2022-04-23T11:15:31+08:00">2022-04-23</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="一、常见定位方案"><a href="#一、常见定位方案" class="headerlink" title="一、常见定位方案"></a>一、常见定位方案</h2><p>在讲 BFC 之前，我们先来了解一下常见的定位方案，定位方案是控制元素的布局，有三种常见方案:</p>
-<ul>
-<li>普通流 (normal flow)</li>
-</ul>
-<blockquote>
-<p>在普通流中，元素按照其在 HTML 中的先后位置至上而下布局，在这个过程中，行内元素水平排列，直到当行被占满然后换行，块级元素则会被渲染为完整的一个新行，除非另外指定，否则所有元素默认都是普通流定位，也可以说，普通流中元素的位置由该元素在 HTML 文档中的位置决定。</p>
-</blockquote>
-<ul>
-<li>浮动 (float)</li>
-</ul>
-<blockquote>
-<p>在浮动布局中，元素首先按照普通流的位置出现，然后根据浮动的方向尽可能的向左边或右边偏移，其效果与印刷排版中的文本环绕相似。</p>
-</blockquote>
-<ul>
-<li>绝对定位 (absolute positioning)</li>
-</ul>
-<blockquote>
-<p>在绝对定位布局中，元素会整体脱离普通流，因此绝对定位元素不会对其兄弟元素造成影响，而元素具体的位置由绝对定位的坐标决定。</p>
-</blockquote>
-<h2 id="二、BFC-概念"><a href="#二、BFC-概念" class="headerlink" title="二、BFC 概念"></a>二、BFC 概念</h2><p>Formatting context(格式化上下文) 是 W3C CSS2.1 规范中的一个概念。它是页面中的一块渲染区域，并且有一套渲染规则，它决定了其子元素将如何定位，以及和其他元素的关系和相互作用。</p>
-<p>那么 BFC 是什么呢？</p>
-<p>BFC 即 Block Formatting Contexts (块级格式化上下文)，它属于上述定位方案的普通流。</p>
-<p>**具有 BFC 特性的元素可以看作是隔离了的独立容器，容器里面的元素不会在布局上影响到外面的元素，并且 BFC 具有普通容器所没有的一些特性。<br>**</p>
-<p>通俗一点来讲，可以把 BFC 理解为一个封闭的大箱子，箱子内部的元素无论如何翻江倒海，都不会影响到外部。</p>
-<p>定位方案：</p>
-<ul>
-<li>内部的Box会在垂直方向上一个接一个放置。</li>
-<li>Box垂直方向的距离由margin决定，属于同一个BFC的两个相邻Box的margin会发生重叠。</li>
-<li>每个元素的margin box 的左边，与包含块border box的左边相接触。</li>
-<li>BFC的区域不会与float box重叠。</li>
-<li>BFC是页面上的一个隔离的独立容器，容器里面的子元素不会影响到外面的元素。</li>
-<li>计算BFC的高度时，浮动元素也会参与计算。</li>
-</ul>
-<h2 id="三、触发-BFC"><a href="#三、触发-BFC" class="headerlink" title="三、触发 BFC"></a>三、触发 BFC</h2><p>只要元素满足下面任一条件即可触发 BFC 特性：</p>
-<ul>
-<li>html 根元素</li>
-<li>浮动元素：float 除 none 以外的值</li>
-<li>绝对定位元素：position (absolute、fixed)</li>
-<li>display 为 inline-block、table-cells、flex</li>
-<li>overflow 除了 visible 以外的值 (hidden、auto、scroll)</li>
-</ul>
-<h2 id="四、BFC-特性及应用"><a href="#四、BFC-特性及应用" class="headerlink" title="四、BFC 特性及应用"></a>四、BFC 特性及应用</h2><p><strong>1. 同一个 BFC 下外边距会发生折叠</strong></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">div&#123;</span><br><span class="line">    width: 100px;</span><br><span class="line">    height: 100px;</span><br><span class="line">    background: lightblue;</span><br><span class="line">    margin: 100px;</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/04/23/BFC/1-16506838939031.png" alt="1"></p>
-<p>从效果上看，因为两个 div 元素都处于同一个 BFC 容器下 (这里指 body 元素) 所以第一个 div 的下边距和第二个 div 的上边距发生了重叠，所以两个盒子之间距离只有 100px，而不是 200px。</p>
-<p>首先这不是 CSS 的 bug，我们可以理解为一种规范，<strong>如果想要避免外边距的重叠，可以将其放在不同的 BFC 容器中。</strong></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">.container &#123;</span><br><span class="line">    overflow: hidden;</span><br><span class="line">&#125;</span><br><span class="line">p &#123;</span><br><span class="line">    width: 100px;</span><br><span class="line">    height: 100px;</span><br><span class="line">    background: lightblue;</span><br><span class="line">    margin: 100px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这时候，两个盒子边距就变成了 200px</p>
-<p><img src="/2022/04/23/BFC/2-16506839367002.png" alt="2"></p>
-<p><strong>2. BFC 可以包含浮动的元素（清除浮动）</strong></p>
-<p>我们都知道，浮动的元素会脱离普通文档流，来看下下面一个例子</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;border: 1px solid #000;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;width: 100px;height: 100px;background: #eee;float: left;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/04/23/BFC/3-16506839739523.png" alt="3"></p>
-<p>由于容器内元素浮动，脱离了文档流，所以容器只剩下 2px 的边距高度。如果使触发容器的 BFC，那么容器将会包裹着浮动元素。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;border: 1px solid #000;overflow: hidden&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;width: 100px;height: 100px;background: #eee;float: left;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>效果如图：</p>
-<p><img src="/2022/04/23/BFC/4-16506840082674.png" alt="4"></p>
-<p><strong>3. BFC 可以阻止元素被浮动元素覆盖</strong></p>
-<p>先来看一个文字环绕效果：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;height: 100px;width: 100px;float: left;background: lightblue&quot;</span>&gt;</span>我是一个左浮动的元素<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;width: 200px; height: 200px;background: #eee&quot;</span>&gt;</span>我是一个没有设置浮动, </span><br><span class="line">也没有触发 BFC 元素, width: 200px; height:200px; background: #eee;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/04/23/BFC/5.png" alt="5"></p>
-<p>这时候其实第二个元素有部分被浮动元素所覆盖，(但是文本信息不会被浮动元素所覆盖) 如果想避免元素被覆盖，可触第二个元素的 BFC 特性，在第二个元素中加入 <strong>overflow: hidden</strong>，就会变成：</p>
-<p><img src="/2022/04/23/BFC/6.png" alt="6"></p>
-<p>这个方法可以用来实现两列自适应布局，效果不错，这时候左边的宽度固定，右边的内容自适应宽度(去掉上面右边内容的宽度)。</p>
-<div style="overflow:hidden">
-    <div style="height: 100px;width: 100px;float: left;background: lightblue">我是一个左浮动的元素</div>
-<div style="margin-left:100px; height: 200px;background: #eee">我是一个没有设置浮动, 
-也没有触发 BFC 元素, width: 200px; height:200px; background: #eee;</div>
-</div>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1319,7 +1275,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">114</span>
+          <span class="site-state-item-count">118</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1380,7 +1336,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共258.1k字</span>
+  <span class="post-count">博客全站共261k字</span>
 </div>
         
 
