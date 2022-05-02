@@ -403,10 +403,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-05-02 11:58:28 / 修改时间：15:41:48" itemprop="dateCreated datePublished" datetime="2022-05-02T11:58:28+08:00">2022-05-02</time>
+              <time title="创建时间：2022-05-02 11:58:28" itemprop="dateCreated datePublished" datetime="2022-05-02T11:58:28+08:00">2022-05-02</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-03 00:00:45" itemprop="dateModified" datetime="2022-05-03T00:00:45+08:00">2022-05-03</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -437,7 +443,7 @@
 <li>同步任务：立即执行的任务，同步任务一般会直接进入到主线程中执行</li>
 <li>异步任务：异步执行的任务，比如<code>ajax</code>网络请求，<code>setTimeout </code>定时函数等</li>
 </ul>
-<p><img src="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/%5C%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%5C1.png"></p>
+<p><img src="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/node1.png"></p>
 <p>从上面我们可以看到，同步任务进入主线程，即主执行栈，异步任务进入任务队列，主线程内的任务执行完毕为空，会去任务队列读取对应的任务，推入主线程执行。上述过程的不断重复就是事件循环</p>
 <h2 id="宏任务与微任务"><a href="#宏任务与微任务" class="headerlink" title="宏任务与微任务"></a>宏任务与微任务</h2><p>如果将任务划分为同步任务和异步任务并不是那么的准确，举个例子：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">console.log(1)</span><br><span class="line"></span><br><span class="line">setTimeout(()=&gt;&#123;</span><br><span class="line">    console.log(2)</span><br><span class="line">&#125;, 0)</span><br><span class="line"></span><br><span class="line">new Promise((resolve, reject)=&gt;&#123;</span><br><span class="line">    console.log(&#x27;new Promise&#x27;)</span><br><span class="line">    resolve()</span><br><span class="line">&#125;).then(()=&gt;&#123;</span><br><span class="line">    console.log(&#x27;then&#x27;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">console.log(3)</span><br></pre></td></tr></table></figure>
@@ -497,7 +503,7 @@
 <p>上面的例子中，<code>await</code> 会阻塞下面的代码（即加入微任务队列），先执行 <code>async </code>外面的同步代码，同步代码执行完，再回到 <code>async</code> 函数中，再执行之前阻塞的代码</p>
 <p>所以上述输出结果为：<code>1</code>，<code>fn2</code>，<code>3</code>，<code>2</code></p>
 <h1 id="Node中的事件循环机制"><a href="#Node中的事件循环机制" class="headerlink" title="Node中的事件循环机制"></a>Node中的事件循环机制</h1><p>事件循环分为6个阶段：</p>
-<p><img src="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/%5C%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%5C2.png"></p>
+<p><img src="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/node2.png"></p>
 <p>timers:执行timer的回调，即setTimeout,setInterval里面的回调函数</p>
 <p>I/O事件回调阶段：执行延迟到下一个循环迭代的I/O阶段，即上一轮循环中未被执行的一些I/O回调</p>
 <p>idle,prepare(闲置阶段):仅内部使用</p>
@@ -505,7 +511,7 @@
 <p>check(检查阶段)：setImmediate()回调函数在这里执行</p>
 <p>close callback（关闭事件回调阶段）：一些关闭的回调函数，如socket.on(‘close’,…)</p>
 <p>除了上述6个阶段，还存在process.nextTick,其不属于事件循环的任何一个阶段，<strong>它属于该阶段与下阶段之间的过渡，即本阶段执行结束，进入下一个阶段前要执行的回调，类似插队</strong></p>
-<p><img src="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/%5C%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%5C3.png"></p>
+<p><img src="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/node3.png"></p>
 <p>在Node中，同样存在宏任务和微任务，与浏览器的事件循环相似</p>
 <p>微任务：</p>
 <ul>
@@ -818,17 +824,27 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-05-01 17:42:46 / 修改时间：21:04:38" itemprop="dateCreated datePublished" datetime="2022-05-01T17:42:46+08:00">2022-05-01</time>
+              <time title="创建时间：2022-05-01 17:42:46" itemprop="dateCreated datePublished" datetime="2022-05-01T17:42:46+08:00">2022-05-01</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-02 23:44:58" itemprop="dateModified" datetime="2022-05-02T23:44:58+08:00">2022-05-02</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Webpack/" itemprop="url" rel="index"><span itemprop="name">Webpack</span></a>
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/webpack/" itemprop="url" rel="index"><span itemprop="name">webpack</span></a>
                 </span>
             </span>
 
@@ -1090,10 +1106,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-04-29 23:07:41 / 修改时间：23:56:47" itemprop="dateCreated datePublished" datetime="2022-04-29T23:07:41+08:00">2022-04-29</time>
+              <time title="创建时间：2022-04-29 23:07:41" itemprop="dateCreated datePublished" datetime="2022-04-29T23:07:41+08:00">2022-04-29</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-02 23:47:58" itemprop="dateModified" datetime="2022-05-02T23:47:58+08:00">2022-05-02</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -1118,7 +1140,7 @@
           <p>Dom事件流</p>
 <p>DOM2事件流分为3个阶段：事件捕获，到达目标和事件冒泡，事件捕获最先发生，为提前拦截事件提供了可能，然后，实际的目标元素接收到事件后，最后一个阶段是冒泡，最迟要在这个阶段响应事件。</p>
 <p>实际目标（div元素）在补货阶段不会接收到事件，这是因为捕获阶段从document到html到body就结束，下一个阶段，即会在div元素上触发事件的‘到达目标阶段，通常在事处理中被认为是事件冒泡的第一部分，然后，冒泡阶段开始，事件反转传播到文档</p>
-<p><img src="/2022/04/29/DOM%E4%BA%8B%E4%BB%B6/1-16512452790681.png"></p>
+<p><img src="/2022/04/29/DOM%E4%BA%8B%E4%BB%B6/dom1.png"></p>
 <p>事件处理程序</p>
 <p>HTML事件处理程序:</p>
 <p>这种交互能力是通过为onclick属性指定JavaScript代码值实现。</p>
@@ -1144,8 +1166,8 @@
 <p>事件对象</p>
 <p>DOM事件对象</p>
 <p>event对象时传给事件处理程序唯一参数</p>
-<p><img src="/2022/04/29/DOM%E4%BA%8B%E4%BB%B6/2-16512466375772.png" alt="2"></p>
-<p><img src="/2022/04/29/DOM%E4%BA%8B%E4%BB%B6/3-16512466722343.png"></p>
+<p><img src="/2022/04/29/DOM%E4%BA%8B%E4%BB%B6/dom2.png" alt="2"></p>
+<p><img src="/2022/04/29/DOM%E4%BA%8B%E4%BB%B6/dom3.png"></p>
 <p>在事件处理程序内部，this对象始终等于currentTarget的值，而target只包含事件的实际目标，如果事件处理程序直接添加在了意图目标，则this,currentTarget,target的值一样</p>
 <p>如果添加在父结点上，则不一样</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.body.onclick=<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(e.currentTarget===<span class="built_in">document</span>.body);<span class="comment">//true</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>===<span class="built_in">document</span>.body)<span class="comment">//true</span></span><br><span class="line">    <span class="built_in">console</span>.log(e.target===<span class="built_in">document</span>.getElementById(<span class="string">&#x27;myBtn&#x27;</span>))<span class="comment">//true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -1380,14 +1402,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">126</span>
+          <span class="site-state-item-count">123</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">21</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -1441,7 +1463,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共267.9k字</span>
+  <span class="post-count">博客全站共102.9k字</span>
 </div>
         
 
