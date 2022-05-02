@@ -182,6 +182,310 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/04/json/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/04/json/" class="post-title-link" itemprop="url">json</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-04 16:03:00 / 修改时间：17:00:12" itemprop="dateCreated datePublished" datetime="2022-01-04T16:03:00+08:00">2022-01-04</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>把它当成一种数据格式，而不是编程语言。JSON 不属于 JavaScript，<br>它们只是拥有相同的语法而已。JSON 也不是只能在 JavaScript 中使用，它是一种通用数据格式。很多语言都有解析和序列化 JSON 的内置能力。</p>
+<h1 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h1><ul>
+<li>简单值：字符串、数值、布尔值和 null 可以在 JSON 中出现，就像在 JavaScript 中一样。特殊值 undefined 不可以。</li>
+<li>对象：第一种复杂数据类型，对象表示有序键/值对。每个值可以是简单值，也可以是复杂类型。</li>
+<li>数组：第二种复杂数据类型，数组表示可以通过数值索引访问的值的有序列表。数组的值可以是任意类型，包括简单值、对象，甚至其他数组。</li>
+</ul>
+<h2 id="简单值"><a href="#简单值" class="headerlink" title="简单值"></a>简单值</h2><p>JavaScript 字符串与 JSON 字符串的主要区别是，JSON 字符串必须使用双引号（单引号会导致语法错误）。布尔值和 null 本身也是有效的 JSON 值</p>
+<h2 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h2><p>与 JavaScript 对象字面量相比，JSON 主要有两处不同。首先，<strong>没有变量声明</strong>（JSON 中没有变量）。其次，<strong>最后没有分号（</strong>不需要，因为不是 JavaScript 语句）。同样，用引号将属性名包围起来才是有效的JSON。属性的值可以是简单值或复杂数据类型值，后者可以在对象中再嵌入对象.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="attr">&quot;name&quot;</span>: <span class="string">&quot;Nicholas&quot;</span>,</span><br><span class="line"><span class="attr">&quot;age&quot;</span>: <span class="number">29</span>,</span><br><span class="line"><span class="attr">&quot;school&quot;</span>: &#123;</span><br><span class="line"><span class="attr">&quot;name&quot;</span>: <span class="string">&quot;Merrimack College&quot;</span>,</span><br><span class="line"><span class="attr">&quot;location&quot;</span>: <span class="string">&quot;North Andover, MA&quot;</span></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><p>数组在 JSON 中使用 JavaScript 的数组字面量形式表示.</p>
+<p>JavaScript</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> values = [<span class="number">25</span>, <span class="string">&quot;hi&quot;</span>, <span class="literal">true</span>];</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Json</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">25</span>,<span class="string">&quot;hi&quot;</span>,<span class="literal">true</span>]</span><br></pre></td></tr></table></figure>
+
+<h1 id="JavaScript序列化为Json"><a href="#JavaScript序列化为Json" class="headerlink" title="JavaScript序列化为Json"></a>JavaScript序列化为Json</h1><p>stringfy()：在序列化 JavaScript 对象时，所有函数和原型成员都会有意地在结果中省略。此外，值为 undefined的任何属性也会被跳过。最终得到的就是所有实例属性均为有效 JSON 数据类型的表</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> book = &#123;</span><br><span class="line"><span class="attr">title</span>: <span class="string">&quot;Professional JavaScript&quot;</span>,</span><br><span class="line"><span class="attr">authors</span>: [</span><br><span class="line"><span class="string">&quot;Nicholas C. Zakas&quot;</span>,</span><br><span class="line"><span class="string">&quot;Matt Frisbie&quot;</span></span><br><span class="line">],</span><br><span class="line"><span class="attr">edition</span>: <span class="number">4</span>,</span><br><span class="line"><span class="attr">year</span>: <span class="number">2017</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">let</span> jsonText = <span class="built_in">JSON</span>.stringify(book);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>结果：</p>
+<p>{“title”:”Professional JavaScript”,”authors”:[“Nicholas C. Zakas”,”Matt Frisbie”],<br>“edition”:4,”year”:2017}</p>
+</blockquote>
+<p>还可以接收两个参数。这两个参数可以用于指定其他序列化 JavaScript 对象的方式。第一个参数是<strong>过滤器</strong>，可以是<strong>数组或函数</strong>；第二个参数是用于<strong>缩进结果 JSON 字符串的选项</strong>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> book = &#123;</span><br><span class="line"><span class="attr">title</span>: <span class="string">&quot;Professional JavaScript&quot;</span>,</span><br><span class="line"><span class="attr">authors</span>: [</span><br><span class="line"><span class="string">&quot;Nicholas C. Zakas&quot;</span>,</span><br><span class="line"><span class="string">&quot;Matt Frisbie&quot;</span></span><br><span class="line">],</span><br><span class="line"><span class="attr">edition</span>: <span class="number">4</span>,</span><br><span class="line"><span class="attr">year</span>: <span class="number">2017</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">let</span> jsonText = <span class="built_in">JSON</span>.stringify(book, [<span class="string">&quot;title&quot;</span>, <span class="string">&quot;edition&quot;</span>]);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>如果第二个参数是一个函数，则行为又有不同。提供的函数接收两个参数：属性名（key）和属性值（value）。可以根据这个 key 决定要对相应属性执行什么操作。这个 key 始终是字符串，只是在值<br>不属于某个键/值对时会是空字符串</li>
+<li>返回的值就是相应 key 应该包含的结果。注意，返回 undefined 会导致属性被忽略</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> book = &#123;</span><br><span class="line"><span class="attr">title</span>: <span class="string">&quot;Professional JavaScript&quot;</span>,</span><br><span class="line"><span class="attr">authors</span>: [</span><br><span class="line"><span class="string">&quot;Nicholas C. Zakas&quot;</span>,</span><br><span class="line"><span class="string">&quot;Matt Frisbie&quot;</span></span><br><span class="line">],</span><br><span class="line"><span class="attr">edition</span>: <span class="number">4</span>,</span><br><span class="line"><span class="attr">year</span>: <span class="number">2017</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">let</span> jsonText = <span class="built_in">JSON</span>.stringify(book, <span class="function">(<span class="params">key, value</span>) =&gt;</span> &#123;</span><br><span class="line"><span class="keyword">switch</span>(key) &#123;</span><br><span class="line"><span class="keyword">case</span> <span class="string">&quot;authors&quot;</span>:</span><br><span class="line"><span class="keyword">return</span> value.join(<span class="string">&quot;,&quot;</span>)</span><br><span class="line"><span class="keyword">case</span> <span class="string">&quot;year&quot;</span>:</span><br><span class="line"><span class="keyword">return</span> <span class="number">5000</span>;</span><br><span class="line"><span class="keyword">case</span> <span class="string">&quot;edition&quot;</span>:</span><br><span class="line"><span class="keyword">return</span> <span class="literal">undefined</span>;</span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line"><span class="keyword">return</span> value;</span><br><span class="line">&#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">/*&#123;&quot;title&quot;:&quot;Professional JavaScript&quot;,&quot;authors&quot;:&quot;Nicholas C. Zakas,Matt</span></span><br><span class="line"><span class="comment">Frisbie&quot;,&quot;year&quot;:5000&#125;*/</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>JSON.stringify()方法的第三个参数控制缩进和空格。在这个参数是数值时，表示每一级缩进的空格数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> book = &#123;</span><br><span class="line"><span class="attr">title</span>: <span class="string">&quot;Professional JavaScript&quot;</span>,</span><br><span class="line"><span class="attr">authors</span>: [</span><br><span class="line">	<span class="string">&quot;Nicholas C. Zakas&quot;</span>,</span><br><span class="line">	<span class="string">&quot;Matt Frisbie&quot;</span></span><br><span class="line">],</span><br><span class="line"><span class="attr">edition</span>: <span class="number">4</span>,</span><br><span class="line"><span class="attr">year</span>: <span class="number">2017</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> jsonText = <span class="built_in">JSON</span>.stringify(book, <span class="literal">null</span>, <span class="number">4</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>toJSON():在要序列化的对象中添加 toJSON()方法，序列化时会基于这个方法返回适当的 JSON 表示:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> book = &#123;</span><br><span class="line"><span class="attr">title</span>: <span class="string">&quot;Professional JavaScript&quot;</span>,</span><br><span class="line"><span class="attr">authors</span>: [</span><br><span class="line"><span class="string">&quot;Nicholas C. Zakas&quot;</span>,</span><br><span class="line"><span class="string">&quot;Matt Frisbie&quot;</span></span><br><span class="line">],</span><br><span class="line"><span class="attr">edition</span>: <span class="number">4</span>,</span><br><span class="line"><span class="attr">year</span>: <span class="number">2017</span>,</span><br><span class="line"><span class="attr">toJSON</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;<span class="comment">//箭头函数不能定义toJSON(),因为剪头函数的词法作用域是全局作用域，在这种情况不合适</span></span><br><span class="line"><span class="keyword">return</span> <span class="built_in">this</span>.title;</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">let</span> jsonText = <span class="built_in">JSON</span>.stringify(book);<span class="comment">//book对象返回图书的书名(this.title)</span></span><br></pre></td></tr></table></figure>
+
+<p>toJSON()方法可以与过滤函数一起使用，在把对象传给 JSON.stringify()时会执行如下步骤。</p>
+<p>(1) 如果可以获取实际的值，则调用 toJSON()方法获取实际的值，否则使用默认的序列化。<br>(2) 否则，使用默认序列化时，如果提供了第二个参数，则应用过滤。<br>(3) 第(2)步返回的每个值都会相应地进行序列化。<br>(4) 如果提供了第三个参数，则相应地进行缩进。</p>
+<h1 id="ES6中堆JSON-stringfy的改造"><a href="#ES6中堆JSON-stringfy的改造" class="headerlink" title="ES6中堆JSON.stringfy的改造"></a>ES6中堆JSON.stringfy的改造</h1><p>UTF-8 标准规定，<code>0xD800</code>到<code>0xDFFF</code>之间的码点，不能单独使用，必须配对使用。比如，<code>\uD834\uDF06</code>是两个码点，但是必须放在一起配对使用，代表字符<code>𝌆</code>。这是为了表示码点大于<code>0xFFFF</code>的字符的一种变通方法。单独使用<code>\uD834</code>和<code>\uDFO6</code>这两个码点是不合法的，或者颠倒顺序也不行，因为<code>\uDF06\uD834</code>并没有对应的字符。</p>
+<p><code>JSON.stringify()</code>的问题在于，它可能返回<code>0xD800</code>到<code>0xDFFF</code>之间的单个码点。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JSON.stringify(&#x27;\u&#123;D834&#125;&#x27;) // &quot;\u&#123;D834&#125;&quot;</span><br></pre></td></tr></table></figure>
+
+<p>为了确保返回的是合法的 UTF-8 字符，<a target="_blank" rel="noopener" href="https://github.com/tc39/proposal-well-formed-stringify">ES2019</a> 改变了<code>JSON.stringify()</code>的行为。如果遇到<code>0xD800</code>到<code>0xDFFF</code>之间的单个码点，或者不存在的配对形式，它会返回转义字符串，留给应用自己决定下一步的处理。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JSON.stringify(&#x27;\u&#123;D834&#125;&#x27;) // &quot;&quot;\\uD834&quot;&quot;JSON.stringify(&#x27;\uDF06\uD834&#x27;) // &quot;&quot;\\udf06\\ud834&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<h1 id="解析选项"><a href="#解析选项" class="headerlink" title="解析选项"></a>解析选项</h1><p>JSON.parse():接收一个参数，这个函数称为还原函数，还原函数接收两个参数，属性名key和属性名value，如果还原函数返回undefined，则结果中删除相应键，如果返回了其他任何值，则该值就会成为相应键的值插入到结果中。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> book = &#123;</span><br><span class="line"><span class="attr">title</span>: <span class="string">&quot;Professional JavaScript&quot;</span>,</span><br><span class="line"><span class="attr">authors</span>: [</span><br><span class="line"><span class="string">&quot;Nicholas C. Zakas&quot;</span>,</span><br><span class="line"><span class="string">&quot;Matt Frisbie&quot;</span></span><br><span class="line">],</span><br><span class="line"><span class="attr">edition</span>: <span class="number">4</span>,</span><br><span class="line"><span class="attr">year</span>: <span class="number">2017</span>,</span><br><span class="line"><span class="attr">releaseDate</span>: <span class="keyword">new</span> <span class="built_in">Date</span>(<span class="number">2017</span>, <span class="number">11</span>, <span class="number">1</span>)</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">let</span> jsonText = <span class="built_in">JSON</span>.stringify(book);</span><br><span class="line"><span class="keyword">let</span> bookCopy = <span class="built_in">JSON</span>.parse(jsonText,</span><br><span class="line"><span class="function">(<span class="params">key, value</span>) =&gt;</span> key == <span class="string">&quot;releaseDate&quot;</span> ? <span class="keyword">new</span> <span class="built_in">Date</span>(value) : value);</span><br><span class="line">alert(bookCopy.releaseDate.getFullYear());<span class="comment">//对象仙贝序列化为JSON字符串，又被重新解析为一个对象bookCopy,还原函数查找&quot;releaseDate&quot;键，找到后根虎日期字符创建新的Date对象，得到的bookCopy.releaseDate属性又变回Date对象，可以调用其getFullYear()方法</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/04/%E5%AD%97%E7%AC%A6%E8%A1%A8%E7%A4%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/04/%E5%AD%97%E7%AC%A6%E8%A1%A8%E7%A4%BA/" class="post-title-link" itemprop="url">字符表示</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-04 11:58:13 / 修改时间：12:14:36" itemprop="dateCreated datePublished" datetime="2022-01-04T11:58:13+08:00">2022-01-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="JavaScript字符表示"><a href="#JavaScript字符表示" class="headerlink" title="JavaScript字符表示"></a>JavaScript字符表示</h1><p>JavaScript 字符串由 16 位码元（code unit）组成。对多数字符来说，每 16 位码元对应一个字符。换<br>句话说，字符串的 length 属性表示字符串包含多少 16 位码元</p>
+<p>JavaScript 字符串使用了两种 Unicode 编码混合的策略：UCS-2 和 UTF-16。对于可以采用 16 位编码<br>的字符（U+0000~U+FFFF），这两种编码实际上是一样的。</p>
+<h2 id="查看指定码元"><a href="#查看指定码元" class="headerlink" title="查看指定码元"></a>查看指定码元</h2><h3 id="charCodeAt"><a href="#charCodeAt" class="headerlink" title="charCodeAt()"></a>charCodeAt()</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> message = <span class="string">&quot;abcde&quot;</span>;</span><br><span class="line"><span class="comment">// Unicode &quot;Latin small letter C&quot;的编码是 U+0063</span></span><br><span class="line"><span class="built_in">console</span>.log(message.charCodeAt(<span class="number">2</span>)); <span class="comment">// 99</span></span><br><span class="line"><span class="comment">// 十进制 99 等于十六进制 63</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="number">99</span> === <span class="number">0x63</span>); <span class="comment">// true</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个对应关系在扩展到 Unicode 增补字符平面时就不成立了。即 16 位只能唯一表示,65 536 个字符。这对于大多数语言字符集是足够了，在 Unicode 中称为基本多语言平面（BMP）。为了表示更多的字符，Unicode 采用了一个策略，即每个字符使用另外 16 位去选择一个增补平面。这种每个字符使用两个 16 位码元的策略称为代理对。</p>
+<h3 id="codePointAt"><a href="#codePointAt" class="headerlink" title="codePointAt()"></a>codePointAt()</h3><p>为正确解析既包含单码元字符又包含代理对字符的字符串，可以使用 codePointAt()来代替charCodeAt()。跟使用 charCodeAt()时类似，codePointAt()接收 16 位码元的索引并返回该索引位置上的码点（code point）。码点是 Unicode 中一个字符的完整标识。比如，”c”的码点是 0x0063，而”☺”的码点是 0x1F60A。码点可能是 16 位，也可能是 32 位，而 codePointAt()方法可以从指定码元位置识别完整的码点。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> message = <span class="string">&quot;ab☺de&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(message.codePointAt(<span class="number">1</span>)); <span class="comment">// 98</span></span><br><span class="line"><span class="built_in">console</span>.log(message.codePointAt(<span class="number">2</span>)); <span class="comment">// 128522</span></span><br><span class="line"><span class="built_in">console</span>.log(message.codePointAt(<span class="number">3</span>)); <span class="comment">// 56842</span></span><br><span class="line"><span class="built_in">console</span>.log(message.codePointAt(<span class="number">4</span>)); <span class="comment">// 100</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="给定UTF-16码原创建字符"><a href="#给定UTF-16码原创建字符" class="headerlink" title="给定UTF-16码原创建字符"></a>给定UTF-16码原创建字符</h2><h3 id="fromCharCode"><a href="#fromCharCode" class="headerlink" title="fromCharCode()"></a>fromCharCode()</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Unicode &quot;Latin small letter A&quot;的编码是 U+0061</span></span><br><span class="line"><span class="comment">// Unicode &quot;Latin small letter B&quot;的编码是 U+0062</span></span><br><span class="line"><span class="comment">// Unicode &quot;Latin small letter C&quot;的编码是 U+0063</span></span><br><span class="line"><span class="comment">// Unicode &quot;Latin small letter D&quot;的编码是 U+0064</span></span><br><span class="line"><span class="comment">// Unicode &quot;Latin small letter E&quot;的编码是 U+0065</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">String</span>.fromCharCode(<span class="number">0x61</span>, <span class="number">0x62</span>, <span class="number">0x63</span>, <span class="number">0x64</span>, <span class="number">0x65</span>)); <span class="comment">// &quot;abcde&quot;</span></span><br><span class="line"><span class="comment">// 0x0061 === 97</span></span><br><span class="line"><span class="comment">// 0x0062 === 98</span></span><br><span class="line"><span class="comment">// 0x0063 === 99</span></span><br><span class="line"><span class="comment">// 0x0064 === 100</span></span><br><span class="line"><span class="comment">// 0x0065 === 101</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">String</span>.fromCharCode(<span class="number">97</span>, <span class="number">98</span>, <span class="number">99</span>, <span class="number">100</span>, <span class="number">101</span>)); <span class="comment">// &quot;abcde&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="fromCodePoint"><a href="#fromCodePoint" class="headerlink" title="fromCodePoint()"></a>fromCodePoint()</h3><p>fromCodePoint()：这个方法接收任意数量的码点，返回对应字符拼接起来的字符串</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="built_in">String</span>.fromCharCode(<span class="number">97</span>, <span class="number">98</span>, <span class="number">55357</span>, <span class="number">56842</span>, <span class="number">100</span>, <span class="number">101</span>)); <span class="comment">// ab☺de</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">String</span>.fromCodePoint(<span class="number">97</span>, <span class="number">98</span>, <span class="number">128522</span>, <span class="number">100</span>, <span class="number">101</span>)); <span class="comment">// ab☺de</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="normalize-规范化"><a href="#normalize-规范化" class="headerlink" title="normalize()规范化"></a>normalize()规范化</h2><p>Unicode提供了 4种规范化形式，可以将类似上面的字符规范化为一致的格式，无论底层字符的代码是什么。这 4种规范化形式是：NFD（Normalization Form D）、NFC（Normalization Form C）、<br>NFKD（Normalization Form KD）和 NFKC（Normalization Form KC）。可以使用 normalize()方法对字符串应用上述规范化形式，使用时需要传入表示哪种形式的字串：”NFD”、”NFC”、”NFKD”或”NFKC”。</p>
+<p>通过比较字符串与其调用 normalize()的返回值，就可以知道该字符串是否已经规范化了</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a1 = <span class="built_in">String</span>.fromCharCode(<span class="number">0x00C5</span>),</span><br><span class="line">a2 = <span class="built_in">String</span>.fromCharCode(<span class="number">0x212B</span>),</span><br><span class="line">a3 = <span class="built_in">String</span>.fromCharCode(<span class="number">0x0041</span>, <span class="number">0x030A</span>);</span><br><span class="line"><span class="comment">// U+00C5 是对 0+212B 进行 NFC/NFKC 规范化之后的结果</span></span><br><span class="line"><span class="built_in">console</span>.log(a1 === a1.normalize(<span class="string">&quot;NFD&quot;</span>)); <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(a1 === a1.normalize(<span class="string">&quot;NFC&quot;</span>)); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(a1 === a1.normalize(<span class="string">&quot;NFKD&quot;</span>)); <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(a1 === a1.normalize(<span class="string">&quot;NFKC&quot;</span>)); <span class="comment">// true</span></span><br><span class="line"><span class="comment">// U+212B 是未规范化的</span></span><br><span class="line"><span class="built_in">console</span>.log(a2 === a2.normalize(<span class="string">&quot;NFD&quot;</span>)); <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(a2 === a2.normalize(<span class="string">&quot;NFC&quot;</span>)); <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(a2 === a2.normalize(<span class="string">&quot;NFKD&quot;</span>)); <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(a2 === a2.normalize(<span class="string">&quot;NFKC&quot;</span>)); <span class="comment">// false</span></span><br><span class="line"><span class="comment">// U+0041/U+030A 是对 0+212B 进行 NFD/NFKD 规范化之后的结果</span></span><br><span class="line"><span class="built_in">console</span>.log(a3 === a3.normalize(<span class="string">&quot;NFD&quot;</span>)); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(a3 === a3.normalize(<span class="string">&quot;NFC&quot;</span>)); <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(a3 === a3.normalize(<span class="string">&quot;NFKD&quot;</span>)); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(a3 === a3.normalize(<span class="string">&quot;NFKC&quot;</span>)); <span class="comment">// false</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>未规范化：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a1 = <span class="built_in">String</span>.fromCharCode(<span class="number">0x00C5</span>),</span><br><span class="line">a2 = <span class="built_in">String</span>.fromCharCode(<span class="number">0x212B</span>),</span><br><span class="line">a3 = <span class="built_in">String</span>.fromCharCode(<span class="number">0x0041</span>, <span class="number">0x030A</span>);</span><br><span class="line"><span class="built_in">console</span>.log(a1, a2, a3); <span class="comment">// Å, Å, Å</span></span><br><span class="line"><span class="built_in">console</span>.log(a1 === a2); <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(a1 === a3); <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(a2 === a3); <span class="comment">// false</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>选择同一种规范化形式可以让比较操作符返回正确的结果：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a1 = <span class="built_in">String</span>.fromCharCode(<span class="number">0x00C5</span>),</span><br><span class="line">a2 = <span class="built_in">String</span>.fromCharCode(<span class="number">0x212B</span>),</span><br><span class="line">a3 = <span class="built_in">String</span>.fromCharCode(<span class="number">0x0041</span>, <span class="number">0x030A</span>);</span><br><span class="line"><span class="built_in">console</span>.log(a1.normalize(<span class="string">&quot;NFD&quot;</span>) === a2.normalize(<span class="string">&quot;NFD&quot;</span>)); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(a2.normalize(<span class="string">&quot;NFKC&quot;</span>) === a3.normalize(<span class="string">&quot;NFKC&quot;</span>)); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(a1.normalize(<span class="string">&quot;NFC&quot;</span>) === a3.normalize(<span class="string">&quot;NFC&quot;</span>)); <span class="comment">// true</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/03/%E5%AA%92%E4%BD%93%E6%9F%A5%E8%AF%A2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/03/%E5%AA%92%E4%BD%93%E6%9F%A5%E8%AF%A2/" class="post-title-link" itemprop="url">媒体查询</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-03 17:42:17 / 修改时间：20:40:52" itemprop="dateCreated datePublished" datetime="2022-01-03T17:42:17+08:00">2022-01-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HTML-CSS/" itemprop="url" rel="index"><span itemprop="name">HTML+CSS</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>媒体查询常被用于以下目的：</p>
+<ul>
+<li><p>有条件的通过 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/@media"><code>@media</code></a> 和 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/@import"><code>@import</code></a> <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/At-rule">at-rules</a> 用<a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/CSS">CSS</a> 装饰样式。</p>
+</li>
+<li><p>用<code>media=</code> 属性为<style>,<link>,<source>和其他<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTML">HTML</a>元素指定特定的媒体类型。</p>
+</li>
+</ul>
+<h1 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h1><p>媒体类型和任意数量的媒体特性表达式构成。</p>
+<p>当媒体类型（如果指定）与在其上显示文档的设备匹配并且所有媒体功能表达式都计算为true时，媒体查询将计算为true。 涉及未知媒体类型的查询始终为false。</p>
+<h2 id="媒体类型"><a href="#媒体类型" class="headerlink" title="媒体类型"></a>媒体类型</h2><p>描述设备的一般类别。除非使用 <code>not</code> 或 <code>only</code> 逻辑操作符，媒体类型是可选的，并且会（隐式地）应用 <code>all</code> 类型。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">all</span><br></pre></td></tr></table></figure>
+
+<p>适用于所有设备。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print</span><br></pre></td></tr></table></figure>
+
+<p>适用于在打印预览模式下在屏幕上查看的分页材料和文档。 （有关特定于这些格式的格式问题的信息，请参阅<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/Paged_Media">分页媒体</a>。）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">screen</span><br></pre></td></tr></table></figure>
+
+<p>主要用于屏幕。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">speech</span><br></pre></td></tr></table></figure>
+
+<p>主要用于语音合成器。</p>
+<h3 id="定位媒体类型"><a href="#定位媒体类型" class="headerlink" title="定位媒体类型"></a>定位媒体类型</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@media</span> screen, print &#123; ... &#125;</span><br><span class="line"><span class="comment">/*用两个媒体查询来同时定位屏幕和打印设备*/</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="媒体特性"><a href="#媒体特性" class="headerlink" title="媒体特性"></a>媒体特性</h2><p>描述了 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Glossary/User_agent">user agent</a>、输出设备，或是浏览环境的具体特征。媒体特性表达式是完全可选的，它负责测试这些特性或特征是否存在、值为多少。每条媒体特性表达式都必须用括号括起来。</p>
+<h3 id="逻辑操作符"><a href="#逻辑操作符" class="headerlink" title="逻辑操作符"></a>逻辑操作符</h3><p> <code>not</code>, <code>and</code>, 和 <code>only</code> 可用于联合构造复杂的媒体查询，您还可以通过用逗号分隔多个媒体查询，将它们组合为一个规则。</p>
+<h4 id="and"><a href="#and" class="headerlink" title="and"></a><code>and</code></h4><p> <code>and</code> 操作符用于将多个媒体查询规则组合成单条媒体查询，当每个查询规则都为真时则该条媒体查询为真，它还用于将媒体功能与媒体类型结合在一起。</p>
+<h4 id="not"><a href="#not" class="headerlink" title="not"></a><code>not</code></h4><p><code>not</code>运算符用于否定媒体查询，如果不满足这个条件则返回true，否则返回false。 如果出现在以逗号分隔的查询列表中，它将仅否定应用了该查询的特定查询。 如果使用not运算符，则还必须指定媒体类型。</p>
+<p><strong>注意：</strong>在Level 3中，<code>not</code>关键字不能用于否定单个媒体功能表达式，而只能用于否定整个媒体查询。</p>
+<h4 id="only"><a href="#only" class="headerlink" title="only"></a><code>only</code></h4><p><code>only</code>运算符仅在整个查询匹配时才用于应用样式，并且对于防止较早的浏览器应用所选样式很有用。 当不使用<code>only</code>时，旧版本的浏览器会将<code>screen and (max-width: 500px)</code>简单地解释为<code>screen</code>，忽略查询的其余部分，并将其样式应用于所有屏幕。 如果使用<code>only</code>运算符，则<em>还必须指定</em>媒体类型。</p>
+<h4 id="逗号"><a href="#逗号" class="headerlink" title=", (逗号)"></a><code>,</code> (逗号)</h4><p>逗号用于将多个媒体查询合并为一个规则。 逗号分隔列表中的每个查询都与其他查询分开处理。 因此，如果列表中的任何查询为true，则整个media语句均返回true。 换句话说，列表的行为类似于逻辑或<code>or</code>运算符。</p>
+<h3 id="定位媒体特性"><a href="#定位媒体特性" class="headerlink" title="定位媒体特性"></a>定位媒体特性</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*当用户的主要输入机制（例如鼠标）可以悬停在元素上*/</span></span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">hover</span>: <span class="attribute">hover</span>) &#123; ... &#125;</span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">max-width</span>: <span class="number">12450px</span>) &#123; ... &#125;</span><br><span class="line"><span class="comment">/*CSS将适用于任何带有彩色屏幕的设备*/</span></span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">color</span>) &#123; ... &#125;</span><br><span class="line"><span class="comment">/*限制为带有屏幕的设备,宽度至少为30 em的横向的设备*/</span></span><br><span class="line"><span class="keyword">@media</span> screen <span class="keyword">and</span> (<span class="attribute">min-width</span>: <span class="number">30em</span>) <span class="keyword">and</span> (<span class="attribute">orientation</span>: landscape) &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+
+</style></p></li></ul>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/03/toggle/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1022,271 +1326,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2021/12/09/%E6%96%87%E6%9C%AC%E6%A1%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/09/%E6%96%87%E6%9C%AC%E6%A1%86/" class="post-title-link" itemprop="url">文本框编程</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-09 20:46:20" itemprop="dateCreated datePublished" datetime="2021-12-09T20:46:20+08:00">2021-12-09</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-12-30 15:18:16" itemprop="dateModified" datetime="2021-12-30T15:18:16+08:00">2021-12-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="文本框编程"><a href="#文本框编程" class="headerlink" title="文本框编程"></a>文本框编程</h1><h2 id="表示文本框的两种方式"><a href="#表示文本框的两种方式" class="headerlink" title="表示文本框的两种方式"></a>表示文本框的两种方式</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;input type=<span class="string">&quot;text&quot;</span> size=<span class="string">&quot;25&quot;</span> maxlength=<span class="string">&quot;50&quot;</span> value=<span class="string">&quot;initial value&quot;</span>&gt;</span><br><span class="line"> <span class="comment">//创建多行文本框</span></span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">textarea</span> <span class="attr">rows</span>=<span class="string">&quot;25&quot;</span> <span class="attr">cols</span>=<span class="string">&quot;5&quot;</span>&gt;</span>initial value<span class="tag">&lt;/<span class="name">textarea</span>&gt;</span></span></span><br><span class="line"><span class="comment">//用使用value属性读写文本框</span></span><br><span class="line"><span class="keyword">let</span> textbox=<span class="built_in">document</span>.forms[<span class="number">0</span>].elements[<span class="string">&quot;textbox1&quot;</span>];</span><br><span class="line">textbox.value=<span class="string">&quot;Some new value&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-<h2 id="选择文本"><a href="#选择文本" class="headerlink" title="选择文本"></a>选择文本</h2><p>select()用于全选文本</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> form=<span class="built_in">document</span>.getElementById(<span class="string">&quot;myForm&quot;</span>);</span><br><span class="line"> <span class="keyword">let</span> textbox=form.elements[<span class="number">0</span>];</span><br><span class="line"> textbox.addEventListener(<span class="string">&quot;focus&quot;</span>,<span class="function">(<span class="params">event</span>)=&gt;</span>&#123;</span><br><span class="line">     event.target.select();</span><br><span class="line">     <span class="built_in">console</span>.log(<span class="string">`Text selected:<span class="subst">$&#123;textbox.value&#125;</span>`</span>);</span><br><span class="line"> &#125;);</span><br></pre></td></tr></table></figure>
-
-<p>setSelectionRange()用于部分选择文本</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> form=<span class="built_in">document</span>.getElementById(<span class="string">&quot;myForm&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> textbox=form.elements[<span class="number">0</span>];</span><br><span class="line">textbox.addEventListener(<span class="string">&quot;focus&quot;</span>,<span class="function">(<span class="params">event</span>)=&gt;</span>&#123;</span><br><span class="line">    event.target.select();</span><br><span class="line">    textbox.setSelectionRange(<span class="number">0</span>,<span class="number">1</span>);</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`Text selected:<span class="subst">$&#123;textbox.value&#125;</span>`</span>);    </span><br><span class="line"> &#125;);</span><br></pre></td></tr></table></figure>
-
-<h2 id="屏蔽按键"><a href="#屏蔽按键" class="headerlink" title="屏蔽按键"></a>屏蔽按键</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">textbox.addEventListener(<span class="string">&quot;keypress&quot;</span>,<span class="function">(<span class="params">event</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!<span class="regexp">/\d/</span>.test(<span class="built_in">String</span>.fromCharCode(event.charCode))&amp;&amp;event.charCode&gt;<span class="number">9</span>&amp;&amp;!event.ctrlKey)&#123;<span class="comment">//屏蔽非数字字符但允许同样触发keypress事件的所有基础按键以及ctrl键</span></span><br><span class="line">        event.preventDefault();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="自动切换"><a href="#自动切换" class="headerlink" title="自动切换"></a>自动切换</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&lt;form method=<span class="string">&quot;post&quot;</span>&gt;</span><br><span class="line">        &lt;input type=&quot;text &quot; name=&quot;tel1&quot; id=&quot;textTel1&quot; maxlength=&quot;3&quot;&gt;</span><br><span class="line">        &lt;input type=&quot;text&quot; name=&quot;tel2&quot; id=&quot;textTel2&quot; maxlength=&quot;3&quot;&gt;</span><br><span class="line">        &lt;input type=&quot;text&quot; name=&quot;tel3&quot; id=&quot;textTel3&quot; maxlength=&quot;4&quot;&gt;</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line">     &lt;/form&gt;</span><br><span class="line">     let inputIds=[&quot;textTel1&quot;,&quot;textTel2&quot;,&quot;textTel3&quot;];</span><br><span class="line">for(let id of inputIds)&#123;</span><br><span class="line">    let textbox=document.getElementById(id);</span><br><span class="line">    textbox.addEventListener(&quot;keyup&quot;,(event)=&gt;&#123;</span><br><span class="line">        let target=event.target;</span><br><span class="line">    if(target.value.length==target.maxLength)&#123;</span><br><span class="line">        let form=target.form;</span><br><span class="line">        for(let i=0,len=form.elements.length;i&lt;len;i++)&#123;</span><br><span class="line">            if(form.elements[i]==target)&#123;</span><br><span class="line">                if(form.elements[i+1])&#123;</span><br><span class="line">                    form.elements[i+1].focus();</span><br><span class="line">                &#125;</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">        </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2021/12/09/%E8%A1%A8%E5%8D%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/09/%E8%A1%A8%E5%8D%95/" class="post-title-link" itemprop="url">表单</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-09 20:11:33" itemprop="dateCreated datePublished" datetime="2021-12-09T20:11:33+08:00">2021-12-09</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-12-30 15:17:44" itemprop="dateModified" datetime="2021-12-30T15:17:44+08:00">2021-12-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="表单"><a href="#表单" class="headerlink" title="表单"></a>表单</h1><h2 id="禁用表单"><a href="#禁用表单" class="headerlink" title="禁用表单"></a>禁用表单</h2><p>避免多次提交表单可以在第一次点击后禁用表单</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> form=<span class="built_in">document</span>.getElementById(<span class="string">&quot;myForm&quot;</span>);</span><br><span class="line">form.addEventListener(<span class="string">&quot;submit&quot;</span>,<span class="function">(<span class="params">event</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> target=event.target;</span><br><span class="line">    <span class="comment">//取得提交按钮</span></span><br><span class="line">    <span class="keyword">let</span> btn=target.elements[<span class="string">&quot;submit-btn&quot;</span>];</span><br><span class="line">    <span class="comment">//禁用提交按钮</span></span><br><span class="line">    btn.disabled=<span class="literal">true</span>;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="focus"><a href="#focus" class="headerlink" title="focus()"></a>focus()</h2><p>把焦点设置到表单字段,这意味着该字段会变成活动字段并可以响应键盘事件,autofocus()会自动为带有该属性的元素设置焦点</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> form=<span class="built_in">document</span>.getElementById(<span class="string">&quot;myForm&quot;</span>);</span><br><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">&quot;load&quot;</span>,<span class="function">(<span class="params">event</span>)=&gt;</span>&#123;</span><br><span class="line">     <span class="keyword">let</span> element=form.elements[<span class="number">0</span>];</span><br><span class="line">     <span class="keyword">if</span>(element.autofocus!==<span class="literal">true</span>)&#123;</span><br><span class="line">         element.focus();</span><br><span class="line">         <span class="built_in">console</span>.log(<span class="string">&quot;JS focus&quot;</span>);</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="表单的公共事件"><a href="#表单的公共事件" class="headerlink" title="表单的公共事件"></a>表单的公共事件</h2>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2021/11/25/BOM/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/25/BOM/" class="post-title-link" itemprop="url">BOM</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-11-25 20:47:05" itemprop="dateCreated datePublished" datetime="2021-11-25T20:47:05+08:00">2021-11-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-12-30 15:04:56" itemprop="dateModified" datetime="2021-12-30T15:04:56+08:00">2021-12-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="BOM"><a href="#BOM" class="headerlink" title="BOM"></a>BOM</h1><h2 id="location对象"><a href="#location对象" class="headerlink" title="location对象"></a>location对象</h2><p>提供当前窗口加载文档的信息，以及通常的导航功能，它既是window的属性也是document的属性。</p>
-<h3 id="查询字符串"><a href="#查询字符串" class="headerlink" title="查询字符串"></a>查询字符串</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> getQueryStringArgs=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//取得没有开头问号的查询字符串</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> qs=(location.search.length&gt;<span class="number">0</span>)?location.search.substring(<span class="number">1</span>):<span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">let</span> args=&#123;&#125;;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> item <span class="keyword">of</span>(qs.split(<span class="string">&#x27;&amp;&#x27;</span>).map(<span class="function"><span class="params">kv</span>=&gt;</span>kv.split(<span class="string">&#x27;=&#x27;</span>))))&#123;</span><br><span class="line">        <span class="keyword">let</span> name=item[<span class="number">0</span>];</span><br><span class="line">            value=item[<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">if</span>(name.length)&#123;</span><br><span class="line">            args[name]=value;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> args;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//qs=&quot;?q=javaScript&amp;num=10&quot;;</span></span><br><span class="line"><span class="keyword">let</span> args=getQueryStringArgs();</span><br><span class="line">alert(args[<span class="string">&quot;q&quot;</span>]);</span><br><span class="line">alert(args[<span class="string">&#x27;num&#x27;</span>]);</span><br></pre></td></tr></table></figure>
-
-<p>使用USLSearchParams检查和修改查询字符串</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> qs=<span class="string">&quot;?q=javaScript&amp;num=10&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> searchParams=<span class="keyword">new</span> URLSearchParams(qs);</span><br><span class="line">alert(searchParams.toString());</span><br><span class="line">searchParams.has(<span class="string">&quot;num&quot;</span>);</span><br><span class="line">searchParams.get(<span class="string">&quot;num&quot;</span>);</span><br><span class="line">searchParams.set(<span class="string">&quot;page&quot;</span>,<span class="string">&quot;3&quot;</span>);</span><br><span class="line">alert(searchParams.toString());</span><br><span class="line">searchParams.delete(<span class="string">&quot;q&quot;</span>);</span><br><span class="line">alert(searchParams.toString());</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> param <span class="keyword">of</span> searchParams)&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(param);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="操作地址"><a href="#操作地址" class="headerlink" title="操作地址"></a>操作地址</h3><p>通过修改location对象修改浏览器地址，使用assign方法传进一个URL,会导航到新URL同时在浏览器历史记录增加一条记录，下面三种方法功能相同</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location.assign(<span class="string">&quot;http://www.wrox.com&quot;</span>);</span><br><span class="line"><span class="built_in">window</span>.location=<span class="string">&quot;http://www.wrox.com&quot;</span>;</span><br><span class="line">location.href=<span class="string">&quot;http://www.wrox.com&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-<p>通过修改location属性可以修改当前加载的页面,hash,search,hostname,pathname.port属性被设置为新值后会修改当前的URL</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//假设当前URL为http://www.wrox.com/WileyCDA/</span></span><br><span class="line">location.assign(<span class="string">&quot;http://www.wrox.com/WileyCDA&quot;</span>);</span><br><span class="line"><span class="comment">//把URL修改为http://www.wrox.com/WileyCDA/#section1</span></span><br><span class="line">location.hash=<span class="string">&quot;#section1&quot;</span>;</span><br><span class="line"><span class="comment">//把URL修改为http://www.wrox.com/WileyCDA/?q=javascript</span></span><br><span class="line">location.search=<span class="string">&quot;?q=javascript&quot;</span>;</span><br><span class="line"><span class="comment">//把URL修改为http://www.somewhere.com/WileyCDA/</span></span><br><span class="line">location.hostname=<span class="string">&quot;www.somewhere.com&quot;</span>;</span><br><span class="line"><span class="comment">//把URL修改为http://www.somewhere.com/mydir/</span></span><br><span class="line">location.pathname=<span class="string">&quot;mydir&quot;</span>;</span><br><span class="line"><span class="comment">//把URL修改为http://www.somewhere.com:8080/WileyCDA/</span></span><br><span class="line">location.port=<span class="number">8080</span>;</span><br></pre></td></tr></table></figure>
-
-<p>以上的修改会在浏览器中增加记录，点击后退即可导航到前一个界面，不希望增加历史记录可以使用replace()方法，reload()可以重新加载当前页面，如果页面自从上次请求后没有修改过，则浏览器可能会从缓存中加载页面，如果想强制从服务器中加载，必须传入true</p>
-<h2 id="history对象"><a href="#history对象" class="headerlink" title="history对象"></a>history对象</h2><p>history用来导航历史记录，同时不会暴露用户访问过的URL。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">history.go(-<span class="number">1</span>);<span class="comment">//后退一页</span></span><br><span class="line">history.go(<span class="number">1</span>);<span class="comment">//前进一页</span></span><br><span class="line">history.go(<span class="string">&quot;wrox.com&quot;</span>)<span class="comment">//导航到最近的wrox.com页面</span></span><br><span class="line"><span class="comment">//go有两个简写方法：back()和forward()</span></span><br><span class="line">history.back();<span class="comment">//后退一页</span></span><br><span class="line">history.forward()<span class="comment">//前进一页</span></span><br><span class="line"><span class="comment">//history的length属性记录历史记录有多少条目</span></span><br><span class="line"><span class="keyword">if</span>(history.length==<span class="number">1</span>)&#123;<span class="comment">//这是用户窗口第一个页面&#125;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="navigator对象"><a href="#navigator对象" class="headerlink" title="navigator对象"></a>navigator对象</h2><p>navigator对象通常用来确定浏览器的类型</p>
-<h3 id="检测插件"><a href="#检测插件" class="headerlink" title="检测插件"></a>检测插件</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasPlugin</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">    name=name.toLowerCase();</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> plugin <span class="keyword">of</span> <span class="built_in">window</span>.navigator.plugins)&#123;</span><br><span class="line">        <span class="keyword">if</span>(plugin.name.toLowerCase().indexOf(name)&gt;-<span class="number">1</span>)&#123;<span class="keyword">return</span> <span class="literal">true</span>;&#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//alert(hasPlugin(&quot;Flash&quot;));</span></span><br><span class="line"><span class="comment">//alert(hasPlugin(&quot;QuickTime&quot;));</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasIEPlugin</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        <span class="keyword">new</span> ActiveXObject(name);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;<span class="keyword">catch</span>(ex)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//在所有浏览器中检测插件</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasFlash</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> result=hasPlugin(<span class="string">&quot;Flash&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span>(!result)&#123;</span><br><span class="line">        result=hasIEPlugin(<span class="string">&quot;ShockwaveFlash.ShockwaveFlash&quot;</span>);</span><br><span class="line">    &#125;<span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasQuickTime</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> res=hasPlugin(<span class="string">&quot;QuickTime&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span>(!res)&#123;</span><br><span class="line">        res=hasIEPlugin(<span class="string">&quot;QuickTime.QuickTime&quot;</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">alert(hasFlash());</span><br><span class="line">alert(hasQuickTime());</span><br></pre></td></tr></table></figure>
-
-<h3 id="注册处理程序"><a href="#注册处理程序" class="headerlink" title="注册处理程序"></a>注册处理程序</h3><p>registerProtocolHandler()方法可以把一个网站注册处理为某种特定类型信息应用程序，传入3个参数：要处理的协议（“mailto或ftp),处理该协议的URL，以及应用名称</p>
-<p>例如，把一个Web应用程序注册为默认客户端</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.registerProtocolHandler(<span class="string">&quot;mailto&quot;</span>,<span class="string">&quot;http://www.somemailclient.com?cmd=%s&quot;</span>,<span class="string">&quot;Some Mail Client&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1358,7 +1397,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">122</span>
+          <span class="site-state-item-count">125</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1419,7 +1458,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共262.9k字</span>
+  <span class="post-count">博客全站共267.4k字</span>
 </div>
         
 

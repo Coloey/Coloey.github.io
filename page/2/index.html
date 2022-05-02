@@ -182,6 +182,325 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/25/%E5%9B%BE%E7%89%87%E6%87%92%E5%8A%A0%E8%BD%BD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/25/%E5%9B%BE%E7%89%87%E6%87%92%E5%8A%A0%E8%BD%BD/" class="post-title-link" itemprop="url">图片懒加载</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-25 17:07:16" itemprop="dateCreated datePublished" datetime="2022-04-25T17:07:16+08:00">2022-04-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-27 23:41:55" itemprop="dateModified" datetime="2022-04-27T23:41:55+08:00">2022-04-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>实现图片懒加载</p>
+<p>懒加载是一种网页性能优化方式，提升用户体验，比如懒加载图片，进入页面时，我们只请求可视区域的图片资源</p>
+<p>总结：</p>
+<p>全部加载会影响用户体验</p>
+<p>浪费用户的流量，有些用户不想全部看完，全部加载会耗费大量流量</p>
+<p>实现方式：</p>
+<p>html实现</p>
+<p>最简单的实现方式给img标签加上 loading=”lazy”</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=<span class="string">&quot;./example.jpg&quot;</span> loading=<span class="string">&quot;lazy&quot;</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>js实现原理</p>
+<ul>
+<li>通过js监听页面的滚动</li>
+<li>使用js实现的原理主要是判断当前图片是否到了可视区域：</li>
+<li>拿到所有图片的dom</li>
+<li>遍历每个图片判断当前图片是否到达了可视区域范围</li>
+<li>如果到了就设置图片的src属性</li>
+<li>绑定window的scroll事件，对其进行事件监听</li>
+</ul>
+<p>在页面初始化时，img图片的src放在data-src属性上，当匀速处于可视区范围，就把data-src赋值给src属性，完成图片加载</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Lazyload<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">      <span class="selector-tag">img</span> &#123;</span></span><br><span class="line"><span class="css">        <span class="attribute">display</span>: block;</span></span><br><span class="line"><span class="css">        <span class="attribute">margin-bottom</span>: <span class="number">50px</span>;</span></span><br><span class="line"><span class="css">        <span class="attribute">height</span>: <span class="number">200px</span>;</span></span><br><span class="line"><span class="css">        <span class="attribute">width</span>: <span class="number">400px</span>;</span></span><br><span class="line"><span class="css">      &#125;</span></span><br><span class="line"><span class="css">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/1.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/2.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/3.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/4.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/5.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/6.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/7.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/8.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/9.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/10.jpg&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>先获取所有图片的dom,通过document.body.clientHeight获取可视区高度，<strong>在使用element.getBoundingClientRect()直接得到元素相对浏览器的top值</strong>，遍历每个图片判断图片是否到达了可视区域</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">lazyLoad</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> viewHeight=<span class="built_in">document</span>.body.clientHeight;<span class="comment">//获取可视区高度</span></span><br><span class="line">    <span class="keyword">let</span> imgs=<span class="built_in">document</span>.querySelectorAll(<span class="string">&quot;img[data-src]&quot;</span>)</span><br><span class="line">    imgs.forEach(<span class="function"><span class="params">item</span>=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(item.data-src==<span class="string">&#x27;&#x27;</span>)<span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">let</span> rect=item.getBoundingClientRect();</span><br><span class="line">        <span class="keyword">if</span>(rect.top&lt;viewHeight&amp;&amp;rect.bottom&gt;=<span class="number">0</span>)&#123;</span><br><span class="line">            item.src=item.data-src</span><br><span class="line">            item.removeAttribute(<span class="string">&#x27;data-src&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样存在性能问题，因为scroll事件会在很短事件内触发多次，严重影响页面性能，为了提高网页性能，我们需要一个节流函数来控制函数的多次触发，在一段时间内只执行一次回调</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttle</span>(<span class="params">fn,delay</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timer=<span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">fn,...args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">const</span> context=<span class="built_in">this</span>;</span><br><span class="line">        <span class="keyword">if</span>(!temer)&#123;</span><br><span class="line">            timer=<span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">                fn.apply(context,args);</span><br><span class="line">                timer=<span class="literal">null</span>;</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>scroll</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">&quot;scroll&quot;</span>,throttle(lazyload,<span class="number">200</span>))</span><br></pre></td></tr></table></figure>
+
+<h2 id="拓展：-IntersectionObserver"><a href="#拓展：-IntersectionObserver" class="headerlink" title="拓展： IntersectionObserver"></a>拓展： IntersectionObserver</h2><p>通过上面例子的实现，我们要实现懒加载都需要去监听 scroll 事件，尽管我们可以通过函数节流的方式来阻止高频率的执行函数，但是我们还是需要去计算 scrollTop，offsetHeight 等属性，有没有简单的不需要计算这些属性的方式呢，答案就是 <code>IntersectionObserver</code>。</p>
+<p><code>IntersectionObserver</code> 是一个比较新的 API，可以自动”观察”元素是否可见，Chrome 51+ 已经支持。由于可见（visible）的本质是，目标元素与视口产生一个交叉区，所以这个 API 叫做”交叉观察器”。我们来看一下它的用法</p>
+<p>[]: <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver">https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> imgs=<span class="built_in">document</span>.querySelectorAll(<span class="string">&quot;img[data-src]&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> config=&#123;</span><br><span class="line">    <span class="attr">rootMargin</span>:<span class="string">&#x27;0px&#x27;</span>,</span><br><span class="line">    <span class="attr">threshold</span>:<span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> observer=<span class="keyword">new</span> IntersectionObserver(<span class="function">(<span class="params">entries,self</span>)=&gt;</span>&#123;</span><br><span class="line">    entries.forEach(<span class="function">(<span class="params">entry</span>)=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(entry.isIntersecting)&#123;</span><br><span class="line">            <span class="keyword">let</span> img=entry.target;</span><br><span class="line">            <span class="keyword">let</span> realsrc=img.dataset.src;</span><br><span class="line">            <span class="keyword">if</span>(src)&#123;</span><br><span class="line">                img.src=realsrc;</span><br><span class="line">                img.removeAttribute(<span class="string">&#x27;data-src&#x27;</span>)</span><br><span class="line">            &#125;</span><br><span class="line">            self.unobserve(entry.target);<span class="comment">//解除观察</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;,config)</span><br><span class="line">imgs.forEach(<span class="function">(<span class="params">image</span>)=&gt;</span>&#123;</span><br><span class="line">    observer.observe(image)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/25/object-create-%E5%92%8Cnew%E5%8C%BA%E5%88%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/25/object-create-%E5%92%8Cnew%E5%8C%BA%E5%88%AB/" class="post-title-link" itemprop="url">object.create()和new区别</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-25 10:44:18" itemprop="dateCreated datePublished" datetime="2022-04-25T10:44:18+08:00">2022-04-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-01 09:54:53" itemprop="dateModified" datetime="2022-05-01T09:54:53+08:00">2022-05-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Object-create"><a href="#Object-create" class="headerlink" title="Object.create()"></a>Object.create()</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.creat=<span class="function"><span class="keyword">function</span>(<span class="params">o</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> F=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">	F.prototype=o;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> F();</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>内部定义一个新对象，并且让F.prototype对象赋值为引进的对象/函数o,并return一个新的对象</p>
+<h1 id="new"><a href="#new" class="headerlink" title="new"></a>new</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>(<span class="params">o,...args</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> o1=&#123;&#125;;</span><br><span class="line">    o1.__proto__=o.prototype;</span><br><span class="line">    <span class="keyword">var</span> res=o.call(o1,args);</span><br><span class="line">    <span class="keyword">return</span> res <span class="keyword">typeof</span> <span class="built_in">Object</span>?res:o1;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="区别："><a href="#区别：" class="headerlink" title="区别："></a>区别：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Base=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.a=<span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> o1=<span class="keyword">new</span> Base();</span><br><span class="line"><span class="keyword">var</span> o2=<span class="built_in">Object</span>.create(Base);</span><br><span class="line"><span class="built_in">console</span>.log(o1.a);<span class="comment">//2</span></span><br><span class="line"><span class="built_in">console</span>.log(o2.a);<span class="comment">//undefined</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Object.create失去了原来对象属性的访问</strong>：F创建后函数调用结束后被销毁，o2直接指向Base构造函数，<strong>o2没有指向它的prototype，</strong>因此o2.consructor不能通过prototype对找到构造函数，所以是undefined,但是如果Base是一个对象，则o2.a值为2，因为o2的[[Prototype]]指向了对象Base</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Base = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.a = <span class="number">2</span></span><br><span class="line">&#125;</span><br><span class="line">Base.prototype.a = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">var</span> o1 = <span class="keyword">new</span> Base();</span><br><span class="line"><span class="keyword">var</span> o2 = <span class="built_in">Object</span>.create(Base);</span><br><span class="line"><span class="built_in">console</span>.log(o1.a); <span class="comment">// 2</span></span><br><span class="line"><span class="built_in">console</span>.log(o2.a); <span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
+
+<p>这里Base.prototype.a会去找它的[[Prototype]]上看是否有a，没有就重新设置了一个a，值为3，**而实际上o1.constructor通过默认的[[Prototype]]委托指向Base.prototype,进而委托到constructor指向的构造函数。所以这里的o1.a=2;o2.a仍旧是undefined，因为o2直接指向的是Base,没有指向它的prototype</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>小结</p>
+<table>
+<thead>
+<tr>
+<th>比较</th>
+<th>new</th>
+<th>Object.create</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>构造函数</td>
+<td>保留原构造函数属性</td>
+<td>丢失原构造函数属性</td>
+</tr>
+<tr>
+<td>原型链</td>
+<td>原构造函数prototype属性</td>
+<td>原构造函数/（对象）本身</td>
+</tr>
+<tr>
+<td>作用对象</td>
+<td>function</td>
+<td>function和object</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/24/new-%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/24/new-%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">new 原理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-24 23:50:57 / 修改时间：23:56:45" itemprop="dateCreated datePublished" datetime="2022-04-24T23:50:57+08:00">2022-04-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="一、是什么"><a href="#一、是什么" class="headerlink" title="一、是什么"></a>一、是什么</h2><p>在<code>JavaScript</code>中，<code>new</code>操作符用于创建一个给定构造函数的实例对象</p>
+<p>例子</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1function Person(name, age)&#123;</span><br><span class="line">2    this.name = name;</span><br><span class="line">3    this.age = age;</span><br><span class="line">4&#125;</span><br><span class="line">5Person.prototype.sayName = function () &#123;</span><br><span class="line">6    console.log(this.name)</span><br><span class="line">7&#125;</span><br><span class="line">8const person1 = new Person(&#x27;Tom&#x27;, 20)</span><br><span class="line">9console.log(person1)  // Person &#123;name: &quot;Tom&quot;, age: 20&#125;</span><br><span class="line">10t.sayName() // &#x27;Tom&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>从上面可以看到：</p>
+<ul>
+<li><code>new</code> 通过构造函数 <code>Person</code> 创建出来的实例可以访问到构造函数中的属性</li>
+<li><code>new</code> 通过构造函数 <code>Person</code> 创建出来的实例可以访问到构造函数原型链中的属性（即实例与构造函数通过原型链连接了起来）</li>
+</ul>
+<p>现在在构建函数中显式加上返回值，并且这个返回值是一个原始类型</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1function Test(name) &#123;</span><br><span class="line">2  this.name = name</span><br><span class="line">3  return 1</span><br><span class="line">4&#125;</span><br><span class="line">5const t = new Test(&#x27;xxx&#x27;)</span><br><span class="line">6console.log(t.name) // &#x27;xxx&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>可以发现，构造函数中返回一个原始值，然而这个返回值并没有作用</p>
+<p>下面在构造函数中返回一个对象</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1function Test(name) &#123;</span><br><span class="line">2  this.name = name</span><br><span class="line">3  console.log(this) // Test &#123; name: &#x27;xxx&#x27; &#125;</span><br><span class="line">4  return &#123; age: 26 &#125;</span><br><span class="line">5&#125;</span><br><span class="line">6const t = new Test(&#x27;xxx&#x27;)</span><br><span class="line">7console.log(t) // &#123; age: 26 &#125;</span><br><span class="line">8console.log(t.name) // &#x27;undefined&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>从上面可以发现，构造函数如果返回值为一个对象，那么这个返回值会被正常使用</p>
+<h2 id="二、流程"><a href="#二、流程" class="headerlink" title="二、流程"></a>二、流程</h2><p>从上面介绍中，我们可以看到<code>new</code>关键字主要做了以下的工作：</p>
+<ul>
+<li>创建一个新的对象<code>obj</code></li>
+<li>将对象与构建函数通过原型链连接起来</li>
+<li>将构建函数中的<code>this</code>绑定到新建的对象<code>obj</code>上</li>
+<li>根据构建函数返回类型作判断，如果是原始值则被忽略，如果是返回对象，需要正常处理</li>
+</ul>
+<p>举个例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1function Person(name, age)&#123;</span><br><span class="line">2    this.name = name;</span><br><span class="line">3    this.age = age;</span><br><span class="line">4&#125;</span><br><span class="line">5const person1 = new Person(&#x27;Tom&#x27;, 20)</span><br><span class="line">6console.log(person1)  // Person &#123;name: &quot;Tom&quot;, age: 20&#125;</span><br><span class="line">7t.sayName() // &#x27;Tom&#x27;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="手写new-操作符"><a href="#手写new-操作符" class="headerlink" title="手写new 操作符"></a>手写new 操作符</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">my</span> <span class="title">new</span>(<span class="params">Func,..args</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> obj=&#123;&#125;;</span><br><span class="line">    obj.__proto__=Func.prototype;</span><br><span class="line">    <span class="keyword">let</span> result=Func.apply(obj,args);</span><br><span class="line">    <span class="keyword">return</span> result instanceOf <span class="built_in">Object</span>?result:obj</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/24/%E5%AE%9E%E7%8E%B0node%E4%B8%AD%E7%9A%84EventEmitter/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -909,408 +1228,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/23/BFC/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/23/BFC/" class="post-title-link" itemprop="url">BFC</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-23 11:15:31 / 修改时间：11:24:47" itemprop="dateCreated datePublished" datetime="2022-04-23T11:15:31+08:00">2022-04-23</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="一、常见定位方案"><a href="#一、常见定位方案" class="headerlink" title="一、常见定位方案"></a>一、常见定位方案</h2><p>在讲 BFC 之前，我们先来了解一下常见的定位方案，定位方案是控制元素的布局，有三种常见方案:</p>
-<ul>
-<li>普通流 (normal flow)</li>
-</ul>
-<blockquote>
-<p>在普通流中，元素按照其在 HTML 中的先后位置至上而下布局，在这个过程中，行内元素水平排列，直到当行被占满然后换行，块级元素则会被渲染为完整的一个新行，除非另外指定，否则所有元素默认都是普通流定位，也可以说，普通流中元素的位置由该元素在 HTML 文档中的位置决定。</p>
-</blockquote>
-<ul>
-<li>浮动 (float)</li>
-</ul>
-<blockquote>
-<p>在浮动布局中，元素首先按照普通流的位置出现，然后根据浮动的方向尽可能的向左边或右边偏移，其效果与印刷排版中的文本环绕相似。</p>
-</blockquote>
-<ul>
-<li>绝对定位 (absolute positioning)</li>
-</ul>
-<blockquote>
-<p>在绝对定位布局中，元素会整体脱离普通流，因此绝对定位元素不会对其兄弟元素造成影响，而元素具体的位置由绝对定位的坐标决定。</p>
-</blockquote>
-<h2 id="二、BFC-概念"><a href="#二、BFC-概念" class="headerlink" title="二、BFC 概念"></a>二、BFC 概念</h2><p>Formatting context(格式化上下文) 是 W3C CSS2.1 规范中的一个概念。它是页面中的一块渲染区域，并且有一套渲染规则，它决定了其子元素将如何定位，以及和其他元素的关系和相互作用。</p>
-<p>那么 BFC 是什么呢？</p>
-<p>BFC 即 Block Formatting Contexts (块级格式化上下文)，它属于上述定位方案的普通流。</p>
-<p>**具有 BFC 特性的元素可以看作是隔离了的独立容器，容器里面的元素不会在布局上影响到外面的元素，并且 BFC 具有普通容器所没有的一些特性。<br>**</p>
-<p>通俗一点来讲，可以把 BFC 理解为一个封闭的大箱子，箱子内部的元素无论如何翻江倒海，都不会影响到外部。</p>
-<p>定位方案：</p>
-<ul>
-<li>内部的Box会在垂直方向上一个接一个放置。</li>
-<li>Box垂直方向的距离由margin决定，属于同一个BFC的两个相邻Box的margin会发生重叠。</li>
-<li>每个元素的margin box 的左边，与包含块border box的左边相接触。</li>
-<li>BFC的区域不会与float box重叠。</li>
-<li>BFC是页面上的一个隔离的独立容器，容器里面的子元素不会影响到外面的元素。</li>
-<li>计算BFC的高度时，浮动元素也会参与计算。</li>
-</ul>
-<h2 id="三、触发-BFC"><a href="#三、触发-BFC" class="headerlink" title="三、触发 BFC"></a>三、触发 BFC</h2><p>只要元素满足下面任一条件即可触发 BFC 特性：</p>
-<ul>
-<li>html 根元素</li>
-<li>浮动元素：float 除 none 以外的值</li>
-<li>绝对定位元素：position (absolute、fixed)</li>
-<li>display 为 inline-block、table-cells、flex</li>
-<li>overflow 除了 visible 以外的值 (hidden、auto、scroll)</li>
-</ul>
-<h2 id="四、BFC-特性及应用"><a href="#四、BFC-特性及应用" class="headerlink" title="四、BFC 特性及应用"></a>四、BFC 特性及应用</h2><p><strong>1. 同一个 BFC 下外边距会发生折叠</strong></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">div&#123;</span><br><span class="line">    width: 100px;</span><br><span class="line">    height: 100px;</span><br><span class="line">    background: lightblue;</span><br><span class="line">    margin: 100px;</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/04/23/BFC/1-16506838939031.png" alt="1"></p>
-<p>从效果上看，因为两个 div 元素都处于同一个 BFC 容器下 (这里指 body 元素) 所以第一个 div 的下边距和第二个 div 的上边距发生了重叠，所以两个盒子之间距离只有 100px，而不是 200px。</p>
-<p>首先这不是 CSS 的 bug，我们可以理解为一种规范，<strong>如果想要避免外边距的重叠，可以将其放在不同的 BFC 容器中。</strong></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">.container &#123;</span><br><span class="line">    overflow: hidden;</span><br><span class="line">&#125;</span><br><span class="line">p &#123;</span><br><span class="line">    width: 100px;</span><br><span class="line">    height: 100px;</span><br><span class="line">    background: lightblue;</span><br><span class="line">    margin: 100px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这时候，两个盒子边距就变成了 200px</p>
-<p><img src="/2022/04/23/BFC/2-16506839367002.png" alt="2"></p>
-<p><strong>2. BFC 可以包含浮动的元素（清除浮动）</strong></p>
-<p>我们都知道，浮动的元素会脱离普通文档流，来看下下面一个例子</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;border: 1px solid #000;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;width: 100px;height: 100px;background: #eee;float: left;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/04/23/BFC/3-16506839739523.png" alt="3"></p>
-<p>由于容器内元素浮动，脱离了文档流，所以容器只剩下 2px 的边距高度。如果使触发容器的 BFC，那么容器将会包裹着浮动元素。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;border: 1px solid #000;overflow: hidden&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;width: 100px;height: 100px;background: #eee;float: left;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>效果如图：</p>
-<p><img src="/2022/04/23/BFC/4-16506840082674.png" alt="4"></p>
-<p><strong>3. BFC 可以阻止元素被浮动元素覆盖</strong></p>
-<p>先来看一个文字环绕效果：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;height: 100px;width: 100px;float: left;background: lightblue&quot;</span>&gt;</span>我是一个左浮动的元素<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;width: 200px; height: 200px;background: #eee&quot;</span>&gt;</span>我是一个没有设置浮动, </span><br><span class="line">也没有触发 BFC 元素, width: 200px; height:200px; background: #eee;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/04/23/BFC/5.png" alt="5"></p>
-<p>这时候其实第二个元素有部分被浮动元素所覆盖，(但是文本信息不会被浮动元素所覆盖) 如果想避免元素被覆盖，可触第二个元素的 BFC 特性，在第二个元素中加入 <strong>overflow: hidden</strong>，就会变成：</p>
-<p><img src="/2022/04/23/BFC/6.png" alt="6"></p>
-<p>这个方法可以用来实现两列自适应布局，效果不错，这时候左边的宽度固定，右边的内容自适应宽度(去掉上面右边内容的宽度)。</p>
-<div style="overflow:hidden">
-    <div style="height: 100px;width: 100px;float: left;background: lightblue">我是一个左浮动的元素</div>
-<div style="margin-left:100px; height: 200px;background: #eee">我是一个没有设置浮动, 
-也没有触发 BFC 元素, width: 200px; height:200px; background: #eee;</div>
-</div>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/23/js-%E5%92%8Ccss%E5%A6%82%E4%BD%95%E5%BD%B1%E5%93%8DDOM%E6%95%B0%E6%9E%84%E5%BB%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/23/js-%E5%92%8Ccss%E5%A6%82%E4%BD%95%E5%BD%B1%E5%93%8DDOM%E6%95%B0%E6%9E%84%E5%BB%BA/" class="post-title-link" itemprop="url">js 和css如何影响DOM数构建</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-23 00:00:11 / 修改时间：00:02:05" itemprop="dateCreated datePublished" datetime="2022-04-23T00:00:11+08:00">2022-04-23</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>先做个总结，然后再进行具体的分析：</p>
-<p>CSS不会阻塞DOM的解析，但是会影响JAVAScript的运行，javaSscript会阻止DOM树的解析，最终css（CSSOM）会影响DOM树的渲染，也可以说最终会影响渲染树的生成。</p>
-<p>接下来我们先看javascript对DOM树构建和渲染是如何造成影响的，分成三种类型来讲解：</p>
-<h2 id="JavaScript脚本在html页面中"><a href="#JavaScript脚本在html页面中" class="headerlink" title="JavaScript脚本在html页面中"></a>JavaScript脚本在html页面中</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1<span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">2  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">3    <span class="tag">&lt;<span class="name">div</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">4    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript"><span class="number">5</span>      <span class="keyword">let</span> div1 = <span class="built_in">document</span>.getElementsByTagName(<span class="string">&#x27;div&#x27;</span>)[<span class="number">0</span>]</span></span><br><span class="line"><span class="javascript"><span class="number">6</span>      div1.innerText = <span class="string">&#x27;time.geekbang&#x27;</span></span></span><br><span class="line"><span class="javascript"><span class="number">7</span>    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">8    <span class="tag">&lt;<span class="name">div</span>&gt;</span>test<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">9  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line">10<span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>两段div中间插入一段JavaScript脚本，这段脚本的解析过程就有点不一样了。</p>
-<p>当解析到script脚本标签时，HTML解析器暂停工作，javascript引擎介入，并执行script标签中的这段脚本。</p>
-<p>因为这段javascript脚本修改了DOM中第一个div中的内容，所以执行这段脚本之后，div节点内容已经修改为time.geekbang了。脚本执行完成之后，HTML解析器回复解析过程，继续解析后续的内容，直至生成最终的DOM。</p>
-<h2 id="html页面中引入javaScript文件"><a href="#html页面中引入javaScript文件" class="headerlink" title="html页面中引入javaScript文件"></a>html页面中引入javaScript文件</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1//foo.js</span><br><span class="line">2let div1 = document.getElementsByTagName(&#x27;div&#x27;)[0]</span><br><span class="line">3div1.innerText = &#x27;time.geekbang&#x27;</span><br><span class="line">1<span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">2  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">3    <span class="tag">&lt;<span class="name">div</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">4    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&#x27;foo.js&#x27;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">5    <span class="tag">&lt;<span class="name">div</span>&gt;</span>test<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">6  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line">7<span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>这段代码的功能还是和前面那段代码是一样的，只是把内嵌JavaScript脚本修改成了通过javaScript文件加载。</p>
-<p>其整个执行流程还是一样的，执行到JAVAScript标签时，暂停整个DOM的解析，执行javascript代码，不过这里执行javascript时，需要现在在这段代码。这里需要重点关注下载环境，因为javascript文件的下载过程会阻塞DOM解析，而通常下载又是非常耗时的，会受到网络环境、javascript文件大小等因素的影响。</p>
-<p>优化机制：</p>
-<p>谷歌浏览器做了很多优化，其中一个主要的优化就是预解析操作。当渲染引擎收到字节流之后，会开启一个预解析线程，用来分析HTML文件中包含的JavaScript、CSS等相关文件，解析到相关文件之后，会开启一个预解析线程，用来分析HTML文件中包含的javascprit、css等相关文件、解析到相关文件之后，预解析线程会提前下载这些文件。</p>
-<p>再回到 DOM 解析上，我们知道引入 JavaScript 线程会阻塞 DOM，不过也有一些相关的策略来规避，比如使用 CDN 来加速 JavaScript 文件的加载，压缩 JavaScript 文件的体积。</p>
-<p>另外，如果 JavaScript 文件中没有操作 DOM 相关代码，就可以将该 JavaScript 脚本设置为异步加载，通过 async 或 defer 来标记代码，使用方式如下所示：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">async</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&#x27;foo.js&#x27;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">defer</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&#x27;foo.js&#x27;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>async和defer区别：</p>
-<ul>
-<li>async：脚本并行加载，加载完成之后立即执行，执行时机不确定，仍有可能阻塞HTML解析，执行时机在load事件派发之前。</li>
-<li>defer：脚本并行加载，等待HTML解析完成之后，按照加载顺序执行脚本，执行时机DOMContentLoaded事件派发之前。</li>
-</ul>
-<h2 id="html页面中有css样式"><a href="#html页面中有css样式" class="headerlink" title="html页面中有css样式"></a>html页面中有css样式</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">1//theme.css</span><br><span class="line">2div &#123;color:blue&#125;</span><br><span class="line">1<span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">2<span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">3    <span class="tag">&lt;<span class="name">style</span> <span class="attr">src</span>=<span class="string">&#x27;theme.css&#x27;</span>&gt;</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">4<span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">5<span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">6  <span class="tag">&lt;<span class="name">div</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">7  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript"><span class="number">8</span>      <span class="keyword">let</span> div1 = <span class="built_in">document</span>.getElementsByTagName(<span class="string">&#x27;div&#x27;</span>)[<span class="number">0</span>]</span></span><br><span class="line"><span class="javascript"><span class="number">9</span>      div1.innerText = <span class="string">&#x27;time.geekbang&#x27;</span> <span class="comment">// 需要 DOM</span></span></span><br><span class="line"><span class="javascript"><span class="number">10</span>      div1.style.color = <span class="string">&#x27;red&#x27;</span> <span class="comment">// 需要 CSSOM</span></span></span><br><span class="line"><span class="javascript"><span class="number">11</span>  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">12  <span class="tag">&lt;<span class="name">div</span>&gt;</span>test<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">13<span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line">14<span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>该示例中，JavaScript 代码出现了 <code>div1.style.color = ‘red’</code> 的语句，它是用来操纵 CSSOM 的，所以在执行 JavaScript 之前，需要先解析 JavaScript 语句之上所有的CSS 样式。所以如果代码里引用了外部的 CSS 文件，那么在执行 JavaScript 之前，还需要等待外部的 CSS 文件下载完成，并解析生成 CSSOM 对象之后，才能执行 JavaScript 脚本。</p>
-<p>而 JavaScript 引擎在解析 JavaScript 之前，是不知道 JavaScript 是否操纵了 CSSOM的，所以渲染引擎在遇到 JavaScript 脚本时，不管该脚本是否操纵了 CSSOM，都会执行CSS 文件下载，解析操作，再执行 JavaScript 脚本。所以说 JavaScript 脚本是依赖样式表的，这又多了一个阻塞过程。</p>
-<p>总结：通过上面三点的分析，我们知道了 JavaScript 会阻塞 DOM 生成，而样式文件又会阻塞js的执行。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/22/%E6%95%B0%E7%BB%84%E7%9A%84%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/22/%E6%95%B0%E7%BB%84%E7%9A%84%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/" class="post-title-link" itemprop="url">数组的常用方法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-22 23:40:09 / 修改时间：23:42:13" itemprop="dateCreated datePublished" datetime="2022-04-22T23:40:09+08:00">2022-04-22</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="一、操作方法"><a href="#一、操作方法" class="headerlink" title="一、操作方法"></a>一、操作方法</h2><p>数组基本操作可以归纳为 增、删、改、查，需要留意的是哪些方法会对原数组产生影响，哪些方法不会</p>
-<p>下面对数组常用的操作方法做一个归纳</p>
-<h3 id="增"><a href="#增" class="headerlink" title="增"></a>增</h3><p>下面前三种是对原数组产生影响的增添方法，第四种则不会对原数组产生影响</p>
-<ul>
-<li>push()</li>
-<li>unshift()</li>
-<li>splice()</li>
-<li>concat()</li>
-</ul>
-<h4 id="push"><a href="#push" class="headerlink" title="push()"></a>push()</h4><p><code>push()</code>方法接收任意数量的参数，并将它们添加到数组末尾，返回数组的最新长度</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">let</span> colors = []; <span class="comment">// 创建一个数组</span></span><br><span class="line">2<span class="keyword">let</span> count = colors.push(<span class="string">&quot;red&quot;</span>, <span class="string">&quot;green&quot;</span>); <span class="comment">// 推入两项</span></span><br><span class="line">3<span class="built_in">console</span>.log(count) <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="unshift"><a href="#unshift" class="headerlink" title="unshift()"></a>unshift()</h4><p>unshift()在数组开头添加任意多个值，然后返回新的数组长度</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">let</span> colors = <span class="keyword">new</span> <span class="built_in">Array</span>(); <span class="comment">// 创建一个数组</span></span><br><span class="line">2<span class="keyword">let</span> count = colors.unshift(<span class="string">&quot;red&quot;</span>, <span class="string">&quot;green&quot;</span>); <span class="comment">// 从数组开头推入两项</span></span><br><span class="line">3alert(count); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="splice"><a href="#splice" class="headerlink" title="splice"></a>splice</h4><p>传入三个参数，分别是开始位置、0（要删除的元素数量）、插入的元素，返回空数组</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">let</span> colors = [<span class="string">&quot;red&quot;</span>, <span class="string">&quot;green&quot;</span>, <span class="string">&quot;blue&quot;</span>];</span><br><span class="line">2<span class="keyword">let</span> removed = colors.splice(<span class="number">1</span>, <span class="number">0</span>, <span class="string">&quot;yellow&quot;</span>, <span class="string">&quot;orange&quot;</span>)</span><br><span class="line">3<span class="built_in">console</span>.log(colors) <span class="comment">// red,yellow,orange,green,blue</span></span><br><span class="line">4<span class="built_in">console</span>.log(removed) <span class="comment">// []</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="concat"><a href="#concat" class="headerlink" title="concat()"></a>concat()</h4><p>首先会创建一个当前数组的副本，然后再把它的参数添加到副本末尾，最后返回这个新构建的数组，不会影响原始数组</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">let</span> colors = [<span class="string">&quot;red&quot;</span>, <span class="string">&quot;green&quot;</span>, <span class="string">&quot;blue&quot;</span>];</span><br><span class="line">2<span class="keyword">let</span> colors2 = colors.concat(<span class="string">&quot;yellow&quot;</span>, [<span class="string">&quot;black&quot;</span>, <span class="string">&quot;brown&quot;</span>]);</span><br><span class="line">3<span class="built_in">console</span>.log(colors); <span class="comment">// [&quot;red&quot;, &quot;green&quot;,&quot;blue&quot;]</span></span><br><span class="line">4<span class="built_in">console</span>.log(colors2); <span class="comment">// [&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;yellow&quot;, &quot;black&quot;, &quot;brown&quot;]</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="删"><a href="#删" class="headerlink" title="删"></a>删</h3><p>下面三种都会影响原数组，最后一项不影响原数组：</p>
-<ul>
-<li>pop()</li>
-<li>shift()</li>
-<li>splice()</li>
-<li>slice()</li>
-</ul>
-<h4 id="pop"><a href="#pop" class="headerlink" title="pop()"></a>pop()</h4><p><code>pop()</code> 方法用于删除数组的最后一项，同时减少数组的<code> length</code> 值，返回被删除的项</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">let</span> colors = [<span class="string">&quot;red&quot;</span>, <span class="string">&quot;green&quot;</span>]</span><br><span class="line">2<span class="keyword">let</span> item = colors.pop(); <span class="comment">// 取得最后一项</span></span><br><span class="line">3<span class="built_in">console</span>.log(item) <span class="comment">// green</span></span><br><span class="line">4<span class="built_in">console</span>.log(colors.length) <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="shift"><a href="#shift" class="headerlink" title="shift()"></a>shift()</h4><p><code>shift()</code>方法用于删除数组的第一项，同时减少数组的<code> length</code> 值，返回被删除的项</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">let</span> colors = [<span class="string">&quot;red&quot;</span>, <span class="string">&quot;green&quot;</span>]</span><br><span class="line">2<span class="keyword">let</span> item = colors.shift(); <span class="comment">// 取得第一项</span></span><br><span class="line">3<span class="built_in">console</span>.log(item) <span class="comment">// red</span></span><br><span class="line">4<span class="built_in">console</span>.log(colors.length) <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="splice-1"><a href="#splice-1" class="headerlink" title="splice()"></a>splice()</h4><p>传入两个参数，分别是开始位置，删除元素的数量，返回包含删除元素的数组</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">let</span> colors = [<span class="string">&quot;red&quot;</span>, <span class="string">&quot;green&quot;</span>, <span class="string">&quot;blue&quot;</span>];</span><br><span class="line">2<span class="keyword">let</span> removed = colors.splice(<span class="number">0</span>,<span class="number">1</span>); <span class="comment">// 删除第一项</span></span><br><span class="line">3<span class="built_in">console</span>.log(colors); <span class="comment">// green,blue</span></span><br><span class="line">4<span class="built_in">console</span>.log(removed); <span class="comment">// red，只有一个元素的数组</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="slice"><a href="#slice" class="headerlink" title="slice()"></a>slice()</h3><p>slice() 用于创建一个包含原有数组中一个或多个元素的新数组，不会影响原始数组</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">let</span> colors = [<span class="string">&quot;red&quot;</span>, <span class="string">&quot;green&quot;</span>, <span class="string">&quot;blue&quot;</span>, <span class="string">&quot;yellow&quot;</span>, <span class="string">&quot;purple&quot;</span>];</span><br><span class="line">2<span class="keyword">let</span> colors2 = colors.slice(<span class="number">1</span>);</span><br><span class="line">3<span class="keyword">let</span> colors3 = colors.slice(<span class="number">1</span>, <span class="number">4</span>);</span><br><span class="line">4<span class="built_in">console</span>.log(colors)   <span class="comment">// red,green,blue,yellow,purple</span></span><br><span class="line">5concole.log(colors2); <span class="comment">// green,blue,yellow,purple</span></span><br><span class="line">6concole.log(colors3); <span class="comment">// green,blue,yellow</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="改"><a href="#改" class="headerlink" title="改"></a>改</h4><p>即修改原来数组的内容，常用<code>splice</code></p>
-<h4 id="splice-2"><a href="#splice-2" class="headerlink" title="splice()"></a>splice()</h4><p>传入三个参数，分别是开始位置，要删除元素的数量，要插入的任意多个元素，返回删除元素的数组，对原数组产生影响</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">let</span> colors = [<span class="string">&quot;red&quot;</span>, <span class="string">&quot;green&quot;</span>, <span class="string">&quot;blue&quot;</span>];</span><br><span class="line">2<span class="keyword">let</span> removed = colors.splice(<span class="number">1</span>, <span class="number">1</span>, <span class="string">&quot;red&quot;</span>, <span class="string">&quot;purple&quot;</span>); <span class="comment">// 插入两个值，删除一个元素</span></span><br><span class="line">3<span class="built_in">console</span>.log(colors); <span class="comment">// red,red,purple,blue</span></span><br><span class="line">4<span class="built_in">console</span>.log(removed); <span class="comment">// green，只有一个元素的数组</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="查"><a href="#查" class="headerlink" title="查"></a>查</h4><p>即查找元素，返回元素坐标或者元素值</p>
-<ul>
-<li>indexOf()</li>
-<li>includes()</li>
-<li>find()</li>
-</ul>
-<h4 id="indexOf"><a href="#indexOf" class="headerlink" title="indexOf()"></a>indexOf()</h4><p>返回要查找的元素在数组中的位置，如果没找到则返回<code>-1</code></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">let</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>];</span><br><span class="line">2numbers.indexOf(<span class="number">4</span>) <span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="includes"><a href="#includes" class="headerlink" title="includes()"></a>includes()</h4><p>返回要查找的元素在数组中的位置，找到返回<code>true</code>，否则<code>false</code></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">let</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>];</span><br><span class="line">2numbers.includes(<span class="number">4</span>) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="find"><a href="#find" class="headerlink" title="find()"></a>find()</h4><p>返回第一个匹配的元素</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">const</span> people = [</span><br><span class="line"><span class="number">2</span>    &#123;</span><br><span class="line"><span class="number">3</span>        name: <span class="string">&quot;Matt&quot;</span>,</span><br><span class="line"><span class="number">4</span>        age: <span class="number">27</span></span><br><span class="line"><span class="number">5</span>    &#125;,</span><br><span class="line"><span class="number">6</span>    &#123;</span><br><span class="line"><span class="number">7</span>        name: <span class="string">&quot;Nicholas&quot;</span>,</span><br><span class="line"><span class="number">8</span>        age: <span class="number">29</span></span><br><span class="line"><span class="number">9</span>    &#125;</span><br><span class="line"><span class="number">10</span>];</span><br><span class="line">11people.find(<span class="function">(<span class="params">element, index, array</span>) =&gt;</span> element.age &lt; <span class="number">28</span>) <span class="comment">// // &#123;name: &quot;Matt&quot;, age: 27&#125;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="二、排序方法"><a href="#二、排序方法" class="headerlink" title="二、排序方法"></a>二、排序方法</h2><p>数组有两个方法可以用来对元素重新排序：</p>
-<ul>
-<li>reverse()</li>
-<li>sort()</li>
-</ul>
-<h3 id="reverse"><a href="#reverse" class="headerlink" title="reverse()"></a>reverse()</h3><p>顾名思义，将数组元素方向排列</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">let</span> values = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line">2values.reverse();</span><br><span class="line">3alert(values); <span class="comment">// 5,4,3,2,1</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="sort"><a href="#sort" class="headerlink" title="sort()"></a>sort()</h3><p>sort()方法接受一个比较函数，用于判断哪个值应该排在前面</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">function</span> <span class="function"><span class="title">compare</span>(<span class="params">value1, value2</span>)</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="keyword">if</span> (value1 &lt; value2) &#123;</span><br><span class="line"><span class="number">3</span>        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"><span class="number">4</span>    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (value1 &gt; value2) &#123;</span><br><span class="line"><span class="number">5</span>        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line"><span class="number">6</span>    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line"><span class="number">7</span>        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="number">8</span>    &#125;</span><br><span class="line"><span class="number">9</span>&#125;</span><br><span class="line">10<span class="keyword">let</span> values = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">10</span>, <span class="number">15</span>];</span><br><span class="line">11values.sort(compare);</span><br><span class="line">12alert(values); <span class="comment">// 0,1,5,10,15</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="三、转换方法"><a href="#三、转换方法" class="headerlink" title="三、转换方法"></a>三、转换方法</h2><p>常见的转换方法有：</p>
-<h3 id="join"><a href="#join" class="headerlink" title="join()"></a>join()</h3><p>join() 方法接收一个参数，即字符串分隔符，返回包含所有项的字符串</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">let</span> colors = [<span class="string">&quot;red&quot;</span>, <span class="string">&quot;green&quot;</span>, <span class="string">&quot;blue&quot;</span>];</span><br><span class="line">2alert(colors.join(<span class="string">&quot;,&quot;</span>)); <span class="comment">// red,green,blue</span></span><br><span class="line">3alert(colors.join(<span class="string">&quot;||&quot;</span>)); <span class="comment">// red||green||blue</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="四、迭代方法"><a href="#四、迭代方法" class="headerlink" title="四、迭代方法"></a>四、迭代方法</h2><p>常用来迭代数组的方法（都不改变原数组）有如下：</p>
-<ul>
-<li>some()</li>
-<li>every()</li>
-<li>forEach()</li>
-<li>filter()</li>
-<li>map()</li>
-</ul>
-<h3 id="some"><a href="#some" class="headerlink" title="some()"></a>some()</h3><p>对数组每一项都运行传入的函数，如果有一项函数返回 true ，则这个方法返回 true</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">let</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>];</span><br><span class="line">2<span class="keyword">let</span> someResult = numbers.every(<span class="function">(<span class="params">item, index, array</span>) =&gt;</span> item &gt; <span class="number">2</span>);</span><br><span class="line">3<span class="built_in">console</span>.log(someResult) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="every"><a href="#every" class="headerlink" title="every()"></a>every()</h3><p>对数组每一项都运行传入的函数，如果对每一项函数都返回 true ，则这个方法返回 true</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">let</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>];</span><br><span class="line">2<span class="keyword">let</span> everyResult = numbers.every(<span class="function">(<span class="params">item, index, array</span>) =&gt;</span> item &gt; <span class="number">2</span>);</span><br><span class="line">3<span class="built_in">console</span>.log(everyResult) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="forEach"><a href="#forEach" class="headerlink" title="forEach()"></a>forEach()</h3><p>对数组每一项都运行传入的函数，没有返回值</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">let</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>];</span><br><span class="line">2numbers.forEach(<span class="function">(<span class="params">item, index, array</span>) =&gt;</span> &#123;</span><br><span class="line"><span class="number">3</span>    <span class="comment">// 执行某些操作</span></span><br><span class="line"><span class="number">4</span>&#125;);</span><br></pre></td></tr></table></figure>
-
-<h3 id="filter"><a href="#filter" class="headerlink" title="filter()"></a>filter()</h3><p>对数组每一项都运行传入的函数，函数返回 <code>true</code> 的项会组成数组之后返回</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">let</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>];</span><br><span class="line">2<span class="keyword">let</span> filterResult = numbers.filter(<span class="function">(<span class="params">item, index, array</span>) =&gt;</span> item &gt; <span class="number">2</span>);</span><br><span class="line">3<span class="built_in">console</span>.log(filterResult); <span class="comment">// 3,4,5,4,3</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="map"><a href="#map" class="headerlink" title="map()"></a>map()</h3><p>对数组每一项都运行传入的函数，返回由每次函数调用的结果构成的数组</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">复制1<span class="keyword">let</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>];</span><br><span class="line">2<span class="keyword">let</span> mapResult = numbers.map(<span class="function">(<span class="params">item, index, array</span>) =&gt;</span> item * <span class="number">2</span>);</span><br><span class="line">3<span class="built_in">console</span>.log(mapResult) <span class="comment">// 2,4,6,8,10,8,6,4,2</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1382,7 +1299,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">122</span>
+          <span class="site-state-item-count">125</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1443,7 +1360,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共262.9k字</span>
+  <span class="post-count">博客全站共267.4k字</span>
 </div>
         
 

