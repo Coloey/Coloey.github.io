@@ -28,7 +28,7 @@
 <meta property="og:description" content="原始值和引用值ECMAScript变量可以包含两种不同类型的数据：原始值和引用值，原始值就是最简单的数据：Undefined,Null,Boolean,Number,String,Symbol,保存原始值的变量是按值访问的，因为我们操作的就是存储在变量中的实际值。 引用值是保存在内存中的对象，JavaScript不允许直接访问内存位置，操作对象时，实际上操作的对该对象的引用，而非实际的对象本身，因">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-04-14T07:04:04.000Z">
-<meta property="article:modified_time" content="2022-04-15T01:20:57.283Z">
+<meta property="article:modified_time" content="2022-05-02T13:33:29.271Z">
 <meta property="article:author" content="小柒">
 <meta name="twitter:card" content="summary">
 
@@ -216,7 +216,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-15 09:20:57" itemprop="dateModified" datetime="2022-04-15T09:20:57+08:00">2022-04-15</time>
+                <time title="修改时间：2022-05-02 21:33:29" itemprop="dateModified" datetime="2022-05-02T21:33:29+08:00">2022-05-02</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -275,6 +275,19 @@
 <p>检查超过两个值是否相等</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">recursiveEqual</span>(<span class="params">x,...rest</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Object</span>.is(x,rest[<span class="number">0</span>])||(rest.length&lt;<span class="number">2</span>||recursiveEqual(...rest));</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h1 id="constructor-NaN"><a href="#constructor-NaN" class="headerlink" title="constructor:"></a>constructor:</h1><p>constructor两个作用，</p>
+<ul>
+<li>判断数据的类型</li>
+<li>对象实例通过prototype对象上的constructor访问它的构造函数，因此如果改变prototype对象，constructor就不能用来判断数据类型</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log((<span class="number">2</span>).constructor === <span class="built_in">Number</span>); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log((<span class="literal">true</span>).constructor === <span class="built_in">Boolean</span>); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log((<span class="string">&#x27;str&#x27;</span>).constructor === <span class="built_in">String</span>); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(([]).constructor === <span class="built_in">Array</span>); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log((<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;).constructor === <span class="built_in">Function</span>); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log((&#123;&#125;).constructor === <span class="built_in">Object</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Fn</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line"> </span><br><span class="line">Fn.prototype = <span class="keyword">new</span> <span class="built_in">Array</span>();</span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> f = <span class="keyword">new</span> Fn();</span><br><span class="line"> </span><br><span class="line"><span class="built_in">console</span>.log(f.constructor===Fn);    <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(f.constructor===<span class="built_in">Array</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Object-prototype-toString-call"><a href="#Object-prototype-toString-call" class="headerlink" title="Object.prototype.toString.call()"></a>Object.prototype.toString.call()</h1><p>Object.prototype.toString.call()使用Object对象的原型方法toString来判断数据类型</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="built_in">Object</span>.prototype.toString;</span><br><span class="line"> </span><br><span class="line"><span class="built_in">console</span>.log(a.call(<span class="number">2</span>));</span><br><span class="line"><span class="built_in">console</span>.log(a.call(<span class="literal">true</span>));</span><br><span class="line"><span class="built_in">console</span>.log(a.call(<span class="string">&#x27;str&#x27;</span>));</span><br><span class="line"><span class="built_in">console</span>.log(a.call([]));</span><br><span class="line"><span class="built_in">console</span>.log(a.call(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;));</span><br><span class="line"><span class="built_in">console</span>.log(a.call(&#123;&#125;));</span><br><span class="line"><span class="built_in">console</span>.log(a.call(<span class="literal">undefined</span>));</span><br><span class="line"><span class="built_in">console</span>.log(a.call(<span class="literal">null</span>));</span><br></pre></td></tr></table></figure>
+
+<p>注意：同样是检测对象obj调用toString方法，obj.toString()的结果和Object.prototype.toString.call(obj)的结果不一样，这是因为toString是Object的原型方法，而Array,function等类型作为Object的实例，都重写了toString()方法，不同的对象类型调用toString方法时，根据原型链的知识，调用的是对应的重写之后的toString()方法，（function类型返回内容为函数体的字符串，Array类型返回元素组成的字符串…），而不会去调用Object上原型toString方法（返回对象的具体类型），所以采用obj.toString()不能得到其对象类型，只能将obj转换为字符串类型；因此，在想要得到对象的具体类型时，应该调用Object原型上的toString方法。</p>
 
     </div>
 
@@ -355,7 +368,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E5%A7%8B%E5%80%BC%E5%92%8C%E5%BC%95%E7%94%A8%E5%80%BC"><span class="nav-number">1.</span> <span class="nav-text">原始值和引用值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">区别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E5%B1%9E%E6%80%A7"><span class="nav-number">2.1.</span> <span class="nav-text">动态属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E5%80%BC"><span class="nav-number">2.2.</span> <span class="nav-text">复制值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%A0%E9%80%92%E5%8F%82%E6%95%B0"><span class="nav-number">2.3.</span> <span class="nav-text">传递参数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#typeof"><span class="nav-number">3.</span> <span class="nav-text">typeof</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#instanceof"><span class="nav-number">4.</span> <span class="nav-text">instanceof</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E6%A0%87%E8%AF%86%E5%92%8C%E7%9B%B8%E7%AD%89%E5%88%A4%E5%AE%9A"><span class="nav-number">5.</span> <span class="nav-text">对象标识和相等判定</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E5%A7%8B%E5%80%BC%E5%92%8C%E5%BC%95%E7%94%A8%E5%80%BC"><span class="nav-number">1.</span> <span class="nav-text">原始值和引用值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">区别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E5%B1%9E%E6%80%A7"><span class="nav-number">2.1.</span> <span class="nav-text">动态属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E5%80%BC"><span class="nav-number">2.2.</span> <span class="nav-text">复制值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%A0%E9%80%92%E5%8F%82%E6%95%B0"><span class="nav-number">2.3.</span> <span class="nav-text">传递参数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#typeof"><span class="nav-number">3.</span> <span class="nav-text">typeof</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#instanceof"><span class="nav-number">4.</span> <span class="nav-text">instanceof</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E6%A0%87%E8%AF%86%E5%92%8C%E7%9B%B8%E7%AD%89%E5%88%A4%E5%AE%9A"><span class="nav-number">5.</span> <span class="nav-text">对象标识和相等判定</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#constructor-NaN"><span class="nav-number">6.</span> <span class="nav-text">constructor:</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Object-prototype-toString-call"><span class="nav-number">7.</span> <span class="nav-text">Object.prototype.toString.call()</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -371,7 +384,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">125</span>
+          <span class="site-state-item-count">126</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -432,7 +445,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共267.4k字</span>
+  <span class="post-count">博客全站共268.1k字</span>
 </div>
         
 

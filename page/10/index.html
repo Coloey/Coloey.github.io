@@ -182,6 +182,86 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/25/%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E4%BB%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/25/%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E4%BB%A4/" class="post-title-link" itemprop="url">自定义指令</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-25 17:14:32 / 修改时间：17:39:59" itemprop="dateCreated datePublished" datetime="2022-01-25T17:14:32+08:00">2022-01-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="自定义指令"><a href="#自定义指令" class="headerlink" title="自定义指令"></a>自定义指令</h1><h2 id="1-语法："><a href="#1-语法：" class="headerlink" title="1.语法："></a>1.语法：</h2><h3 id="（1）-局部指令："><a href="#（1）-局部指令：" class="headerlink" title="（1） 局部指令："></a>（1） 局部指令：</h3><p>​    directives:{指令名：配置对象}或 directives：{指令名:回调函数}</p>
+<h3 id="（2）全局指令："><a href="#（2）全局指令：" class="headerlink" title="（2）全局指令："></a>（2）全局指令：</h3><p>Vue.directive(指令名，配置对象)或Vue.directive(指令名，回调函数)</p>
+<h2 id="2-配置对象中常用的回调"><a href="#2-配置对象中常用的回调" class="headerlink" title="2.配置对象中常用的回调"></a>2.配置对象中常用的回调</h2><p><code>created</code>：在绑定元素的 attribute 或事件监听器被应用之前调用。在指令需要附加在普通的 <code>v-on</code> 事件监听器调用前的事件监听器中时，这很有用。` </p>
+<p><code>beforeMount</code>：当指令第一次绑定到元素并且在挂载父组件之前调用。<code>mounted</code>：指令与元素成功绑定时使用</p>
+<p><code>updated</code>:在包含组件的 VNode <strong>及其子组件的 VNode</strong> 更新后调用。</p>
+<p><code>beforeUpdate</code>：在更新包含组件的 VNode 之前调用。</p>
+<p><code>beforeUnmount</code>：在卸载绑定元素的父组件之前调用</p>
+<p><code>unmounted</code>：当指令与元素解除绑定且父组件已卸载时，只调用一次。</p>
+<p>PS:指令定义时不加v-,，但是使用时要加v-</p>
+<p>指令名如果是多个单词要用kebab-case命名方式，不要用camelCase命名</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"> &lt;div id=&quot;root&quot;&gt;</span><br><span class="line">        &lt;h3&gt;&#123;&#123;name&#125;&#125;&lt;/h3&gt;</span><br><span class="line">        &lt;h3&gt;当前n:&lt;span v-text=&quot;n&quot;&gt;&#123;&#123;n&#125;&#125;&lt;/span&gt;&lt;/h3&gt;</span><br><span class="line">        &lt;h3&gt;放大10倍后的n：&lt;span v-big=&quot;n&quot;&gt;&#123;&#123;n&#125;&#125;&lt;/span&gt;&lt;/h3&gt;</span><br><span class="line">        &lt;button @click=&quot;n++&quot;&gt;点我n+1&lt;/button&gt;</span><br><span class="line">        &lt;br&gt;</span><br><span class="line">        &lt;input type=&quot;text&quot; v-fbind:value=&quot;n&quot;&gt;</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line">&lt;script src=&quot;https://unpkg.com/vue@next&quot;&gt;&lt;/script&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">        Vue.createApp(&#123;</span><br><span class="line">            data()&#123;</span><br><span class="line">                return&#123;</span><br><span class="line">                    name:&quot;ann&quot;,</span><br><span class="line">                    n:1</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            directives: &#123;</span><br><span class="line">                //v-big被调用：指令与元素成功绑定时（一上来） 指令所在模板重新编译时</span><br><span class="line">                big(element,binding)&#123;</span><br><span class="line">                   element.innerText=binding.value*10</span><br><span class="line">                   </span><br><span class="line">                &#125;,</span><br><span class="line">               /*fbind(element,binding)&#123;</span><br><span class="line">                    element.value=binding.value</span><br><span class="line">                    element.focus()</span><br><span class="line">                &#125;,*/</span><br><span class="line">               fbind:&#123;</span><br><span class="line">                   // 当被绑定的元素挂载到 DOM 中时……</span><br><span class="line">                    mounted(element,binding)&#123;</span><br><span class="line">                        console.log(this)</span><br><span class="line">                        element.value=binding.value</span><br><span class="line">                        element.focus()</span><br><span class="line"></span><br><span class="line">                    &#125;,</span><br><span class="line">                    updated(element,binding)&#123;</span><br><span class="line">                        element.value=binding.value</span><br><span class="line"></span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).mount(&quot;#root&quot;)</span><br><span class="line"></span><br><span class="line">    &lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/25/%E5%86%85%E7%BD%AE%E6%8C%87%E4%BB%A4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -926,105 +1006,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/23/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/23/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86/" class="post-title-link" itemprop="url">事件处理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-01-23 18:35:27 / 修改时间：22:23:07" itemprop="dateCreated datePublished" datetime="2022-01-23T18:35:27+08:00">2022-01-23</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="事件的基本使用："><a href="#事件的基本使用：" class="headerlink" title="事件的基本使用："></a>事件的基本使用：</h1><ol>
-<li><p>使用v-on:xxx或@xxx绑定事件，其中xxx是事件名</p>
-</li>
-<li><p>事件的回调需要配置在methods对象中，最终会在vm上</p>
-</li>
-<li><p>methods中配置的函数，不要用箭头函数，否则this就不是vm</p>
-</li>
-<li><p>methods中配置的函数，都是被Vue管理的函数，this的指向是vm或组件实例对象</p>
-</li>
-<li><p>@click=”demo”和@click=”demo($event)”效果一致，但后者可以传参</p>
-</li>
-</ol>
-<h1 id="事件修饰符"><a href="#事件修饰符" class="headerlink" title="事件修饰符"></a>事件修饰符</h1><p>prevent:阻止默认事件</p>
-<p>stop：阻止事件冒泡</p>
-<p>once:事件只触发一次</p>
-<h1 id="键盘事件"><a href="#键盘事件" class="headerlink" title="键盘事件"></a>键盘事件</h1><p>1 Vue常用按键别名：</p>
-<p>回车：enter</p>
-<p>删除：delete</p>
-<p>退出：esc</p>
-<p>空格：space</p>
-<p>换行：tab(特殊，必须配合keydown使用)</p>
-<p>上：up</p>
-<p>下:down</p>
-<p>左:left</p>
-<p>右:right</p>
-<p>2 Vue未提供别名的按键，可以使用按键原始的key值去绑定，但注意要转为keb-case(短横线命名)</p>
-<p>3 系统修饰符(用法特殊):ctrl,alt,shift,meta</p>
-<p>(1)配合keyup使用：按下修饰键的同时再按下其他键，随后释放其他键，事件才被触发</p>
-<p>(2)配合keydown使用：正常触发事件</p>
-<p>4 也可以使用keyCode去指定具体的键</p>
-<p>5 Vue.config.keyCode自定义键名=键码，可以定制按键别名</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1096,7 +1077,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">125</span>
+          <span class="site-state-item-count">126</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1157,7 +1138,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共267.4k字</span>
+  <span class="post-count">博客全站共268.1k字</span>
 </div>
         
 
