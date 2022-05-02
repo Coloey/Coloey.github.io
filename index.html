@@ -208,7 +208,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-05-02 11:58:28 / 修改时间：14:43:16" itemprop="dateCreated datePublished" datetime="2022-05-02T11:58:28+08:00">2022-05-02</time>
+              <time title="创建时间：2022-05-02 11:58:28 / 修改时间：15:41:48" itemprop="dateCreated datePublished" datetime="2022-05-02T11:58:28+08:00">2022-05-02</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -240,7 +240,7 @@
 <li>同步任务：立即执行的任务，同步任务一般会直接进入到主线程中执行</li>
 <li>异步任务：异步执行的任务，比如<code>ajax</code>网络请求，<code>setTimeout </code>定时函数等</li>
 </ul>
-<p><img src="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/1-16514640871701.png"></p>
+<p><img src="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/%5C%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%5C1.png"></p>
 <p>从上面我们可以看到，同步任务进入主线程，即主执行栈，异步任务进入任务队列，主线程内的任务执行完毕为空，会去任务队列读取对应的任务，推入主线程执行。上述过程的不断重复就是事件循环</p>
 <h2 id="宏任务与微任务"><a href="#宏任务与微任务" class="headerlink" title="宏任务与微任务"></a>宏任务与微任务</h2><p>如果将任务划分为同步任务和异步任务并不是那么的准确，举个例子：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">console.log(1)</span><br><span class="line"></span><br><span class="line">setTimeout(()=&gt;&#123;</span><br><span class="line">    console.log(2)</span><br><span class="line">&#125;, 0)</span><br><span class="line"></span><br><span class="line">new Promise((resolve, reject)=&gt;&#123;</span><br><span class="line">    console.log(&#x27;new Promise&#x27;)</span><br><span class="line">    resolve()</span><br><span class="line">&#125;).then(()=&gt;&#123;</span><br><span class="line">    console.log(&#x27;then&#x27;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">console.log(3)</span><br></pre></td></tr></table></figure>
@@ -300,14 +300,15 @@
 <p>上面的例子中，<code>await</code> 会阻塞下面的代码（即加入微任务队列），先执行 <code>async </code>外面的同步代码，同步代码执行完，再回到 <code>async</code> 函数中，再执行之前阻塞的代码</p>
 <p>所以上述输出结果为：<code>1</code>，<code>fn2</code>，<code>3</code>，<code>2</code></p>
 <h1 id="Node中的事件循环机制"><a href="#Node中的事件循环机制" class="headerlink" title="Node中的事件循环机制"></a>Node中的事件循环机制</h1><p>事件循环分为6个阶段：</p>
-<p><img src="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/2-16514700295272.png">timers:执行timer的回调，即setTimeout,setInterval里面的回调函数</p>
+<p><img src="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/%5C%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%5C2.png"></p>
+<p>timers:执行timer的回调，即setTimeout,setInterval里面的回调函数</p>
 <p>I/O事件回调阶段：执行延迟到下一个循环迭代的I/O阶段，即上一轮循环中未被执行的一些I/O回调</p>
 <p>idle,prepare(闲置阶段):仅内部使用</p>
 <p>poll(轮询阶段)：检查新的I/O事件，执行与I/O相关的回调，（几乎所有情况下，除了关闭的回调函数，那些由计时器和setImmediate（）调度的之外），其余情况node将在适当的时候在此阻塞</p>
 <p>check(检查阶段)：setImmediate()回调函数在这里执行</p>
 <p>close callback（关闭事件回调阶段）：一些关闭的回调函数，如socket.on(‘close’,…)</p>
 <p>除了上述6个阶段，还存在process.nextTick,其不属于事件循环的任何一个阶段，<strong>它属于该阶段与下阶段之间的过渡，即本阶段执行结束，进入下一个阶段前要执行的回调，类似插队</strong></p>
-<p><img src="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/3-16514704468113.png"></p>
+<p><img src="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/%5C%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%5C3.png"></p>
 <p>在Node中，同样存在宏任务和微任务，与浏览器的事件循环相似</p>
 <p>微任务：</p>
 <ul>
