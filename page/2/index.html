@@ -182,6 +182,81 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/30/%E6%89%8B%E5%86%99object-freeze/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/30/%E6%89%8B%E5%86%99object-freeze/" class="post-title-link" itemprop="url">手写object.freeze</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-30 22:04:32 / 修改时间：22:12:45" itemprop="dateCreated datePublished" datetime="2022-04-30T22:04:32+08:00">2022-04-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>object.freeze()=不可扩展（preventExtensions)+不可配置(configurable:false)+不可写(writable:fasle)</p>
+<p>object.seal()=不可扩展+不可配置</p>
+<p>preventExtensions=不可添加属性+不可改__proto__</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> _objectFreeze = <span class="function"><span class="params">object</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="comment">// 补全代码</span></span><br><span class="line">                <span class="comment">//Object.defineProperty(object,)</span></span><br><span class="line">                <span class="keyword">const</span> props=<span class="built_in">Object</span>.getOwnPropertyNames(object);</span><br><span class="line">                props.forEach(<span class="function"><span class="params">prop</span>=&gt;</span>&#123;</span><br><span class="line">                    <span class="keyword">const</span> des=<span class="built_in">Object</span>.getOwnPropertyDescriptor(object,prop);</span><br><span class="line">                    <span class="keyword">if</span>(des.get||des.set)&#123;</span><br><span class="line">                        <span class="built_in">Object</span>.defineProperty(object,prop,&#123;</span><br><span class="line">                            <span class="attr">configurable</span>:<span class="literal">false</span>,<span class="comment">//小写</span></span><br><span class="line">                            <span class="attr">writable</span>:<span class="literal">false</span>,</span><br><span class="line">                            <span class="attr">get</span>:des.get,</span><br><span class="line">                            <span class="attr">set</span>:des.set</span><br><span class="line">                        </span><br><span class="line">                        &#125;)</span><br><span class="line">                    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                        <span class="built_in">Object</span>.defineProperty(object,prop,&#123;</span><br><span class="line">                           <span class="attr">configurable</span>:<span class="literal">false</span>,</span><br><span class="line">                           <span class="attr">writable</span>:<span class="literal">false</span>,</span><br><span class="line">                        </span><br><span class="line">                        &#125;)</span><br><span class="line">                        </span><br><span class="line">                    &#125;</span><br><span class="line">                            </span><br><span class="line">                &#125;)</span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">Object</span>.preventExtensions(object);</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+
+<p>数据属性的值不可更改，<strong>访问器属性（有getter和setter）也同样（但由于是函数调用，</strong>给人的错觉是还是可以修改这个属性）。如果一个属性的值是个对象，则这个对象中的属性是可以修改的，除非它也是个冻结对象。数组作为一种对象，被冻结，其元素不能被修改。没有数组元素可以被添加或移除。</p>
+<p>这个方法<strong>返回传递的对象</strong>，而不是创建一个被冻结的副本。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/30/%E5%B8%B8%E8%A7%81%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1144,114 +1219,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/24/%E9%98%B2%E6%8A%96%E8%8A%82%E6%B5%81/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/24/%E9%98%B2%E6%8A%96%E8%8A%82%E6%B5%81/" class="post-title-link" itemprop="url">防抖节流</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-24 17:49:35 / 修改时间：18:09:28" itemprop="dateCreated datePublished" datetime="2022-04-24T17:49:35+08:00">2022-04-24</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h1><p>本质上是优化高频率执行代码的一种手段</p>
-<p>如：浏览器的 <code>resize</code>、<code>scroll</code>、<code>keypress</code>、<code>mousemove</code> 等事件在触发时，会不断地调用绑定在事件上的回调函数，极大地浪费资源，降低前端性能</p>
-<p>为了优化体验，需要对这类事件进行调用次数的限制，对此我们就可以采用<code>throttle</code>（节流）和<code>debounce</code>（防抖）的方式来减少调用频率</p>
-<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><ul>
-<li>节流: n 秒内只运行一次，若在 n 秒内重复触发，只有一次生效</li>
-<li>防抖: n 秒后再执行该事件，若在 n 秒内被重复触发，则重新计时</li>
-</ul>
-<h1 id="节流："><a href="#节流：" class="headerlink" title="节流："></a>节流：</h1><p>用时间戳实现：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttled</span>(<span class="params">fn,delay=<span class="number">500</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> oldTime=<span class="keyword">new</span> <span class="built_in">Date</span>.now();</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">let</span> newTime=<span class="keyword">new</span> <span class="built_in">Date</span>.now();</span><br><span class="line">        <span class="keyword">if</span>(newTime-oldTime&gt;=delay)&#123;</span><br><span class="line">            fn.apply(<span class="built_in">this</span>,args);</span><br><span class="line">            oldTime=<span class="keyword">new</span> <span class="built_in">Date</span>.now();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>用定时器实现</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttled</span>(<span class="params">fn,delay=<span class="number">500</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timer=<span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">..args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!timer)&#123;</span><br><span class="line">            timer=<span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">                fn.apply(<span class="built_in">this</span>,args);</span><br><span class="line">                timer=<span class="literal">null</span>;</span><br><span class="line">            &#125;,delay)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="防抖："><a href="#防抖：" class="headerlink" title="防抖："></a>防抖：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">fn,delay=<span class="number">500</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timer;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(timer)<span class="built_in">clearTimeout</span>(timer);</span><br><span class="line">        timer=<span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">            fn.apply(<span class="built_in">this</span>,args);<span class="comment">//每次执行，都先清除该计时器，然后下面重新开始计数，即不执行 debounce 一段时间 wait 后，setTimeout 里面的代码才会执行</span></span><br><span class="line">        &#125;,delay)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>立即执行的防抖函数</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">fn,delay=<span class="number">500</span>,immediate</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timer;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(immediate)&#123;</span><br><span class="line">            immediate=!immediate;</span><br><span class="line">            fn.apply(<span class="built_in">this</span>,args);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(timer)<span class="built_in">clearTimeout</span>(timer);</span><br><span class="line">            timer=<span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">                fn.apply(<span class="built_in">this</span>,args);</span><br><span class="line">            &#125;,delay)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h1><p>相同点：</p>
-<ul>
-<li>都可以通过使用 <code>setTimeout</code> 实现</li>
-<li>目的都是，降低回调执行频率。节省计算资源</li>
-</ul>
-<p>不同点：</p>
-<ul>
-<li>函数防抖，在一段连续操作结束后，处理回调，利用<code>clearTimeout </code>和 <code>setTimeout</code>实现。函数节流，在一段连续操作中，每一段时间只执行一次，频率较高的事件中使用来提高性能</li>
-<li>函数防抖关注一定时间连续触发的事件，因为会清除定时器，只在最后执行一次，而函数节流一段时间内只执行一次,不会清除定时器，因此会在隔一段时间执行一次。</li>
-</ul>
-<p>例如，都设置时间频率为500ms，在2秒时间内，频繁触发函数，节流，每隔 500ms 就执行一次。防抖，则不管调动多少次方法，在2s后，只会执行一次</p>
-<h1 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h1><p>防抖在连续的事件，只需触发一次回调的场景有：</p>
-<ul>
-<li>搜索框搜索输入。只需用户最后一次输入完，再发送请求</li>
-<li>手机号、邮箱验证输入检测</li>
-<li>窗口大小<code>resize</code>。只需窗口调整完成后，计算窗口大小。防止重复渲染。</li>
-</ul>
-<p>节流在间隔一段时间执行一次回调的场景有：</p>
-<ul>
-<li>滚动加载，加载更多或滚到底部监听</li>
-<li>搜索框，搜索联想功能</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1323,7 +1290,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">126</span>
+          <span class="site-state-item-count">127</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1384,7 +1351,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共106.9k字</span>
+  <span class="post-count">博客全站共110.2k字</span>
 </div>
         
 

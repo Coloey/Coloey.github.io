@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"coloey.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一、Vue 3 响应式使用1 实现单个值的响应式在普通 JS 代码执行中，并不会有响应式变化，比如在控制台执行下面代码： 12345let price &#x3D; 10, quantity &#x3D; 2;const total &#x3D; price * quantity;console.log(&#96;total: $&amp;#123;total&amp;#125;&#96;); &#x2F;&#x2F; total: 20price &#x3D; 20;console.l">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue3响应式原理">
+<meta property="og:url" content="https://coloey.github.io/2022/05/04/Vue3%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="小柒">
+<meta property="og:description" content="一、Vue 3 响应式使用1 实现单个值的响应式在普通 JS 代码执行中，并不会有响应式变化，比如在控制台执行下面代码： 12345let price &#x3D; 10, quantity &#x3D; 2;const total &#x3D; price * quantity;console.log(&#96;total: $&amp;#123;total&amp;#125;&#96;); &#x2F;&#x2F; total: 20price &#x3D; 20;console.l">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://coloey.github.io/2022/05/04/Vue3%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86/vuexiang1.png">
+<meta property="og:image" content="https://coloey.github.io/2022/05/04/Vue3%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86/vuexiang2.png">
+<meta property="og:image" content="https://coloey.github.io/2022/05/04/Vue3%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86/vuexiang3.png">
+<meta property="og:image" content="https://coloey.github.io/2022/05/04/Vue3%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86/vuexiang4.png">
+<meta property="og:image" content="https://coloey.github.io/2022/05/04/Vue3%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86/vuexiang5.png">
+<meta property="article:published_time" content="2022-05-04T03:59:43.000Z">
+<meta property="article:modified_time" content="2022-05-04T05:20:48.925Z">
+<meta property="article:author" content="小柒">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://coloey.github.io/2022/05/04/Vue3%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86/vuexiang1.png">
+
+<link rel="canonical" href="https://coloey.github.io/2022/05/04/Vue3%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Vue3响应式原理 | 小柒</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="小柒" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小柒</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">www.xiaoqi.cn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/04/Vue3%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h1 class="post-title" itemprop="name headline">
+          Vue3响应式原理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-04 11:59:43 / 修改时间：13:20:48" itemprop="dateCreated datePublished" datetime="2022-05-04T11:59:43+08:00">2022-05-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一、Vue-3-响应式使用"><a href="#一、Vue-3-响应式使用" class="headerlink" title="一、Vue 3 响应式使用"></a>一、Vue 3 响应式使用</h2><h3 id="1-实现单个值的响应式"><a href="#1-实现单个值的响应式" class="headerlink" title="1 实现单个值的响应式"></a>1 实现单个值的响应式</h3><p>在普通 JS 代码执行中，并不会有响应式变化，比如在控制台执行下面代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> price = <span class="number">10</span>, quantity = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">const</span> total = price * quantity;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`total: <span class="subst">$&#123;total&#125;</span>`</span>); <span class="comment">// total: 20</span></span><br><span class="line">price = <span class="number">20</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`total: <span class="subst">$&#123;total&#125;</span>`</span>); <span class="comment">// total: 20</span></span><br></pre></td></tr></table></figure>
+
+<p>从这可以看出，在修改 <code>price</code> 变量的值后， <code>total</code> 的值并没有发生改变。</p>
+<p>那么如何修改上面代码，让 <code>total</code> 能够自动更新呢？我们其实可以将修改 <code>total</code> 值的方法保存起来，等到与 <code>total</code> 值相关的变量（如 <code>price</code> 或 <code>quantity</code> 变量的值）发生变化时，触发该方法，更新 <code>total</code> 即可。我们可以这么实现：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> price = <span class="number">10</span>, quantity = <span class="number">2</span>, total = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">const</span> dep = <span class="keyword">new</span> <span class="built_in">Set</span>(); <span class="comment">// ① </span></span><br><span class="line"><span class="keyword">const</span> effect = <span class="function">() =&gt;</span> &#123; total = price * quantity &#125;;</span><br><span class="line"><span class="keyword">const</span> track = <span class="function">() =&gt;</span> &#123; dep.add(effect) &#125;;  <span class="comment">// ②</span></span><br><span class="line"><span class="keyword">const</span> trigger = <span class="function">() =&gt;</span> &#123; dep.forEach( <span class="function"><span class="params">effect</span> =&gt;</span> effect() )&#125;;  <span class="comment">// ③</span></span><br><span class="line"></span><br><span class="line">track();</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`total: <span class="subst">$&#123;total&#125;</span>`</span>); <span class="comment">// total: 0</span></span><br><span class="line">trigger();</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`total: <span class="subst">$&#123;total&#125;</span>`</span>); <span class="comment">// total: 20</span></span><br><span class="line">price = <span class="number">20</span>;</span><br><span class="line">trigger();</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`total: <span class="subst">$&#123;total&#125;</span>`</span>); <span class="comment">// total: 40</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码通过 3 个步骤，实现对 <code>total</code> 数据进行响应式变化：</p>
+<p>① 初始化一个 <code>Set</code> 类型的 <code>dep</code> 变量，用来存放需要执行的副作用（ <code>effect</code> 函数），这边是修改 <code>total</code> 值的方法；</p>
+<p>② 创建 <code>track()</code> 函数，用来将需要执行的副作用保存到 <code>dep</code> 变量中（也称收集副作用）；</p>
+<p>③ 创建 <code>trigger()</code> 函数，用来执行 <code>dep</code> 变量中的所有副作用；</p>
+<p>在每次修改 <code>price</code> 或 <code>quantity</code> 后，调用 <code>trigger()</code> 函数执行所有副作用后， <code>total</code> 值将自动更新为最新值。</p>
+<p><img src="/2022/05/04/Vue3%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86/vuexiang1.png"></p>
+<h3 id="2-实现单个对象的响应式"><a href="#2-实现单个对象的响应式" class="headerlink" title="2 实现单个对象的响应式"></a>2 实现单个对象的响应式</h3><p>通常，<strong>我们的对象具有多个属性，并且每个属性都需要自己的 <code>dep</code>。我们如何存储这些？比如：</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> product = &#123; <span class="attr">price</span>: <span class="number">10</span>, <span class="attr">quantity</span>: <span class="number">2</span> &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>从前面介绍我们知道，我们将所有副作用保存在一个 <code>Set</code> 集合中，而该集合不会有重复项，这里我们引入一个 <code>Map</code> 类型集合（即 <code>depsMap</code> ），其 <code>key</code> 为对象的属性（如： <code>price</code> 属性）， <code>value</code> 为前面保存副作用的 <code>Set</code> 集合（如： <code>dep</code> 对象），大致结构如下图：</p>
+<p><img src="/2022/05/04/Vue3%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86/vuexiang2.png"></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> product = &#123; <span class="attr">price</span>: <span class="number">10</span>, <span class="attr">quantity</span>: <span class="number">2</span> &#125;, total = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">const</span> depsMap = <span class="keyword">new</span> <span class="built_in">Map</span>(); <span class="comment">// ① </span></span><br><span class="line"><span class="keyword">const</span> effect = <span class="function">() =&gt;</span> &#123; total = product.price * product.quantity &#125;;</span><br><span class="line"><span class="keyword">const</span> track = <span class="function"><span class="params">key</span> =&gt;</span> &#123;     <span class="comment">// ②</span></span><br><span class="line">  <span class="keyword">let</span> dep = depsMap.get(key);</span><br><span class="line">  <span class="keyword">if</span>(!dep) &#123;</span><br><span class="line">    depsMap.set(key, (dep = <span class="keyword">new</span> <span class="built_in">Set</span>()));</span><br><span class="line">  &#125;</span><br><span class="line">  dep.add(effect);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> trigger = <span class="function"><span class="params">key</span> =&gt;</span> &#123;  <span class="comment">// ③</span></span><br><span class="line">  <span class="keyword">let</span> dep = depsMap.get(key);</span><br><span class="line">  <span class="keyword">if</span>(dep) &#123;</span><br><span class="line">    dep.forEach( <span class="function"><span class="params">effect</span> =&gt;</span> effect() );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">track(<span class="string">&#x27;price&#x27;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`total: <span class="subst">$&#123;total&#125;</span>`</span>); <span class="comment">// total: 0</span></span><br><span class="line">effect();</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`total: <span class="subst">$&#123;total&#125;</span>`</span>); <span class="comment">// total: 20</span></span><br><span class="line">product.price = <span class="number">20</span>;</span><br><span class="line">trigger(<span class="string">&#x27;price&#x27;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`total: <span class="subst">$&#123;total&#125;</span>`</span>); <span class="comment">// total: 40</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码通过 3 个步骤，实现对 <code>total</code> 数据进行响应式变化：</p>
+<p>① 初始化一个 <code>Map</code> 类型的 <code>depsMap</code> 变量，用来保存每个需要响应式变化的对象属性（<code>key</code> 为对象的属性， <code>value</code> 为前面 <code>Set</code> 集合）；</p>
+<p>② 创建 <code>track()</code> 函数，用来将需要执行的副作用保存到 <code>depsMap</code> 变量中对应的对象属性下（也称收集副作用）；</p>
+<p>③ 创建 <code>trigger()</code> 函数，用来执行 <code>dep</code> 变量中指定对象属性的所有副作用；</p>
+<p>这样就实现监听对象的响应式变化，在 <code>product</code> 对象中的属性值发生变化， <code>total</code> 值也会跟着更新。</p>
+<h3 id="3-实现多个对象的响应式"><a href="#3-实现多个对象的响应式" class="headerlink" title="3 实现多个对象的响应式"></a>3 实现多个对象的响应式</h3><p>如果我们有多个响应式数据，比如同时需要观察对象 <code>a</code> 和对象 <code>b</code> 的数据，那么又要如何跟踪每个响应变化的对象？</p>
+<p>这里我们引入一个 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/WeakMap">WeakMap 类型</a>的对象，将需要观察的对象作为 <code>key</code> ，值为前面用来保存对象属性的 Map 变量。代码如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> product = &#123; <span class="attr">price</span>: <span class="number">10</span>, <span class="attr">quantity</span>: <span class="number">2</span> &#125;, total = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">const</span> targetMap = <span class="keyword">new</span> <span class="built_in">WeakMap</span>();     <span class="comment">// ① 初始化 targetMap，保存观察对象</span></span><br><span class="line"><span class="keyword">const</span> effect = <span class="function">() =&gt;</span> &#123; total = product.price * product.quantity &#125;;</span><br><span class="line"><span class="keyword">const</span> track = <span class="function">(<span class="params">target, key</span>) =&gt;</span> &#123;     <span class="comment">// ② 收集依赖</span></span><br><span class="line">  <span class="keyword">let</span> depsMap = targetMap.get(target);</span><br><span class="line">  <span class="keyword">if</span>(!depsMap)&#123;</span><br><span class="line">    targetMap.set(target, (depsMap = <span class="keyword">new</span> <span class="built_in">Map</span>()));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">let</span> dep = depsMap.get(key);</span><br><span class="line">  <span class="keyword">if</span>(!dep) &#123;</span><br><span class="line">    depsMap.set(key, (dep = <span class="keyword">new</span> <span class="built_in">Set</span>()));</span><br><span class="line">  &#125;</span><br><span class="line">  dep.add(effect);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> trigger = <span class="function">(<span class="params">target, key</span>) =&gt;</span> &#123;  <span class="comment">// ③ 执行指定对象的指定属性的所有副作用</span></span><br><span class="line">  <span class="keyword">const</span> depsMap = targetMap.get(target);</span><br><span class="line">  <span class="keyword">if</span>(!depsMap) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">let</span> dep = depsMap.get(key);</span><br><span class="line">  <span class="keyword">if</span>(dep) &#123;</span><br><span class="line">    dep.forEach( <span class="function"><span class="params">effect</span> =&gt;</span> effect() );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">track(product, <span class="string">&#x27;price&#x27;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`total: <span class="subst">$&#123;total&#125;</span>`</span>); <span class="comment">// total: 0</span></span><br><span class="line">effect();</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`total: <span class="subst">$&#123;total&#125;</span>`</span>); <span class="comment">// total: 20</span></span><br><span class="line">product.price = <span class="number">20</span>;</span><br><span class="line">trigger(product, <span class="string">&#x27;price&#x27;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`total: <span class="subst">$&#123;total&#125;</span>`</span>); <span class="comment">// total: 40</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码通过 3 个步骤，实现对 <code>total</code> 数据进行响应式变化：</p>
+<p>① 初始化一个 <code>WeakMap</code> 类型的 <code>targetMap</code> 变量，用来要观察每个响应式对象；</p>
+<p>② 创建 <code>track()</code> 函数，用来将需要执行的副作用保存到指定对象（ <code>target</code> ）的依赖中（也称收集副作用）；</p>
+<p>③ 创建 <code>trigger()</code> 函数，用来执行指定对象（ <code>target</code> ）中指定属性（ <code>key</code> ）的所有副作用；</p>
+<p>这样就实现监听对象的响应式变化，在 <code>product</code> 对象中的属性值发生变化， <code>total</code> 值也会跟着更新。</p>
+<p>大致流程如下图：</p>
+<p><img src="/2022/05/04/Vue3%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86/vuexiang3.png"></p>
+<h2 id="二、Proxy-和-Reflect"><a href="#二、Proxy-和-Reflect" class="headerlink" title="二、Proxy 和 Reflect"></a>二、Proxy 和 Reflect</h2><p>在上一节内容中，介绍了如何在数据发生变化后，自动更新数据，但存在的问题是，每次需要手动通过触发 <code>track()</code> 函数搜集依赖，通过 <code>trigger()</code> 函数执行所有副作用，达到数据更新目的。</p>
+<p>这一节将来解决这个问题，实现这两个函数自动调用。</p>
+<h3 id="1-如何实现自动操作"><a href="#1-如何实现自动操作" class="headerlink" title="1. 如何实现自动操作"></a>1. 如何实现自动操作</h3><p>这里我们引入 JS 对象访问器的概念，解决办法如下：</p>
+<ul>
+<li>在读取（GET 操作）数据时，自动执行 <code>track()</code> 函数自动收集依赖；</li>
+<li>在修改（SET 操作）数据时，自动执行 <code>trigger()</code> 函数执行所有副作用；</li>
+</ul>
+<p>那么如何拦截 GET 和 SET 操作？接下来看看 Vue2 和 Vue3 是如何实现的：</p>
+<ul>
+<li>在 Vue2 中，使用 ES5 的 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty"><code>Object.defineProperty()</code></a> 函数实现；</li>
+<li>在 Vue3 中，使用 ES6 的 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy"><code>Proxy</code></a> 和 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect"><code>Reflect</code></a> API 实现；</li>
+</ul>
+<p>需要注意的是：Vue3 使用的 <code>Proxy</code> 和 <code>Reflect</code> API 并不支持 IE。</p>
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty"><code>Object.defineProperty()</code></a> 函数这边就不多做介绍，可以阅读文档，下文将主要介绍 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy"><code>Proxy</code></a> 和 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect"><code>Reflect</code></a> API。</p>
+<h3 id="2-如何使用-Reflect"><a href="#2-如何使用-Reflect" class="headerlink" title="2. 如何使用 Reflect"></a>2. 如何使用 Reflect</h3><p>通常我们有三种方法读取一个对象的属性：</p>
+<ol>
+<li>使用 <code>.</code> 操作符：<code>leo.name</code> ；</li>
+<li>使用 <code>[]</code> ： <code>leo[&#39;name&#39;]</code> ；</li>
+<li>使用 <code>Reflect</code> API： <code>Reflect.get(leo, &#39;name&#39;)</code> 。</li>
+</ol>
+<p>这三种方式输出结果相同。</p>
+<h3 id="3-如何使用-Proxy"><a href="#3-如何使用-Proxy" class="headerlink" title="3. 如何使用 Proxy"></a>3. 如何使用 Proxy</h3><p>Proxy 对象用于创建一个对象的代理，从而实现基本操作的拦截和自定义（如属性查找、赋值、枚举、函数调用等）。语法如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const p = new Proxy(target, handler)</span><br></pre></td></tr></table></figure>
+
+<p>参数如下：</p>
+<ul>
+<li>target : 要使用 Proxy 包装的目标对象（可以是任何类型的对象，包括原生数组，函数，甚至另一个代理）。</li>
+<li>handler : 一个通常以函数作为属性的对象，各属性中的函数分别定义了在执行各种操作时代理 <code>p</code> 的行为</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> product = &#123; <span class="attr">price</span>: <span class="number">10</span>, <span class="attr">quantity</span>: <span class="number">2</span> &#125;;</span><br><span class="line"><span class="keyword">let</span> proxiedProduct = <span class="keyword">new</span> <span class="built_in">Proxy</span>(product, &#123;</span><br><span class="line">    <span class="function"><span class="title">get</span>(<span class="params">target, key</span>)</span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&#x27;正在读取的数据：&#x27;</span>,key);</span><br><span class="line">    <span class="keyword">return</span> target[key];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(proxiedProduct.price); </span><br><span class="line"><span class="comment">// 正在读取的数据： price</span></span><br><span class="line"><span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/05/04/Vue3%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86/vuexiang4.png"></p>
+<p>然后结合 Reflect 使用，只需修改 get 函数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">  <span class="function"><span class="title">get</span>(<span class="params">target, key, receiver</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;正在读取的数据：&#x27;</span>,key);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Reflect</span>.get(target, key, receiver);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果还是一样。</p>
+<p>接下来增加 set 函数，来拦截对象的修改操作：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> product = &#123; <span class="attr">price</span>: <span class="number">10</span>, <span class="attr">quantity</span>: <span class="number">2</span> &#125;;</span><br><span class="line"><span class="keyword">let</span> proxiedProduct = <span class="keyword">new</span> <span class="built_in">Proxy</span>(product, &#123;</span><br><span class="line">  <span class="function"><span class="title">get</span>(<span class="params">target, key, receiver</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;正在读取的数据：&#x27;</span>,key);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Reflect</span>.get(target, key, receiver);</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="function"><span class="title">set</span>(<span class="params">target, key, value, receiver</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;正在修改的数据：&#x27;</span>, key, <span class="string">&#x27;,值为：&#x27;</span>, value);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Reflect</span>.set(target, key, value, receiver);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line">proxiedProduct.price = <span class="number">20</span>;</span><br><span class="line"><span class="built_in">console</span>.log(proxiedProduct.price); </span><br><span class="line"><span class="comment">// 正在修改的数据： price ,值为： 20</span></span><br><span class="line"><span class="comment">// 正在读取的数据： price</span></span><br><span class="line"><span class="comment">// 20</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-修改-track-和-trigger-函数"><a href="#4-修改-track-和-trigger-函数" class="headerlink" title="4. 修改 track 和 trigger 函数"></a>4. 修改 track 和 trigger 函数</h3><p>通过上面代码，我们已经实现一个简单 <code>reactive()</code> 函数，用来<strong>将普通对象转换为响应式对象</strong>。但是还缺少自动执行 <code>track()</code> 函数和 <code>trigger()</code> 函数，接下来修改上面代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> targetMap = <span class="keyword">new</span> <span class="built_in">WeakMap</span>();</span><br><span class="line"><span class="keyword">let</span> total = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">const</span> effect = <span class="function">() =&gt;</span> &#123; total = product.price * product.quantity &#125;;</span><br><span class="line"><span class="keyword">const</span> track = <span class="function">(<span class="params">target, key</span>) =&gt;</span> &#123; </span><br><span class="line">  <span class="keyword">let</span> depsMap = targetMap.get(target);</span><br><span class="line">  <span class="keyword">if</span>(!depsMap)&#123;</span><br><span class="line">    targetMap.set(target, (depsMap = <span class="keyword">new</span> <span class="built_in">Map</span>()));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">let</span> dep = depsMap.get(key);</span><br><span class="line">  <span class="keyword">if</span>(!dep) &#123;</span><br><span class="line">    depsMap.set(key, (dep = <span class="keyword">new</span> <span class="built_in">Set</span>()));</span><br><span class="line">  &#125;</span><br><span class="line">  dep.add(effect);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> trigger = <span class="function">(<span class="params">target, key</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> depsMap = targetMap.get(target);</span><br><span class="line">  <span class="keyword">if</span>(!depsMap) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">let</span> dep = depsMap.get(key);</span><br><span class="line">  <span class="keyword">if</span>(dep) &#123;</span><br><span class="line">    dep.forEach( <span class="function"><span class="params">effect</span> =&gt;</span> effect() );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> reactive = <span class="function">(<span class="params">target</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> handler = &#123;</span><br><span class="line">    <span class="function"><span class="title">get</span>(<span class="params">target, key, receiver</span>)</span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&#x27;正在读取的数据：&#x27;</span>,key);</span><br><span class="line">      <span class="keyword">const</span> result = <span class="built_in">Reflect</span>.get(target, key, receiver);</span><br><span class="line">      track(target, key);  <span class="comment">// 自动调用 track 方法收集依赖</span></span><br><span class="line">      <span class="keyword">return</span> result;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="function"><span class="title">set</span>(<span class="params">target, key, value, receiver</span>)</span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&#x27;正在修改的数据：&#x27;</span>, key, <span class="string">&#x27;,值为：&#x27;</span>, value);</span><br><span class="line">      <span class="keyword">const</span> oldValue = target[key];</span><br><span class="line">      <span class="keyword">const</span> result = <span class="built_in">Reflect</span>.set(target, key, value, receiver);</span><br><span class="line">      <span class="keyword">if</span>(oldValue != result)&#123;</span><br><span class="line">         trigger(target, key);  <span class="comment">// 自动调用 trigger 方法执行依赖</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Proxy</span>(target, handler);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> product = reactive(&#123;<span class="attr">price</span>: <span class="number">10</span>, <span class="attr">quantity</span>: <span class="number">2</span>&#125;); </span><br><span class="line">effect();</span><br><span class="line"><span class="built_in">console</span>.log(total); </span><br><span class="line">product.price = <span class="number">20</span>;</span><br><span class="line"><span class="built_in">console</span>.log(total); </span><br><span class="line"><span class="comment">// 正在读取的数据： price</span></span><br><span class="line"><span class="comment">// 正在读取的数据： quantity</span></span><br><span class="line"><span class="comment">// 20</span></span><br><span class="line"><span class="comment">// 正在修改的数据： price ,值为： 20</span></span><br><span class="line"><span class="comment">// 正在读取的数据： price</span></span><br><span class="line"><span class="comment">// 正在读取的数据： quantity</span></span><br><span class="line"><span class="comment">// 40</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/05/04/Vue3%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86/vuexiang5.png"></p>
+<h2 id="三、activeEffect-和-ref"><a href="#三、activeEffect-和-ref" class="headerlink" title="三、activeEffect 和 ref"></a>三、activeEffect 和 ref</h2><p>在上一节代码中，还存在一个问题： <code>track</code> 函数中的依赖（ <code>effect</code> 函数）是外部定义的，当依赖发生变化， <code>track</code> 函数收集依赖时都要手动修改其依赖的方法名。</p>
+<p>比如现在的依赖为 <code>foo</code> 函数，就要修改 <code>track</code> 函数的逻辑，可能是这样：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> foo = <span class="function">() =&gt;</span> &#123; <span class="comment">/**/</span> &#125;;</span><br><span class="line"><span class="keyword">const</span> track = <span class="function">(<span class="params">target, key</span>) =&gt;</span> &#123;     <span class="comment">// ②</span></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  dep.add(foo);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-引入-activeEffect-变量"><a href="#1-引入-activeEffect-变量" class="headerlink" title="1. 引入 activeEffect 变量"></a>1. 引入 activeEffect 变量</h3><p>接下来引入 <code>activeEffect</code> 变量，来保存当前运行的 effect 函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> activeEffect = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">const</span> effect = <span class="function"><span class="params">eff</span> =&gt;</span> &#123;</span><br><span class="line">  activeEffect = eff; <span class="comment">// 1. 将 eff 函数赋值给 activeEffect</span></span><br><span class="line">  activeEffect();     <span class="comment">// 2. 执行 activeEffect</span></span><br><span class="line">  activeEffect = <span class="literal">null</span>;<span class="comment">// 3. 重置 activeEffect</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在 <code>track</code> 函数中将 <code>activeEffect</code> 变量作为依赖：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> track = <span class="function">(<span class="params">target, key</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (activeEffect) &#123;  <span class="comment">// 1. 判断当前是否有 activeEffect</span></span><br><span class="line">        <span class="keyword">let</span> depsMap = targetMap.get(target);</span><br><span class="line">        <span class="keyword">if</span> (!depsMap) &#123;</span><br><span class="line">            targetMap.set(target, (depsMap = <span class="keyword">new</span> <span class="built_in">Map</span>()));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">let</span> dep = depsMap.get(key);</span><br><span class="line">        <span class="keyword">if</span> (!dep) &#123;</span><br><span class="line">            depsMap.set(key, (dep = <span class="keyword">new</span> <span class="built_in">Set</span>()));</span><br><span class="line">        &#125;</span><br><span class="line">        dep.add(activeEffect);  <span class="comment">// 2. 添加 activeEffect 依赖</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">effect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    total = product.price * product.quantity</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这样就可以解决手动修改依赖的问题，这也是 Vue3 解决该问题的方法</p>
+<h3 id="2-引入-ref-方法"><a href="#2-引入-ref-方法" class="headerlink" title="2. 引入 ref 方法"></a>2. 引入 ref 方法</h3><p>熟悉 Vue3 Composition API 的朋友可能会想到 Ref，它接收一个值，并返回一个响应式可变的<a target="_blank" rel="noopener" href="https://v3.cn.vuejs.org/api/refs-api.html"> Ref 对象</a>，其值可以通过 <code>value</code> 属性获取。</p>
+<blockquote>
+<p>ref：接受一个内部值并返回一个响应式且可变的 ref 对象。ref 对象具有指向内部值的单个 property .value。</p>
+</blockquote>
+<p>官网的使用示例如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> count = ref(<span class="number">0</span>)</span><br><span class="line"><span class="built_in">console</span>.log(count.value) <span class="comment">// 0</span></span><br><span class="line"></span><br><span class="line">count.value++</span><br><span class="line"><span class="built_in">console</span>.log(count.value) <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+
+<p>我们有 2 种方法实现 ref 函数：</p>
+<h4 id="使用-rective-函数"><a href="#使用-rective-函数" class="headerlink" title="使用 rective 函数"></a><strong>使用 <code>rective</code> 函数</strong></h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ref = <span class="function"><span class="params">intialValue</span> =&gt;</span> reactive(&#123;<span class="attr">value</span>: intialValue&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用对象的属性访问器（计算属性）"><a href="#使用对象的属性访问器（计算属性）" class="headerlink" title="使用对象的属性访问器（计算属性）"></a><strong>使用对象的属性访问器（计算属性）</strong></h4><p>属性方式去包括：<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/get">getter</a> 和 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/set">setter</a>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ref = <span class="function"><span class="params">raw</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> r = &#123;</span><br><span class="line">    <span class="keyword">get</span> <span class="title">value</span>()&#123;</span><br><span class="line">      track(r, <span class="string">&#x27;value&#x27;</span>);</span><br><span class="line">      <span class="keyword">return</span> raw;</span><br><span class="line">    &#125;,</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">set</span> <span class="title">value</span>(<span class="params">newVal</span>)&#123;</span><br><span class="line">    	raw = newVal;</span><br><span class="line">      trigger(r, <span class="string">&#x27;value&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> r;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、完整代码"><a href="#四、完整代码" class="headerlink" title="四、完整代码"></a>四、完整代码</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> targetMap=<span class="keyword">new</span> <span class="built_in">WeakMap</span>()</span><br><span class="line"><span class="keyword">let</span> activeEffect=<span class="literal">null</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">effect</span>(<span class="params">eff</span>)</span>&#123;</span><br><span class="line">    activeEffect=eff</span><br><span class="line">    activeEffect()</span><br><span class="line">    activeEffect=<span class="literal">null</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">track</span>(<span class="params">target,key</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(activeEffect)&#123;</span><br><span class="line">        <span class="keyword">let</span> depsMap=targetMap.get(target)</span><br><span class="line">        <span class="keyword">if</span>(!depsMap)&#123;</span><br><span class="line">            targetMap.set(target,(depsMap=<span class="keyword">new</span> <span class="built_in">Map</span>()))</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">let</span> dep=depsMap.get(key)</span><br><span class="line">        <span class="keyword">if</span>(!dep)&#123;</span><br><span class="line">            depsMap.set(key,(dep=<span class="keyword">new</span> <span class="built_in">Set</span>()))</span><br><span class="line">        &#125;</span><br><span class="line">        dep.add(activeEffect)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">trigger</span>(<span class="params">target,key</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> depsMap=targetMap.get(target)</span><br><span class="line">    <span class="keyword">if</span>(!depsMap)<span class="keyword">return</span></span><br><span class="line">    <span class="keyword">const</span> dep=depsMap.get(key)</span><br><span class="line">    <span class="keyword">if</span>(dep)&#123;</span><br><span class="line">        dep.forEach(<span class="function"><span class="params">effect</span>=&gt;</span>&#123;</span><br><span class="line">            effect()</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reactive</span>(<span class="params">target</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> handler=&#123;</span><br><span class="line">        <span class="function"><span class="title">get</span>(<span class="params">target,key,receiver</span>)</span>&#123;</span><br><span class="line">            <span class="keyword">let</span> res=<span class="built_in">Reflect</span>.get(target,key,receiver)</span><br><span class="line">            track(target,key)<span class="comment">//if reactive property is Get inside then tarck the effect to rerun on SET,add the effect to the dep</span></span><br><span class="line">            <span class="keyword">return</span> res</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="function"><span class="title">set</span>(<span class="params">target,key,value,receiver</span>)</span>&#123;</span><br><span class="line">            <span class="keyword">let</span> oldValue=target[key]</span><br><span class="line">            <span class="keyword">let</span> res=<span class="built_in">Reflect</span>.set(target,key,value,receiver)</span><br><span class="line">            <span class="keyword">if</span>(res&amp;&amp;oldValue!=value)</span><br><span class="line">            &#123;</span><br><span class="line">                trigger(target,key)<span class="comment">//if this reactive property has effects to rerun on SET,trigger them</span></span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> res</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Proxy</span>(target,handler)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ref</span>(<span class="params">raw</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> r=&#123;</span><br><span class="line">        <span class="keyword">get</span> <span class="title">value</span>()&#123;</span><br><span class="line">            track(r,<span class="string">&#x27;value&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span> raw</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="keyword">set</span> <span class="title">value</span>(<span class="params">newval</span>)&#123;</span><br><span class="line">            raw=newval</span><br><span class="line">            trigger(r,<span class="string">&#x27;value&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> r;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> product=reactive(&#123;<span class="attr">prie</span>:<span class="number">5</span>,<span class="attr">quantity</span>:<span class="number">2</span>&#125;)</span><br><span class="line"><span class="keyword">let</span> salePrice=ref(<span class="number">0</span>)</span><br><span class="line"><span class="keyword">let</span> total=<span class="number">0</span></span><br><span class="line">effect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    salePrice.value=product.price*<span class="number">0.9</span></span><br><span class="line">&#125;)</span><br><span class="line">effect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    total=salePrice.value*product.quantity</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`Before updated quantity total=<span class="subst">$&#123;total&#125;</span> salePrice=<span class="subst">$&#123;salePrice.value&#125;</span>`</span>)</span><br><span class="line">product.quantity=<span class="number">3</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`After updated quantity total=<span class="subst">$&#123;total&#125;</span> salePrice=<span class="subst">$&#123;salePrice.value&#125;</span>`</span>)</span><br><span class="line">product.price=<span class="number">10</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`After updated quantity total=<span class="subst">$&#123;total&#125;</span> salePrice=<span class="subst">$&#123;salePrice.value&#125;</span>`</span>)</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/05/03/Vue3%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84%E5%87%A0%E4%B8%AA%E6%96%B9%E9%9D%A2/" rel="prev" title="Vue3性能提升的几个方面">
+      <i class="fa fa-chevron-left"></i> Vue3性能提升的几个方面
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81Vue-3-%E5%93%8D%E5%BA%94%E5%BC%8F%E4%BD%BF%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">一、Vue 3 响应式使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AE%9E%E7%8E%B0%E5%8D%95%E4%B8%AA%E5%80%BC%E7%9A%84%E5%93%8D%E5%BA%94%E5%BC%8F"><span class="nav-number">1.1.</span> <span class="nav-text">1 实现单个值的响应式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%AE%9E%E7%8E%B0%E5%8D%95%E4%B8%AA%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%93%8D%E5%BA%94%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">2 实现单个对象的响应式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%AE%9E%E7%8E%B0%E5%A4%9A%E4%B8%AA%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%93%8D%E5%BA%94%E5%BC%8F"><span class="nav-number">1.3.</span> <span class="nav-text">3 实现多个对象的响应式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Proxy-%E5%92%8C-Reflect"><span class="nav-number">2.</span> <span class="nav-text">二、Proxy 和 Reflect</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E6%93%8D%E4%BD%9C"><span class="nav-number">2.1.</span> <span class="nav-text">1. 如何实现自动操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-Reflect"><span class="nav-number">2.2.</span> <span class="nav-text">2. 如何使用 Reflect</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-Proxy"><span class="nav-number">2.3.</span> <span class="nav-text">3. 如何使用 Proxy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E4%BF%AE%E6%94%B9-track-%E5%92%8C-trigger-%E5%87%BD%E6%95%B0"><span class="nav-number">2.4.</span> <span class="nav-text">4. 修改 track 和 trigger 函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81activeEffect-%E5%92%8C-ref"><span class="nav-number">3.</span> <span class="nav-text">三、activeEffect 和 ref</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%BC%95%E5%85%A5-activeEffect-%E5%8F%98%E9%87%8F"><span class="nav-number">3.1.</span> <span class="nav-text">1. 引入 activeEffect 变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%BC%95%E5%85%A5-ref-%E6%96%B9%E6%B3%95"><span class="nav-number">3.2.</span> <span class="nav-text">2. 引入 ref 方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-rective-%E5%87%BD%E6%95%B0"><span class="nav-number">3.2.1.</span> <span class="nav-text">使用 rective 函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%B1%9E%E6%80%A7%E8%AE%BF%E9%97%AE%E5%99%A8%EF%BC%88%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%EF%BC%89"><span class="nav-number">3.2.2.</span> <span class="nav-text">使用对象的属性访问器（计算属性）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81"><span class="nav-number">4.</span> <span class="nav-text">四、完整代码</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小柒"
+      src="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+  <p class="site-author-name" itemprop="name">小柒</p>
+  <div class="site-description" itemprop="description">欢迎来到我的世界!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">127</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小柒</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_pv">
+    本站访问量:<span id="busuanzi_value_site_pv"></span>次
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_uv">
+    本站总访客量：<span id="busuanzi_value_site_uv"></span>人
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共110.2k字</span>
+</div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 动态背景 -->
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="../source/js/src/clicklove.js"></script>
+</body>
+</html>
