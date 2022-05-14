@@ -182,6 +182,156 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">Vue diff算法</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-03 15:53:37 / 修改时间：16:27:20" itemprop="dateCreated datePublished" datetime="2022-05-03T15:53:37+08:00">2022-05-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="一、是什么"><a href="#一、是什么" class="headerlink" title="一、是什么"></a>一、是什么</h2><p>diss算法是一种同层的树节点进行比较的高效算法</p>
+<p>两个特点：</p>
+<p>比较只会在同层级进行，不会跨层级比较</p>
+<p>在diff比较过程中，循环会从两边向中间比较</p>
+<p><code>diff</code> 算法的在很多场景下都有应用，在 <code>vue</code> 中，作用于虚拟 <code>dom</code> 渲染成真实 <code>dom</code> 的新旧 <code>VNode</code> 节点比较</p>
+<h2 id="二、比较方式"><a href="#二、比较方式" class="headerlink" title="二、比较方式"></a>二、比较方式</h2><p><code>diff</code>整体策略为：深度优先，同层比较</p>
+<ol>
+<li>比较只会在同层级进行, 不会跨层级比较</li>
+</ol>
+<img src="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/91e9c9519a11caa0c5bf70714383f054.png" alt="img" style="zoom:50%;">
+
+<ol>
+<li>比较的过程中，循环从两边向中间收拢</li>
+</ol>
+<img src="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/2dcd6ad5cf82c65b9cfc43a27ba1e4ec.png" alt="img" style="zoom:50%;">
+
+<p>下面举个<code>vue</code>通过<code>diff</code>算法更新的例子：</p>
+<p>新旧<code>VNode</code>节点如下图所示：</p>
+<p><img src="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/diff1.png"></p>
+<p>第一次循环后，发现旧节点D与新节点D相同，直接复用旧节点D作为<code>diff</code>后的第一个真实节点，同时旧节点<code>endIndex</code>移动到C，新节点的 <code>startIndex</code> 移动到了 C</p>
+<p><img src="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/diff2.png"></p>
+<p>第二次循环后，同样是旧节点的末尾和新节点的开头(都是 C)相同，同理，<code>diff</code> 后创建了 C 的真实节点插入到第一次创建的 B 节点后面。同时旧节点的 <code>endIndex</code> 移动到了 B，新节点的 <code>startIndex</code> 移动到了 E</p>
+<p><img src="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/diff3.png"></p>
+<p>第三次循环中，发现E没有找到，这时候只能直接创建新的真实节点 E，插入到第二次创建的 C 节点之后。同时新节点的 <code>startIndex</code> 移动到了 A。旧节点的 <code>startIndex</code> 和 <code>endIndex</code> 都保持不动</p>
+<p><img src="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/diff4.png"></p>
+<p>第四次循环中，发现了新旧节点的开头(都是 A)相同，于是 <code>diff</code> 后创建了 A 的真实节点，插入到前一次创建的 E 节点后面。同时旧节点的 <code>startIndex</code> 移动到了 B，新节点的<code> startIndex</code> 移动到了 B</p>
+<p><img src="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/diff5.png"></p>
+<p>第五次循环中，情形同第四次循环一样，因此 <code>diff</code> 后创建了 B 真实节点 插入到前一次创建的 A 节点后面。同时旧节点的 <code>startIndex </code>移动到了 C，新节点的 startIndex 移动到了 F</p>
+<p><img src="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/diff6.png"></p>
+<p>新节点的 <code>startIndex</code> 已经大于 <code>endIndex</code> 了，需要创建 <code>newStartIdx</code> 和 <code>newEndIdx</code> 之间的所有节点，也就是节点F，直接创建 F 节点对应的真实节点放到 B 节点后面</p>
+<p><img src="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/diff7.png"></p>
+<h2 id="三、原理分析"><a href="#三、原理分析" class="headerlink" title="三、原理分析"></a>三、原理分析</h2><p>当数据发生改变时，<code>set</code>方法会调用<code>Dep.notify</code>通知所有订阅者<code>Watcher</code>，订阅者就会调用<code>patch</code>给真实的<code>DOM</code>打补丁，更新相应的视图</p>
+<p>源码位置：src/core/vdom/patch.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">patch</span>(<span class="params">oldVnode, vnode, hydrating, removeOnly</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (isUndef(vnode)) &#123; <span class="comment">// 没有新节点，直接执行destory钩子函数</span></span><br><span class="line">        <span class="keyword">if</span> (isDef(oldVnode)) invokeDestroyHook(oldVnode)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> isInitialPatch = <span class="literal">false</span></span><br><span class="line">    <span class="keyword">const</span> insertedVnodeQueue = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (isUndef(oldVnode)) &#123;</span><br><span class="line">        isInitialPatch = <span class="literal">true</span></span><br><span class="line">        createElm(vnode, insertedVnodeQueue) <span class="comment">// 没有旧节点，直接用新节点生成dom元素</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> isRealElement = isDef(oldVnode.nodeType)</span><br><span class="line">        <span class="keyword">if</span> (!isRealElement &amp;&amp; sameVnode(oldVnode, vnode)) &#123;</span><br><span class="line">            <span class="comment">// 判断旧节点和新节点自身一样，一致执行patchVnode</span></span><br><span class="line">            patchVnode(oldVnode, vnode, insertedVnodeQueue, <span class="literal">null</span>, <span class="literal">null</span>, removeOnly)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 否则直接销毁及旧节点，根据新节点生成dom元素</span></span><br><span class="line">            <span class="keyword">if</span> (isRealElement) &#123;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (oldVnode.nodeType === <span class="number">1</span> &amp;&amp; oldVnode.hasAttribute(SSR_ATTR)) &#123;</span><br><span class="line">                    oldVnode.removeAttribute(SSR_ATTR)</span><br><span class="line">                    hydrating = <span class="literal">true</span></span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (isTrue(hydrating)) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (hydrate(oldVnode, vnode, insertedVnodeQueue)) &#123;</span><br><span class="line">                        invokeInsertHook(vnode, insertedVnodeQueue, <span class="literal">true</span>)</span><br><span class="line">                        <span class="keyword">return</span> oldVnode</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                oldVnode = emptyNodeAt(oldVnode)</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> vnode.elm</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>patch</code>函数前两个参数位为<code>oldVnode</code> 和 <code>Vnode</code> ，分别代表旧的节点和新节点，主要做了四个判断：</p>
+<ul>
+<li>没有新节点，直接触发旧节点的<code>destory</code>钩子</li>
+<li>没有旧节点，说明是页面刚开始初始化的时候，此时，根本不需要比较了，直接全是新建，所以只调用 <code>createElm</code></li>
+<li>旧节点和新节点自身一样，通过 <code>sameVnode</code> 判断节点是否一样，一样时，直接调用 <code>patchVnode </code>去处理这两个节点</li>
+<li>旧节点和新节点自身不一样，当两个节点不一样的时候，直接创建新节点，删除旧节点</li>
+</ul>
+<p>下面主要讲的是<code>patchVnode</code>部分</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">patchVnode</span> (<span class="params">oldVnode, vnode, insertedVnodeQueue, removeOnly</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 如果新旧节点一致，什么都不做</span></span><br><span class="line">    <span class="keyword">if</span> (oldVnode === vnode) &#123;</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 让vnode.el引用到现在的真实dom，当el修改时，vnode.el会同步变化</span></span><br><span class="line">    <span class="keyword">const</span> elm = vnode.elm = oldVnode.elm</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 异步占位符</span></span><br><span class="line">    <span class="keyword">if</span> (isTrue(oldVnode.isAsyncPlaceholder)) &#123;</span><br><span class="line">      <span class="keyword">if</span> (isDef(vnode.asyncFactory.resolved)) &#123;</span><br><span class="line">        hydrate(oldVnode.elm, vnode, insertedVnodeQueue)</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        vnode.isAsyncPlaceholder = <span class="literal">true</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果新旧都是静态节点，并且具有相同的key</span></span><br><span class="line">    <span class="comment">// 当vnode是克隆节点或是v-once指令控制的节点时，只需要把oldVnode.elm和oldVnode.child都复制到vnode上</span></span><br><span class="line">    <span class="comment">// 也不用再有其他操作</span></span><br><span class="line">    <span class="keyword">if</span> (isTrue(vnode.isStatic) &amp;&amp;</span><br><span class="line">      isTrue(oldVnode.isStatic) &amp;&amp;</span><br><span class="line">      vnode.key === oldVnode.key &amp;&amp;</span><br><span class="line">      (isTrue(vnode.isCloned) || isTrue(vnode.isOnce))</span><br><span class="line">    ) &#123;</span><br><span class="line">      vnode.componentInstance = oldVnode.componentInstance</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> i</span><br><span class="line">    <span class="keyword">const</span> data = vnode.data</span><br><span class="line">    <span class="keyword">if</span> (isDef(data) &amp;&amp; isDef(i = data.hook) &amp;&amp; isDef(i = i.prepatch)) &#123;</span><br><span class="line">      i(oldVnode, vnode)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> oldCh = oldVnode.children</span><br><span class="line">    <span class="keyword">const</span> ch = vnode.children</span><br><span class="line">    <span class="keyword">if</span> (isDef(data) &amp;&amp; isPatchable(vnode)) &#123;</span><br><span class="line">      <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; cbs.update.length; ++i) cbs.update[i](oldVnode, vnode)</span><br><span class="line">      <span class="keyword">if</span> (isDef(i = data.hook) &amp;&amp; isDef(i = i.update)) i(oldVnode, vnode)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果vnode不是文本节点或者注释节点</span></span><br><span class="line">    <span class="keyword">if</span> (isUndef(vnode.text)) &#123;</span><br><span class="line">      <span class="comment">// 并且都有子节点</span></span><br><span class="line">      <span class="keyword">if</span> (isDef(oldCh) &amp;&amp; isDef(ch)) &#123;</span><br><span class="line">        <span class="comment">// 并且子节点不完全一致，则调用updateChildren</span></span><br><span class="line">        <span class="keyword">if</span> (oldCh !== ch) updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果只有新的vnode有子节点</span></span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isDef(ch)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (isDef(oldVnode.text)) nodeOps.setTextContent(elm, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        <span class="comment">// elm已经引用了老的dom节点，在老的dom节点上添加子节点</span></span><br><span class="line">        addVnodes(elm, <span class="literal">null</span>, ch, <span class="number">0</span>, ch.length - <span class="number">1</span>, insertedVnodeQueue)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果新vnode没有子节点，而Oldvnode有子节点，直接删除老的oldCh</span></span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isDef(oldCh)) &#123;</span><br><span class="line">        removeVnodes(elm, oldCh, <span class="number">0</span>, oldCh.length - <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果老节点是文本节点</span></span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isDef(oldVnode.text)) &#123;</span><br><span class="line">        nodeOps.setTextContent(elm, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 如果新vnode和老vnode是文本节点或注释节点</span></span><br><span class="line">      <span class="comment">// 但是vnode.text != oldVnode.text时，只需要更新vnode.elm的文本内容就可以</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (oldVnode.text !== vnode.text) &#123;</span><br><span class="line">      nodeOps.setTextContent(elm, vnode.text)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (isDef(data)) &#123;</span><br><span class="line">      <span class="keyword">if</span> (isDef(i = data.hook) &amp;&amp; isDef(i = i.postpatch)) i(oldVnode, vnode)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>patchVnode</code>主要做了几个判断：</p>
+<ul>
+<li>新节点是否是文本节点，如果是，则直接更新<code>dom</code>的文本内容为新节点的文本内容</li>
+<li>新节点和旧节点如果都有子节点，则处理比较更新子节点</li>
+<li>只有新节点有子节点，旧节点没有，那么不用比较了，所有节点都是全新的，所以直接全部新建就好了，新建是指创建出所有新<code>DOM</code>，并且添加进父节点</li>
+<li>只有旧节点有子节点而新节点没有，说明更新后的页面，旧节点全部都不见了，那么要做的，就是把所有的旧节点删除，也就是直接把<code>DOM</code> 删除</li>
+</ul>
+<p>子节点不完全一致，则调用<code>updateChildren</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateChildren</span> (<span class="params">parentElm, oldCh, newCh, insertedVnodeQueue, removeOnly</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> oldStartIdx = <span class="number">0</span> <span class="comment">// 旧头索引</span></span><br><span class="line">    <span class="keyword">let</span> newStartIdx = <span class="number">0</span> <span class="comment">// 新头索引</span></span><br><span class="line">    <span class="keyword">let</span> oldEndIdx = oldCh.length - <span class="number">1</span> <span class="comment">// 旧尾索引</span></span><br><span class="line">    <span class="keyword">let</span> newEndIdx = newCh.length - <span class="number">1</span> <span class="comment">// 新尾索引</span></span><br><span class="line">    <span class="keyword">let</span> oldStartVnode = oldCh[<span class="number">0</span>] <span class="comment">// oldVnode的第一个child</span></span><br><span class="line">    <span class="keyword">let</span> oldEndVnode = oldCh[oldEndIdx] <span class="comment">// oldVnode的最后一个child</span></span><br><span class="line">    <span class="keyword">let</span> newStartVnode = newCh[<span class="number">0</span>] <span class="comment">// newVnode的第一个child</span></span><br><span class="line">    <span class="keyword">let</span> newEndVnode = newCh[newEndIdx] <span class="comment">// newVnode的最后一个child</span></span><br><span class="line">    <span class="keyword">let</span> oldKeyToIdx, idxInOld, vnodeToMove, refElm</span><br><span class="line"></span><br><span class="line">    <span class="comment">// removeOnly is a special flag used only by &lt;transition-group&gt;</span></span><br><span class="line">    <span class="comment">// to ensure removed elements stay in correct relative positions</span></span><br><span class="line">    <span class="comment">// during leaving transitions</span></span><br><span class="line">    <span class="keyword">const</span> canMove = !removeOnly</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果oldStartVnode和oldEndVnode重合，并且新的也都重合了，证明diff完了，循环结束</span></span><br><span class="line">    <span class="keyword">while</span> (oldStartIdx &lt;= oldEndIdx &amp;&amp; newStartIdx &lt;= newEndIdx) &#123;</span><br><span class="line">      <span class="comment">// 如果oldVnode的第一个child不存在</span></span><br><span class="line">      <span class="keyword">if</span> (isUndef(oldStartVnode)) &#123;</span><br><span class="line">        <span class="comment">// oldStart索引右移</span></span><br><span class="line">        oldStartVnode = oldCh[++oldStartIdx] <span class="comment">// Vnode has been moved left</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">// 如果oldVnode的最后一个child不存在</span></span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isUndef(oldEndVnode)) &#123;</span><br><span class="line">        <span class="comment">// oldEnd索引左移</span></span><br><span class="line">        oldEndVnode = oldCh[--oldEndIdx]</span><br><span class="line"></span><br><span class="line">      <span class="comment">// oldStartVnode和newStartVnode是同一个节点</span></span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sameVnode(oldStartVnode, newStartVnode)) &#123;</span><br><span class="line">        <span class="comment">// patch oldStartVnode和newStartVnode， 索引左移，继续循环</span></span><br><span class="line">        patchVnode(oldStartVnode, newStartVnode, insertedVnodeQueue)</span><br><span class="line">        oldStartVnode = oldCh[++oldStartIdx]</span><br><span class="line">        newStartVnode = newCh[++newStartIdx]</span><br><span class="line"></span><br><span class="line">      <span class="comment">// oldEndVnode和newEndVnode是同一个节点</span></span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sameVnode(oldEndVnode, newEndVnode)) &#123;</span><br><span class="line">        <span class="comment">// patch oldEndVnode和newEndVnode，索引右移，继续循环</span></span><br><span class="line">        patchVnode(oldEndVnode, newEndVnode, insertedVnodeQueue)</span><br><span class="line">        oldEndVnode = oldCh[--oldEndIdx]</span><br><span class="line">        newEndVnode = newCh[--newEndIdx]</span><br><span class="line"></span><br><span class="line">      <span class="comment">// oldStartVnode和newEndVnode是同一个节点</span></span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sameVnode(oldStartVnode, newEndVnode)) &#123; <span class="comment">// Vnode moved right</span></span><br><span class="line">        <span class="comment">// patch oldStartVnode和newEndVnode</span></span><br><span class="line">        patchVnode(oldStartVnode, newEndVnode, insertedVnodeQueue)</span><br><span class="line">        <span class="comment">// 如果removeOnly是false，则将oldStartVnode.eml移动到oldEndVnode.elm之后</span></span><br><span class="line">        canMove &amp;&amp; nodeOps.insertBefore(parentElm, oldStartVnode.elm, nodeOps.nextSibling(oldEndVnode.elm))</span><br><span class="line">        <span class="comment">// oldStart索引右移，newEnd索引左移</span></span><br><span class="line">        oldStartVnode = oldCh[++oldStartIdx]</span><br><span class="line">        newEndVnode = newCh[--newEndIdx]</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 如果oldEndVnode和newStartVnode是同一个节点</span></span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sameVnode(oldEndVnode, newStartVnode)) &#123; <span class="comment">// Vnode moved left</span></span><br><span class="line">        <span class="comment">// patch oldEndVnode和newStartVnode</span></span><br><span class="line">        patchVnode(oldEndVnode, newStartVnode, insertedVnodeQueue)</span><br><span class="line">        <span class="comment">// 如果removeOnly是false，则将oldEndVnode.elm移动到oldStartVnode.elm之前</span></span><br><span class="line">        canMove &amp;&amp; nodeOps.insertBefore(parentElm, oldEndVnode.elm, oldStartVnode.elm)</span><br><span class="line">        <span class="comment">// oldEnd索引左移，newStart索引右移</span></span><br><span class="line">        oldEndVnode = oldCh[--oldEndIdx]</span><br><span class="line">        newStartVnode = newCh[++newStartIdx]</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 如果都不匹配</span></span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (isUndef(oldKeyToIdx)) oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 尝试在oldChildren中寻找和newStartVnode的具有相同的key的Vnode</span></span><br><span class="line">        idxInOld = isDef(newStartVnode.key)</span><br><span class="line">          ? oldKeyToIdx[newStartVnode.key]</span><br><span class="line">          : findIdxInOld(newStartVnode, oldCh, oldStartIdx, oldEndIdx)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果未找到，说明newStartVnode是一个新的节点</span></span><br><span class="line">        <span class="keyword">if</span> (isUndef(idxInOld)) &#123; <span class="comment">// New element</span></span><br><span class="line">          <span class="comment">// 创建一个新Vnode</span></span><br><span class="line">          createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果找到了和newStartVnodej具有相同的key的Vnode，叫vnodeToMove</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          vnodeToMove = oldCh[idxInOld]</span><br><span class="line">          <span class="comment">/* istanbul ignore if */</span></span><br><span class="line">          <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">&#x27;production&#x27;</span> &amp;&amp; !vnodeToMove) &#123;</span><br><span class="line">            warn(</span><br><span class="line">              <span class="string">&#x27;It seems there are duplicate keys that is causing an update error. &#x27;</span> +</span><br><span class="line">              <span class="string">&#x27;Make sure each v-for item has a unique key.&#x27;</span></span><br><span class="line">            )</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="comment">// 比较两个具有相同的key的新节点是否是同一个节点</span></span><br><span class="line">          <span class="comment">//不设key，newCh和oldCh只会进行头尾两端的相互比较，设key后，除了头尾两端的比较外，还会从用key生成的对象oldKeyToIdx中查找匹配的节点，所以为节点设置key可以更高效的利用dom。</span></span><br><span class="line">          <span class="keyword">if</span> (sameVnode(vnodeToMove, newStartVnode)) &#123;</span><br><span class="line">            <span class="comment">// patch vnodeToMove和newStartVnode</span></span><br><span class="line">            patchVnode(vnodeToMove, newStartVnode, insertedVnodeQueue)</span><br><span class="line">            <span class="comment">// 清除</span></span><br><span class="line">            oldCh[idxInOld] = <span class="literal">undefined</span></span><br><span class="line">            <span class="comment">// 如果removeOnly是false，则将找到的和newStartVnodej具有相同的key的Vnode，叫vnodeToMove.elm</span></span><br><span class="line">            <span class="comment">// 移动到oldStartVnode.elm之前</span></span><br><span class="line">            canMove &amp;&amp; nodeOps.insertBefore(parentElm, vnodeToMove.elm, oldStartVnode.elm)</span><br><span class="line"></span><br><span class="line">          <span class="comment">// 如果key相同，但是节点不相同，则创建一个新的节点</span></span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// same key but different element. treat as new element</span></span><br><span class="line">            createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 右移</span></span><br><span class="line">        newStartVnode = newCh[++newStartIdx]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>while</code>循环主要处理了以下五种情景：</p>
+<ul>
+<li>当新老 <code>VNode</code> 节点的 <code>start</code> 相同时，直接 <code>patchVnode</code> ，同时新老 <code>VNode</code> 节点的开始索引都加 1</li>
+<li>当新老 <code>VNode</code> 节点的 <code>end</code>相同时，同样直接 <code>patchVnode</code> ，同时新老 <code>VNode</code> 节点的结束索引都减 1</li>
+<li>当老 <code>VNode</code> 节点的 <code>start</code> 和新 <code>VNode</code> 节点的 <code>end</code> 相同时，这时候在 <code>patchVnode</code> 后，还需要将当前真实 <code>dom</code> 节点移动到 <code>oldEndVnode</code> 的后面，同时老 <code>VNode</code> 节点开始索引加 1，新 <code>VNode</code> 节点的结束索引减 1</li>
+<li>当老 <code>VNode</code> 节点的 <code>end</code> 和新 <code>VNode</code> 节点的 <code>start</code> 相同时，这时候在 <code>patchVnode</code> 后，还需要将当前真实 <code>dom</code> 节点移动到 <code>oldStartVnode</code> 的前面，同时老 <code>VNode</code> 节点结束索引减 1，新 <code>VNode</code> 节点的开始索引加 1</li>
+<li>如果都不满足以上四种情形，那说明没有相同的节点可以复用，则会分为以下两种情况：<ul>
+<li>从旧的 <code>VNode</code> 为 <code>key</code> 值，对应 <code>index</code> 序列为 <code>value</code> 值的哈希表中找到与 <code>newStartVnode</code> 一致 <code>key</code> 的旧的 <code>VNode</code> 节点，再进行<code>patchVnode </code>，同时将这个真实 <code>dom </code>移动到 <code>oldStartVnode</code> 对应的真实 <code>dom</code> 的前面</li>
+<li>调用 <code>createElm</code> 创建一个新的 <code>dom</code> 节点放到当前 <code>newStartIdx</code> 的位置</li>
+</ul>
+</li>
+</ul>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ul>
+<li><p>当数据发生改变时，订阅者<code>watcher</code>就会调用<code>patch</code>给真实的<code>DOM</code>打补丁</p>
+</li>
+<li><p>通过<code>isSameVnode</code>进行判断，相同则调用<code>patchVnode</code>方法</p>
+</li>
+<li><p>```<br>patchVnode</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  做了以下操作：</span><br><span class="line"></span><br><span class="line">  - 找到对应的真实`dom`，称为`el`</span><br><span class="line">  - 如果都有文本节点且不相等，将`el`文本节点设置为`Vnode`的文本节点</span><br><span class="line">  - 如果`oldVnode`有子节点而`VNode`没有，则删除`el`子节点</span><br><span class="line">  - 如果`oldVnode`没有子节点而`VNode`有，则将`VNode`的子节点真实化后添加到`el`</span><br><span class="line">  - 如果两者都有子节点，则执行`updateChildren`函数比较子节点</span><br><span class="line"></span><br><span class="line">- ```</span><br><span class="line">  updateChildren</span><br></pre></td></tr></table></figure>
+
+<p>主要做了以下操作：</p>
+<ul>
+<li>设置新旧<code>VNode</code>的头尾指针</li>
+<li>新旧头尾指针进行比较，循环向中间靠拢，根据情况调用<code>patchVnode</code>进行<code>patch</code>重复流程、调用<code>createElem</code>创建一个新节点，从哈希表寻找 <code>key</code>一致的<code>VNode</code> 节点再分情况操作</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/03/Composition-API-%E4%B8%8EOptions-API/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1144,129 +1294,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/29/DOM%E4%BA%8B%E4%BB%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/29/DOM%E4%BA%8B%E4%BB%B6/" class="post-title-link" itemprop="url">DOM事件</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-29 23:07:41" itemprop="dateCreated datePublished" datetime="2022-04-29T23:07:41+08:00">2022-04-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-02 23:47:58" itemprop="dateModified" datetime="2022-05-02T23:47:58+08:00">2022-05-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Dom事件流</p>
-<p>DOM2事件流分为3个阶段：事件捕获，到达目标和事件冒泡，事件捕获最先发生，为提前拦截事件提供了可能，然后，实际的目标元素接收到事件后，最后一个阶段是冒泡，最迟要在这个阶段响应事件。</p>
-<p>实际目标（div元素）在补货阶段不会接收到事件，这是因为捕获阶段从document到html到body就结束，下一个阶段，即会在div元素上触发事件的‘到达目标阶段，通常在事处理中被认为是事件冒泡的第一部分，然后，冒泡阶段开始，事件反转传播到文档</p>
-<p><img src="/2022/04/29/DOM%E4%BA%8B%E4%BB%B6/dom1.png"></p>
-<p>事件处理程序</p>
-<p>HTML事件处理程序:</p>
-<p>这种交互能力是通过为onclick属性指定JavaScript代码值实现。</p>
-<p>showMessage()函数时单独在script元素中定义，也可以在外部文件定义，作为事件处理程序的代码可以访问全局作用域中的一切</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">showMessage</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;hello world&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"> &lt;/script&gt;</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&#x27;button&#x27;</span> <span class="attr">value</span>=<span class="string">&#x27;Click me&#x27;</span> <span class="attr">onclick</span>=<span class="string">&quot;showMessage()&quot;</span>/&gt;</span></span></span><br></pre></td></tr></table></figure>
-
-<p>DOM0事件处理程序</p>
-<p>每个元素（包括window和document）都有通常小写的事件处理程序属性，比如onclick,只要把这个属性赋值为一个函数即可</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> btn=<span class="built_in">document</span>.getElementById(<span class="string">&#x27;myBtn&#x27;</span>);</span><br><span class="line">btn.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.id)<span class="comment">//myBtn</span></span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>所赋函数被视为元素的方法，因此，事件处理程序会在元素的作用域中运行，即this等于元素</strong>以这种方式添加事件处理程序时注册在事件流的冒泡阶段</p>
-<p>通过将事件处理程序属性的值设置为null，可以移除通过Dom0添加的事件处理程序</p>
-<p>DOM2事件处理程序</p>
-<p>DOM2 Events为事件处理程序的赋值和移除定义了两个方法：addEventListener()和removeEventListener(),它们接收3个参数：事件名，事件处理函数和一个布尔值，true表示在捕获阶段调用事件处理程序，false(默认值)表示在冒泡阶段调用事件处理程序</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> btn=<span class="built_in">document</span>.getElementById(<span class="string">&quot;myBtn&quot;</span>)</span><br><span class="line">btn.addEventListener(<span class="string">&#x27;click&#x27;</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.id)</span><br><span class="line">&#125;,<span class="literal">false</span>)</span><br></pre></td></tr></table></figure>
-
-<p>使用DOM2的主要优势是<strong>可以为同一个事件添加多个事件处理程序</strong></p>
-<p>通过addEventListener()添加的事件处理程序通过removeEventListener()移除要传入与添加时同样的参数，因此无法使用addEventListener()添加的匿名函数移除</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> btn=<span class="built_in">document</span>.getElementById(<span class="string">&quot;myBtn&quot;</span>)</span><br><span class="line">btn.addEventListener(<span class="string">&#x27;click&#x27;</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.id)</span><br><span class="line">&#125;,<span class="literal">false</span>)</span><br><span class="line">btn.removeEventListener(<span class="string">&#x27;click&#x27;</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.id)</span><br><span class="line">&#125;,<span class="literal">false</span>)<span class="comment">//没有效果</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> handler=<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.id)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> btn=<span class="built_in">document</span>.getElementById(<span class="string">&quot;myBtn&quot;</span>)</span><br><span class="line">btn.addEventListener(<span class="string">&#x27;click&#x27;</span>,handler,<span class="literal">false</span>);</span><br><span class="line">btn.removeEventListener(<span class="string">&#x27;click&#x27;</span>,handler,<span class="literal">false</span>)<span class="comment">//有效果</span></span><br></pre></td></tr></table></figure>
-
-<p>事件对象</p>
-<p>DOM事件对象</p>
-<p>event对象时传给事件处理程序唯一参数</p>
-<p><img src="/2022/04/29/DOM%E4%BA%8B%E4%BB%B6/dom2.png" alt="2"></p>
-<p><img src="/2022/04/29/DOM%E4%BA%8B%E4%BB%B6/dom3.png"></p>
-<p>在事件处理程序内部，this对象始终等于currentTarget的值，而target只包含事件的实际目标，如果事件处理程序直接添加在了意图目标，则this,currentTarget,target的值一样</p>
-<p>如果添加在父结点上，则不一样</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.body.onclick=<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(e.currentTarget===<span class="built_in">document</span>.body);<span class="comment">//true</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>===<span class="built_in">document</span>.body)<span class="comment">//true</span></span><br><span class="line">    <span class="built_in">console</span>.log(e.target===<span class="built_in">document</span>.getElementById(<span class="string">&#x27;myBtn&#x27;</span>))<span class="comment">//true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>this和currentTarget等于document.body:它是注册事件处理程序的元素</li>
-<li>target属性等于按钮本身：按钮时click的真正目标</li>
-<li>由于按钮本身没有注册事件处理程序，因此click事件冒泡到document.body，触发了在它上面注册的处理程序</li>
-</ol>
-<p>type属性可以处理多个事件</p>
-<p>preventDefault()方法用于阻止特定事件的默认动作，比如链接的默认行为是在被单击时导航到href属性指定的URL，阻止这个导航可以在onclick事件处理程序中取消，通过preventDefault()取消默认行为，事件对象的cancleable属性被设为true</p>
-<p>stopPropagation()方法用于立即阻止事件流在DOM结构中传播，取消后序事件的捕获或冒泡。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> btn=<span class="built_in">document</span>.getElementById(<span class="string">&quot;myBtn&quot;</span>)</span><br><span class="line">btn.addEventListener(<span class="string">&#x27;click&#x27;</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.id)</span><br><span class="line">    event.stopPropagation();</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">document</span>.body.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;body click&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>由于click事件不会传播到document.body，因此onclick事件处理程序永远不会执行</p>
-<p>eventPhase用于确定事件流所处阶段，如果事件处理程序在捕获阶段被调用，则eventphase等于1，到达目标阶段为2，冒泡阶段为3</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> btn=<span class="built_in">document</span>.getElementById(<span class="string">&#x27;myBtn&#x27;</span>)</span><br><span class="line">btn.onclick=<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(e.eventPhase);<span class="comment">//2</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">document</span>.body.addEventListener(<span class="string">&#x27;click&#x27;</span>,<span class="function">(<span class="params">e</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(e.eventPhase);<span class="comment">//1</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">document</span>.body.onclick=<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(e.eventPhase);<span class="comment">//3</span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1338,7 +1365,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-count">145</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1399,7 +1426,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共131.6k字</span>
+  <span class="post-count">博客全站共132.2k字</span>
 </div>
         
 

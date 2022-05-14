@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"coloey.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="欢迎来到我的世界!">
+  <meta name="description" content="装饰器模式是在对原有功能的基础上对功能拓展的模式为输入框增加新功能 12345678910111213141516171819202122232425262728&#x2F;&#x2F;装饰者var decorator&#x3D;function(input,fn)&amp;#123;    &#x2F;&#x2F;获取事件源    var input&#x3D;document.getElementById(input)    &#x2F;&#x2F;若事件源已经绑定事件    i">
 <meta property="og:type" content="article">
 <meta property="og:title" content="装饰器模式">
 <meta property="og:url" content="https://coloey.github.io/2022/05/14/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/index.html">
 <meta property="og:site_name" content="小柒">
-<meta property="og:description" content="欢迎来到我的世界!">
+<meta property="og:description" content="装饰器模式是在对原有功能的基础上对功能拓展的模式为输入框增加新功能 12345678910111213141516171819202122232425262728&#x2F;&#x2F;装饰者var decorator&#x3D;function(input,fn)&amp;#123;    &#x2F;&#x2F;获取事件源    var input&#x3D;document.getElementById(input)    &#x2F;&#x2F;若事件源已经绑定事件    i">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-05-14T01:57:53.000Z">
-<meta property="article:modified_time" content="2022-05-14T01:57:54.032Z">
+<meta property="article:modified_time" content="2022-05-14T02:41:58.559Z">
 <meta property="article:author" content="小柒">
 <meta name="twitter:card" content="summary">
 
@@ -210,7 +210,16 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-05-14 09:57:53 / 修改时间：09:57:54" itemprop="dateCreated datePublished" datetime="2022-05-14T09:57:53+08:00">2022-05-14</time>
+              <time title="创建时间：2022-05-14 09:57:53 / 修改时间：10:41:58" itemprop="dateCreated datePublished" datetime="2022-05-14T09:57:53+08:00">2022-05-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
             </span>
 
           
@@ -224,7 +233,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <h1 id="装饰器模式是在对原有功能的基础上对功能拓展的模式"><a href="#装饰器模式是在对原有功能的基础上对功能拓展的模式" class="headerlink" title="装饰器模式是在对原有功能的基础上对功能拓展的模式"></a>装饰器模式是在对原有功能的基础上对功能拓展的模式</h1><p>为输入框增加新功能</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//装饰者</span></span><br><span class="line"><span class="keyword">var</span> decorator=<span class="function"><span class="keyword">function</span>(<span class="params">input,fn</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//获取事件源</span></span><br><span class="line">    <span class="keyword">var</span> input=<span class="built_in">document</span>.getElementById(input)</span><br><span class="line">    <span class="comment">//若事件源已经绑定事件</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> input.onclick===<span class="string">&#x27;function&#x27;</span>)&#123;</span><br><span class="line">        <span class="comment">//缓存事件原有回调函数</span></span><br><span class="line">        <span class="keyword">var</span> oldClickFn=input.onclick</span><br><span class="line">        input.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="comment">//事件原有回调函数</span></span><br><span class="line">            oldClickFn()</span><br><span class="line">            <span class="comment">//执行事件新增回调函数</span></span><br><span class="line">            fn()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//事件源未绑定事件，直接为事件源添加新增回调函数</span></span><br><span class="line">        input.onclick=fn</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//电话输入框功能装饰</span></span><br><span class="line">decorator(<span class="string">&#x27;tel_input&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">document</span>.getElementById(<span class="string">&#x27;tel_demo_text&#x27;</span>).style.display=<span class="string">&#x27;none&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//姓名输入框功能装饰</span></span><br><span class="line">decorator(<span class="string">&#x27;name_input&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">document</span>.getElementById(<span class="string">&#x27;name_demo_text&#x27;</span>).style.display=<span class="string">&#x27;none&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="适配器模式和装饰器模式的区别："><a href="#适配器模式和装饰器模式的区别：" class="headerlink" title="适配器模式和装饰器模式的区别："></a>适配器模式和装饰器模式的区别：</h1><p>适配器模式是对原有对象的适配，添加的方法与原有方法功能上大致相似，但是装饰器模式提供的方法与原有方法的功能项是由一定区别的，使用适配器模式时我们新增的方法是要调用原来的方法，不过在装饰器模式，不需要了解对象原有功能没并且对象原有方法原封不动的使用</p>
+
     </div>
 
     
@@ -242,7 +255,10 @@
     <a href="/2022/05/12/%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/" rel="prev" title="适配器模式">
       <i class="fa fa-chevron-left"></i> 适配器模式
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/05/14/%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/" rel="next" title="桥接模式">
+      桥接模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -301,6 +317,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F%E6%98%AF%E5%9C%A8%E5%AF%B9%E5%8E%9F%E6%9C%89%E5%8A%9F%E8%83%BD%E7%9A%84%E5%9F%BA%E7%A1%80%E4%B8%8A%E5%AF%B9%E5%8A%9F%E8%83%BD%E6%8B%93%E5%B1%95%E7%9A%84%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">装饰器模式是在对原有功能的基础上对功能拓展的模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F%E5%92%8C%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">适配器模式和装饰器模式的区别：</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -316,7 +333,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-count">145</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -377,7 +394,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共131.6k字</span>
+  <span class="post-count">博客全站共132.2k字</span>
 </div>
         
 

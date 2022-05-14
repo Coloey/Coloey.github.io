@@ -182,6 +182,105 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/23/%E8%A7%A3%E5%86%B3%E7%9B%B8%E9%82%BBinline-block%E4%B9%8B%E9%97%B4%E7%9A%84%E9%97%B4%E9%9A%94/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/23/%E8%A7%A3%E5%86%B3%E7%9B%B8%E9%82%BBinline-block%E4%B9%8B%E9%97%B4%E7%9A%84%E9%97%B4%E9%9A%94/" class="post-title-link" itemprop="url">解决相邻inline-block之间的间隔</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-23 23:35:04 / 修改时间：23:44:17" itemprop="dateCreated datePublished" datetime="2022-04-23T23:35:04+08:00">2022-04-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>转载自 zhangxinxu from <a target="_blank" rel="noopener" href="http://www.zhangxinxu.com/">http://www.zhangxinxu.com</a></p>
+<h1 id="一、现象描述"><a href="#一、现象描述" class="headerlink" title="一、现象描述"></a>一、现象描述</h1><p>真正意义上的inline-block水平呈现的元素间，换行显示或空格分隔的情况下会有间距.</p>
+<p>我们使用CSS更改非inline-block水平元素为inline-block水平，也会有该问题：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">space <span class="selector-tag">a</span> &#123;</span><br><span class="line">    <span class="attribute">display</span>: inline-block;</span><br><span class="line">    <span class="attribute">padding</span>: .<span class="number">5em</span> <span class="number">1em</span>;</span><br><span class="line">    <span class="attribute">background-color</span>: <span class="number">#cad5eb</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;space&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;##&quot;</span>&gt;</span>惆怅<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;##&quot;</span>&gt;</span>淡定<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;##&quot;</span>&gt;</span>热血<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这种表现是符合规范的应该有的表现。</p>
+<p>元素被当成行内元素排版的时候，<strong>元素之间的空白符</strong>（空格、回车换行等）都会被浏览器处理，根据white-space的处理方式（默认是normal，合并多余空白），原来HTML代码中的回车换行被转成一个空白符，在字体不为0的情况下，空白符占据一定宽度，所以inline-block的元素之间就出现了空隙。这些元素之间的间距会随着字体的大小而变化，当行内元素font-size:16px时，间距为8px。</p>
+<h1 id="二、方法之移除空格"><a href="#二、方法之移除空格" class="headerlink" title="二、方法之移除空格"></a>二、方法之移除空格</h1><p>元素间留白间距出现的原因就是标签段之间的空格，因此，去掉HTML中的空格，自然间距就木有了。考虑到代码可读性，显然连成一行的写法是不可取的，我们可以：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;space&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;##&quot;</span>&gt;</span>惆怅&lt;/a</span><br><span class="line">    &gt;<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;##&quot;</span>&gt;</span>淡定&lt;/a</span><br><span class="line">    &gt;<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;##&quot;</span>&gt;</span>热血<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class=&quot;space&quot;&gt;</span><br><span class="line">    &lt;a href=&quot;##&quot;&gt;惆怅&lt;/a&gt;&lt;!--</span><br><span class="line">    --&gt;&lt;a href=&quot;##&quot;&gt;淡定&lt;/a&gt;&lt;!--</span><br><span class="line">    --&gt;&lt;a href=&quot;##&quot;&gt;热血&lt;/a&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用margin负值"><a href="#使用margin负值" class="headerlink" title="使用margin负值"></a>使用margin负值</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1.space a &#123;</span><br><span class="line">2    display: inline-block;</span><br><span class="line">3    margin-right: -3px;</span><br><span class="line">4&#125;</span><br></pre></td></tr></table></figure>
+
+<p>margin负值的大小与上下文的字体和文字大小相关</p>
+<h2 id="使用font-size-0"><a href="#使用font-size-0" class="headerlink" title="使用font-size:0"></a>使用font-size:0</h2><p>类似下面的代码：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="selector-class">.space</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="attribute">font-size</span>: <span class="number">0</span>;</span><br><span class="line"><span class="number">3</span>&#125;</span><br><span class="line"><span class="number">4</span><span class="selector-class">.space</span> <span class="selector-tag">a</span> &#123;</span><br><span class="line"><span class="number">5</span>    <span class="attribute">font-size</span>: <span class="number">12px</span>;</span><br><span class="line"><span class="number">6</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个方法，基本上可以解决大部分浏览器下inline-block元素之间的间距(IE7等浏览器有时候会有1像素的间距)。</p>
+<p>使用letter-spacing</p>
+<p>类似下面的代码：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="selector-class">.space</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="attribute">letter-spacing</span>: -<span class="number">3px</span>;</span><br><span class="line"><span class="number">3</span>&#125;</span><br><span class="line"><span class="number">4</span><span class="selector-class">.space</span> <span class="selector-tag">a</span> &#123;</span><br><span class="line"><span class="number">5</span>    <span class="attribute">letter-spacing</span>: <span class="number">0</span>;</span><br><span class="line"><span class="number">6</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用word-spacing"><a href="#使用word-spacing" class="headerlink" title="使用word-spacing"></a>使用word-spacing</h2><p>类似下面代码：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="selector-class">.space</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="attribute">word-spacing</span>: -<span class="number">6px</span>;</span><br><span class="line"><span class="number">3</span>&#125;</span><br><span class="line"><span class="number">4</span><span class="selector-class">.space</span> <span class="selector-tag">a</span> &#123;</span><br><span class="line"><span class="number">5</span>    <span class="attribute">word-spacing</span>: <span class="number">0</span>;</span><br><span class="line"><span class="number">6</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一个是字符间距(<code>letter-spacing</code>)一个是单词间距(<code>word-spacing</code>)，大同小异。据我测试，<code>word-spacing</code>的负值只要大到一定程度，其兼容性上的差异就可以被忽略。因为，貌似，<code>word-spacing</code>即使负值很大，也不会发生重叠。</p>
+<p>与上面demo一样的效果，这里就不截图展示了。如果您使用Chrome浏览器，可能看到的是间距依旧存在。确实是有该问题，原因我是不清楚，不过我知道，可以添加<code>display: table;</code>或<code>display:inline-table;</code>让Chrome浏览器也变得乖巧。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="selector-class">.space</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="attribute">display</span>: inline-table;</span><br><span class="line"><span class="number">3</span>    <span class="attribute">word-spacing</span>: -<span class="number">6px</span>;</span><br><span class="line"><span class="number">4</span>&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/23/%E5%AE%9E%E7%8E%B0flex%E7%9B%92%E5%AD%90%E6%9C%80%E5%90%8E%E4%B8%80%E8%A1%8C%E5%B7%A6%E5%AF%B9%E9%BD%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1398,108 +1497,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/18/%E5%AE%BD%E6%9D%BE%E7%9B%B8%E7%AD%89%E5%92%8C%E4%B8%A5%E6%A0%BC%E7%9B%B8%E7%AD%89/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/18/%E5%AE%BD%E6%9D%BE%E7%9B%B8%E7%AD%89%E5%92%8C%E4%B8%A5%E6%A0%BC%E7%9B%B8%E7%AD%89/" class="post-title-link" itemprop="url">宽松相等和严格相等</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-18 23:14:28" itemprop="dateCreated datePublished" datetime="2022-04-18T23:14:28+08:00">2022-04-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-19 00:12:57" itemprop="dateModified" datetime="2022-04-19T00:12:57+08:00">2022-04-19</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="区别："><a href="#区别：" class="headerlink" title="区别："></a>区别：</h1><p>==允许在相等比较中做强制类型转换而===不允许</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a=<span class="number">42</span>;</span><br><span class="line"><span class="keyword">var</span> b=<span class="string">&quot;42&quot;</span>;</span><br><span class="line">a===b;<span class="comment">//false;</span></span><br><span class="line">a==b;<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<p>ES5中定义：</p>
-<ol>
-<li>如果Type(x)是数字，Type(y)是字符串，则返回x==ToNumber(y)的结果</li>
-<li>如果Type(x)是字符串，Type(y)是数字，则返回ToNumber(x)==y的结果</li>
-</ol>
-<h1 id="其他类型和布尔类型之间的相等比较"><a href="#其他类型和布尔类型之间的相等比较" class="headerlink" title="其他类型和布尔类型之间的相等比较"></a>其他类型和布尔类型之间的相等比较</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a=<span class="string">&#x27;42&#x27;</span>;</span><br><span class="line"><span class="keyword">var</span> b=<span class="literal">true</span>;</span><br><span class="line">a==b;<span class="comment">//false</span></span><br><span class="line"><span class="comment">//ToNumber()将b转为1，变成&#x27;42&#x27;==1,又把&#x27;42&#x27;转为42就出现不相等</span></span><br></pre></td></tr></table></figure>
-
-<p>规范：</p>
-<p>1.如果Type(x)是布尔类型，则返回ToNumber(x)==y的结果</p>
-<p>2.如果Type(y)是布尔类型，则返回x==ToNumber(y)的结果</p>
-<p>这个结果是错误的，因为’42‘本身是真值，要避免==true,==false</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a=<span class="string">&#x27;42&#x27;</span>;</span><br><span class="line"><span class="comment">//不要这样用，不成立</span></span><br><span class="line"><span class="keyword">if</span>(a==<span class="literal">true</span>)</span><br><span class="line"><span class="keyword">if</span>(a)</span><br><span class="line"><span class="keyword">if</span>(!!a)</span><br><span class="line"><span class="keyword">if</span>(<span class="built_in">Boolean</span>(a))</span><br></pre></td></tr></table></figure>
-
-<h1 id="null和undefined之间的相等比较"><a href="#null和undefined之间的相等比较" class="headerlink" title="null和undefined之间的相等比较"></a>null和undefined之间的相等比较</h1><p>规范：</p>
-<ol>
-<li>如果x为null,y为undefined,则结果为true</li>
-<li>如果x为undefined,y为null，则结果为true</li>
-</ol>
-<p>因此判断a是否是null或者undefined时直接判断a==null即可</p>
-<h1 id="对象和非对象的相等比较"><a href="#对象和非对象的相等比较" class="headerlink" title="对象和非对象的相等比较"></a>对象和非对象的相等比较</h1><p>规范：</p>
-<ol>
-<li>如果Type(x)是字符串或者数字，Type(y)是对象，则返回x==ToPrimitive(y)的结果</li>
-<li>如果Type(x)是对象，Type(y)是字符串或数字，则返回ToPrimitive(x)==y的结果</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a=<span class="number">42</span>;</span><br><span class="line"><span class="keyword">var</span> b=[<span class="number">42</span>];</span><br><span class="line">a==b;<span class="comment">//true,变成42==&#x27;42&#x27;=&gt;42==42</span></span><br><span class="line"><span class="keyword">var</span> a=<span class="string">&quot;abc&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> b=<span class="built_in">Object</span>(a);</span><br><span class="line">a===b;<span class="comment">//false</span></span><br><span class="line">a==b;<span class="comment">//true,b通过ToPrimitive强制类型转换为&quot;abc&quot;</span></span><br><span class="line"><span class="comment">//没有对应封装对象，null和undefined不能被封装，下面返回false</span></span><br><span class="line"><span class="keyword">var</span> a==<span class="literal">null</span>;</span><br><span class="line"><span class="keyword">var</span> b=<span class="built_in">Object</span>(a);</span><br><span class="line">a==b;<span class="comment">//false</span></span><br><span class="line"><span class="keyword">var</span> a=<span class="literal">undefined</span>;</span><br><span class="line"><span class="keyword">var</span> b=<span class="built_in">Object</span>(a);</span><br><span class="line">a==b;<span class="comment">//false</span></span><br><span class="line"><span class="keyword">var</span> a=NAN;</span><br><span class="line"><span class="keyword">var</span> b=<span class="built_in">Object</span>(a);</span><br><span class="line">a==b;<span class="comment">//false,因为NAN==NAN本身是false</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1571,7 +1568,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-count">145</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1632,7 +1629,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共131.6k字</span>
+  <span class="post-count">博客全站共132.2k字</span>
 </div>
         
 
