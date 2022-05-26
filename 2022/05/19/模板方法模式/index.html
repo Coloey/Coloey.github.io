@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"coloey.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="模板方法的核心在于对方法的重用，它将核心方法封装在基类中，让子类继承基类的方法，实现基类方法的共享，达到方法的共用，当然这种设计模式将导致基类控制子类必须遵守某些法则，这是一种行为的约束，但是为了让行为的约束更加可靠，基类中封装的方法通常是不变的算法，或者具有稳定的调用方式。 子类继承的方法也可以扩展，要求对基类继承的方法进行重写 123456789101112131415161718192021">
+<meta property="og:type" content="article">
+<meta property="og:title" content="模板方法模式">
+<meta property="og:url" content="https://coloey.github.io/2022/05/19/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="小柒">
+<meta property="og:description" content="模板方法的核心在于对方法的重用，它将核心方法封装在基类中，让子类继承基类的方法，实现基类方法的共享，达到方法的共用，当然这种设计模式将导致基类控制子类必须遵守某些法则，这是一种行为的约束，但是为了让行为的约束更加可靠，基类中封装的方法通常是不变的算法，或者具有稳定的调用方式。 子类继承的方法也可以扩展，要求对基类继承的方法进行重写 123456789101112131415161718192021">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-05-19T11:42:49.000Z">
+<meta property="article:modified_time" content="2022-05-19T11:54:51.486Z">
+<meta property="article:author" content="小柒">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://coloey.github.io/2022/05/19/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>模板方法模式 | 小柒</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="小柒" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小柒</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">www.xiaoqi.cn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/19/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h1 class="post-title" itemprop="name headline">
+          模板方法模式
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-19 19:42:49 / 修改时间：19:54:51" itemprop="dateCreated datePublished" datetime="2022-05-19T19:42:49+08:00">2022-05-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>模板方法的核心在于对方法的重用，它将核心方法封装在基类中，让子类继承基类的方法，实现基类方法的共享，达到方法的共用，当然这种设计模式将导致基类控制子类必须遵守某些法则，这是一种行为的约束，但是为了让行为的约束更加可靠，基类中封装的方法通常是不变的算法，或者具有稳定的调用方式。</p>
+<p>子类继承的方法也可以扩展，要求对基类继承的方法进行重写</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//模板类 基础提示框data渲染数据</span></span><br><span class="line"><span class="keyword">var</span> Alert=<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!data)<span class="keyword">return</span>;</span><br><span class="line">    <span class="comment">//设置内容</span></span><br><span class="line">    <span class="built_in">this</span>.content=data.content;</span><br><span class="line">    <span class="comment">//创建提示面板</span></span><br><span class="line">    <span class="built_in">this</span>.panel=<span class="built_in">document</span>.createElement(<span class="string">&#x27;div&#x27;</span>);</span><br><span class="line">    <span class="comment">//创建内容提示组件</span></span><br><span class="line">    <span class="built_in">this</span>.contentNode=<span class="built_in">document</span>.createElement(<span class="string">&#x27;p&#x27;</span>);</span><br><span class="line">    <span class="comment">//创建确定按钮组件</span></span><br><span class="line">    <span class="built_in">this</span>.confirmBtn=<span class="built_in">document</span>.createElement(<span class="string">&#x27;span&#x27;</span>);</span><br><span class="line">    <span class="comment">//创建关闭按钮组件</span></span><br><span class="line">    <span class="built_in">this</span>.closeBtn=<span class="built_in">document</span>.createElement(<span class="string">&#x27;b&#x27;</span>);</span><br><span class="line">    <span class="comment">//为提示面板添加类</span></span><br><span class="line">    <span class="built_in">this</span>.panel.className=<span class="string">&#x27;alert&#x27;</span>;</span><br><span class="line">    <span class="comment">//为关闭按钮添加类</span></span><br><span class="line">    <span class="built_in">this</span>.closeBtn.className=<span class="string">&#x27;a-close&#x27;</span>;</span><br><span class="line">    <span class="comment">//为确定按钮添加类</span></span><br><span class="line">    <span class="built_in">this</span>.confirmBtn.className=<span class="string">&#x27;a-confirm&#x27;</span>;</span><br><span class="line">    <span class="comment">//为确定按钮添加文案</span></span><br><span class="line">    <span class="built_in">this</span>.confirmBtn.innerHTML=data.confirm||<span class="string">&#x27;确认&#x27;</span></span><br><span class="line">    <span class="comment">//为提示内容添加文本</span></span><br><span class="line">    <span class="built_in">this</span>.contentNode.innerHTML=<span class="built_in">this</span>.content;</span><br><span class="line">    <span class="comment">//点击确定按钮执行方法 如果data中有success方法则为success方法，否则为空函数</span></span><br><span class="line">    <span class="built_in">this</span>.success=data.success||<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">    <span class="comment">//点击关闭按钮执行方法</span></span><br><span class="line">    <span class="built_in">this</span>.fail=data.fail||<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">Array</span>.prototype=&#123;</span><br><span class="line">    <span class="attr">init</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//生成提示框</span></span><br><span class="line">        <span class="built_in">this</span>.panel.appendChild(<span class="built_in">this</span>.closeBtn);</span><br><span class="line">        <span class="built_in">this</span>.panel.appendChild(<span class="built_in">this</span>.contentNode);</span><br><span class="line">        <span class="built_in">this</span>.panel.appendChild(<span class="built_in">this</span>.confirmBtn);</span><br><span class="line">        <span class="comment">//插入页面</span></span><br><span class="line">        <span class="built_in">document</span>.body.appendChild(<span class="built_in">this</span>.panel);</span><br><span class="line">        <span class="comment">//绑定事件</span></span><br><span class="line">        <span class="built_in">this</span>.bindEvent();</span><br><span class="line">        <span class="comment">//显示提示框</span></span><br><span class="line">        <span class="built_in">this</span>.show();</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">bindEvent</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> me=<span class="built_in">this</span>;</span><br><span class="line">        <span class="comment">//关闭按钮点击事件</span></span><br><span class="line">        <span class="built_in">this</span>.closeBtn.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            me.fail();</span><br><span class="line">            <span class="comment">//隐藏弹层</span></span><br><span class="line">            me.hide()</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//确认按钮点击事件</span></span><br><span class="line">        <span class="built_in">this</span>.confirmBtn.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            me.success();</span><br><span class="line">            me.hide();</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">hide</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.panel.style.display=<span class="string">&#x27;none&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">//显示弹层</span></span><br><span class="line">    <span class="attr">show</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.panel.style.display=<span class="string">&#x27;block&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//右侧按钮提示框</span></span><br><span class="line"><span class="keyword">var</span> RightAlert=<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//继承基本提示框构造函数</span></span><br><span class="line">    Alert.call(<span class="built_in">this</span>,data);</span><br><span class="line">    <span class="comment">//为确认按钮添加right类</span></span><br><span class="line">    <span class="built_in">this</span>.confirmBtn.className=<span class="built_in">this</span>.confirmBtn.className+<span class="string">&#x27;right&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//继承基本提示框方法</span></span><br><span class="line">RightAlert.prototype=<span class="keyword">new</span> Alert();</span><br><span class="line"><span class="comment">//标题提示框</span></span><br><span class="line"><span class="keyword">var</span> TitleAlert=<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    Alert.call(<span class="built_in">this</span>,data);</span><br><span class="line">    <span class="built_in">this</span>.title=data.title;</span><br><span class="line">    <span class="built_in">this</span>.titleNode=<span class="built_in">document</span>.createElement(<span class="string">&#x27;h3&#x27;</span>);</span><br><span class="line">    <span class="built_in">this</span>.titleNode.innerHTML=<span class="built_in">this</span>.title</span><br><span class="line">&#125;</span><br><span class="line">TitleAlert.prototype=<span class="keyword">new</span> Alert();</span><br><span class="line"><span class="comment">//对基本提示框创建方法的拓展</span></span><br><span class="line">TitleAlert.prototype.init=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//插入标题</span></span><br><span class="line">    <span class="built_in">this</span>.panel.insertBefore(<span class="built_in">this</span>.titleNode,<span class="built_in">this</span>.panel.firstChild);</span><br><span class="line">    <span class="comment">//继承基本提示框的init方法</span></span><br><span class="line">    Alert.prototype.init.call(<span class="built_in">this</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//带有取消按钮的弹出框</span></span><br><span class="line"><span class="keyword">var</span> CancleAlert=<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//继承标题提示框构造函数</span></span><br><span class="line">    TitleAlert.call(<span class="built_in">this</span>,data)</span><br><span class="line">    <span class="comment">//取消按钮文案</span></span><br><span class="line">    <span class="built_in">this</span>.cancel=data.cancel;</span><br><span class="line">    <span class="comment">//创建取消按钮</span></span><br><span class="line">    <span class="built_in">this</span>.cancelBtn=<span class="built_in">document</span>.createElement(<span class="string">&#x27;span&#x27;</span>);</span><br><span class="line">    <span class="comment">//为取消按钮添加类</span></span><br><span class="line">    <span class="built_in">this</span>.cancelBtn.className=<span class="string">&#x27;cancel&#x27;</span></span><br><span class="line">    <span class="comment">//设置取消按钮内容</span></span><br><span class="line">    <span class="built_in">this</span>.cancelBtn.innerHTML=<span class="built_in">this</span>.cancel||<span class="string">&#x27;取消&#x27;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//继承标题提示框原型方法</span></span><br><span class="line">CancleAlert.prototype=<span class="keyword">new</span> Alert()</span><br><span class="line">CancleAlert.prototype.init=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//继承标题提示框创建方法</span></span><br><span class="line">    TitleAlert.prototype.init.call(<span class="built_in">this</span>);</span><br><span class="line">    <span class="comment">//由于取消按钮要添加在末尾，所以在创建完其他组件后添加</span></span><br><span class="line">    <span class="built_in">this</span>.panel.appendChild(<span class="built_in">this</span>.cancelBtn)</span><br><span class="line">&#125;</span><br><span class="line">CancleAlert.prototype.bindEvent=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> me=<span class="built_in">this</span>;</span><br><span class="line">    <span class="comment">//标题提示框绑定事件方法继承</span></span><br><span class="line">    TitleAlert.prototype.bindEvent.call(me);</span><br><span class="line">    <span class="comment">//取消按钮绑定事件</span></span><br><span class="line">    <span class="built_in">this</span>.cancelBtn.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        me.fail();</span><br><span class="line">        me.hide();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">new</span> CancleAlert(&#123;</span><br><span class="line">    <span class="attr">title</span>:<span class="string">&#x27;提示标题&#x27;</span>,</span><br><span class="line">    <span class="attr">content</span>:<span class="string">&#x27;提示内容&#x27;</span>,</span><br><span class="line">    <span class="attr">success</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;ok&#x27;</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">fail</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;cancel&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).init()</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/05/16/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/" rel="prev" title="组合模式">
+      <i class="fa fa-chevron-left"></i> 组合模式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/05/19/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" rel="next" title="策略模式">
+      策略模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小柒"
+      src="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+  <p class="site-author-name" itemprop="name">小柒</p>
+  <div class="site-description" itemprop="description">欢迎来到我的世界!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">153</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小柒</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_pv">
+    本站访问量:<span id="busuanzi_value_site_pv"></span>次
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_uv">
+    本站总访客量：<span id="busuanzi_value_site_uv"></span>人
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共135.2k字</span>
+</div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 动态背景 -->
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="../source/js/src/clicklove.js"></script>
+</body>
+</html>
