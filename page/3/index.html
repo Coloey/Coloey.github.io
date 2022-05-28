@@ -182,6 +182,131 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/08/Mock%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/08/Mock%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">Mock服务器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-08 22:04:17 / 修改时间：23:43:54" itemprop="dateCreated datePublished" datetime="2022-05-08T22:04:17+08:00">2022-05-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/Mock%E6%9C%8D%E5%8A%A1%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">Mock服务器</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="动态构建："><a href="#动态构建：" class="headerlink" title="动态构建："></a>动态构建：</h2><h3 id="webpack-dev-middleware"><a href="#webpack-dev-middleware" class="headerlink" title="webpack-dev-middleware:"></a>webpack-dev-middleware:</h3><p>将webpack构建输出的文件存储在内存中，正常情况下，webpack构建产出的文件会存储在output配置项指定的硬盘目录中，webpack-dev-middleware在此基础上建立一个文件映射机制，每当匹配到一个webpack构建产出文件的请求后便会将内存中与其对应的数据返回给发起请求的客户端，由于是内存的文件系统，没有好使的硬盘读写，数据更新很快，这也是webpack相较其他同类工具的优势之一</p>
+<p>实际上，webpacl-dev-server是在Express和webpack-dev-middleware基础上进行的封装，但由于不具备Mock服务，我们需要自己封装本地开发服务器，注意：</p>
+<ul>
+<li>如何启用源文件的监听并触发动态编译</li>
+<li>如何令客户端可访问由HTML引用但是并未参与构建的本地静态文件，比如jQuery等第三方库，这类文件由独立的script标签引入，不参与webpack构建</li>
+</ul>
+<h4 id="webpack-dev-middleware配置项："><a href="#webpack-dev-middleware配置项：" class="headerlink" title="webpack-dev-middleware配置项："></a>webpack-dev-middleware配置项：</h4><ul>
+<li>lazy:是否开启惰性模式</li>
+<li>watchOptions-监听细节配置（默认）</li>
+<li>aggregateTimeouy:指定webpack的执行频率，webpack将在此段时间内针对源代码所有修改都聚合到一次重新编译行为中</li>
+<li>ignored:指定不参与监听的文件</li>
+<li>poll:指定webpack监听无效时轮询检验文件的频率</li>
+</ul>
+<p>实际开发中并非所有的静态文件都参与构建，一些常用第三方库通常用单独的script和link标签引入，此类文件不参与构建，不在webpack-dev-middleware的监听范围内，也就不能通过文件映射策略将其对应的请求映射到内存文件系统中，只能借助express内置的static中间件将这些文件作为静态内容开放给Http服务，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.use(<span class="string">&#x27;/libs&#x27;</span>,express.static(path.join(process.cwd(),<span class="string">&#x27;static&#x27;</span>)))</span><br></pre></td></tr></table></figure>
+
+<p>第一个参数/libs是客户端请求静态资源的路径，express.static的参数时本地存放静态资源的绝对路径，上述代码将/libs路径的http请求映射到本地项目的static目录</p>
+<h3 id="创建一个本地开发服务器："><a href="#创建一个本地开发服务器：" class="headerlink" title="创建一个本地开发服务器："></a>创建一个本地开发服务器：</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> webpack=<span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> path=<span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> webpackdevmiddleware=<span class="built_in">require</span>(<span class="string">&#x27;webpack-dev-middleware&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> app=express()</span><br><span class="line"><span class="keyword">const</span> compiler=webpack(&#123;</span><br><span class="line">    <span class="comment">//webpack配置</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//配置中间件</span></span><br><span class="line">app.use(<span class="string">&#x27;/libs&#x27;</span>,express.static(path.join(process.cwd(),<span class="string">&#x27;static&#x27;</span>)))</span><br><span class="line">.use(webpackdevmiddleware(compiler,&#123;</span><br><span class="line">    <span class="attr">lazy</span>:<span class="literal">false</span>,</span><br><span class="line">    <span class="attr">watchOprtions</span>:&#123;</span><br><span class="line">        <span class="attr">aggregateTimeout</span>:<span class="number">300</span>,</span><br><span class="line">        <span class="attr">ignored</span>:<span class="regexp">/node_modules/</span>,</span><br><span class="line">        poll:<span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;))</span><br><span class="line">app.listen(<span class="number">8888</span>,<span class="function"><span class="params">err</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(err)&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(err)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Mock"><a href="#Mock" class="headerlink" title="Mock"></a>Mock</h2><h3 id="1-假数据"><a href="#1-假数据" class="headerlink" title="1 假数据"></a>1 假数据</h3><h3 id="2-客户端Mock"><a href="#2-客户端Mock" class="headerlink" title="2 客户端Mock"></a>2 客户端Mock</h3><p>Mock进化的第二种形态就是以Mock.js为代表的客户端Mock,工作原理是在客户端拦截JavaScript代码发出的ajax请求并返回由Mock.js创建的假数据</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="string">&quot;/libs/js/mock.js&quot;</span>&gt;&lt;/script&gt;</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span></span><br><span class="line"><span class="javascript"><span class="xml">    Mock.mock(<span class="string">&#x27;/api&#x27;</span>,&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="string">&#x27;code|1&#x27;</span>:&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="number">200</span>,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="number">404</span>,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="number">500</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">    &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="string">&#x27;errMsg|1&#x27;</span>:[</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="string">&#x27;资源未找到&#x27;</span>,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="string">&#x27;服务器错误&#x27;</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">    ],</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="string">&#x27;data&#x27;</span>:&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="string">&#x27;a&#x27;</span>:<span class="number">1</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">    &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">&#125;)</span></span></span><br><span class="line"><span class="javascript"><span class="xml">loading=<span class="literal">true</span>;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">$.ajax(&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="attr">url</span>:<span class="string">&#x27;/api&#x27;</span>,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="attr">dataType</span>:<span class="string">&#x27;jsonp&#x27;</span>,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="function"><span class="title">success</span>(<span class="params">res</span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="keyword">if</span>(res.code===<span class="number">200</span>&amp;&amp;res.response)&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            data=res.response.data</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        &#125;<span class="keyword">else</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            alert(res.errMsg)</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="function"><span class="title">fail</span>(<span class="params"></span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        alert(<span class="string">&#x27;操作失败&#x27;</span>)</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="function"><span class="title">complete</span>(<span class="params"></span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        loading=<span class="literal">false</span>;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">&#125;)</span></span></span><br><span class="line"><span class="javascript"><span class="xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>Mock.js可以随机创建假数据，还可以处理各种异常状态，然而几遍客户端Mock提供了许多便利，Mock相关代码或文件仍然必须存在于业务代码中，上线之前仍然需要删除，这对于产品质量保障始终存在一定隐患。</p>
+<h3 id="3-Mock-Server"><a href="#3-Mock-Server" class="headerlink" title="3 Mock Server"></a>3 Mock Server</h3><p>在开发阶段使用Mock Server提供的与真实接口规范和逻辑一致的本地接口进行开发</p>
+<p>开发完成后，在构建阶段将Mock的地址修改为已完成的真实服务器端接口地址</p>
+<p>Mock Server最普遍的使用场景就是模拟异步数据接口，比如使用Ajax或者JSONP获取和提交数据，模拟的方式通常有两种：</p>
+<ul>
+<li>Local:本地模式，使用本地JSON数据作为异步接口的请求响应</li>
+<li>Proxy：代理模式，将异步接口代理到线上的其他接口地址，类似于转接者角色</li>
+</ul>
+<p>Mock Server本质上是一个简化版的Web Server,最基础的组件就是负责分发的路由</p>
+<h4 id="Local模式："><a href="#Local模式：" class="headerlink" title="Local模式："></a>Local模式：</h4><p>在开发阶段使用本地API代替真实API地址，使用本地JSON作为接口的返回数据，具体搭建流程：</p>
+<p>通过路由创建一个可访问的本地域名API代替真实API，比如使用/login代替<a target="_blank" rel="noopener" href="http://auth.app.com/login">http://auth.app.com/login</a></p>
+<p>在路由响应函数内对请求进行校验，比如是否为JSONP请求，然后返回本地JSON数据</p>
+<p>前端工程师在开发阶段的业务代码中将<a target="_blank" rel="noopener" href="http://auth.app.com/login%E4%BF%AE%E6%94%B9%E4%B8%BAAPI/login">http://auth.app.com/login修改为API/login</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Path=<span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> app=express()</span><br><span class="line">app.get(<span class="string">&#x27;/login&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//path.join(process.cwd())//返回的是当前Node.js进程执行时的工作目录</span></span><br><span class="line">    <span class="keyword">const</span> MockData=<span class="built_in">require</span>(path.join(process.cwd(),<span class="string">&#x27;./mockdata.login.js&#x27;</span>));</span><br><span class="line">    req.query.callback?res.jsonp(MockData):res.json(MockData);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line">);</span><br><span class="line">app.listen(<span class="number">8888</span>,<span class="function"><span class="params">err</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(err)&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(err)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="DefinePlugin和环境变量"><a href="#DefinePlugin和环境变量" class="headerlink" title="DefinePlugin和环境变量"></a>DefinePlugin和环境变量</h4><p>开发环境使用Mock Server将所有真实接口地址修改为本地域名地址，在部署测试和生产环境之前必须将接口的地址复原。</p>
+<p>接口地址的修改需求涉及两个方面：</p>
+<p>执行环境：开发，测试，生产环境下的接口地址均不同，所以必须能够依据部署目标环境将接口修改为对应地址</p>
+<p>字符串修改：对于JavaScript代码来说，接口地址就是一个字符串，我们要做的就是将该字符串修改为指定的值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">entry:&#123;</span><br><span class="line">    <span class="string">&#x27;main.app&#x27;</span>:<span class="string">&#x27;./js/main.app.js&#x27;</span></span><br><span class="line">&#125;,</span><br><span class="line">    <span class="attr">plugins</span>:[</span><br><span class="line">        <span class="keyword">new</span> webpack.DefinePlugin(&#123;</span><br><span class="line">            <span class="attr">AUTH_API_DOMAIN</span>:<span class="string">&#x27;//auth.app.com&#x27;</span>,</span><br><span class="line">            <span class="attr">HMOE_API_DOMAIN</span>:<span class="string">&#x27;//www.app.com&#x27;</span></span><br><span class="line">        &#125;)</span><br><span class="line">    ]</span><br></pre></td></tr></table></figure>
+
+<p>源代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//请求位于auth.app.com域名下的login接口</span></span><br><span class="line">$.ajax(&#123;</span><br><span class="line">    <span class="attr">url</span>:<span class="string">`<span class="subst">$&#123;AUTH_API_DOMAIN&#125;</span>/login`</span>,</span><br><span class="line">    <span class="function"><span class="title">success</span>(<span class="params">res</span>)</span>&#123;&#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//请求位于www.app.com域名下的login接口</span></span><br><span class="line">$.ajax(&#123;</span><br><span class="line">    <span class="attr">url</span>:<span class="string">`<span class="subst">$&#123;HOME_API_DOMAIN&#125;</span>/login`</span>,</span><br><span class="line">    <span class="function"><span class="title">success</span>(<span class="params">res</span>)</span>&#123;&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>经过构建后</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//请求位于auth.app.com域名下的login接口</span></span><br><span class="line">$.ajax(&#123;</span><br><span class="line">    <span class="attr">url</span>:<span class="string">`//auth.app.com/login`</span>,</span><br><span class="line">    <span class="function"><span class="title">success</span>(<span class="params">res</span>)</span>&#123;&#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//请求位于www.app.com域名下的login接口</span></span><br><span class="line">$.ajax(&#123;</span><br><span class="line">    <span class="attr">url</span>:<span class="string">`//www.app.com/login`</span>,</span><br><span class="line">    <span class="function"><span class="title">success</span>(<span class="params">res</span>)</span>&#123;&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>结合环境变量，配置DefinePlugin指定不同环境下的替换值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> webpack.DefinePlugin(&#123;</span><br><span class="line">    <span class="attr">AUTH_API_DOMAIN</span>:process.env.NODE_ENV===<span class="string">&#x27;dev&#x27;</span>?<span class="string">&#x27;&#x27;</span>:<span class="string">&#x27;//auth.app.com&#x27;</span>,</span><br><span class="line">    <span class="attr">HOME_API_DOMAIN</span>:process.env.NODE_ENV===<span class="string">&#x27;dev&#x27;</span>?<span class="string">&#x27;&#x27;</span>:<span class="string">&#x27;//www.app.com&#x27;</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>以上代码在开发环境下将接口映射到本地的Mock Server,非开发环境下修改为真实域名的地址</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/08/%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1481,64 +1606,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/03/Composition-API-%E4%B8%8EOptions-API/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/03/Composition-API-%E4%B8%8EOptions-API/" class="post-title-link" itemprop="url">Composition API 与Options API</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-05-03 14:46:26" itemprop="dateCreated datePublished" datetime="2022-05-03T14:46:26+08:00">2022-05-03</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1610,7 +1677,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">153</span>
+          <span class="site-state-item-count">154</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
