@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>手写bind</title>
+    <url>/2022/07/03/%E6%89%8B%E5%86%99bind/</url>
+    <content><![CDATA[<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.bind=<span class="function"><span class="keyword">function</span>(<span class="params">context</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="built_in">this</span> !==<span class="string">&#x27;function&#x27;</span>)&#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&quot;Function .prototype.bind-what is trying to be bound is not callable&quot;</span>)</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">var</span> self=<span class="built_in">this</span>;</span><br><span class="line">       <span class="keyword">var</span> args=<span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>,<span class="number">1</span>);</span><br><span class="line">       <span class="keyword">var</span> fNOP=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">       <span class="keyword">var</span> fBound=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">           <span class="keyword">var</span> bindArgs=<span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>);</span><br><span class="line">           <span class="keyword">return</span> self.apply(<span class="built_in">this</span> <span class="keyword">instanceof</span> fNOP?<span class="built_in">this</span>:context,args.concat(bindArgs));</span><br><span class="line">       &#125;</span><br><span class="line">       fNOP.prototype=<span class="built_in">this</span>.prototype;</span><br><span class="line">       fBound.prototype=<span class="keyword">new</span> fNOP();</span><br><span class="line">       <span class="keyword">return</span> fBound;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>参考：</p>
+<p>[]: <a href="https://github.com/mqyqingfeng/Blog/issues/12">https://github.com/mqyqingfeng/Blog/issues/12</a></p>
+]]></content>
+      <categories>
+        <category>手撕代码</category>
+      </categories>
+  </entry>
+  <entry>
     <title>基础类型</title>
     <url>/2022/06/29/%E5%9F%BA%E7%A1%80%E7%B1%BB%E5%9E%8B/</url>
     <content><![CDATA[<h2 id="布尔值："><a href="#布尔值：" class="headerlink" title="布尔值："></a>布尔值：</h2><figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> isdone:<span class="built_in">boolean</span>=<span class="literal">false</span>;</span><br></pre></td></tr></table></figure>

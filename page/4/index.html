@@ -182,6 +182,90 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/06/vue-router%E4%B8%ADhash%E6%A8%A1%E5%BC%8F%E5%92%8Chistory%E6%A8%A1%E5%BC%8F%E5%8C%BA%E5%88%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/06/vue-router%E4%B8%ADhash%E6%A8%A1%E5%BC%8F%E5%92%8Chistory%E6%A8%A1%E5%BC%8F%E5%8C%BA%E5%88%AB/" class="post-title-link" itemprop="url">vue-router中hash模式和history模式区别</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-06 18:26:08 / 修改时间：22:31:27" itemprop="dateCreated datePublished" datetime="2022-05-06T18:26:08+08:00">2022-05-06</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="vue-router的本质："><a href="#vue-router的本质：" class="headerlink" title="vue-router的本质："></a>vue-router的本质：</h1><p>路由就是SPA（单页应用）的路径管理器，vue-router的单页应用中，则是路径之间的切换，也就是组件的切换，<strong>路由模块的本质就是建立起url和页面之间的映射关系</strong></p>
+<p>为什么不能用a标签，这是因为Vue左的是单页应用，当你的项目准备打包时，会生成dist文件夹，这里面只有静态资源和一个index.html页面，所有a标签跳转页面不起作用</p>
+<p>单页应用的核心之一就是：<strong>更新视图而不重新请求页面，vue-router在实现单页面前端路由时</strong>，提供两种方式：Hash模式和History模式，根据mode参数来决定使用哪一种</p>
+<h2 id="Hash模式"><a href="#Hash模式" class="headerlink" title="Hash模式"></a>Hash模式</h2><p>vue-router默认hash模式，使用URL的hash模拟一个完整的URL,于是URL改变时，页面不会重新加载，<strong>hash(#)是URL的锚点，代表网页中的一个位置，单单改变#后的部分，浏览器只会滚动到相应位置，不会重新加载页面，也就是hash出现在URL中（#后面的值），但不会被包含在http请求中，对后端没有影响，因此改变hash不会重新加载页面；同时每一次改变#后的部分，都会在浏览器的访问历史中增加一个记录，使用“后退”按钮，就可以回到上一个位置，所以Hash模式通过锚点值的改变，根据不同的值，渲染指定DOM位置的不同数据，hash模式原理是onhashchange事件(监测hash值变化)，可以在window对象上监听这个事件</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Router</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//存储hash与callback键值对</span></span><br><span class="line">        <span class="built_in">this</span>.routes=&#123;&#125;;</span><br><span class="line">        <span class="comment">//当前hash</span></span><br><span class="line">        <span class="built_in">this</span>.currentUrl=<span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="comment">//记录出现过的hash</span></span><br><span class="line">        <span class="built_in">this</span>.history=[];</span><br><span class="line">        <span class="comment">//作为指针，默认指向this.history的末尾，根据后退前进指向history中不同的hash</span></span><br><span class="line">        <span class="built_in">this</span>.currentIndex=<span class="built_in">this</span>.history.length-<span class="number">1</span>;</span><br><span class="line">        <span class="built_in">this</span>.refresh=<span class="built_in">this</span>.refresh.bind(<span class="built_in">this</span>);</span><br><span class="line">        <span class="built_in">this</span>.backoff=<span class="built_in">this</span>.backoff.bind(<span class="built_in">this</span>)</span><br><span class="line">        <span class="comment">//默认不是后退操作</span></span><br><span class="line">        <span class="built_in">this</span>.isBack=<span class="literal">false</span></span><br><span class="line">        <span class="built_in">window</span>.addEventListener(<span class="string">&#x27;load&#x27;</span>,<span class="built_in">this</span>.refresh,<span class="literal">false</span>)</span><br><span class="line">        <span class="built_in">window</span>.addEventListener(<span class="string">&#x27;hashchange&#x27;</span>,<span class="built_in">this</span>.refresh,<span class="literal">false</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">route</span>(<span class="params">path,callback</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.routes[path]=callback||<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">refresh</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//不能包括&#x27;#&#x27;</span></span><br><span class="line">        <span class="built_in">this</span>.currentUrl=location.hash.slice(<span class="number">1</span>)||<span class="string">&#x27;/&#x27;</span>;</span><br><span class="line">        <span class="comment">//不是后退操作</span></span><br><span class="line">        <span class="keyword">if</span>(!<span class="built_in">this</span>.isBack)&#123;</span><br><span class="line">            <span class="comment">//如果当前指针小于数组总长度，直接截取之前的部分储存下来，避免点击后退按钮后指针后移一位，当再次正常跳转时，指针前进一位，</span></span><br><span class="line">            <span class="comment">//而在数组中添加新hash路由</span></span><br><span class="line">            <span class="comment">//导致指针和路由不匹配</span></span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">this</span>.currentIndex&lt;<span class="built_in">this</span>.history.length-<span class="number">1</span>)&#123;</span><br><span class="line">                <span class="built_in">this</span>.history=<span class="built_in">this</span>.history.slice(<span class="number">0</span>,<span class="built_in">this</span>.currentIndex+<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">this</span>.history.push(<span class="built_in">this</span>.currentUrl)</span><br><span class="line">            <span class="built_in">this</span>.currentIndex++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.routes[<span class="built_in">this</span>.currentUrl]()</span><br><span class="line">        <span class="built_in">this</span>.isBack=<span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">backoff</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.isBack=<span class="literal">true</span></span><br><span class="line">        <span class="built_in">this</span>.currentIndex&lt;=<span class="number">0</span></span><br><span class="line">        ?(<span class="built_in">this</span>.currentIndex=<span class="number">0</span>)</span><br><span class="line">        :(<span class="built_in">this</span>.currentIndex=<span class="built_in">this</span>.currentIndex-<span class="number">1</span>)</span><br><span class="line">        <span class="comment">//找到后退后的哈希地址</span></span><br><span class="line">        location.hash=<span class="string">`#<span class="subst">$&#123;<span class="built_in">this</span>.history[<span class="built_in">this</span>.currentIndex]&#125;</span>`</span></span><br><span class="line">        <span class="comment">//调用后退后的地址对应的函数</span></span><br><span class="line">        <span class="built_in">this</span>.routes[<span class="built_in">this</span>.history[<span class="built_in">this</span>.currentIndex]]</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">window</span>.Router=<span class="keyword">new</span> Routers()</span><br><span class="line"><span class="keyword">const</span> content=<span class="built_in">document</span>.querySelector(<span class="string">&#x27;body&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> button=<span class="built_in">document</span>.querySelector(<span class="string">&#x27;button&#x27;</span>)</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">changeBgColor</span>(<span class="params">color</span>)</span>&#123;</span><br><span class="line">    content.style.background=color</span><br><span class="line">&#125;</span><br><span class="line">Router.route(<span class="string">&#x27;/blue&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    changeBgColor(<span class="string">&#x27;blue&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line">Router.route(<span class="string">&#x27;/green&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    changeBgColor(<span class="string">&#x27;green&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line">Router.route(<span class="string">&#x27;/red&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    changeBgColor(<span class="string">&#x27;red&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line">button.addEventListener(<span class="string">&#x27;click&#x27;</span>,Router.backoff,<span class="literal">false</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="history模式"><a href="#history模式" class="headerlink" title="history模式"></a>history模式</h1><p>hash模式在url中自带#,比较丑，可以用路由的history模式，只需要在配置路由规则时，加上’mode:history’</p>
+<p><strong>这种模式利用了html5  history Interface中新增的pushState()和replaceState()方法</strong>，这两个方法应用于浏览器记录栈，在当前已有的back,forwarc,go基础上，它们提供了对历史记录修改的功能，<strong>只是当修改时，虽然改变了当前的URL，但浏览器不会去请求服务器该路径下的资源，</strong>一旦刷新就会暴露，显示404，<strong>因此这种模式下需要后端的支持，在服务端增加一个覆盖所有情况的候选资源：如果URL匹配不到任何静态资源，就返回一个Index.html页面，这个页面就是app依赖的页面</strong></p>
+<p>export const routes=[</p>
+<p>​    {path:”*”,redirect:’/‘}</p>
+<p>]</p>
+<p>history.pushState用于在浏览器中添加历史记录，但不触发跳转，此方法接收三个参数：</p>
+<ul>
+<li><p>state:一个与指定网址相关的状态对象，popstate事件触发时，该对象会传入回调函数，不需要这个对象时此处就填null</p>
+</li>
+<li><p>title:新页面标题，但是所有浏览器目前都忽略这个值，因此这里填null</p>
+</li>
+<li><p>url:新的网址，必须与当前页面处在同一个域，浏览器的地址栏将显示这个网址</p>
+<p>新标准下路由的实现</p>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Router</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.routes=&#123;&#125;;</span><br><span class="line">        <span class="built_in">this</span>.bindPopState();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">init</span>(<span class="params">path</span>)</span>&#123;</span><br><span class="line">        history.replaceState(&#123;<span class="attr">path</span>:path&#125;,<span class="literal">null</span>,path)</span><br><span class="line">        <span class="built_in">this</span>.routes[path]&amp;&amp;<span class="built_in">this</span>.routes[path]()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">route</span>(<span class="params">path,callback</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.routes[path]=callback||<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">go</span>(<span class="params">path</span>)</span>&#123;</span><br><span class="line">        history.pushState(&#123;<span class="attr">path</span>:path&#125;,<span class="literal">null</span>,path)</span><br><span class="line">        <span class="built_in">this</span>.routes[path]&amp;&amp;<span class="built_in">this</span>.routes[path]()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">_bindPopState</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">window</span>.addEventListener(<span class="string">&#x27;popstate&#x27;</span>,<span class="function"><span class="params">e</span>=&gt;</span>&#123;</span><br><span class="line">            <span class="keyword">const</span> path=e.state&amp;&amp;e.state.path;</span><br><span class="line">            <span class="built_in">this</span>.routes[path]&amp;&amp;<span class="built_in">this</span>.routes[path]()</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">window</span>.Router = <span class="keyword">new</span> Routers();</span><br><span class="line">Router.init(location.pathname);</span><br><span class="line"><span class="keyword">const</span> content = <span class="built_in">document</span>.querySelector(<span class="string">&#x27;body&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> ul = <span class="built_in">document</span>.querySelector(<span class="string">&#x27;ul&#x27;</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">changeBgColor</span>(<span class="params">color</span>) </span>&#123;</span><br><span class="line">  content.style.backgroundColor = color;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Router.route(<span class="string">&#x27;/&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  changeBgColor(<span class="string">&#x27;yellow&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line">Router.route(<span class="string">&#x27;/blue&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  changeBgColor(<span class="string">&#x27;blue&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line">Router.route(<span class="string">&#x27;/green&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  changeBgColor(<span class="string">&#x27;green&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/05/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1521,103 +1605,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/02/%E7%AE%AD%E5%A4%B4%E5%87%BD%E6%95%B0%E5%92%8C%E6%99%AE%E9%80%9A%E5%87%BD%E6%95%B0%E5%8C%BA%E5%88%AB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/02/%E7%AE%AD%E5%A4%B4%E5%87%BD%E6%95%B0%E5%92%8C%E6%99%AE%E9%80%9A%E5%87%BD%E6%95%B0%E5%8C%BA%E5%88%AB/" class="post-title-link" itemprop="url">箭头函数和普通函数区别</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-05-02 11:21:43 / 修改时间：11:37:43" itemprop="dateCreated datePublished" datetime="2022-05-02T11:21:43+08:00">2022-05-02</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="箭头函数和普通函数区别"><a href="#箭头函数和普通函数区别" class="headerlink" title="箭头函数和普通函数区别"></a>箭头函数和普通函数区别</h1><ol>
-<li><p>语法更加简洁清晰</p>
-</li>
-<li><p>箭头函数不会创建自己的this</p>
-</li>
-</ol>
-<p>所以它不会有自己的this,它只会从<strong>自己的作用域链的上一层继承this</strong>，作用域链包括全局作用域，块作用域和函数作用域</p>
-<ol start="3">
-<li>箭头函数继承而来的this指向永远不变</li>
-</ol>
-<p>对象obj的方法b时用箭头函数定义的，这个函数中的this永远指向它<strong>定义时所处的全局环境中的this</strong>,即使这个函数是作为对象obj的方法调用，它依然指向window对象</p>
-<ol start="4">
-<li>call()/apply()/bind()无法改变箭头函数中this得指向</li>
-</ol>
-<p>call()/apply()/bind()方法可以用来动态修改this的指向，但由于箭头函数的this定义时就已经确定且永远不会改变，所以使用这些犯法永远也改变不了箭头函数this的指向，但是代码也不会报错</p>
-<ol start="5">
-<li>箭头函数不能用作构造函数调用</li>
-</ol>
-<p>构造函数的new原理：</p>
-<p>箭头函数是ES6中的提出来的，<strong>它没有prototype，也没有自己的this指向，更不可以使用arguments参数</strong>，所以不能New一个箭头函数。</p>
-<p>new操作符的实现步骤如下：</p>
-<p>1、创建一个空的简单JavaScript对象（即{}）；</p>
-<p>2、为步骤1新创建的对象添加属性__proto__，将该属性链接至构造函数的原型对象 ；</p>
-<p>3、将步骤1新创建的对象作为this的上下文 ；</p>
-<p>4、如果该函数没有返回对象，则返回this。</p>
-<p>所以，上面的第二、三步，箭头函数都是没有办法执行的。</p>
-<ol start="6">
-<li>箭头函数不能用作Generator函数，不能使用yield关键字</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1689,14 +1676,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">159</span>
+          <span class="site-state-item-count">160</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">27</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -1750,7 +1737,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共138.8k字</span>
+  <span class="post-count">博客全站共138.9k字</span>
 </div>
         
 
