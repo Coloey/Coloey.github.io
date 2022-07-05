@@ -182,6 +182,696 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/29/Vue%E4%B8%AD%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/29/Vue%E4%B8%AD%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1/" class="post-title-link" itemprop="url">Vue中组件通信</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-29 18:15:22 / 修改时间：19:15:11" itemprop="dateCreated datePublished" datetime="2022-05-29T18:15:22+08:00">2022-05-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li>父子组件之间通信</li>
+<li>兄弟组件之间的通信</li>
+<li>祖孙与后代组件之间的通信</li>
+<li>非关系组件间的通信</li>
+</ul>
+<h1 id="整理vue中8种常规的通信方案"><a href="#整理vue中8种常规的通信方案" class="headerlink" title="整理vue中8种常规的通信方案"></a>整理<code>vue</code>中8种常规的通信方案</h1><ol>
+<li>通过 props 传递</li>
+<li>通过 $emit 触发自定义事件</li>
+<li>使用 ref</li>
+<li>EventBus</li>
+<li>$parent 或$root</li>
+<li>attrs 与 listeners</li>
+<li>Provide 与 Inject</li>
+<li>Vuex</li>
+</ol>
+<h1 id="组件通信方案："><a href="#组件通信方案：" class="headerlink" title="组件通信方案："></a>组件通信方案：</h1><ul>
+<li>通过props传递</li>
+<li>通过$emit触发自定义事件</li>
+<li>使用ref</li>
+<li>EventBus</li>
+<li>$parent或$root</li>
+<li>attrs与listeners</li>
+<li>Provide与inject</li>
+<li>Vuex</li>
+</ul>
+<h1 id="props传递数据"><a href="#props传递数据" class="headerlink" title="props传递数据"></a>props传递数据</h1><ul>
+<li>适用场景：父组件传递数据给子组件</li>
+<li>子组件设置props属性，定义接收父组件传递过来的参数</li>
+<li>父组件在使用子组件标签中通过字面量来传递值</li>
+</ul>
+<p>Children.vue</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">props:&#123;</span><br><span class="line">    <span class="comment">//字符串形式</span></span><br><span class="line">    <span class="attr">name</span>:<span class="built_in">String</span><span class="comment">//接收的类型参数</span></span><br><span class="line">    <span class="comment">//对象形式</span></span><br><span class="line">    <span class="attr">age</span>:&#123;</span><br><span class="line">        <span class="attr">type</span>:<span class="built_in">Number</span>,<span class="comment">//接收的类型为数值</span></span><br><span class="line">        <span class="attr">default</span>:<span class="number">18</span>;<span class="comment">//默认值为18</span></span><br><span class="line">        <span class="built_in">require</span>:<span class="literal">true</span>;<span class="comment">//age属性必须传递</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Father.vue</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Children name=<span class="string">&#x27;jack&#x27;</span> age=<span class="number">18</span>/&gt;</span><br></pre></td></tr></table></figure>
+
+<h1 id="emit触发自定义事件"><a href="#emit触发自定义事件" class="headerlink" title="$emit触发自定义事件"></a>$emit触发自定义事件</h1><ul>
+<li>适用场景：子组件传递数据给父组件</li>
+<li>子组件通过$emit触发自定义事件，$emit第二个参数为传递的数值</li>
+<li>父组件绑定监听器获取子组件传递过来的参数</li>
+<li>与组件和 prop 一样，事件名提供了自动的大小写转换。如果在子组件中触发一个以 camelCase (驼峰式命名) 命名的事件，你将可以在父组件中添加一个 kebab-case (短横线分隔命名) 的监听器。</li>
+</ul>
+<p>Children.vue</p>
+<p>methods中</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">this</span>.$emit(<span class="string">&#x27;add&#x27;</span>,good)</span><br></pre></td></tr></table></figure>
+
+<p>Father.vue</p>
+<p>template中：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Children @add=<span class="string">&quot;cartAdd($event)&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>ref</p>
+<p>父组件在使用子组件的时候设置ref</p>
+<p>父组件通过这只子组件ref来获取数据</p>
+<p>父组件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;Children ref=<span class="string">&#x27;foo&#x27;</span>/&gt;</span><br><span class="line">    <span class="built_in">this</span>.$refs.foo<span class="comment">//获取子组件实例，通过子组件实例我们可以拿到对应数据</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="EventBus"><a href="#EventBus" class="headerlink" title="EventBus"></a>EventBus</h1><ul>
+<li>使用场景：兄弟组件传值</li>
+<li>创建一个中央事件总线EventBus</li>
+<li>兄弟组件通过$emit触发自定义事件，$emit第二个参数为传递的数值</li>
+<li>另一个兄弟组件通过$on监听自定义事件</li>
+</ul>
+<p>Bus.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bus</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.events=&#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">on</span>(<span class="params">event,fn</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.events[event]=<span class="built_in">this</span>.events[event]||[];</span><br><span class="line">        <span class="built_in">this</span>.events[event].push(fn)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">emit</span>(<span class="params">event,data</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">this</span>.events[event])&#123;</span><br><span class="line">            <span class="built_in">this</span>.events[event].forEach(<span class="function"><span class="params">cb</span>=&gt;</span>&#123;</span><br><span class="line">                cb(data)</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">off</span>(<span class="params">event,fn</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">this</span>.events[event])&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="number">0</span>;i&lt;<span class="built_in">this</span>.events[event].length;i++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(<span class="built_in">this</span>.events[event][i]===fn)&#123;</span><br><span class="line">                    <span class="built_in">this</span>.events[event].splice(i,<span class="number">1</span>);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在入口中执行挂载</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//main.js</span></span><br><span class="line"><span class="keyword">import</span> &#123;createApp&#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">&#x27;./App.vue&#x27;</span></span><br><span class="line"><span class="comment">//引入事件类</span></span><br><span class="line"><span class="keyword">import</span> EventBus <span class="keyword">from</span> <span class="string">&#x27;lib/Bus.js&#x27;</span></span><br><span class="line"><span class="keyword">const</span> $bus=<span class="keyword">new</span> Bus()</span><br><span class="line"><span class="comment">//挂载</span></span><br><span class="line"><span class="comment">//1使用provide</span></span><br><span class="line">app.provide(<span class="string">&#x27;$bus&#x27;</span>,$bus);</span><br><span class="line"><span class="comment">//2 挂载到this上</span></span><br><span class="line">app.config.globalProperties.$bus=$bus</span><br></pre></td></tr></table></figure>
+
+<p>在组件中引入并使用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span>&#123;</span><br><span class="line">    <span class="function"><span class="title">created</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.$bus.emit(<span class="string">&#x27;ButtonCreated&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在setup中使用</p>
+<p>setup中无法访问到应用实例的this,所以用provide/inject</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;inject&#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    <span class="function"><span class="title">setup</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">const</span> $bus=inject(<span class="string">&#x27;$bus&#x27;</span>)</span><br><span class="line">        $bus.emit(<span class="string">&#x27;ButtonSetup&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="parent或-root"><a href="#parent或-root" class="headerlink" title="$parent或$root"></a>$parent或$root</h1><p>通过共同父辈$parent或者$root搭建通信桥梁</p>
+<p>兄弟组件</p>
+<p>this.$parent.on(‘add’,this.add);</p>
+<p>另一个兄弟组件</p>
+<p>this.$parent.emit(‘add’)</p>
+<h1 id="attrs-与-listeners"><a href="#attrs-与-listeners" class="headerlink" title="$attrs 与$ listeners"></a>$attrs 与$ listeners</h1><ul>
+<li>适用场景：祖先传递数据给子孙</li>
+<li>设置批量向下传属性<code>$attrs</code>和 <code>$listeners</code></li>
+<li>包含了父级作用域中不作为 <code>prop</code> 被识别 (且获取) 的特性绑定 ( class 和 style 除外)。</li>
+<li>可以通过 <code>v-bind=&quot;$attrs&quot;</code> 传⼊内部组件</li>
+</ul>
+<p>在vue2.4中，为了解决该需求，引入了<code>$attrs</code>和<code>$listeners</code>，新增了<code>inheritAttrs</code>选项。我们只需要在B组件中对引入的C组件增加下面两个属性即可绑定所有的属性和事件。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;C v-bind=<span class="string">&quot;$attrs&quot;</span> v-on=<span class="string">&quot;$listeners&quot;</span>&gt;&lt;/C&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>A组件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;<span class="name">h2</span>&gt;</span>组件A 数据项:&#123;&#123;myData&#125;&#125;<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;<span class="name">B</span> @<span class="attr">changeMyData</span>=<span class="string">&quot;changeMyData&quot;</span> <span class="attr">:myData</span>=<span class="string">&quot;myData&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">B</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="keyword">import</span> B <span class="keyword">from</span> <span class="string">&quot;./B&quot;</span>;</span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="function"><span class="title">data</span>(<span class="params"></span>)</span> &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="keyword">return</span> &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">      <span class="attr">myData</span>: <span class="string">&quot;100&quot;</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">    &#125;;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">components</span>: &#123; B &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">methods</span>: &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="function"><span class="title">changeMyData</span>(<span class="params">val</span>)</span> &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">      <span class="built_in">this</span>.myData = val;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">&#125;;</span></span></span><br><span class="line"><span class="javascript"><span class="xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>B组件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">h3</span>&gt;</span>组件B<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">C</span> <span class="attr">v-bind</span>=<span class="string">&quot;$attrs&quot;</span> <span class="attr">v-on</span>=<span class="string">&quot;$listeners&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">C</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="keyword">import</span> C <span class="keyword">from</span> <span class="string">&quot;./C&quot;</span>;</span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">components</span>: &#123; C &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">&#125;;</span></span></span><br><span class="line"><span class="javascript"><span class="xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>C组件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">h5</span>&gt;</span>组件C<span class="tag">&lt;/<span class="name">h5</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">v-model</span>=<span class="string">&quot;myc&quot;</span> @<span class="attr">input</span>=<span class="string">&quot;hInput&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">props</span>: &#123; <span class="attr">myData</span>: &#123; <span class="built_in">String</span> &#125; &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="function"><span class="title">created</span>(<span class="params"></span>)</span> &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="built_in">this</span>.myc = <span class="built_in">this</span>.myData;  <span class="comment">// 在组件A中传递过来的属性</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="built_in">console</span>.info(<span class="built_in">this</span>.$attrs, <span class="built_in">this</span>.$listeners);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">methods</span>: &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="function"><span class="title">hInput</span>(<span class="params"></span>)</span> &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">      <span class="built_in">this</span>.$emit(<span class="string">&quot;changeMyData&quot;</span>, <span class="built_in">this</span>.myc); <span class="comment">// // 在组件A中传递过来的事件</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">    &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">&#125;;</span></span></span><br><span class="line"><span class="javascript"><span class="xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>参考：<a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903828098138120">https://juejin.cn/post/6844903828098138120</a></p>
+<p>provide与inject</p>
+<p>在祖先组件定义provide属性，并返回传递的值</p>
+<p>在后代组件通过inject接收组件传递过来的值</p>
+<p>祖先组件：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">provide</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">foo</span>:<span class="string">&#x27;foo&#x27;</span></span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>后代组件：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">inject:[<span class="string">&#x27;foo&#x27;</span>];<span class="comment">//获取到祖先组件传递过来的值</span></span><br></pre></td></tr></table></figure>
+
+<p>具体：<a target="_blank" rel="noopener" href="https://v3.cn.vuejs.org/guide/component-provide-inject.html#%E5%A4%84%E7%90%86%E5%93%8D%E5%BA%94%E6%80%A7">https://v3.cn.vuejs.org/guide/component-provide-inject.html#%E5%A4%84%E7%90%86%E5%93%8D%E5%BA%94%E6%80%A7</a></p>
+<h1 id="Vuex"><a href="#Vuex" class="headerlink" title="Vuex"></a>Vuex</h1><ul>
+<li>适用场景: 复杂关系的组件数据传递</li>
+<li><code>Vuex</code>作用相当于一个用来存储共享变量的容器</li>
+<li><code>state</code>用来存放共享变量的地方</li>
+<li><code>getter</code>，可以增加一个<code>getter</code>派生状态，(相当于<code>store</code>中的计算属性），用来获得共享变量的值</li>
+<li><code>mutations</code>用来存放修改<code>state</code>的方法。</li>
+<li><code>actions</code>也是用来存放修改state的方法，不过<code>action</code>是在<code>mutations</code>的基础上进行。常用来做一些异步操作</li>
+</ul>
+<h1 id="小结"><a href="#小结" class="headerlink" title="#小结"></a><a target="_blank" rel="noopener" href="https://vue3js.cn/interview/vue/communication.html#%E5%B0%8F%E7%BB%93">#</a>小结</h1><ul>
+<li>父子关系的组件数据传递选择 <code>props</code> 与 <code>$emit</code>进行传递，也可选择<code>ref</code></li>
+<li>兄弟关系的组件数据传递可选择<code>$bus</code>，其次可以选择<code>$parent</code>进行传递</li>
+<li>祖先与后代组件数据传递可选择<code>attrs</code>与<code>listeners</code>或者 <code>Provide</code>与 <code>Inject</code></li>
+<li>复杂关系的组件数据传递可以通过<code>vuex</code>存放共享的变量</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/29/%E4%B8%BA%E4%BB%80%E4%B9%88data%E5%B1%9E%E6%80%A7%E6%97%B6%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%E8%80%8C%E4%B8%8D%E6%98%AF%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/29/%E4%B8%BA%E4%BB%80%E4%B9%88data%E5%B1%9E%E6%80%A7%E6%97%B6%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%E8%80%8C%E4%B8%8D%E6%98%AF%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1/" class="post-title-link" itemprop="url">为什么data属性是一个函数而不是一个对象</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-29 17:08:36 / 修改时间：17:23:15" itemprop="dateCreated datePublished" datetime="2022-05-29T17:08:36+08:00">2022-05-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="组件data定义函数与对象的区别"><a href="#组件data定义函数与对象的区别" class="headerlink" title="组件data定义函数与对象的区别"></a>组件data定义函数与对象的区别</h1><p>在我们定义好一个组件的时候，vue最终都会通过Vue.extend()构成组件实例</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Component</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line">Component.prototype.data=&#123;</span><br><span class="line">    <span class="attr">count</span>:<span class="number">0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建两个组件实例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> componentA=<span class="keyword">new</span> Component()</span><br><span class="line"><span class="keyword">const</span> componentB=<span class="keyword">new</span> Component();</span><br><span class="line"><span class="built_in">console</span>.log(componentB.data.count);<span class="comment">//0</span></span><br><span class="line">componentA.data.count=<span class="number">1</span>;</span><br><span class="line"><span class="built_in">console</span>.log(componentB.data.count)<span class="comment">//1</span></span><br></pre></td></tr></table></figure>
+
+<p>产生这样的原因是两者共用了同一个内存地址，compoentA修改的内容，同样对componentB产生了影响</p>
+<p>如果采用函数形式，则不会出现这种情况（函数返回的对象内存地址并不相同）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Component</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">this</span>.data = <span class="built_in">this</span>.data()</span><br><span class="line">&#125;</span><br><span class="line">Component.prototype.data = <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">   		<span class="attr">count</span> : <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(componentB.data.count)  <span class="comment">// 0</span></span><br><span class="line">componentA.data.count = <span class="number">1</span></span><br><span class="line"><span class="built_in">console</span>.log(componentB.data.count)  <span class="comment">// 0</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>vue组件可能有多个实例，采用函数返回一个全新data形式，使每个实例对象的数据不会受到其他实例对象数据的污染</strong></p>
+<h1 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h1><p>vue初始化data的代码时，data的定义可以是函数或者对象</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">initData</span> (<span class="params">vm: Component</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> data = vm.$options.data</span><br><span class="line">  data = vm._data = <span class="keyword">typeof</span> data === <span class="string">&#x27;function&#x27;</span></span><br><span class="line">    ? getData(data, vm)</span><br><span class="line">    : data || &#123;&#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是组件在创建的时候，会进行选项的合并，自定义组件会进入mergeOptions进行选择合并</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Vue.prototype._init = <span class="function"><span class="keyword">function</span> (<span class="params">options?: <span class="built_in">Object</span></span>) </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// merge options</span></span><br><span class="line">    <span class="keyword">if</span> (options &amp;&amp; options._isComponent) &#123;</span><br><span class="line">      <span class="comment">// optimize internal component instantiation</span></span><br><span class="line">      <span class="comment">// since dynamic options merging is pretty slow, and none of the</span></span><br><span class="line">      <span class="comment">// internal component options needs special treatment.</span></span><br><span class="line">      initInternalComponent(vm, options)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      vm.$options = mergeOptions(</span><br><span class="line">        resolveConstructorOptions(vm.constructor),</span><br><span class="line">        options || &#123;&#125;,</span><br><span class="line">        vm</span><br><span class="line">      )</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义data会进行数据校验</p>
+<p>这时候vm实例为undefined，进入if判断，若data类型不是function，则出现警告提示</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">strats.data = <span class="function"><span class="keyword">function</span> (<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="function">  parentVal: any,</span></span></span><br><span class="line"><span class="params"><span class="function">  childVal: any,</span></span></span><br><span class="line"><span class="params"><span class="function">  vm?: Component</span></span></span><br><span class="line"><span class="params"><span class="function"></span>): ?<span class="title">Function</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!vm) &#123;</span><br><span class="line">    <span class="keyword">if</span> (childVal &amp;&amp; <span class="keyword">typeof</span> childVal !== <span class="string">&quot;function&quot;</span>) &#123;</span><br><span class="line">      process.env.NODE_ENV !== <span class="string">&quot;production&quot;</span> &amp;&amp;</span><br><span class="line">        warn(</span><br><span class="line">          <span class="string">&#x27;The &quot;data&quot; option should be a function &#x27;</span> +</span><br><span class="line">            <span class="string">&quot;that returns a per-instance value in component &quot;</span> +</span><br><span class="line">            <span class="string">&quot;definitions.&quot;</span>,</span><br><span class="line">          vm</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> parentVal;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> mergeDataOrFn(parentVal, childVal);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> mergeDataOrFn(parentVal, childVal, vm);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h1 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h1><ul>
+<li><strong>根实例对象data可以是对象也可以是函数（根实例是单例</strong>），不会产生数据污染情况</li>
+<li><strong>组件实例对象data必须是函数</strong>，目的是为了防止多个组件实例对象之间共用一个data,产生数据污染，采用函数的形式,initData时会将其作为<strong>工厂函数返回全新data对象</strong></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/29/Vue%E5%AE%9E%E4%BE%8B%E6%8C%82%E8%BD%BD%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/29/Vue%E5%AE%9E%E4%BE%8B%E6%8C%82%E8%BD%BD%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/" class="post-title-link" itemprop="url">Vue实例挂载发生了什么</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-29 16:33:28 / 修改时间：17:08:01" itemprop="dateCreated datePublished" datetime="2022-05-29T16:33:28+08:00">2022-05-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li>new Vue 的时候调用_init方法</li>
+</ul>
+<ol>
+<li>定义$set,$get,$delete,$watch等方法</li>
+<li>定义$on,$off,$emit等事件</li>
+<li>定义_update,$forceUpdate,$destroy生命周期</li>
+</ol>
+<ul>
+<li>调用$mount进行页面的挂载，会解析template:</li>
+</ul>
+<ol>
+<li>将html文档解析后生成ast抽象语法树</li>
+<li>将ast解析成字符串</li>
+<li>生成render函数，挂载到vm上后，会再次调用mount方法</li>
+</ol>
+<ul>
+<li>mount方法中</li>
+</ul>
+<ol>
+<li>会调用mountComponent渲染组件</li>
+<li>执行beforeMount钩子</li>
+<li>定义updateComponent渲染页面视图方法（updateComponent方法主要执行在vue初始化声明的render,update方法，render的作用是生成vnode)</li>
+<li>监听组件数据，一旦发生变化，触发beforeUpdate生命钩子</li>
+</ol>
+<ul>
+<li>_update主要功能是调用patch,将vnode转换为真实DOM,并且更新到页面中</li>
+</ul>
+<p>参考链接：</p>
+<p><a target="_blank" rel="noopener" href="https://vue3js.cn/interview/vue/new_vue.html#%E4%B8%89%E3%80%81%E7%BB%93%E8%AE%BA">https://vue3js.cn/interview/vue/new_vue.html#%E4%B8%89%E3%80%81%E7%BB%93%E8%AE%BA</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/27/git-commit%E8%A7%84%E8%8C%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/27/git-commit%E8%A7%84%E8%8C%83/" class="post-title-link" itemprop="url">git commit规范</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-27 22:18:46" itemprop="dateCreated datePublished" datetime="2022-05-27T22:18:46+08:00">2022-05-27</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/26/%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/26/%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96/" class="post-title-link" itemprop="url">函数柯里化</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-26 16:37:28" itemprop="dateCreated datePublished" datetime="2022-05-26T16:37:28+08:00">2022-05-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-29 15:44:27" itemprop="dateModified" datetime="2022-05-29T15:44:27+08:00">2022-05-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>柯里化：把接受多个参数的函数变换成接收一个单一参数（最初函数的第一个参数）的函数，并且返回接收余下的参数而且返回结果的新函数的技术</p>
+<h1 id="柯里化的通用实现方法："><a href="#柯里化的通用实现方法：" class="headerlink" title="柯里化的通用实现方法："></a>柯里化的通用实现方法：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> curry=<span class="function">(<span class="params">fn,...args</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> args.length&lt;fn.length<span class="comment">//函数参数个数可以通过函数.length属性访问，</span></span><br><span class="line">    ?<span class="function">(<span class="params">..._args</span>)=&gt;</span>curry(fn,...args,..._args)<span class="comment">//传入参数小于原始函数fn参数的个数时，继续对当前函数进行柯里化，返回一个接受所有参数（当前参数和剩余参数）的函数</span></span><br><span class="line">    :fn(...args)<span class="comment">//否则直接执行函数</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add1</span>(<span class="params">a,b,c,d</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a+b+c+d;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> add=curry(add1)</span><br><span class="line"><span class="built_in">console</span>.log(add(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>))<span class="comment">//10</span></span><br><span class="line"><span class="built_in">console</span>.log(add(<span class="number">1</span>)(<span class="number">2</span>)(<span class="number">3</span>)(<span class="number">4</span>));<span class="comment">//10</span></span><br><span class="line"><span class="built_in">console</span>.log(add(<span class="number">1</span>,<span class="number">2</span>)(<span class="number">3</span>,<span class="number">4</span>));<span class="comment">//10</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="柯里化的作用："><a href="#柯里化的作用：" class="headerlink" title="柯里化的作用："></a>柯里化的作用：</h1><h2 id="参数复用"><a href="#参数复用" class="headerlink" title="参数复用"></a>参数复用</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 正常正则验证字符串 reg.test(txt)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数封装后</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">check</span>(<span class="params">reg, txt</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> reg.test(txt)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">check(<span class="regexp">/\d+/g</span>, <span class="string">&#x27;test&#x27;</span>)       <span class="comment">//false</span></span><br><span class="line">check(<span class="regexp">/[a-z]+/g</span>, <span class="string">&#x27;test&#x27;</span>)    <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Currying后</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">curryingCheck</span>(<span class="params">reg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">txt</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> reg.test(txt)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> hasNumber = curryingCheck(<span class="regexp">/\d+/g</span>)</span><br><span class="line"><span class="keyword">var</span> hasLetter = curryingCheck(<span class="regexp">/[a-z]+/g</span>)</span><br><span class="line"></span><br><span class="line">hasNumber(<span class="string">&#x27;test1&#x27;</span>)      <span class="comment">// true</span></span><br><span class="line">hasNumber(<span class="string">&#x27;testtest&#x27;</span>)   <span class="comment">// false</span></span><br><span class="line">hasLetter(<span class="string">&#x27;21212&#x27;</span>)      <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<p>第一个参数reg进行了复用</p>
+<h2 id="提前返回"><a href="#提前返回" class="headerlink" title="提前返回"></a>提前返回</h2><p>举个例子，兼容现代浏览器以及IE浏览器的事件添加方法，我们正常情况可能这样写：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> addEvent=<span class="function"><span class="keyword">function</span>(<span class="params">el,type,fn,capture</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">window</span>.addEventListener)&#123;</span><br><span class="line">        el.addEventListener(type,<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">            fn.call(el,e);</span><br><span class="line">        &#125;,capture);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">window</span>.attachEvent)&#123;</span><br><span class="line">        el.attachEvent(<span class="string">&quot;on&quot;</span>+type,<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">            fn.call(el,e);</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的方法我们每次使用addEvent为元素添加事件的时候，都会走一遍if…else if…，其实只要判断一次，用柯里化</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> addEvent=(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">window</span>.addEventListener)&#123;</span><br><span class="line">        el.addEventListener(type,<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">            fn.call(el,e);</span><br><span class="line">        &#125;,capture);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">window</span>.attachEvent)&#123;</span><br><span class="line">        el.attachEvent(<span class="string">&quot;on&quot;</span>+type,<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">            fn.call(el,e);</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<h2 id="延迟执行"><a href="#延迟执行" class="headerlink" title="延迟执行"></a>延迟执行</h2><p>比如bind方法的实现机制就是柯里化：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.bind=<span class="function"><span class="keyword">function</span>(<span class="params">context</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> self=<span class="built_in">this</span>;</span><br><span class="line">    <span class="keyword">var</span> args=<span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>,<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="title">funtion</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> self.apply(context,args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>参考文章：</p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904093467541517">https://juejin.cn/post/6844904093467541517</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.zhangxinxu.com/wordpress/2013/02/js-currying/">https://www.zhangxinxu.com/wordpress/2013/02/js-currying/</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/2975c25e4d71">https://www.jianshu.com/p/2975c25e4d71</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/24/%E6%89%8B%E5%86%99Object-is/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/24/%E6%89%8B%E5%86%99Object-is/" class="post-title-link" itemprop="url">手写Object.is</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-24 16:23:28" itemprop="dateCreated datePublished" datetime="2022-05-24T16:23:28+08:00">2022-05-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-29 15:46:09" itemprop="dateModified" datetime="2022-05-29T15:46:09+08:00">2022-05-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">is=<span class="function"><span class="keyword">function</span>(<span class="params">x,y</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(x===y)&#123;<span class="comment">//如果x===y并且+0和-0=&gt;+0!==0false -0!==0false 1/+0===1/-0false返回false</span></span><br><span class="line">        <span class="keyword">return</span> x!==<span class="number">0</span>||y!==<span class="number">0</span>||<span class="number">1</span>/x===<span class="number">1</span>/y</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//解决NaN===NaN为false,NaN!==NaNtrue NaN!==NaN true 返回true</span></span><br><span class="line">        <span class="keyword">return</span> x!==x&amp;&amp;y!==y;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(is(<span class="number">0</span>,<span class="number">0</span>))<span class="comment">//true</span></span><br><span class="line"><span class="built_in">console</span>.log(is(+<span class="number">0</span>,-<span class="number">0</span>))<span class="comment">//false</span></span><br><span class="line"><span class="built_in">console</span>.log(is(<span class="literal">NaN</span>,<span class="literal">NaN</span>))<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/24/%E6%89%8B%E5%86%99object-assign/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/24/%E6%89%8B%E5%86%99object-assign/" class="post-title-link" itemprop="url">手写object.assign</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-24 15:48:46" itemprop="dateCreated datePublished" datetime="2022-05-24T15:48:46+08:00">2022-05-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-29 15:45:21" itemprop="dateModified" datetime="2022-05-29T15:45:21+08:00">2022-05-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.defineProperty(<span class="built_in">Object</span>,<span class="string">&#x27;assign&#x27;</span>,&#123;</span><br><span class="line">    <span class="attr">value</span>:</span><br><span class="line">    <span class="function"><span class="keyword">function</span> (<span class="params">target,...args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(target===<span class="literal">null</span>)<span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">TypeError</span>(<span class="string">&quot;Can&#x27;t convert null or undefined to object&quot;</span>)</span><br><span class="line">        <span class="comment">//目标对象统一为引用数据类型</span></span><br><span class="line">        <span class="keyword">const</span> to=<span class="built_in">Object</span>(target);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="number">0</span>;i&lt;args.length;i++)&#123;</span><br><span class="line">            <span class="comment">//每一个源对象</span></span><br><span class="line">            <span class="keyword">const</span> nextSource=args[i];</span><br><span class="line">            <span class="keyword">if</span>(nextSource!==<span class="literal">null</span>)&#123;</span><br><span class="line">                <span class="comment">//使用for...in 和hasOwnProperty双重判断，确保只拿到本身的属性，方法（不包含继承的)</span></span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">const</span> nextKey <span class="keyword">in</span> nextSource)&#123;</span><br><span class="line">                    <span class="keyword">if</span>(<span class="built_in">Object</span>.prototype.hasOwnProperty.call(nextSource,nextKey))&#123;</span><br><span class="line">                        to[nextKey]=nextSource[nextKey];</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> to;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">//不可枚举</span></span><br><span class="line">    <span class="attr">enumerable</span>:<span class="literal">false</span>,</span><br><span class="line">    <span class="attr">writable</span>:<span class="literal">true</span>,</span><br><span class="line">    <span class="attr">configurable</span>:<span class="literal">true</span>  </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/24/%E6%89%8B%E5%86%99call/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -409,549 +1099,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/16/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/16/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">组合模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-05-16 11:12:05 / 修改时间：11:27:56" itemprop="dateCreated datePublished" datetime="2022-05-16T11:12:05+08:00">2022-05-16</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>组合模式能够给我们提供一个清晰的组成结构，组合对象类通过集成同一个父类使其具有统一的方法，方便我们统一管理和使用。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> form=<span class="keyword">new</span> FormItem=(<span class="string">&#x27;ForemItem&#x27;</span>,documebt.body);</span><br><span class="line">form.add(</span><br><span class="line">    <span class="keyword">new</span> FieldsetItem(<span class="string">&#x27;account&#x27;</span>,<span class="string">&#x27;账号&#x27;</span>).add(</span><br><span class="line">        <span class="keyword">new</span> Group().add(</span><br><span class="line">            <span class="keyword">new</span> LabelItem(<span class="string">&#x27;user_name&#x27;</span>,<span class="string">&#x27;用户名：&#x27;</span>)</span><br><span class="line">        ).add(</span><br><span class="line">            <span class="keyword">new</span> InputItem(<span class="string">&#x27;user_name&#x27;</span>)</span><br><span class="line">            </span><br><span class="line">        ).add(</span><br><span class="line">            <span class="keyword">new</span> SpanItem(<span class="string">&#x27;4到6位字母&#x27;</span>)</span><br><span class="line">        )</span><br><span class="line">    ).add(</span><br><span class="line">        <span class="keyword">new</span> Group().add(</span><br><span class="line">            <span class="keyword">new</span> LabelItem(<span class="string">&#x27;user_password&#x27;</span>,<span class="string">&#x27;密码:&#x27;</span>)</span><br><span class="line">        ).add(</span><br><span class="line">            <span class="keyword">new</span> InputItem(<span class="string">&#x27;user_password&#x27;</span>)</span><br><span class="line">        ).add(</span><br><span class="line">            <span class="keyword">new</span> SpanItem(<span class="string">&#x27;6到12位数字或密码&#x27;</span>)</span><br><span class="line">        )</span><br><span class="line">    )</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">inheritPrototype</span>(<span class="params">subType,superType</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> prototype=<span class="built_in">Object</span>.create(superType.prototype)</span><br><span class="line">    prototype.constructor=subType;</span><br><span class="line">    subType.prototype=prototype</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> Form=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//子组件容器</span></span><br><span class="line">    <span class="built_in">this</span>.children=[]</span><br><span class="line">    <span class="comment">//当前组件元素</span></span><br><span class="line">    <span class="built_in">this</span>.element=<span class="literal">null</span>;</span><br><span class="line">&#125;</span><br><span class="line">Form.prototype=&#123;</span><br><span class="line">    <span class="attr">init</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;请重写方法&#x27;</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">add</span>:<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;请重写方法&#x27;</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">getElement</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;请重写方法&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> FormItem =<span class="function"><span class="keyword">function</span>(<span class="params">id,parent</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//构造函数继承父类</span></span><br><span class="line">    Form.call(<span class="built_in">this</span>)</span><br><span class="line">    <span class="built_in">this</span>.id=id;</span><br><span class="line">    <span class="built_in">this</span>.parent=parent;</span><br><span class="line">    <span class="built_in">this</span>.init()</span><br><span class="line">&#125;</span><br><span class="line">inheritPrototype(FormItem,Form)</span><br><span class="line">FormItem.prototype.init=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.element=<span class="built_in">document</span>.createElement(<span class="string">&#x27;ul&#x27;</span>)</span><br><span class="line">    <span class="built_in">this</span>.element.id=<span class="built_in">this</span>.id;</span><br><span class="line">    <span class="built_in">this</span>.element.className=<span class="string">&#x27;new-container&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//添加子元素方法</span></span><br><span class="line">FormItem.prototype.add=<span class="function"><span class="keyword">function</span>(<span class="params">child</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//在子元素容器中插入子元素</span></span><br><span class="line">    <span class="built_in">this</span>.children.push(child);</span><br><span class="line">    <span class="comment">//插入当前组件的元素树</span></span><br><span class="line">    <span class="built_in">this</span>.element.appendChild(child.getElement())</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//获取当前元素方法</span></span><br><span class="line">FormItem.prototype.getElement=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.element;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//显示方法</span></span><br><span class="line">FormItem.prototype.show=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.parent.appendChild(<span class="built_in">this</span>.element)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> FieldsetItem=<span class="function"><span class="keyword">function</span>(<span class="params">classname,name</span>)</span>&#123;</span><br><span class="line">    Form.call(<span class="built_in">this</span>);</span><br><span class="line">    <span class="built_in">this</span>.classname=classname||<span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="built_in">this</span>.name=name||<span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="built_in">this</span>.init();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">inheritPrototype(FieldsetItem,Form);</span><br><span class="line">FieldsetItem.prototype.init=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.element=<span class="built_in">document</span>.createElement(<span class="string">&#x27;li&#x27;</span>);</span><br><span class="line">    <span class="built_in">this</span>.element.className=<span class="built_in">this</span>.classname</span><br><span class="line">&#125;</span><br><span class="line">FieldsetItem.prototype.add=<span class="function"><span class="keyword">function</span>(<span class="params">child</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.children.push(child)</span><br><span class="line">    <span class="built_in">this</span>.element.appendChild(child.getElement());</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">&#125;</span><br><span class="line">FieldsetItem.prototype.getElement=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.element;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> Group=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    Form.call(<span class="built_in">this</span>);</span><br><span class="line">    <span class="built_in">this</span>.init();</span><br><span class="line">&#125;</span><br><span class="line">inheritPrototype(Group,Form);</span><br><span class="line">Group.prototype.init=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.element=<span class="built_in">document</span>.createElement(<span class="string">&#x27;div&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line">Group.prototype.add=<span class="function"><span class="keyword">function</span>(<span class="params">child</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.children.push(child);</span><br><span class="line">    <span class="built_in">this</span>.element.appendChild(child.getElement());</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">&#125;</span><br><span class="line">Group.prototype.getElement=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.element;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> LabelItem=<span class="function"><span class="keyword">function</span>(<span class="params">classname,text</span>)</span>&#123;</span><br><span class="line">    Form.call(<span class="built_in">this</span>);</span><br><span class="line">    <span class="built_in">this</span>.classname=classname||<span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="built_in">this</span>.text=text||<span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="built_in">this</span>.init()</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">inheritPrototype(LabelItem,Form)</span><br><span class="line">LabelItem.prototype.init=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.element=<span class="built_in">document</span>.createElement(<span class="string">&#x27;p&#x27;</span>);</span><br><span class="line">    <span class="built_in">this</span>.element.innerHTML=<span class="built_in">this</span>.text;</span><br><span class="line">    <span class="built_in">this</span>.element.className=<span class="built_in">this</span>.classname</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">LabelItem.prototype.getElement=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.element;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> InputItem=<span class="function"><span class="keyword">function</span>(<span class="params">classname</span>)</span>&#123;</span><br><span class="line">    Form.call(<span class="built_in">this</span>);</span><br><span class="line">    <span class="built_in">this</span>.classname=classname;</span><br><span class="line">    <span class="built_in">this</span>.init();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">inheritPrototype(InputItem,Form)</span><br><span class="line">InputItem.prototype.init=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.element=<span class="built_in">document</span>.createElement(<span class="string">&#x27;input&#x27;</span>);</span><br><span class="line">    <span class="built_in">this</span>.element.className=<span class="built_in">this</span>.classname;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">InputItem.prototype.add=<span class="function"><span class="keyword">function</span>(<span class="params">child</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.children.push(child);</span><br><span class="line">    <span class="built_in">this</span>.element.appendChild(child.getElement());</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">InputItem.prototype.getElement=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.element;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> SpanItem=<span class="function"><span class="keyword">function</span> (<span class="params">text</span>) </span>&#123;</span><br><span class="line">    Form.call(<span class="built_in">this</span>);</span><br><span class="line">    <span class="built_in">this</span>.text=text;</span><br><span class="line">    <span class="built_in">this</span>.init();</span><br><span class="line">&#125;</span><br><span class="line">inheritPrototype(SpanItem,Form)</span><br><span class="line">SpanItem.prototype.init=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.element=<span class="built_in">document</span>.createElement(<span class="string">&#x27;span&#x27;</span>);</span><br><span class="line">    <span class="built_in">this</span>.element.innerHTML=<span class="built_in">this</span>.text;</span><br><span class="line">    <span class="built_in">this</span>.element.className=<span class="built_in">this</span>.classname;</span><br><span class="line">&#125;</span><br><span class="line">SpanItem.prototype.getElement=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.element;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/16/%E5%88%92%E5%88%86%E9%93%BE%E8%A1%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/16/%E5%88%92%E5%88%86%E9%93%BE%E8%A1%A8/" class="post-title-link" itemprop="url">划分链表</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-05-16 00:23:16 / 修改时间：00:34:36" itemprop="dateCreated datePublished" datetime="2022-05-16T00:23:16+08:00">2022-05-16</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95/%E9%93%BE%E8%A1%A8/" itemprop="url" rel="index"><span itemprop="name">链表</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ListPartition=<span class="function">(<span class="params">head,pivot</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> sH=<span class="literal">null</span>,sT=<span class="literal">null</span>,eH=<span class="literal">null</span>,eT=<span class="literal">null</span>,mH=<span class="literal">null</span>,mT=<span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">let</span> next=<span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">while</span>(head!==<span class="literal">null</span>)&#123;</span><br><span class="line">        next=head.next;</span><br><span class="line">        head.next=<span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">if</span>(head.value&lt;pivot)&#123;</span><br><span class="line">            <span class="keyword">if</span>(sH===<span class="literal">null</span>)&#123;</span><br><span class="line">                sH=head;</span><br><span class="line">                sT=head;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                sT.next=head;</span><br><span class="line">                sT=head;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(head.value===pivot)&#123;</span><br><span class="line">            <span class="keyword">if</span>(eH===<span class="literal">null</span>)&#123;</span><br><span class="line">                eH=head;</span><br><span class="line">                eT=head;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                eT.next=head;</span><br><span class="line">                eT=head;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(mH==<span class="literal">null</span>)&#123;</span><br><span class="line">                mH=head;</span><br><span class="line">                mT=head;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                mT.next=head;</span><br><span class="line">                mT=head;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        head=next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(sT!==<span class="literal">null</span>)&#123;<span class="comment">//如果有小于区域</span></span><br><span class="line">        sT.next=eH;</span><br><span class="line">        eT=eT===<span class="literal">null</span>?sT:eT;<span class="comment">//下一步谁连大于区域的头谁就是eT</span></span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(eT!==<span class="literal">null</span>)&#123;<span class="comment">//小于区域和等于区域不是都没有</span></span><br><span class="line">        eT.next=mH;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sH!==<span class="literal">null</span>?sH:(eH!==<span class="literal">null</span>?eH:mH)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/14/%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/14/%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">桥接模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-05-14 10:58:44 / 修改时间：11:17:04" itemprop="dateCreated datePublished" datetime="2022-05-14T10:58:44+08:00">2022-05-14</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>桥接模式：在系统沿着多个维度变化的同时，又不增加其复杂度并达到解耦</p>
-<p>提取共同点</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//抽象处公共部分</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">changeColor</span>(<span class="params">dom,color,bg</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//设置元素的字体颜色</span></span><br><span class="line">    dom.style.color=color</span><br><span class="line">    <span class="comment">//设置元素的背景颜色</span></span><br><span class="line">    dom.style.background=bg</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> spans=<span class="built_in">document</span>.getElementsByTagName(<span class="string">&#x27;span&#x27;</span>)</span><br><span class="line">spans[<span class="number">0</span>].onmouseover=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="comment">//匿名函数作为回调函数作为桥接方法，解除this和事件之间的耦合，changeColor方法中的dom实质上是事件回调函数中的this</span></span><br><span class="line">    changeColor(<span class="built_in">this</span>,<span class="string">&#x27;red&#x27;</span>,<span class="string">&#x27;#ddd&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line">spans[<span class="number">0</span>].onmouseout=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    changeColor(<span class="built_in">this</span>,<span class="string">&#x27;#333&#x27;</span>,<span class="string">&#x27;#f5f5f5&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>桥接模式最主要特点就是将实现层（如元素绑定的事件）与抽象层（如修饰页面UI逻辑）解耦分离，使两部分可以独立变化，桥接模式主要是针对结构之间的结构，而抽象工厂模式和创建者模式主要业务在于创建。通过桥接模式实现的解耦，使实现层和抽象层分开处理，避免需求的改变造成对象内部的修改。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/14/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/14/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">装饰器模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-05-14 09:57:53 / 修改时间：10:41:58" itemprop="dateCreated datePublished" datetime="2022-05-14T09:57:53+08:00">2022-05-14</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="装饰器模式是在对原有功能的基础上对功能拓展的模式"><a href="#装饰器模式是在对原有功能的基础上对功能拓展的模式" class="headerlink" title="装饰器模式是在对原有功能的基础上对功能拓展的模式"></a>装饰器模式是在对原有功能的基础上对功能拓展的模式</h1><p>为输入框增加新功能</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//装饰者</span></span><br><span class="line"><span class="keyword">var</span> decorator=<span class="function"><span class="keyword">function</span>(<span class="params">input,fn</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//获取事件源</span></span><br><span class="line">    <span class="keyword">var</span> input=<span class="built_in">document</span>.getElementById(input)</span><br><span class="line">    <span class="comment">//若事件源已经绑定事件</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> input.onclick===<span class="string">&#x27;function&#x27;</span>)&#123;</span><br><span class="line">        <span class="comment">//缓存事件原有回调函数</span></span><br><span class="line">        <span class="keyword">var</span> oldClickFn=input.onclick</span><br><span class="line">        input.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="comment">//事件原有回调函数</span></span><br><span class="line">            oldClickFn()</span><br><span class="line">            <span class="comment">//执行事件新增回调函数</span></span><br><span class="line">            fn()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//事件源未绑定事件，直接为事件源添加新增回调函数</span></span><br><span class="line">        input.onclick=fn</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//电话输入框功能装饰</span></span><br><span class="line">decorator(<span class="string">&#x27;tel_input&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">document</span>.getElementById(<span class="string">&#x27;tel_demo_text&#x27;</span>).style.display=<span class="string">&#x27;none&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//姓名输入框功能装饰</span></span><br><span class="line">decorator(<span class="string">&#x27;name_input&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">document</span>.getElementById(<span class="string">&#x27;name_demo_text&#x27;</span>).style.display=<span class="string">&#x27;none&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="适配器模式和装饰器模式的区别："><a href="#适配器模式和装饰器模式的区别：" class="headerlink" title="适配器模式和装饰器模式的区别："></a>适配器模式和装饰器模式的区别：</h1><p>适配器模式是对原有对象的适配，添加的方法与原有方法功能上大致相似，但是装饰器模式提供的方法与原有方法的功能项是由一定区别的，使用适配器模式时我们新增的方法是要调用原来的方法，不过在装饰器模式，不需要了解对象原有功能没并且对象原有方法原封不动的使用</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/12/%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/12/%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">适配器模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-05-12 23:39:04 / 修改时间：23:55:29" itemprop="dateCreated datePublished" datetime="2022-05-12T23:39:04+08:00">2022-05-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>JQuey适配器</p>
-<p>如果A框架和jQuery很像我，直接用适配器适配两种代码库中不兼容的代码，window.A=A=jQuery</p>
-<p>参数适配器</p>
-<p>当传递多个参数，记住参数顺序比较困难，所有我们经常以一个参数对象方式传入，调用它的时候又不知道传递的参数是否完整，如果有一些参数没有传入，一些参数是有默认值的等等，此时用适配器传入这个参数对象</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">doSomething</span>(<span class="params">obj</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> _adapter=&#123;</span><br><span class="line">        <span class="attr">name</span>:<span class="string">&#x27;lala&#x27;</span>,</span><br><span class="line">        <span class="attr">title</span>:<span class="string">&#x27;设计模式&#x27;</span>,</span><br><span class="line">        <span class="attr">age</span>:<span class="number">24</span>,</span><br><span class="line">        <span class="attr">color</span>:<span class="string">&#x27;pink&#x27;</span>,</span><br><span class="line">        <span class="attr">size</span>:<span class="number">100</span>,</span><br><span class="line">        <span class="attr">prize</span>:<span class="number">50</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> _adapter)&#123;</span><br><span class="line">        _adapter[i]=obj[i]||_adapter[i]</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>数据适配</p>
-<p>var arr=[‘JavaScript’,’book’,’前端编程’]</p>
-<p>这种数据结构语义不好，通常会适配成对象形式，比如：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">arrToObjAdapter</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">name</span>:arr[<span class="number">0</span>],</span><br><span class="line">        <span class="attr">type</span>:arr[<span class="number">1</span>],</span><br><span class="line">        <span class="attr">title</span>:arr[<span class="number">2</span>]</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> adapterData=arrToObjAdapter(arr)</span><br><span class="line"><span class="built_in">console</span>.log(adapterData)</span><br></pre></td></tr></table></figure>
-
-<p>服务器端数据适配</p>
-<p>如果后端因为架构改变导致传递的数据结构发生变化，我们只需要写个适配器将传递过来的数据适配成对我们可用的数据再使用</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ajaxAdapter</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//处理数据并返回数据</span></span><br><span class="line">    <span class="keyword">return</span> [data[<span class="string">&#x27;key1&#x27;</span>],data[<span class="string">&#x27;key2&#x27;</span>],data[<span class="string">&#x27;key3&#x27;</span>]]</span><br><span class="line">&#125;</span><br><span class="line">$.ajax(&#123;</span><br><span class="line">    <span class="attr">url</span>:<span class="string">&#x27;someAddress.php&#x27;</span>,</span><br><span class="line">    <span class="attr">success</span>:<span class="function"><span class="keyword">function</span>(<span class="params">data,status</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(data)&#123;</span><br><span class="line">            <span class="comment">//使用适配器后的数据——返回的对象</span></span><br><span class="line">            doSomething(ajaxAdapter(data))</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/12/%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/12/%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">外观模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-05-12 22:26:08" itemprop="dateCreated datePublished" datetime="2022-05-12T22:26:08+08:00">2022-05-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-13 00:23:00" itemprop="dateModified" datetime="2022-05-13T00:23:00+08:00">2022-05-13</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>外观模式：为一组复杂的子系统接口提供一个更高级的统一接口，通过这个接口使得对子系统接口的访问更容易，在javaScript中用于对底层结构兼容性做统一封装来简化用户使用</p>
-<h1 id="兼容性优化："><a href="#兼容性优化：" class="headerlink" title="兼容性优化："></a>兼容性优化：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addEvent</span>(<span class="params">dom,type,fn</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//支持DOM2的事件处理程序addEventListener方法的浏览器</span></span><br><span class="line">    <span class="keyword">if</span>(dom.addEventListener)&#123;</span><br><span class="line">        dom.addEventListener(type,fn,<span class="literal">false</span>);</span><br><span class="line">        <span class="comment">//对于addEventListener方法但支持attachEvent方法的浏览器</span></span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(dom.attachEvent)&#123;</span><br><span class="line">        dom.attachEvent(<span class="string">&#x27;on&#x27;</span>+type,fn)</span><br><span class="line">        <span class="comment">//对于不支持addEventListener方法也不支持attachEvent方法，但支持&#x27;on+事件名&#x27;的浏览器</span></span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        dom[<span class="string">&#x27;on&#x27;</span>+type]=fn</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//获取事件对象</span></span><br><span class="line"><span class="keyword">var</span> getEvent=<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> event||<span class="built_in">window</span>.event</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//获取元素</span></span><br><span class="line"><span class="keyword">var</span> getTarget=<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> event=getEvent(event)</span><br><span class="line">    <span class="comment">//标准浏览器下event.target，IE下event.srcElement</span></span><br><span class="line">    <span class="keyword">return</span> event.target||event.srcElement</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//阻止默认行为</span></span><br><span class="line"><span class="keyword">var</span> preventDefault=<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> event=getEvent(event)</span><br><span class="line">    <span class="comment">//标准浏览器</span></span><br><span class="line">    <span class="keyword">if</span>(event.preventDefault)&#123;</span><br><span class="line">        event.preventDefault()</span><br><span class="line">        <span class="comment">//IE浏览器</span></span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        event.returnValue=<span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">addEvent(myInput,<span class="string">&#x27;click&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">    preventDefault(e)</span><br><span class="line">    <span class="comment">//获取事件源目标对象</span></span><br><span class="line">    <span class="keyword">if</span>(getTarget(e)!==<span class="built_in">document</span>.getElementById(<span class="string">&#x27;myInput&#x27;</span>))&#123;</span><br><span class="line">        hideInputSug()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="对接口方法的外层包装"><a href="#对接口方法的外层包装" class="headerlink" title="对接口方法的外层包装"></a>对接口方法的外层包装</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> A=&#123;</span><br><span class="line">    <span class="comment">//通过id获取元素</span></span><br><span class="line">    <span class="attr">g</span>:<span class="function"><span class="keyword">function</span>(<span class="params">id</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">document</span>.getElementById(id)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">//设置元素css属性</span></span><br><span class="line">    <span class="attr">css</span>:<span class="function"><span class="keyword">function</span>(<span class="params">id,key,value</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">document</span>.getElementById(id).style[key]=value</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">//设置元素的属性</span></span><br><span class="line">    <span class="attr">attr</span>:<span class="function"><span class="keyword">function</span>(<span class="params">id,key,value</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">document</span>.getElementById(id)[key]=value</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">html</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">document</span>.getElementById(id).innerHTML=html</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">//为元素绑定事件</span></span><br><span class="line">    <span class="attr">on</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">document</span>.getElementById(id)[<span class="string">&#x27;on&#x27;</span>+type]=fn</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">A.css(<span class="string">&#x27;box&#x27;</span>,<span class="string">&#x27;background&#x27;</span>,<span class="string">&#x27;red&#x27;</span>)<span class="comment">//设置css样式</span></span><br><span class="line">A.attr(<span class="string">&#x27;box&#x27;</span>,<span class="string">&#x27;className&#x27;</span>,<span class="string">&#x27;box&#x27;</span>)<span class="comment">//设置class</span></span><br><span class="line">A.html(<span class="string">&#x27;box&#x27;</span>,<span class="string">&#x27;这是新添加的内容&#x27;</span>)<span class="comment">//设置内容</span></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/12/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/12/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">单例模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-05-12 21:29:46" itemprop="dateCreated datePublished" datetime="2022-05-12T21:29:46+08:00">2022-05-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-13 00:22:46" itemprop="dateModified" datetime="2022-05-13T00:22:46+08:00">2022-05-13</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="创建代码库"><a href="#创建代码库" class="headerlink" title="创建代码库"></a>创建代码库</h2><p>单例模式是一个只允许实例化一次的对象类，有时这么做是为了节省系统资源，javaScript中单例模式经常会作为命名空间对象来实现，通过单例对象可以将各个模块的代码井井有条的梳理在一起</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> A=&#123;</span><br><span class="line">    <span class="attr">Util</span>:&#123;</span><br><span class="line">        <span class="attr">util_method1</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;,</span><br><span class="line">        <span class="attr">util_method2</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">Tool</span>:&#123;</span><br><span class="line">        <span class="attr">tool_method1</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;,</span><br><span class="line">        <span class="attr">tool_method2</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">Ajax</span>:&#123;</span><br><span class="line">        <span class="attr">get</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;,</span><br><span class="line">        <span class="attr">post</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">others</span>:&#123;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">A.Util.util_method1()</span><br><span class="line">A.Tool.tool_method1()</span><br><span class="line">A.Ajax.get()</span><br></pre></td></tr></table></figure>
-
-<h2 id="单例模式管理静态变量"><a href="#单例模式管理静态变量" class="headerlink" title="单例模式管理静态变量"></a>单例模式管理静态变量</h2><p>静态变量：<strong>只能访问不能修改并且创建后就能使用</strong>，为了实现创建后就能使用这一需求，我们需要让创建的函数执行一次，我们创建的对象内保存着静态变量通过取值器访问，最后将这个对象作为一个单例放在全局空间里作为<strong>静态变量单例对象</strong>供他人使用</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Conf=(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> conf=&#123;</span><br><span class="line">        <span class="attr">MAX_NUM</span>:<span class="number">100</span>,</span><br><span class="line">        <span class="attr">MIN_NUM</span>:<span class="number">1</span>,</span><br><span class="line">        <span class="attr">COUNT</span>:<span class="number">1000</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//返回取值器对象</span></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">get</span>: <span class="function"><span class="keyword">function</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> conf[name]?conf[name]:<span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)()</span><br><span class="line"><span class="keyword">var</span> count=Conf.get(<span class="string">&#x27;COUNT&#x27;</span>)</span><br><span class="line"><span class="built_in">console</span>.log(count)<span class="comment">//1000</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="惰性单例"><a href="#惰性单例" class="headerlink" title="惰性单例"></a>惰性单例</h2><p>对于单例对象延迟创建，称为惰性创建</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> LazySingle=(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//单例实例引用</span></span><br><span class="line">    <span class="keyword">var</span> _instance=<span class="literal">null</span>;</span><br><span class="line">    <span class="comment">//单例</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">Single</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//这里定义私有属性和方法</span></span><br><span class="line">        <span class="keyword">return</span>&#123;</span><br><span class="line">            <span class="attr">publicMethod</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;,</span><br><span class="line">            <span class="attr">publicProperty</span>:<span class="string">&#x27;1.0&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//获取单例对象接口</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!_instance)&#123;</span><br><span class="line">            _instance=Single()</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//返回单例</span></span><br><span class="line">        <span class="keyword">return</span> _instance</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(LazySingle().publicProperty);<span class="comment">//1.0</span></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1019,14 +1170,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">160</span>
+          <span class="site-state-item-count">167</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-count">26</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -1080,7 +1231,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共138.9k字</span>
+  <span class="post-count">博客全站共144k字</span>
 </div>
         
 
