@@ -182,6 +182,348 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/11/http%E8%AF%B7%E6%B1%82%E9%A6%96%E9%83%A8%E5%AD%97%E6%AE%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/11/http%E8%AF%B7%E6%B1%82%E9%A6%96%E9%83%A8%E5%AD%97%E6%AE%B5/" class="post-title-link" itemprop="url">http请求首部字段</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-11 19:53:59" itemprop="dateCreated datePublished" datetime="2022-04-11T19:53:59+08:00">2022-04-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-02 23:05:47" itemprop="dateModified" datetime="2022-05-02T23:05:47+08:00">2022-05-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/" itemprop="url" rel="index"><span itemprop="name">HTTP</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Accept"><a href="#Accept" class="headerlink" title="Accept"></a>Accept</h1><blockquote>
+<p>Accept:text/html,application/xhtml+xml,application/xml;q=0.9,<em>/</em>;q=0.8</p>
+</blockquote>
+<p>Accept首部字段通知服务器，用户代理能够处理的媒体类型及媒体类型的相对优先级。可用type/subtype这种形式，一次指定多种媒体类型。</p>
+<p>文本文件：text/html,text/plain,text/css…</p>
+<p>application/xhtml+xml,application/xml…</p>
+<p>图片文件：image/jpg,image/gif…</p>
+<p>视频文件：video/mpeg,video/quicktime…</p>
+<p>应用程序使用的二进制文件：application/octet-stream,application/zip…</p>
+<p>若想给显示的媒体类型增加优先级，使用q=来额外表示权重值，用分号（；）进行分隔，权重值q范围是0~1,（可精确到小数点后3位，且1为最大值。不指定权重值q时，默认权重为q=1.0</p>
+<p>当服务器提供多种内容时，将首先返回权重值最高的媒体类型。</p>
+<h1 id="Accept-Charset"><a href="#Accept-Charset" class="headerlink" title="Accept-Charset"></a>Accept-Charset</h1><blockquote>
+<p>Accept-Charset:iso-8859-5,unicode-1-1;q=0.8</p>
+</blockquote>
+<p>Accept-Charset首部字段可用来通知服务器用户代理支持的字符集及字符集的相对优先顺序。另外，可一次性指定多种字符集。与各首部字段Accept相同的是可用权重q值来表示相对优先级</p>
+<p>该首部字段用于内容协商机制的服务器驱动协商。</p>
+<h1 id="Accept-Encoding"><a href="#Accept-Encoding" class="headerlink" title="Accept-Encoding"></a>Accept-Encoding</h1><blockquote>
+<p>Accept-Encoding:gzip,deflate</p>
+</blockquote>
+<p>Accept-Encoding 首部字段用来告知服务器用户代理支持的内容编码及内容编码的优先级顺序。可一次性指定多种内容编码。</p>
+<p>gzip:由文件压缩程序gzip（GNU zip)生成的编码格式，采用LZ77及32为循环冗余校验</p>
+<p>compress:由UNIX文件压缩程序compress生成的编码格式，采用的算法LZW</p>
+<p>deflate:组合使用zlib格式及由deflate压缩算法生成的编码格式</p>
+<p>identity:不执行压缩或不会变化的默认编码格式</p>
+<p>采用权值q来表示相对优先级，这点与首部字段Accept相同。可用(*)作为通配符，指定任意编码格式</p>
+<h1 id="Accept-Language"><a href="#Accept-Language" class="headerlink" title="Accept-Language"></a>Accept-Language</h1><p>告知服务器用户代理能够处理的自然语言集，以及自然语言集的相对优先级。可一次指定多种自然语言集</p>
+<p>按权重q表示相对优先级。</p>
+<h1 id="Authorization"><a href="#Authorization" class="headerlink" title="Authorization"></a>Authorization</h1><p>首部字段Authorization用来告知服务器，用户代理的认证信息，通常想要通过服务器认证的用户代理会在接收待返回的401状态码后，把首部字段Authorization加入到请求中。共用缓存在接收到含有Authorization首部字段的请求时的操作处理会略有差异。</p>
+<h1 id="Expect"><a href="#Expect" class="headerlink" title="Expect"></a>Expect</h1><blockquote>
+<p>Expect:100-continue</p>
+</blockquote>
+<p>客户端使用首部字段Expect来告知服务器，期望出现的某种特定行为，因服务器无法理解客户端的期望做出回应而发生错误时，会返回417Expectation Failed</p>
+<p>客户端可以利用该首部字段，写明所期望的扩展。虽然HTTP/1.1规范只定义100-continue(状态码100Continue之意)</p>
+<h1 id="From"><a href="#From" class="headerlink" title="From"></a>From</h1><p>首部字段From用来告知服务器使用用户代理的用户的电子邮件地址。通常使用目的是为了显示搜索引擎用户代理的负责人的电子邮件联系方式。使用代理时，尽可能包含From首部字段</p>
+<h1 id="Host"><a href="#Host" class="headerlink" title="Host"></a>Host</h1><p>首部字段Host会告知服务器，请求的资源所处的互联网主机名和端口号。Host首部字段再HTTP/1.1规范内是唯一一个必须被包含在请求内的首部字段。</p>
+<p>请求被发送到服务器时，请求中的主机名会用IP地址直接替换解决，但如果这时相同的IP地址下部署运行着多个域名，那么服务器就无法理解是哪个域名对应的请求。因此，就要使用首部字段Host来明确指出请求的主机名，若服务器未设定主机名，那直接发送空值。</p>
+<p>Host:</p>
+<h1 id="If-Match"><a href="#If-Match" class="headerlink" title="If-Match"></a>If-Match</h1><p>if-xxx为条件请求，服务器接收到附带条件请求后，只有判断指定条件为真，才执行请求。</p>
+<p>首部字段If-Match，属于附带条件之一，它会告知服务器匹配资源所用的实体标记(ETag)值，这时的服务器无法使用弱ETag值，服务器对比If-Match的字段值与资源的ETag值，仅当两者一致时才执行请求，否则，返回状态码412 Precondition Failed</p>
+<p>还可以使用(*)指定If-Match的字段值，针对这种情况，服务器会忽略ETag的值，只要资源存在就处理请求。</p>
+<h1 id="If-Modified-Since"><a href="#If-Modified-Since" class="headerlink" title="If-Modified-Since"></a>If-Modified-Since</h1><blockquote>
+<p>If-Modified-Since: Thu,15 Apr 2004 00:00:00 GMT</p>
+</blockquote>
+<p>首部字段If-Modified-Since属于附带条件之一，它会告知服务器若If-Modified-Since字段值早于资源的更新时间，则希望能处理该请求，而在If-Modified-Since字段值的日期时间后，如果请求的资源都没有更新，返回状态码304Not Modified的响应</p>
+<p>If-Modified-Since用于确认代理或客户端拥有的本地资源的有效性，获取资源的更新时间可通过确认首部字段Last-Modified确定</p>
+<h1 id="If-None-Match"><a href="#If-None-Match" class="headerlink" title="If-None-Match"></a>If-None-Match</h1><p>与If-Match作用相反，用于指定If-None-Match字段值的实体标记（ETag)值与请求资源得到ETag不一致时会告知服务器处理该请求。</p>
+<p>在GET或HEAD方法中使用首部字段If-None-Match可获取最新的源，因此这与使用首部字段If-Modified-Since有些类似。</p>
+<h1 id="If-Range"><a href="#If-Range" class="headerlink" title="If-Range"></a>If-Range</h1><p>If-Range字段值若是和ETag值或更新的日期时间匹配一致，那么就作为范围请求处理，<strong>若不一致返回全部资源</strong></p>
+<p>如果不使用If-Range,而是使用If-Match,服务器端的资源如果更新了，那客户端持有的资源中的一部分也会随之无效，服务器端就会以<strong>402 Precondition Failed</strong>返回，催促客户端再次发请求，与使用If-Range相比，就要花费两倍的功夫。</p>
+<h1 id="If-Unmodified-Since"><a href="#If-Unmodified-Since" class="headerlink" title="If-Unmodified-Since"></a>If-Unmodified-Since</h1><p>与If-Modified-Since作用相反，它的作用是告知服务器，指定的资源只有在字段值内指定的日期时间之后未发生更新得情况下，才能处理请求，如果在指定日期时间后发生了更新，则以状态码412 Precondition Failed作为响应返回</p>
+<h1 id="Max-Forwards"><a href="#Max-Forwards" class="headerlink" title="Max-Forwards"></a>Max-Forwards</h1><p>通过TRACE方法或OPTIONS方法，发送包含首部字段Max-Forwards的请求时，该字段以十进制整数的形式指定可经过的服务器最大数目。服务器在往下一个服务器转发请求前，Max-Forwards的值减1后重新复制，当服务器收到Max-Forwards值为0的请求时则不再进行转发，而是直接返回响应。</p>
+<p>如果代理服务器由于某些原因导致请求转发失败，客户端也就等不到服务器返回的响应。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/11/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/11/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" class="post-title-link" itemprop="url">开发环境</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-11 14:51:43" itemprop="dateCreated datePublished" datetime="2022-04-11T14:51:43+08:00">2022-04-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-07 21:08:25" itemprop="dateModified" datetime="2022-05-07T21:08:25+08:00">2022-05-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/webpack/" itemprop="url" rel="index"><span itemprop="name">webpack</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="开发环境中使用source-map"><a href="#开发环境中使用source-map" class="headerlink" title="开发环境中使用source map"></a>开发环境中使用source map</h1><p>当 webpack 打包源代码时，可能会很难追踪到 error(错误) 和 warning(警告) 在源代码中的原始位置。例如，如果将三个源文件（<code>a.js</code>, <code>b.js</code> 和 <code>c.js</code>）打包到一个 bundle（<code>bundle.js</code>）中，而其中一个源文件包含一个错误，那么堆栈跟踪就会直接指向到 <code>bundle.js</code>。你可能需要准确地知道错误来自于哪个源文件，所以这种提示这通常不会提供太多帮助。</p>
+<p>为了更容易地追踪 error 和 warning，JavaScript 提供了 <a target="_blank" rel="noopener" href="http://blog.teamtreehouse.com/introduction-source-maps">source maps</a> 功能，可以将编译后的代码映射回原始源代码。如果一个错误来自于 <code>b.js</code>，source map 就会明确的告诉你。</p>
+<p>source map 有许多 <a target="_blank" rel="noopener" href="https://webpack.docschina.org/configuration/devtool">可用选项</a>，请务必仔细阅读它们，以便可以根据需要进行配置。</p>
+<p>对于本指南，我们将使用 <code>inline-source-map</code> 选项，这有助于解释说明示例意图（此配置仅用于示例，不要用于生产环境）：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path=<span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> HtmlWebpackPlugin=<span class="built_in">require</span>(<span class="string">&quot;html-webpack-plugin&quot;</span>)</span><br><span class="line"><span class="built_in">module</span>.exports=&#123;</span><br><span class="line">    <span class="attr">entry</span>:&#123;</span><br><span class="line">       <span class="attr">index</span>: <span class="string">&#x27;./src/index.js&#x27;</span>,</span><br><span class="line">       <span class="attr">print</span>:<span class="string">&#x27;./src/print.js&#x27;</span></span><br><span class="line"></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">output</span>:&#123;</span><br><span class="line">        <span class="attr">filename</span>:<span class="string">&#x27;[name]bundle.js&#x27;</span>,</span><br><span class="line">        <span class="attr">path</span>:path.resolve(__dirname,<span class="string">&#x27;dist&#x27;</span>),</span><br><span class="line">        <span class="attr">clean</span>:<span class="literal">true</span>,</span><br><span class="line">        <span class="attr">publicPath</span>:<span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">module</span>:&#123;</span><br><span class="line">        <span class="attr">rules</span>:[</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">test</span>: <span class="regexp">/\.css$/i</span>,</span><br><span class="line">                use:[<span class="string">&#x27;style-loader&#x27;</span>,<span class="string">&#x27;css-loader&#x27;</span>],</span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">test</span>:<span class="regexp">/\.(png|jpg|jpeg|svg|gif)$/i</span>,</span><br><span class="line">                type:<span class="string">&#x27;asset/resource&#x27;</span></span><br><span class="line"></span><br><span class="line">            &#125;,</span><br><span class="line">            </span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">devtool</span>:<span class="string">&#x27;inline-source-map&#x27;</span>,</span><br><span class="line">    <span class="attr">devServer</span>:&#123;</span><br><span class="line">        <span class="attr">static</span>:<span class="string">&#x27;./dist&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">plugins</span>:[</span><br><span class="line">        <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">            <span class="attr">title</span>:<span class="string">&#x27;Development&#x27;</span>,</span><br><span class="line">        &#125;)</span><br><span class="line"></span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">mode</span>:<span class="string">&#x27;development&#x27;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="选择开发工具"><a href="#选择开发工具" class="headerlink" title="选择开发工具"></a>选择开发工具</h1><p>webpack 提供几种可选方式，帮助你在代码发生变化后自动编译代码：</p>
+<ol>
+<li>webpack’s <a target="_blank" rel="noopener" href="https://webpack.docschina.org/configuration/watch/#watch">Watch Mode</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/webpack/webpack-dev-server">webpack-dev-server</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/webpack/webpack-dev-middleware">webpack-dev-middleware</a></li>
+</ol>
+<p>多数场景中，你可能需要使用 <code>webpack-dev-server</code>，但是不妨探讨一下以上的所有选项。</p>
+<h2 id="使用watch-mode"><a href="#使用watch-mode" class="headerlink" title="使用watch mode"></a>使用watch mode</h2><p>你可以指示 webpack “watch” 依赖图中所有文件的更改。如果其中一个文件被更新，代码将被重新编译，所以你不必再去手动运行整个构建。</p>
+<p>我们添加一个用于启动 webpack watch mode 的 npm scripts：</p>
+<p><strong>package.json</strong></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   &quot;name&quot;: &quot;webpack-demo&quot;,</span><br><span class="line">   &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line">   &quot;description&quot;: &quot;&quot;,</span><br><span class="line">   &quot;private&quot;: true,</span><br><span class="line">   &quot;scripts&quot;: &#123;</span><br><span class="line">     &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,</span><br><span class="line"><span class="addition">+    &quot;watch&quot;: &quot;webpack --watch&quot;,</span></span><br><span class="line">     &quot;build&quot;: &quot;webpack&quot;</span><br><span class="line">   &#125;,</span><br><span class="line">   &quot;keywords&quot;: [],</span><br><span class="line">   &quot;author&quot;: &quot;&quot;,</span><br><span class="line">   &quot;license&quot;: &quot;ISC&quot;,</span><br><span class="line">   &quot;devDependencies&quot;: &#123;</span><br><span class="line">     &quot;html-webpack-plugin&quot;: &quot;^4.5.0&quot;,</span><br><span class="line">     &quot;webpack&quot;: &quot;^5.4.0&quot;,</span><br><span class="line">     &quot;webpack-cli&quot;: &quot;^4.2.0&quot;</span><br><span class="line">   &#125;,</span><br><span class="line">   &quot;dependencies&quot;: &#123;</span><br><span class="line">     &quot;lodash&quot;: &quot;^4.17.20&quot;</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在，你可以在命令行中运行 <code>npm run watch</code>，然后就会看到 webpack 是如何编译代码。</p>
+<p>唯一的缺点是，为了看到修改后的实际效果，<strong>你需要刷新浏览器</strong>。如果能够自动刷新浏览器就更好了，因此接下来我们会尝试通过 <code>webpack-dev-server</code> 实现此功能。</p>
+<h2 id="webpack-dev-server"><a href="#webpack-dev-server" class="headerlink" title="webpack-dev-server"></a>webpack-dev-server</h2><p><code>webpack-dev-server</code> 为你提供了一个基本的 web server，并且具有 live reloading(实时重新加载) 功能。设置如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev webpack-dev-server</span><br></pre></td></tr></table></figure>
+
+<p>修改配置文件，告知 dev server，从什么位置查找文件：</p>
+<p><strong>webpack.config.js</strong></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"> const path = require(&#x27;path&#x27;);</span><br><span class="line"> const HtmlWebpackPlugin = require(&#x27;html-webpack-plugin&#x27;);</span><br><span class="line"></span><br><span class="line"> module.exports = &#123;</span><br><span class="line">   mode: &#x27;development&#x27;,</span><br><span class="line">   entry: &#123;</span><br><span class="line">     index: &#x27;./src/index.js&#x27;,</span><br><span class="line">     print: &#x27;./src/print.js&#x27;,</span><br><span class="line">   &#125;,</span><br><span class="line">   devtool: &#x27;inline-source-map&#x27;,</span><br><span class="line"><span class="addition">+  devServer: &#123;</span></span><br><span class="line"><span class="addition">+    static: &#x27;./dist&#x27;,</span></span><br><span class="line"><span class="addition">+  &#125;,</span></span><br><span class="line">   plugins: [</span><br><span class="line">     new HtmlWebpackPlugin(&#123;</span><br><span class="line">       title: &#x27;Development&#x27;,</span><br><span class="line">     &#125;),</span><br><span class="line">   ],</span><br><span class="line">   output: &#123;</span><br><span class="line">     filename: &#x27;[name].bundle.js&#x27;,</span><br><span class="line">     path: path.resolve(__dirname, &#x27;dist&#x27;),</span><br><span class="line">     clean: true,</span><br><span class="line">   &#125;,</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>以上配置告知 <code>webpack-dev-server</code>，将 <code>dist</code> 目录下的文件 serve 到 <code>localhost:8080</code> 下。（译注：serve，将资源作为 server 的可访问文件）</p>
+<p>我们添加一个可以直接运行 dev server 的 script：</p>
+<p><strong>package.json</strong></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&quot;scripts&quot;: &#123;</span><br><span class="line">     &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,</span><br><span class="line">     &quot;watch&quot;: &quot;webpack --watch&quot;,</span><br><span class="line"><span class="addition">+    &quot;start&quot;: &quot;webpack serve --open&quot;,</span></span><br><span class="line">     &quot;build&quot;: &quot;webpack&quot;</span><br><span class="line">   &#125;,</span><br></pre></td></tr></table></figure>
+
+<p>现在，在命令行中运行 <code>npm start</code>，我们会看到浏览器自动加载页面。如果你更改任何源文件并保存它们，web server 将在编译代码后自动重新加载</p>
+<h2 id="webpack-dev-middleware"><a href="#webpack-dev-middleware" class="headerlink" title="webpack-dev-middleware"></a>webpack-dev-middleware</h2><p><code>webpack-dev-middleware</code> 是一个封装器(wrapper)，它可以把 webpack 处理过的文件发送到一个 server。<code>webpack-dev-server</code> 在内部使用了它，然而它也可以作为一个单独的 package 来使用，以便根据需求进行更多自定义设置。下面是一个 webpack-dev-middleware 配合 express server 的示例。</p>
+<p>首先，安装 <code>express</code> 和 <code>webpack-dev-middleware</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev express webpack-dev-middleware</span><br></pre></td></tr></table></figure>
+
+<p>调整webpack.config,js</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"> const path = require(&#x27;path&#x27;);</span><br><span class="line"> const HtmlWebpackPlugin = require(&#x27;html-webpack-plugin&#x27;);</span><br><span class="line"></span><br><span class="line"> module.exports = &#123;</span><br><span class="line">   mode: &#x27;development&#x27;,</span><br><span class="line">   entry: &#123;</span><br><span class="line">     index: &#x27;./src/index.js&#x27;,</span><br><span class="line">     print: &#x27;./src/print.js&#x27;,</span><br><span class="line">   &#125;,</span><br><span class="line">   devtool: &#x27;inline-source-map&#x27;,</span><br><span class="line">   devServer: &#123;</span><br><span class="line">     static: &#x27;./dist&#x27;,</span><br><span class="line">   &#125;,</span><br><span class="line">   plugins: [</span><br><span class="line">     new HtmlWebpackPlugin(&#123;</span><br><span class="line">       title: &#x27;Development&#x27;,</span><br><span class="line">     &#125;),</span><br><span class="line">   ],</span><br><span class="line">   output: &#123;</span><br><span class="line">     filename: &#x27;[name].bundle.js&#x27;,</span><br><span class="line">     path: path.resolve(__dirname, &#x27;dist&#x27;),</span><br><span class="line">     clean: true,</span><br><span class="line"><span class="addition">+    publicPath: &#x27;/&#x27;,</span></span><br><span class="line">   &#125;,</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>我们将会在 server 脚本使用 <code>publicPath</code>，以确保文件资源能够正确地 serve 在 <code>http://localhost:3000</code> 下，稍后我们会指定 port number(端口号)。接下来是设置自定义 <code>express</code> server：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> webpack-demo</span><br><span class="line">  |- package.json</span><br><span class="line">  |- package-lock.json</span><br><span class="line">  |- webpack.config.js</span><br><span class="line"><span class="addition">+ |- server.js</span></span><br><span class="line">  |- /dist</span><br><span class="line">  |- /src</span><br><span class="line">    |- index.js</span><br><span class="line">    |- print.js</span><br><span class="line">  |- /node_modules</span><br></pre></td></tr></table></figure>
+
+<p><strong>server.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> webpackDevMiddleware = <span class="built_in">require</span>(<span class="string">&#x27;webpack-dev-middleware&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = express();</span><br><span class="line"><span class="keyword">const</span> config = <span class="built_in">require</span>(<span class="string">&#x27;./webpack.config.js&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> compiler = webpack(config);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 告知 express 使用 webpack-dev-middleware，</span></span><br><span class="line"><span class="comment">// 以及将 webpack.config.js 配置文件作为基础配置。</span></span><br><span class="line">app.use(</span><br><span class="line">  webpackDevMiddleware(compiler, &#123;</span><br><span class="line">    <span class="attr">publicPath</span>: config.output.publicPath,</span><br><span class="line">  &#125;)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将文件 serve 到 port 3000。</span></span><br><span class="line">app.listen(<span class="number">3000</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Example app listening on port 3000!\n&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>现在，添加一个 npm script，以使我们更方便地运行 server：</p>
+<p>package.json</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> &quot;scripts&quot;: &#123;</span><br><span class="line">     &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,</span><br><span class="line">     &quot;watch&quot;: &quot;webpack --watch&quot;,</span><br><span class="line">     &quot;start&quot;: &quot;webpack serve --open&quot;,</span><br><span class="line"><span class="addition">+    &quot;server&quot;: &quot;node server.js&quot;,</span></span><br><span class="line">     &quot;build&quot;: &quot;webpack&quot;</span><br><span class="line">   &#125;,</span><br></pre></td></tr></table></figure>
+
+<p>现在，在 terminal(终端) 中执行 <code>npm run server</code></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/11/Vue%E4%B8%AD%E5%B0%81%E8%A3%85axios%E8%AF%B7%E6%B1%82/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/11/Vue%E4%B8%AD%E5%B0%81%E8%A3%85axios%E8%AF%B7%E6%B1%82/" class="post-title-link" itemprop="url">Vue中封装axios请求</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-11 10:01:47 / 修改时间：10:24:02" itemprop="dateCreated datePublished" datetime="2022-04-11T10:01:47+08:00">2022-04-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Node/" itemprop="url" rel="index"><span itemprop="name">Node</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Node/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在src文件夹中新创建一个utils文件夹，创建index.js来实现axios实例，并配置拦截器</p>
+<h2 id="index-js"><a href="#index-js" class="headerlink" title="index.js"></a>index.js</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&#x27;axios&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123;ElLoading,ElMessage&#125; <span class="keyword">from</span> <span class="string">&#x27;element-plus&#x27;</span></span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">&quot;../router&quot;</span></span><br><span class="line"><span class="keyword">import</span> store <span class="keyword">from</span> <span class="string">&quot;../store&quot;</span></span><br><span class="line"><span class="keyword">import</span> CHAT <span class="keyword">from</span> <span class="string">&quot;../client&quot;</span></span><br><span class="line"><span class="comment">//const pendingMap=new Map();</span></span><br><span class="line"><span class="comment">//axios.defaults.headers.post[&#x27;Content-Type&#x27;] = &#x27;application/x-www-form-urlencoded;charset=UTF-8&#x27;;</span></span><br><span class="line"><span class="comment">//创建一个axios实例</span></span><br><span class="line"><span class="keyword">var</span> instance=axios.create(&#123;</span><br><span class="line">    <span class="attr">baseURL</span>:<span class="string">&quot;http://127.0.0.1:3007&quot;</span>,</span><br><span class="line">    <span class="attr">timeout</span>: <span class="number">10000</span>,<span class="comment">//设置超时</span></span><br><span class="line">    <span class="attr">headers</span>:&#123;</span><br><span class="line">        <span class="string">&#x27;Content-Type&#x27;</span>:<span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span>,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">let</span> loading;</span><br><span class="line"><span class="comment">//多次请求时</span></span><br><span class="line"><span class="keyword">let</span> requestCount=<span class="number">0</span>;</span><br><span class="line"><span class="comment">//显示Loading</span></span><br><span class="line"><span class="keyword">const</span> showLoading=<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(requestCount===<span class="number">0</span>&amp;&amp;!loading)&#123;<span class="comment">//第一次发送请求并且没有loading加载loaing</span></span><br><span class="line">        loading=ElLoading.service(&#123;</span><br><span class="line">            <span class="attr">text</span>:<span class="string">&#x27;Loading&#x27;</span>,</span><br><span class="line">            <span class="attr">background</span>:<span class="string">&#x27;rgba(0,0,0,0.7)&#x27;</span>,</span><br><span class="line">            <span class="attr">spinner</span>:<span class="string">&#x27;el-icon-loading&#x27;</span>,</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    requestCount++;<span class="comment">//多次请求</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//隐藏loading</span></span><br><span class="line"><span class="keyword">const</span> hideLoading=<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    requestCount--;</span><br><span class="line">    <span class="keyword">if</span>(requestCount===<span class="number">0</span>)&#123;</span><br><span class="line">        loading.close()<span class="comment">//直到请求都结束Loading才关闭</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//请求拦截器</span></span><br><span class="line">instance.interceptors.request.use(<span class="function">(<span class="params">config</span>)=&gt;</span>&#123;</span><br><span class="line">    showLoading()</span><br><span class="line">    <span class="comment">//每次发送请求前判断是否存在token如果存在则在header加上token</span></span><br><span class="line">    <span class="keyword">const</span> token=<span class="built_in">window</span>.localStorage.getItem(<span class="string">&#x27;token&#x27;</span>);</span><br><span class="line">    token&amp;&amp;(config.headers.Authorization=token)</span><br><span class="line">    <span class="keyword">return</span> config;</span><br><span class="line">&#125;,<span class="function">(<span class="params">error</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">Promise</span>.reject(error);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">//响应拦截器</span></span><br><span class="line">instance.interceptors.response.use(<span class="function">(<span class="params">response</span>)=&gt;</span>&#123;</span><br><span class="line">    hideLoading()</span><br><span class="line">    <span class="comment">//响应成功</span></span><br><span class="line">   <span class="comment">// console.log(&#x27;拦截器报错&#x27;)</span></span><br><span class="line">   <span class="comment">// console.log(response)</span></span><br><span class="line">    <span class="keyword">const</span> status=response.data.status;</span><br><span class="line">    <span class="keyword">if</span>(status!=<span class="number">1</span>)&#123;</span><br><span class="line">        <span class="keyword">switch</span>(status)&#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>: <span class="comment">//响应成功后如果是登录成功有token把token存储在本地</span></span><br><span class="line">                <span class="keyword">if</span>(response.data.token!=<span class="literal">undefined</span>)<span class="built_in">window</span>.localStorage.setItem(<span class="string">&#x27;token&#x27;</span>,response.data.token);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">200</span>:<span class="comment">//获取用户信息成功后存储在localStorage里和store</span></span><br><span class="line">                <span class="built_in">console</span>.log(response.data);</span><br><span class="line">                store.commit(<span class="string">&quot;saveUserInfo&quot;</span>,(response.data).data);</span><br><span class="line">                <span class="built_in">window</span>.localStorage.setItem(<span class="string">&#x27;userInfo&#x27;</span>,<span class="built_in">JSON</span>.stringify((response.data).data));</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">401</span>:<span class="comment">//登录过期跳转到登录页面</span></span><br><span class="line">            <span class="keyword">case</span> <span class="number">201</span>:<span class="comment">//退出登录清空token跳转登录页面                </span></span><br><span class="line">                <span class="built_in">window</span>.localStorage.removeItem(<span class="string">&#x27;token&#x27;</span>);</span><br><span class="line">                <span class="built_in">window</span>.localStorage.removeItem(<span class="string">&#x27;userInfo&#x27;</span>)</span><br><span class="line">                CHAT.logout();</span><br><span class="line">                router.push(<span class="string">&quot;/login&quot;</span>);  </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(response.data.message)ElMessage.success(response.data.message)           </span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Promise</span>.resolve(response); </span><br><span class="line">    &#125;</span><br><span class="line">     <span class="keyword">else</span> &#123;       </span><br><span class="line">        ElMessage.error(response.data.message);            </span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(response);        </span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">&#125;,<span class="function">(<span class="params">error</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(error);</span><br><span class="line">    <span class="comment">//响应错误</span></span><br><span class="line">    <span class="keyword">if</span>(error.response&amp;&amp;error.response.status)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(error)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(error);</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> instance;</span><br></pre></td></tr></table></figure>
+
+<h2 id="request-js"><a href="#request-js" class="headerlink" title="request.js"></a>request.js</h2><p>request.js中使用axios实例</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> instance <span class="keyword">from</span> <span class="string">&quot;./index&quot;</span></span><br><span class="line"><span class="keyword">const</span> axios=<span class="function">(<span class="params">&#123;</span></span></span><br><span class="line"><span class="params"><span class="function">    method,</span></span></span><br><span class="line"><span class="params"><span class="function">    url,</span></span></span><br><span class="line"><span class="params"><span class="function">    data,</span></span></span><br><span class="line"><span class="params"><span class="function">    config</span></span></span><br><span class="line"><span class="params"><span class="function">&#125;</span>)=&gt;</span>&#123;</span><br><span class="line">    method=method.toLowerCase();</span><br><span class="line">    <span class="keyword">if</span>(method==<span class="string">&#x27;post&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> instance.post(url,data,&#123;...config&#125;)</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(method==<span class="string">&#x27;get&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> instance.get(url,&#123;</span><br><span class="line">            <span class="attr">params</span>:data,</span><br><span class="line">            ...config</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(method==<span class="string">&#x27;delete&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> instance.delete(url,&#123;</span><br><span class="line">            <span class="attr">params</span>:data,</span><br><span class="line">            ...config</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(method==<span class="string">&#x27;put&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> instance.put(url,data,&#123;...config&#125;)</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;未知的方法&#x27;</span>+method)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> axios</span><br></pre></td></tr></table></figure>
+
+<h2 id="api-js"><a href="#api-js" class="headerlink" title="api.js"></a>api.js</h2><p>api.js用来封装各种类型的请求</p>
+<p>默认情况下，axios 将 JavaScript 对象序列化为<code>JSON</code>. 要改为以格式发送数据<code>application/x-www-form-urlencoded</code>，我用的是qs.stringfy将数据转换，其他方法可以参考官网</p>
+<p>[]: <a target="_blank" rel="noopener" href="https://axios-http.com/docs/urlencoded">https://axios-http.com/docs/urlencoded</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&quot;./request&quot;</span></span><br><span class="line"><span class="keyword">import</span> qs <span class="keyword">from</span> <span class="string">&quot;qs&quot;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> login=<span class="function">(<span class="params">data</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> axios(&#123;</span><br><span class="line">        <span class="attr">url</span>:<span class="string">&#x27;/api/login&#x27;</span>,</span><br><span class="line">        <span class="attr">method</span>:<span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">        <span class="attr">data</span>:qs.stringify(data),</span><br><span class="line">         </span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> register=<span class="function">(<span class="params">data</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> axios(&#123;</span><br><span class="line">        <span class="attr">url</span>:<span class="string">&#x27;/api/register&#x27;</span>,</span><br><span class="line">        <span class="attr">method</span>:<span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">        <span class="attr">data</span>:qs.stringify(data)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> logout=<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> axios(&#123;</span><br><span class="line">        <span class="attr">url</span>:<span class="string">&#x27;/api/logout&#x27;</span>,</span><br><span class="line">        <span class="attr">method</span>:<span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> getUserInfo=<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> axios(&#123;</span><br><span class="line">        <span class="attr">url</span>:<span class="string">&#x27;/my/getUserInfo&#x27;</span>,</span><br><span class="line">        <span class="attr">method</span>:<span class="string">&#x27;get&#x27;</span>,</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> updatePassword=<span class="function">(<span class="params">data</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> axios(&#123;</span><br><span class="line">        <span class="attr">url</span>:<span class="string">&#x27;/my/updatePassword&#x27;</span>,</span><br><span class="line">        <span class="attr">method</span>:<span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">        <span class="attr">data</span>:qs.stringify(data)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/10/%E6%89%93%E5%8C%85%E8%B5%84%E6%BA%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1260,242 +1602,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/03/21/axios%E5%8F%91%E9%80%81%E8%AF%B7%E6%B1%82%E6%97%B6%E5%90%8E%E5%8F%B0%E6%8E%A5%E6%94%B6%E7%9A%84req-body%E4%B8%BA%E7%A9%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/21/axios%E5%8F%91%E9%80%81%E8%AF%B7%E6%B1%82%E6%97%B6%E5%90%8E%E5%8F%B0%E6%8E%A5%E6%94%B6%E7%9A%84req-body%E4%B8%BA%E7%A9%BA/" class="post-title-link" itemprop="url">axios发送请求时后台接收的req.body为空</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-03-21 09:47:50 / 修改时间：11:12:20" itemprop="dateCreated datePublished" datetime="2022-03-21T09:47:50+08:00">2022-03-21</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Node/" itemprop="url" rel="index"><span itemprop="name">Node</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>首先，先了解一下关于http协议里定义的四种常见数据的post方法，分别是：<br>application/www-form-ulrencoded<br>multipart/form-data<br>application/json<br>text/xml</p>
-<p>Express依赖bodyParser对请求的包体进行解析。默认支持application/json,application/www-form-urlencoded,multipart/form-data.单数对xml没有支持。需要自己代码来实现</p>
-<p>用axios post请求提交数据的时候需要清楚发送请求的类型是哪种，后台用相应的方法解析</p>
-<p>1 使用FormData提交表单数据</p>
-<p>坑一：使用FormData时一定要在先绑定submit事件，在submit事件触发时发送axios post请求,否则获取不到formData里面的值</p>
-<p>坑二:axios请求里面如果直接使用data:formData，浏览器会自动帮我们加上 <code>Content-Type: multipart/form-data</code> ，因此请求要这样设置：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> form = <span class="built_in">document</span>.getElementById(<span class="string">&quot;myForm&quot;</span>);</span><br><span class="line">       <span class="comment">// 用表单来初始化</span></span><br><span class="line">       <span class="keyword">var</span> formData = <span class="keyword">new</span> FormData(form);</span><br><span class="line">       <span class="comment">// 我们可以根据name来访问表单中的字段</span></span><br><span class="line">       <span class="keyword">var</span> username = formData.get(<span class="string">&quot;username&quot;</span>); <span class="comment">// 获取名字</span></span><br><span class="line">       <span class="keyword">var</span> password = formData.get(<span class="string">&quot;password&quot;</span>); <span class="comment">// 获取密码</span></span><br><span class="line">       axios(&#123;</span><br><span class="line">           <span class="attr">method</span>:<span class="string">&quot;post&quot;</span>,</span><br><span class="line">           <span class="attr">url</span>:<span class="string">&#x27;http://127.0.0.1/api/login&#x27;</span>,</span><br><span class="line">           <span class="attr">data</span>:&#123;</span><br><span class="line">               <span class="attr">username</span>:username,</span><br><span class="line">               <span class="attr">password</span>:password</span><br><span class="line">           &#125;</span><br><span class="line">            </span><br><span class="line">       &#125;)</span><br></pre></td></tr></table></figure>
-
-<p>这样默认Content-type：application/json,</p>
-<p>如果表单属性过多，可以先用一个对象接收：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> form = <span class="built_in">document</span>.getElementById(<span class="string">&quot;myForm&quot;</span>);</span><br><span class="line">        <span class="comment">// 用表单来初始化</span></span><br><span class="line">        <span class="keyword">var</span> formData = <span class="keyword">new</span> FormData(form);</span><br><span class="line">        <span class="comment">// 我们可以根据name来访问表单中的字段</span></span><br><span class="line">        <span class="keyword">let</span> myFormData=&#123;&#125;;</span><br><span class="line">        <span class="comment">//如果表单属性过多可以先遍历</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">let</span> pair <span class="keyword">of</span> formData.entries())&#123;</span><br><span class="line">            myFormData[pair[<span class="number">0</span>]]=pair[<span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        axios(&#123;</span><br><span class="line">            <span class="attr">method</span>:<span class="string">&quot;post&quot;</span>,</span><br><span class="line">            <span class="attr">url</span>:<span class="string">&#x27;http://127.0.0.1/api/login&#x27;</span>,</span><br><span class="line">            <span class="attr">data</span>:myFormData</span><br><span class="line">             </span><br><span class="line">        &#125;)</span><br></pre></td></tr></table></figure>
-
-<p>后台接收使用中间件body-parser解析表单体数据</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> session=<span class="built_in">require</span>(<span class="string">&#x27;express-session&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> cors=<span class="built_in">require</span>(<span class="string">&#x27;cors&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> bodyParser=<span class="built_in">require</span>(<span class="string">&#x27;body-parser&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> app=express();</span><br><span class="line">app.use(cors());</span><br><span class="line">app.use(</span><br><span class="line">    session(&#123;</span><br><span class="line">        <span class="attr">secret</span>:<span class="string">&#x27;xiaoqi&#x27;</span>,</span><br><span class="line">        <span class="attr">resave</span>:<span class="literal">false</span>,</span><br><span class="line">        <span class="attr">saveUninitialized</span>:<span class="literal">true</span></span><br><span class="line">    &#125;)</span><br><span class="line">)</span><br><span class="line"><span class="comment">//托管静态页面</span></span><br><span class="line">app.use(express.static(<span class="string">&#x27;./pages&#x27;</span>));</span><br><span class="line"><span class="comment">//自定义解析Post提交过来的表单数据</span></span><br><span class="line">app.use(bodyParser.urlencoded(&#123;<span class="attr">extended</span>:<span class="literal">false</span>&#125;))</span><br><span class="line">app.use(bodyParser.json())</span><br><span class="line"><span class="comment">//登录API接口</span></span><br><span class="line">app.post(<span class="string">&#x27;/api/login&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//判断用户提交的登录信息是否正确</span></span><br><span class="line">    <span class="comment">//console.log(req.body)</span></span><br><span class="line">    <span class="keyword">if</span>(req.body.username!==<span class="string">&quot;admin&quot;</span>||req.body.password!==<span class="string">&quot;888888&quot;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> res.send(&#123;<span class="attr">status</span>:<span class="number">1</span>,<span class="attr">msg</span>:<span class="string">&#x27;登录失败&#x27;</span>&#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//登录成功则把信息存储在Session中</span></span><br><span class="line">    <span class="built_in">console</span>.log(req.body);</span><br><span class="line">    req.session.user=req.body;<span class="comment">//用户登录信息</span></span><br><span class="line">    req.session.islogin=<span class="literal">true</span>;<span class="comment">//用户登录状态</span></span><br><span class="line">    res.send(&#123;<span class="attr">status</span>:<span class="number">0</span>,<span class="attr">msg</span>:<span class="string">&#x27;登录成功&#x27;</span>&#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//获取用户姓名的接口</span></span><br><span class="line">app.get(<span class="string">&#x27;/api/username&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//从Session中获取用户姓名响应给客户端</span></span><br><span class="line">    <span class="keyword">if</span>(!req.session.islogin)&#123;</span><br><span class="line">        <span class="keyword">return</span> res.send(&#123;<span class="attr">status</span>:<span class="number">1</span>,<span class="attr">msg</span>:<span class="string">&#x27;fail&#x27;</span>&#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    res.send(&#123;</span><br><span class="line">        <span class="attr">status</span>:<span class="number">0</span>,</span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;success&#x27;</span>,</span><br><span class="line">        <span class="attr">username</span>:req.session.user.username,</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//退出登录的接口</span></span><br><span class="line">app.post(<span class="string">&#x27;/api/logout&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//清空当前客户端的session信息</span></span><br><span class="line">    req.session.destroy()</span><br><span class="line">    res.send(&#123;</span><br><span class="line">        <span class="attr">status</span>:<span class="number">0</span>,</span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;退出登录成功&#x27;</span></span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">80</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;运行在http://127.0.0.1&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/03/20/node%E8%BF%9E%E6%8E%A5MySql%E6%8A%A5%E9%94%99ER-NOT-SUPPORTED-AUTH-MODE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/20/node%E8%BF%9E%E6%8E%A5MySql%E6%8A%A5%E9%94%99ER-NOT-SUPPORTED-AUTH-MODE/" class="post-title-link" itemprop="url">node连接MySql报错ER_NOT_SUPPORTED_AUTH_MODE</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-03-20 13:28:16 / 修改时间：13:33:56" itemprop="dateCreated datePublished" datetime="2022-03-20T13:28:16+08:00">2022-03-20</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Node/" itemprop="url" rel="index"><span itemprop="name">Node</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="报错信息"><a href="#报错信息" class="headerlink" title="报错信息"></a>报错信息</h1><p>本人系统安装的是mysql-installer-community-8.0.18.0.msi这个版本，然后我本地使用node-mysql去连接数据库。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> mysql=<span class="built_in">require</span>(<span class="string">&#x27;mysql&#x27;</span>)</span><br><span class="line"><span class="comment">//建立MYSQL与数据库的联系</span></span><br><span class="line"><span class="keyword">const</span> db=mysql.createPool(&#123;</span><br><span class="line">    <span class="attr">host</span>:<span class="string">&#x27;127.0.0.1&#x27;</span>,<span class="comment">//数据库的ip地址</span></span><br><span class="line">    <span class="attr">user</span>:<span class="string">&#x27;root&#x27;</span>,</span><br><span class="line">    <span class="attr">password</span>:<span class="string">&#x27;123456&#x27;</span>,</span><br><span class="line">    <span class="attr">database</span>:<span class="string">&#x27;my_db_01&#x27;</span>,<span class="comment">//指定要操作哪个数据库</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//测试mysql能否正常工作</span></span><br><span class="line">db.query(<span class="string">&#x27;select 1&#x27;</span>,<span class="function">(<span class="params">err,result</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//mysql工作期间报错</span></span><br><span class="line">    <span class="keyword">if</span>(err)<span class="keyword">return</span> <span class="built_in">console</span>.log(err.message)</span><br><span class="line">    <span class="comment">//能成功执行SQL语句</span></span><br><span class="line">    <span class="built_in">console</span>.log(result);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>运行db.js</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PS D:\Vue-chat\Server&gt; node db.js</span><br><span class="line">ER_NOT_SUPPORTED_AUTH_MODE: Client does not support authentication protocol requested by server; consider upgrading MySQL client</span><br></pre></td></tr></table></figure>
-
-<h1 id="报错原因"><a href="#报错原因" class="headerlink" title="报错原因"></a>报错原因</h1><p>mysql8.0以上加密方式，Node还不支持。</p>
-<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>第一步谷歌<br>查到了 <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-authentication-protocol-requested-by-server">https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-authentication-protocol-requested-by-server</a><br>这个答案，和我报错的步骤基本一样，按照这个进行操作，登录MySql Command Line Client使用这个</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; alter user &#x27;root&#x27;@&#x27;localhost&#x27; identified with mysql_native_password by &#x27;123456&#x27;;</span><br><span class="line">Query OK, 0 rows affected (0.27 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">Query OK, 0 rows affected (0.08 sec)</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/03/18/git%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/18/git%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91/" class="post-title-link" itemprop="url">git遇到的坑</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-03-18 21:44:59 / 修改时间：21:45:30" itemprop="dateCreated datePublished" datetime="2022-03-18T21:44:59+08:00">2022-03-18</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/git/" itemprop="url" rel="index"><span itemprop="name">git</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>解决用git push origin master时出现的问题<br>不知道小伙伴们在使用git push origin master时有没有遇到下面的问题，今天我遇到了，原因一般是相同的，下面详细分析一下</p>
-<p>报错内容：<br>To github.com:<em><strong>/</strong></em><br>! [rejected] master -&gt; master (non-fast-forward)<br>error: failed to push some refs to ‘<a href="mailto:&#103;&#x69;&#116;&#64;&#x67;&#105;&#116;&#104;&#x75;&#x62;&#46;&#99;&#111;&#x6d;">&#103;&#x69;&#116;&#64;&#x67;&#105;&#116;&#104;&#x75;&#x62;&#46;&#99;&#111;&#x6d;</a>:***/***’<br>hint: Updates were rejected because the tip of your current branch is behind<br>hint: its remote counterpart. Integrate the remote changes (e.g.<br>hint: ‘git pull …’) before pushing again.<br>hint: See the ‘Note about fast-forwards’ in ‘git push –help’ for details.</p>
-<p>大致翻译为：<br>错误：无法将一些引用推送到’<a href="mailto:&#x67;&#105;&#116;&#64;&#x67;&#105;&#116;&#104;&#117;&#98;&#46;&#x63;&#x6f;&#x6d;">&#x67;&#105;&#116;&#64;&#x67;&#105;&#116;&#104;&#117;&#98;&#46;&#x63;&#x6f;&#x6d;</a>：****** / Demo.git’<br>提示：由于当前分支的尖端位于其远程对应的后面，因此更新被拒绝。 合并远程更改（例如’git pull’），然后再次推送。 有关详细信息，请参见“ git push –help”中的“关于fast-forwards的注意事项”。</p>
-<p>这个报错的原因是因为远程repository和本地的repository有冲突，下面有3种解决办法：</p>
-<p>按上面报错内容中所给的提示先用git pull之后再用git push<br>$ git pull origin master<br>$ git push origin master</p>
-<p>使用强制push的方法，但是这会使远程修改丢失，一般是不可取的，尤其是多人协作开发的时候<br>$ git push origin master -f</p>
-<p>如果不想merge远程和本地修改，可以先创建新的分支，然后再push<br>$ git branch [name]<br>$ git push origin [name]</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1567,7 +1673,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">167</span>
+          <span class="site-state-item-count">170</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1628,7 +1734,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共144k字</span>
+  <span class="post-count">博客全站共146.9k字</span>
 </div>
         
 
