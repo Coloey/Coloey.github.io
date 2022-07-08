@@ -182,6 +182,141 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/08/%E6%90%AD%E5%BB%BATypeScript-webpack5%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/07/08/%E6%90%AD%E5%BB%BATypeScript-webpack5%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" class="post-title-link" itemprop="url">搭建TypeScript+webpack5开发环境</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-07-08 21:13:05 / 修改时间：21:56:17" itemprop="dateCreated datePublished" datetime="2022-07-08T21:13:05+08:00">2022-07-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="初始化package-json"><a href="#初始化package-json" class="headerlink" title="初始化package.json"></a>初始化package.json</h1><p>初始化package.json有两种方式，一种是通过npm管理，一种是通过yarn管理。</p>
+<p>npm命令：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm init</span><br></pre></td></tr></table></figure>
+
+<p>yarn命令：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn init</span><br></pre></td></tr></table></figure>
+
+<p>直接用默认配置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn init -y</span><br></pre></td></tr></table></figure>
+
+<p>package.json中dependencies,devDependencies,peerDependencies,scripts这几个字段的意思。</p>
+<blockquote>
+<p>dependencies:生产环境，项目运行的依赖（如ract,ract-dom</p>
+<p>devDependencies开发环境，项目所需的依赖(webpack插件，打包插件叶索插件，eslint等)</p>
+<p>peerDependencies 包不会自动安装，会提示你项目运行，需要主动安装该依赖</p>
+<p>scripts命令脚本</p>
+</blockquote>
+<h1 id="引入TypeScript"><a href="#引入TypeScript" class="headerlink" title="引入TypeScript"></a>引入TypeScript</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -D typescript</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add typescript -D</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="用tsc命令初始化生产tsconfig-json文件"><a href="#用tsc命令初始化生产tsconfig-json文件" class="headerlink" title="用tsc命令初始化生产tsconfig.json文件"></a>用tsc命令初始化生产tsconfig.json文件</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tsc --init</span><br></pre></td></tr></table></figure>
+
+<p>tssconfig.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;compilerOptions&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;rootDir&quot;</span>: <span class="string">&quot;./src&quot;</span>,<span class="comment">//源码目录</span></span><br><span class="line">        <span class="string">&quot;target&quot;</span>: <span class="string">&quot;es5&quot;</span>, <span class="comment">// 指定输出 ECMAScript 目标版本</span></span><br><span class="line">        <span class="string">&quot;module&quot;</span>: <span class="string">&quot;ESNext&quot;</span>, <span class="comment">//面向未来的ESM模块化</span></span><br><span class="line">        <span class="string">&quot;strict&quot;</span>: <span class="literal">true</span>, <span class="comment">// 开启所有的严格检查配置</span></span><br><span class="line">        <span class="string">&quot;esModuleInterop&quot;</span>: <span class="literal">true</span>, <span class="comment">// 允许 export = xxx 导出 ，并使用 import xxx form &quot;module-name&quot; 导入</span></span><br><span class="line">        <span class="string">&quot;outDir&quot;</span>: <span class="string">&quot;dist&quot;</span>,</span><br><span class="line">        <span class="comment">/* 指定要包含在编译中的库文件——引用类库——即申明文件，如果输出的模块方式是 es5，就会默认引入 &quot;dom&quot;,&quot;es5&quot;,&quot;scripthost&quot; 。如果在 TS 中想要使用一些 ES6 以上版本的语法，就需要引入相关的类库 */</span></span><br><span class="line">        <span class="string">&quot;lib&quot;</span>: [</span><br><span class="line">            <span class="string">&quot;webworker&quot;</span>,</span><br><span class="line">            <span class="string">&quot;dom&quot;</span>,</span><br><span class="line">            <span class="string">&quot;es5&quot;</span>,</span><br><span class="line">            <span class="string">&quot;es2015&quot;</span>,</span><br><span class="line">            <span class="string">&quot;es2016&quot;</span>,</span><br><span class="line">            <span class="string">&quot;es2015.promise&quot;</span>,</span><br><span class="line">            <span class="string">&quot;dom.iterable&quot;</span>,</span><br><span class="line">            <span class="string">&quot;scripthost&quot;</span>,</span><br><span class="line">            <span class="string">&quot;esnext&quot;</span>,</span><br><span class="line">        ], <span class="comment">// 要包含在编译中的依赖库文件列表</span></span><br><span class="line">        <span class="string">&quot;allowJs&quot;</span>: <span class="literal">true</span>, <span class="comment">// 允许编译 JavaScript 文件</span></span><br><span class="line">        <span class="comment">// 检查 JS 文件</span></span><br><span class="line">        <span class="string">&quot;checkJs&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;skipLibCheck&quot;</span>: <span class="literal">true</span>, <span class="comment">// 跳过所有声明文件的类型检查</span></span><br><span class="line">        <span class="string">&quot;allowSyntheticDefaultImports&quot;</span>: <span class="literal">true</span>, <span class="comment">// 允许从没有默认导出的模块进行默认导入</span></span><br><span class="line">        <span class="string">&quot;resolveJsonModule&quot;</span>: <span class="literal">true</span>, <span class="comment">// 允许使用 .json 扩展名导入的模块</span></span><br><span class="line">        <span class="comment">/* react 模式下：直接将 JSX 编译成 JS，会生成 React.createElement 的形式，在使用前不需要再进行转换操作了，输出文件的扩展名为 .js */</span></span><br><span class="line">        <span class="comment">/* preserve 模式下：不会将 JSX 编译成 JS，生成代码中会保留 JSX，以供后续的转换操作使用（比如：Babel）。 另外，输出文件会带有 .jsx 扩展名 */</span></span><br><span class="line">        <span class="comment">/* react-native 模式下：相当于 preserve，它也保留了所有的 JSX，但是输出文件的扩展名是 .js */</span></span><br><span class="line">        <span class="string">&quot;jsx&quot;</span>: <span class="string">&quot;react&quot;</span>, <span class="comment">// 在.tsx文件中支持JSX</span></span><br><span class="line">        <span class="string">&quot;sourceMap&quot;</span>: <span class="literal">true</span>, <span class="comment">// 生成相应的.map文件</span></span><br><span class="line">        <span class="string">&quot;declaration&quot;</span>: <span class="literal">true</span>, <span class="comment">// 生成相应的.d.ts文件</span></span><br><span class="line">        <span class="string">&quot;allowUmdGlobalAccess&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;experimentalDecorators&quot;</span>: <span class="literal">true</span>, <span class="comment">// 启用对ES装饰器的实验性支持</span></span><br><span class="line">        <span class="string">&quot;moduleResolution&quot;</span>: <span class="string">&quot;node&quot;</span>, <span class="comment">// 将模块解析模式设置为node.js解析模式</span></span><br><span class="line">        <span class="string">&quot;baseUrl&quot;</span>: <span class="string">&quot;./&quot;</span>,</span><br><span class="line">        <span class="string">&quot;incremental&quot;</span>: <span class="literal">true</span>, <span class="comment">// 通过从以前的编译中读取/写入信息到磁盘上的文件来启用增量编译</span></span><br><span class="line">        <span class="string">&quot;forceConsistentCasingInFileNames&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="comment">/* 当目标是ES5或ES3的时候提供对for-of、扩展运算符和解构赋值中对于迭代器的完整支持 */</span></span><br><span class="line">        <span class="string">&quot;downlevelIteration&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;noUnusedLocals&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;noUnusedParameters&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;noImplicitReturns&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;noFallthroughCasesInSwitch&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="comment">// 不允许使用隐式的 any 类型</span></span><br><span class="line">        <span class="string">&quot;noImplicitAny&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="comment">// 不允许 this 有隐式的 any 类型，即 this 必须有明确的指向</span></span><br><span class="line">        <span class="string">&quot;noImplicitThis&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="comment">// 不允许把 null、undefined 赋值给其他类型变量</span></span><br><span class="line">        <span class="string">&quot;strictNullChecks&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;paths&quot;</span>: &#123;</span><br><span class="line">            <span class="comment">//别名</span></span><br><span class="line">            <span class="string">&quot;@/*&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;src/*&quot;</span></span><br><span class="line">            ],</span><br><span class="line">            <span class="string">&quot;@images/*&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;src/assets/images/*&quot;</span></span><br><span class="line">            ],</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&quot;include&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;src&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&quot;exclude&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;node_modules&quot;</span>,</span><br><span class="line">        <span class="string">&quot;dist&quot;</span></span><br><span class="line">    ] <span class="comment">// *** 不进行类型检查的文件 ***</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">作者：qyjandroid</span><br><span class="line">链接：https:<span class="comment">//juejin.cn/post/7020972849649156110</span></span><br><span class="line">来源：稀土掘金</span><br><span class="line">著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="引入webpack"><a href="#引入webpack" class="headerlink" title="引入webpack"></a>引入webpack</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i webpack webpack-cli webpack-dev-server --save-dev</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="构建tsx"><a href="#构建tsx" class="headerlink" title="构建tsx"></a>构建tsx</h2><p>关于TS转JS，有三种方案</p>
+<ol>
+<li>tsc 缺点，转换为es5后，一些语法特性不能转换</li>
+<li>ts-loader</li>
+<li>babel-loader+@babel/preset-typescript 插件丰富，后序兼容扩展性强</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i @babel/core @babel/preset-env babel-loader core-js</span><br></pre></td></tr></table></figure>
+
+<p> [babel中文网](<a href="https://link.juejin.cn/?target=https://www.babeljs.cn/docs/usage">https://link.juejin.cn/?target=https%3A%2F%2Fwww.babeljs.cn%2Fdocs%2Fusage</a></p>
+<p>安装必要的webapck插件和Loader</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -D html-webpack-plugin less-loader css-loader style-loader postcss postcss-loader</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="配置webpack-config-js"><a href="#配置webpack-config-js" class="headerlink" title="配置webpack.config.js"></a>配置webpack.config.js</h2><p>解释：path.resolve()方法用于将相对路径转为绝对路径</p>
+<p>它接收多个参数，依次表示所要进入的路径，直到将最后一个参数转为绝对路径，如果根据参数无法得到绝对路径，就以当前所在路径作为基准，除了根目录，该方法的返回值不带尾部斜杠</p>
+<p>例如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 格式</span></span><br><span class="line">path.resolve([<span class="keyword">from</span> ...], to)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实例</span></span><br><span class="line">path.resolve(<span class="string">&#x27;foo/bar&#x27;</span>, <span class="string">&#x27;/tmp/file/&#x27;</span>, <span class="string">&#x27;..&#x27;</span>, <span class="string">&#x27;a/../subfile&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>执行效果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ cd foo/bar</span><br><span class="line">$ cd /tmp/file/</span><br><span class="line">$ cd ..</span><br><span class="line">$ cd a/../subfile</span><br><span class="line">$ pwd</span><br></pre></td></tr></table></figure>
+
+<p>node.js中的文件路径大概有____dirname,___filename,precess.cwd,./或者../</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">__dirname：    获得当前执行文件所在目录的完整目录名</span><br><span class="line">__filename：   获得当前执行文件的带有完整绝对路径的文件名</span><br><span class="line">process.cwd()：获得当前执行node命令时候的文件夹目录名 </span><br><span class="line">./：           文件所在目录</span><br></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> HtmlWebpackPlugin = <span class="built_in">require</span>(<span class="string">&#x27;html-webpack-plugin&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> path=<span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports=&#123;</span><br><span class="line">    <span class="attr">entry</span>:<span class="string">&#x27;./src/index.ts&#x27;</span>,</span><br><span class="line">    <span class="comment">//用来设置引用模块,避免找不到ts和js模块</span></span><br><span class="line">    <span class="attr">resolve</span>: &#123;</span><br><span class="line">        <span class="attr">extensions</span>:[<span class="string">&#x27;.ts&#x27;</span>,<span class="string">&#x27;.js&#x27;</span>]</span><br><span class="line"></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">output</span>:&#123;</span><br><span class="line">        <span class="attr">path</span>:path.resolve(__dirname,<span class="string">&#x27;dist&#x27;</span>),</span><br><span class="line">        <span class="comment">//打包后文件</span></span><br><span class="line">        <span class="attr">filename</span>:<span class="string">&quot;bundle.js&quot;</span>,</span><br><span class="line">        <span class="attr">clean</span>:<span class="literal">true</span>,</span><br><span class="line">        <span class="attr">environment</span>:&#123;</span><br><span class="line">            <span class="attr">arrowFunction</span>: <span class="literal">false</span>,<span class="comment">//关闭webpack的箭头函数，可选</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;,</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//开发模式使用，方便查错误</span></span><br><span class="line">    <span class="attr">devtool</span>:<span class="string">&#x27;inline-source-map&#x27;</span>,</span><br><span class="line">    <span class="attr">devServer</span>: &#123;</span><br><span class="line">        <span class="attr">static</span>:<span class="string">&#x27;./dist&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="attr">module</span>:&#123;</span><br><span class="line">        <span class="attr">rules</span>:[</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">test</span>:<span class="regexp">/\.ts$/</span>,</span><br><span class="line">                use:</span><br><span class="line">                [</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="attr">loader</span>:<span class="string">&quot;babel-loader&quot;</span>,</span><br><span class="line">                        <span class="comment">//设置babel</span></span><br><span class="line">                        <span class="attr">options</span>:&#123;</span><br><span class="line">                            <span class="comment">//设置预定义环境</span></span><br><span class="line">                            <span class="attr">presets</span>:[</span><br><span class="line">                                [</span><br><span class="line">                                    <span class="comment">//指定环境的插件</span></span><br><span class="line">                                    <span class="string">&quot;@babel/preset-env&quot;</span>,</span><br><span class="line">                                    <span class="comment">//配置信息</span></span><br><span class="line">                                    &#123;</span><br><span class="line">                                        <span class="comment">//要兼容的目标浏览器</span></span><br><span class="line">                                        <span class="attr">targets</span>:&#123;</span><br><span class="line">                                            <span class="attr">chrome</span>:<span class="string">&quot;58&quot;</span>,</span><br><span class="line">                                            <span class="attr">ie</span>:<span class="string">&quot;11&quot;</span>,</span><br><span class="line">                                        &#125;,</span><br><span class="line">                                        <span class="comment">//指定corejs版本</span></span><br><span class="line">                                        <span class="attr">corejs</span>:<span class="string">&#x27;3&#x27;</span>,</span><br><span class="line">                                        <span class="comment">//使用corejs的方式&quot;usage&quot;表示按需加载,能够解决ie11旧浏览器中promise无法使用的问题</span></span><br><span class="line">                                        <span class="attr">useBuiltIns</span>:<span class="string">&quot;usage&quot;</span>,</span><br><span class="line"></span><br><span class="line">                                    &#125;</span><br><span class="line">                                ]</span><br><span class="line"></span><br><span class="line">                            ]</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                    &#125;,</span><br><span class="line">                    &#123;</span><br><span class="line">                    <span class="attr">loader</span>:<span class="string">&#x27;ts-loader&#x27;</span>,</span><br><span class="line">                    &#125;,</span><br><span class="line">                ],</span><br><span class="line">                </span><br><span class="line">                <span class="attr">exclude</span>:<span class="regexp">/node-modules/</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">test</span>:<span class="regexp">/\.css$/</span>,</span><br><span class="line">            <span class="comment">//使用哪些loader</span></span><br><span class="line">            use:[</span><br><span class="line">                <span class="comment">//use数组中loader执行顺序从右到左，从下到上一次执行</span></span><br><span class="line">                <span class="comment">//创建style标签，将js中的样式资源插入进行，添加到head中生效</span></span><br><span class="line">                <span class="string">&#x27;style-loader&#x27;</span>,</span><br><span class="line">                <span class="comment">//将css文件变成commonjs模块加载到js中，里面内容是样式字符串</span></span><br><span class="line">                <span class="string">&#x27;css-loader&#x27;</span></span><br><span class="line">            ]&#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">test</span>:<span class="regexp">/\.less$/</span>,</span><br><span class="line">                use:[</span><br><span class="line">                    <span class="string">&#x27;style-loader&#x27;</span>,</span><br><span class="line">                    <span class="string">&#x27;css-loader&#x27;</span>,</span><br><span class="line">                    <span class="comment">//引入postcss</span></span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="attr">loader</span>:<span class="string">&quot;postcss-loader&quot;</span>,</span><br><span class="line">                        <span class="attr">options</span>:&#123;</span><br><span class="line">                            <span class="attr">postcssOptions</span>:&#123;</span><br><span class="line">                                <span class="attr">plugins</span>:[</span><br><span class="line">                                    [</span><br><span class="line">                                        <span class="string">&quot;postcss-preset-env&quot;</span>,</span><br><span class="line">                                        &#123;</span><br><span class="line">                                            <span class="attr">browsers</span>:<span class="string">&#x27;last 2 versions&#x27;</span></span><br><span class="line">                                        &#125;</span><br><span class="line">                                    ]</span><br><span class="line">                                ]</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                    &#125;,</span><br><span class="line">                    <span class="string">&#x27;less-loader&#x27;</span>,<span class="comment">//将less文件编译成css文件</span></span><br><span class="line">                ]</span><br><span class="line">            &#125;,</span><br><span class="line"></span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">plugins</span>:[</span><br><span class="line">        <span class="keyword">new</span> HtmlWebpackPlugin(</span><br><span class="line">            &#123;<span class="attr">template</span>:<span class="string">&#x27;./src/index.html&#x27;</span>&#125;</span><br><span class="line">        )</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">mode</span>:<span class="string">&#x27;development&#x27;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>修改 package.json中scripts</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;test&quot;</span>: <span class="string">&quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;</span>,</span><br><span class="line">    <span class="string">&quot;build&quot;</span>: <span class="string">&quot;webpack-dev-server --open&quot;</span></span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+<p>直接npm run build就能启动webpack-dev-server</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/07/%E8%A3%85%E9%A5%B0%E5%99%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -309,10 +444,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-07-06 19:50:36 / 修改时间：21:03:11" itemprop="dateCreated datePublished" datetime="2022-07-06T19:50:36+08:00">2022-07-06</time>
+              <time title="创建时间：2022-07-06 19:50:36" itemprop="dateCreated datePublished" datetime="2022-07-06T19:50:36+08:00">2022-07-06</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-08 20:32:19" itemprop="dateModified" datetime="2022-07-08T20:32:19+08:00">2022-07-08</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -334,8 +475,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>readonly</p>
-<p>字段可以添加一个readonly的前缀修改符，会阻止在构造函数之外的赋值</p>
+          <h1 id="readonly"><a href="#readonly" class="headerlink" title="readonly"></a>readonly</h1><p>字段可以添加一个readonly的前缀修改符，会阻止在构造函数之外的赋值</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Greeter</span> </span>&#123;</span><br><span class="line">    <span class="keyword">readonly</span> name:<span class="built_in">string</span>=<span class="string">&quot;world&quot;</span>;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params">otherName?:stirng</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(otherName!==<span class="literal">undefined</span>)&#123;</span><br><span class="line">            <span class="built_in">this</span>.name=otherName;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">err</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.name=<span class="string">&quot;not ok&quot;</span>;</span><br><span class="line">        <span class="comment">// Cannot assign to &#x27;name&#x27; because it is a read-only property.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h1 id="类构造函数"><a href="#类构造函数" class="headerlink" title="类构造函数"></a>类构造函数</h1><p>可以使用带类型注解的参数，默认值，重载等，</p>
@@ -410,6 +550,8 @@
 <p>例子：对一个特定字段进行懒校验，当hasValue被验证为true,会从类型中移除undefined</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Box</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">    value?:T;</span><br><span class="line">    hasValue():<span class="built_in">this</span> is &#123;<span class="attr">value</span>:T&#125;&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.value!==<span class="literal">undefined</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> box=<span class="keyword">new</span> Box();</span><br><span class="line">box.value=<span class="string">&quot;Game&quot;</span>;</span><br><span class="line">box.value;<span class="comment">// (property) Box&lt;unknown&gt;.value?: unknown</span></span><br><span class="line"><span class="keyword">if</span>(box.hasValue())&#123;</span><br><span class="line">    box.value;<span class="comment">// (property) value: unknown</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>总结：</p>
+<p><strong>构造函数中,this表示当前实例对象，在方法中，this表示当前调用方法的对象</strong></p>
 <h1 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h1><p><a target="_blank" rel="noopener" href="https://ts.yayujs.com/handbook/Class.html#%E7%B1%BB%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB-relationships-between-classes">https://ts.yayujs.com/handbook/Class.html#%E7%B1%BB%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB-relationships-between-classes</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.typescriptlang.org/docs/handbook/2/classes.html">https://www.typescriptlang.org/docs/handbook/2/classes.html</a></p>
 
@@ -1107,127 +1249,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/03/%E5%87%BD%E6%95%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/03/%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">函数</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-07-03 11:53:45" itemprop="dateCreated datePublished" datetime="2022-07-03T11:53:45+08:00">2022-07-03</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-04 17:03:51" itemprop="dateModified" datetime="2022-07-04T17:03:51+08:00">2022-07-04</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="写一个好的泛型函数建议："><a href="#写一个好的泛型函数建议：" class="headerlink" title="写一个好的泛型函数建议："></a>写一个好的泛型函数建议：</h1><h2 id="类型参数下移："><a href="#类型参数下移：" class="headerlink" title="类型参数下移："></a>类型参数下移：</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">firstElemet1</span>&lt;<span class="title">Type</span>&gt;(<span class="params">arr:Type[]</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arr[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">firstElemet2</span>&lt;<span class="title">Type</span> <span class="title">extends</span> <span class="title">any</span>[]&gt;(<span class="params">arr:Type</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arr[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//a:number(good)</span></span><br><span class="line"><span class="keyword">const</span> a=firstElemet1([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br><span class="line"><span class="comment">//b:any(bad)</span></span><br><span class="line"><span class="keyword">const</span> b=firstElemet2([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>第一个函数可以推断出返回的类型是number,第二个函数推断出的返回类型却是any,因为TypeScript不得不用约束的类型来推断arr[0]表达式，而不是等到函数调用的时候再去推断这个元素。</p>
-<p>push down就是如果超类中的某个函数只与一个或者少数几个子类有关，那么最好将其从超类中挪走，放到真正关心它的子类中，即只在超类保留共用的行为，这种将超类中的函数本体复制到具体需要的子类的方法称为”push down”,与本节中的去除extend any[],将其具体的推断交给Type自身就类似于push down.</p>
-<p>注意：<strong>如果可能，直接使用类型参数而不是约束它</strong></p>
-<h2 id="使用更少的类型参数"><a href="#使用更少的类型参数" class="headerlink" title="使用更少的类型参数"></a>使用更少的类型参数</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">filter1</span>&lt;<span class="title">Type</span>&gt;(<span class="params">arr: Type[], func: (arg: Type) =&gt; <span class="built_in">boolean</span></span>): <span class="title">Type</span>[] </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> arr.filter(func);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">filter2</span>&lt;<span class="title">Type</span>, <span class="title">Func</span> <span class="title">extends</span> (<span class="params">arg: Type</span>) =&gt; <span class="title">boolean</span>&gt;(<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="function">  arr: Type[],</span></span></span><br><span class="line"><span class="params"><span class="function">  func: Func</span></span></span><br><span class="line"><span class="params"><span class="function"></span>): <span class="title">Type</span>[] </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> arr.filter(func);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>我们创建了一个并没有关联两个值的类型参数Func,这是一个危险信号，因为它意味着调用者不得不毫无理由的手动指定一个额外的类型参数，Func什么也没做，却导致函数更难阅读和推断</p>
-<p>！<strong>尽可能使用更少的类型参数</strong></p>
-<h2 id="类型参数应该出现两次"><a href="#类型参数应该出现两次" class="headerlink" title="类型参数应该出现两次"></a>类型参数应该出现两次</h2><p>有的时候一个函数其实并不需要泛型</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">greet</span>&lt;<span class="title">Str</span> <span class="title">extends</span> <span class="title">string</span>&gt;(<span class="params">s:Str</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;Hello,&quot;</span>+s);</span><br><span class="line">&#125;</span><br><span class="line">greet(<span class="string">&quot;world&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>类型参数时用来关联多个值之间的类型，如果一个类型参数只在函数签名里出现了一次，那它就没有跟任何东西产生关联</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">greet</span>(<span class="params">s:<span class="built_in">string</span></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;Hello,&quot;</span>+s);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在函数中声明this</p>
-<p>TypeScript会通过代码流反洗函数中的this会是什么类型</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> user=&#123;</span><br><span class="line">    <span class="attr">id</span>:<span class="number">124</span>,</span><br><span class="line">    <span class="attr">admin</span>:<span class="literal">false</span>,</span><br><span class="line">    <span class="attr">becomeAdmin</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.admin=<span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>TypeScript能够理解函数user.becomeAdmin中的this指向的是外层的对象user,在Js中,this是保留字，不能当做参数使用，但TypeScript可以允许你在函数体内声明this的类型</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> DB&#123;</span><br><span class="line">    filterUsers(filters:<span class="function">(<span class="params"><span class="built_in">this</span>:User</span>)=&gt;</span><span class="built_in">boolean</span>):User[];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> db=getDB();</span><br><span class="line"><span class="keyword">const</span> admins=db.filterUsers(<span class="function"><span class="keyword">function</span>(<span class="params"><span class="built_in">this</span>:User</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.admin;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>function的形式不能使用箭头函数</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> DB &#123;</span><br><span class="line">  filterUsers(filter: <span class="function">(<span class="params"><span class="built_in">this</span>: User</span>) =&gt;</span> <span class="built_in">boolean</span>): User[];</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> db = getDB();</span><br><span class="line"><span class="keyword">const</span> admins = db.filterUsers(<span class="function">() =&gt;</span> <span class="built_in">this</span>.admin);</span><br><span class="line"><span class="comment">// The containing arrow function captures the global value of &#x27;this&#x27;.</span></span><br><span class="line"><span class="comment">// Element implicitly has an &#x27;any&#x27; type because type &#x27;typeof globalThis&#x27; has no index signature.</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="函数的可赋值性"><a href="#函数的可赋值性" class="headerlink" title="函数的可赋值性:"></a>函数的可赋值性:</h1><h2 id="返回void"><a href="#返回void" class="headerlink" title="返回void"></a>返回void</h2><p>当基于上下文的类型推导推导出返回类型为void的时候，并不会强制函数一定不能返回内容，换句话说，如果一个返回void类型的函数类型(type vf=()=&gt;void)，当被应用时，<strong>也是可以返回任何值的，但返回的值会被忽略</strong>，在TS里，子类型的值可以赋值给父类型的变量，在这里，我们可以认为void类型比具体的一些类型，比如number,string类型之类的，更宽泛，因此可以接受这些具体类型。</p>
-<p>虽然可以赋值，但是执行函数后返回值的类型，却是void的，并不是实际的真实类型，参考下面的f1变量，它并不是boolean类型，不能访问boolean类型的属性。<strong>void类型的用法，主要用在我们不希望调用者关心函数返回值的情况下，比如通常的异步回调函数，这种情况下返回值时没有意义的</strong></p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> voidFunc = <span class="function">() =&gt;</span> <span class="built_in">void</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> f1: voidFunc = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> f2: voidFunc = <span class="function">() =&gt;</span> <span class="literal">true</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> f3: voidFunc = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>而且即便这些函数的返回值赋值给其他变量，也会维持void类型</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> v1=f1();</span><br><span class="line"><span class="keyword">const</span> v2=f2();</span><br><span class="line"><span class="keyword">const</span> v3=f3();</span><br></pre></td></tr></table></figure>
-
-<p>因此，以下代码有效：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> src=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line"><span class="keyword">const</span> dst=[<span class="number">0</span>];</span><br><span class="line">src.forEach(<span class="function">(<span class="params">el</span>)=&gt;</span>dst.push(el));</span><br></pre></td></tr></table></figure>
-
-<p>尽管Array.prototype.push返回一个数字，并且Array.prototype.forEach方法期待一个返回void类型的函数，但这段代码依然没有报错，就是因为基于上下文</p>
-<p>推导，推导出forEach函数返回类型为void,正是因为不强制函数一定不能返回内容，所有上面这种return dst.push(el)的写法不报错</p>
-<p>当一个函数字面量定义返回一个void类型，函数一定不能返回任何东西</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f2</span>(<span class="params"></span>): <span class="title">void</span> </span>&#123;</span><br><span class="line">  <span class="comment">// @ts-expect-error</span></span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> f3 = <span class="function"><span class="keyword">function</span> (<span class="params"></span>): <span class="title">void</span> </span>&#123;</span><br><span class="line">  <span class="comment">// @ts-expect-error</span></span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>具体参考：</p>
-<p><a target="_blank" rel="noopener" href="https://ts.yayujs.com/handbook/MoreOnFunctions.html#%E5%87%BD%E6%95%B0-more-on-functions">https://ts.yayujs.com/handbook/MoreOnFunctions.html#%E5%87%BD%E6%95%B0-more-on-functions</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.typescriptlang.org/docs/handbook/2/functions.html">https://www.typescriptlang.org/docs/handbook/2/functions.html</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1295,7 +1320,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">170</span>
+          <span class="site-state-item-count">171</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1306,7 +1331,7 @@
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -1356,7 +1381,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共146.9k字</span>
+  <span class="post-count">博客全站共148.6k字</span>
 </div>
         
 

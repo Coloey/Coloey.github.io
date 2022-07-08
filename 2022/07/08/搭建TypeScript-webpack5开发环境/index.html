@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"coloey.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="初始化package.json初始化package.json有两种方式，一种是通过npm管理，一种是通过yarn管理。 npm命令： 1npm init  yarn命令： 1yarn init  直接用默认配置： 1yarn init -y  package.json中dependencies,devDependencies,peerDependencies,scripts这几个字段的意思。  d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搭建TypeScript+webpack5开发环境">
+<meta property="og:url" content="https://coloey.github.io/2022/07/08/%E6%90%AD%E5%BB%BATypeScript-webpack5%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/index.html">
+<meta property="og:site_name" content="小柒">
+<meta property="og:description" content="初始化package.json初始化package.json有两种方式，一种是通过npm管理，一种是通过yarn管理。 npm命令： 1npm init  yarn命令： 1yarn init  直接用默认配置： 1yarn init -y  package.json中dependencies,devDependencies,peerDependencies,scripts这几个字段的意思。  d">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-08T13:13:05.000Z">
+<meta property="article:modified_time" content="2022-07-08T13:56:17.405Z">
+<meta property="article:author" content="小柒">
+<meta property="article:tag" content="前端工程化">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://coloey.github.io/2022/07/08/%E6%90%AD%E5%BB%BATypeScript-webpack5%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>搭建TypeScript+webpack5开发环境 | 小柒</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="小柒" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小柒</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">www.xiaoqi.cn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/08/%E6%90%AD%E5%BB%BATypeScript-webpack5%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h1 class="post-title" itemprop="name headline">
+          搭建TypeScript+webpack5开发环境
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-07-08 21:13:05 / 修改时间：21:56:17" itemprop="dateCreated datePublished" datetime="2022-07-08T21:13:05+08:00">2022-07-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="初始化package-json"><a href="#初始化package-json" class="headerlink" title="初始化package.json"></a>初始化package.json</h1><p>初始化package.json有两种方式，一种是通过npm管理，一种是通过yarn管理。</p>
+<p>npm命令：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm init</span><br></pre></td></tr></table></figure>
+
+<p>yarn命令：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn init</span><br></pre></td></tr></table></figure>
+
+<p>直接用默认配置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn init -y</span><br></pre></td></tr></table></figure>
+
+<p>package.json中dependencies,devDependencies,peerDependencies,scripts这几个字段的意思。</p>
+<blockquote>
+<p>dependencies:生产环境，项目运行的依赖（如ract,ract-dom</p>
+<p>devDependencies开发环境，项目所需的依赖(webpack插件，打包插件叶索插件，eslint等)</p>
+<p>peerDependencies 包不会自动安装，会提示你项目运行，需要主动安装该依赖</p>
+<p>scripts命令脚本</p>
+</blockquote>
+<h1 id="引入TypeScript"><a href="#引入TypeScript" class="headerlink" title="引入TypeScript"></a>引入TypeScript</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -D typescript</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add typescript -D</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="用tsc命令初始化生产tsconfig-json文件"><a href="#用tsc命令初始化生产tsconfig-json文件" class="headerlink" title="用tsc命令初始化生产tsconfig.json文件"></a>用tsc命令初始化生产tsconfig.json文件</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tsc --init</span><br></pre></td></tr></table></figure>
+
+<p>tssconfig.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;compilerOptions&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;rootDir&quot;</span>: <span class="string">&quot;./src&quot;</span>,<span class="comment">//源码目录</span></span><br><span class="line">        <span class="string">&quot;target&quot;</span>: <span class="string">&quot;es5&quot;</span>, <span class="comment">// 指定输出 ECMAScript 目标版本</span></span><br><span class="line">        <span class="string">&quot;module&quot;</span>: <span class="string">&quot;ESNext&quot;</span>, <span class="comment">//面向未来的ESM模块化</span></span><br><span class="line">        <span class="string">&quot;strict&quot;</span>: <span class="literal">true</span>, <span class="comment">// 开启所有的严格检查配置</span></span><br><span class="line">        <span class="string">&quot;esModuleInterop&quot;</span>: <span class="literal">true</span>, <span class="comment">// 允许 export = xxx 导出 ，并使用 import xxx form &quot;module-name&quot; 导入</span></span><br><span class="line">        <span class="string">&quot;outDir&quot;</span>: <span class="string">&quot;dist&quot;</span>,</span><br><span class="line">        <span class="comment">/* 指定要包含在编译中的库文件——引用类库——即申明文件，如果输出的模块方式是 es5，就会默认引入 &quot;dom&quot;,&quot;es5&quot;,&quot;scripthost&quot; 。如果在 TS 中想要使用一些 ES6 以上版本的语法，就需要引入相关的类库 */</span></span><br><span class="line">        <span class="string">&quot;lib&quot;</span>: [</span><br><span class="line">            <span class="string">&quot;webworker&quot;</span>,</span><br><span class="line">            <span class="string">&quot;dom&quot;</span>,</span><br><span class="line">            <span class="string">&quot;es5&quot;</span>,</span><br><span class="line">            <span class="string">&quot;es2015&quot;</span>,</span><br><span class="line">            <span class="string">&quot;es2016&quot;</span>,</span><br><span class="line">            <span class="string">&quot;es2015.promise&quot;</span>,</span><br><span class="line">            <span class="string">&quot;dom.iterable&quot;</span>,</span><br><span class="line">            <span class="string">&quot;scripthost&quot;</span>,</span><br><span class="line">            <span class="string">&quot;esnext&quot;</span>,</span><br><span class="line">        ], <span class="comment">// 要包含在编译中的依赖库文件列表</span></span><br><span class="line">        <span class="string">&quot;allowJs&quot;</span>: <span class="literal">true</span>, <span class="comment">// 允许编译 JavaScript 文件</span></span><br><span class="line">        <span class="comment">// 检查 JS 文件</span></span><br><span class="line">        <span class="string">&quot;checkJs&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;skipLibCheck&quot;</span>: <span class="literal">true</span>, <span class="comment">// 跳过所有声明文件的类型检查</span></span><br><span class="line">        <span class="string">&quot;allowSyntheticDefaultImports&quot;</span>: <span class="literal">true</span>, <span class="comment">// 允许从没有默认导出的模块进行默认导入</span></span><br><span class="line">        <span class="string">&quot;resolveJsonModule&quot;</span>: <span class="literal">true</span>, <span class="comment">// 允许使用 .json 扩展名导入的模块</span></span><br><span class="line">        <span class="comment">/* react 模式下：直接将 JSX 编译成 JS，会生成 React.createElement 的形式，在使用前不需要再进行转换操作了，输出文件的扩展名为 .js */</span></span><br><span class="line">        <span class="comment">/* preserve 模式下：不会将 JSX 编译成 JS，生成代码中会保留 JSX，以供后续的转换操作使用（比如：Babel）。 另外，输出文件会带有 .jsx 扩展名 */</span></span><br><span class="line">        <span class="comment">/* react-native 模式下：相当于 preserve，它也保留了所有的 JSX，但是输出文件的扩展名是 .js */</span></span><br><span class="line">        <span class="string">&quot;jsx&quot;</span>: <span class="string">&quot;react&quot;</span>, <span class="comment">// 在.tsx文件中支持JSX</span></span><br><span class="line">        <span class="string">&quot;sourceMap&quot;</span>: <span class="literal">true</span>, <span class="comment">// 生成相应的.map文件</span></span><br><span class="line">        <span class="string">&quot;declaration&quot;</span>: <span class="literal">true</span>, <span class="comment">// 生成相应的.d.ts文件</span></span><br><span class="line">        <span class="string">&quot;allowUmdGlobalAccess&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;experimentalDecorators&quot;</span>: <span class="literal">true</span>, <span class="comment">// 启用对ES装饰器的实验性支持</span></span><br><span class="line">        <span class="string">&quot;moduleResolution&quot;</span>: <span class="string">&quot;node&quot;</span>, <span class="comment">// 将模块解析模式设置为node.js解析模式</span></span><br><span class="line">        <span class="string">&quot;baseUrl&quot;</span>: <span class="string">&quot;./&quot;</span>,</span><br><span class="line">        <span class="string">&quot;incremental&quot;</span>: <span class="literal">true</span>, <span class="comment">// 通过从以前的编译中读取/写入信息到磁盘上的文件来启用增量编译</span></span><br><span class="line">        <span class="string">&quot;forceConsistentCasingInFileNames&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="comment">/* 当目标是ES5或ES3的时候提供对for-of、扩展运算符和解构赋值中对于迭代器的完整支持 */</span></span><br><span class="line">        <span class="string">&quot;downlevelIteration&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;noUnusedLocals&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;noUnusedParameters&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;noImplicitReturns&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;noFallthroughCasesInSwitch&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="comment">// 不允许使用隐式的 any 类型</span></span><br><span class="line">        <span class="string">&quot;noImplicitAny&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="comment">// 不允许 this 有隐式的 any 类型，即 this 必须有明确的指向</span></span><br><span class="line">        <span class="string">&quot;noImplicitThis&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="comment">// 不允许把 null、undefined 赋值给其他类型变量</span></span><br><span class="line">        <span class="string">&quot;strictNullChecks&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;paths&quot;</span>: &#123;</span><br><span class="line">            <span class="comment">//别名</span></span><br><span class="line">            <span class="string">&quot;@/*&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;src/*&quot;</span></span><br><span class="line">            ],</span><br><span class="line">            <span class="string">&quot;@images/*&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;src/assets/images/*&quot;</span></span><br><span class="line">            ],</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&quot;include&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;src&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&quot;exclude&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;node_modules&quot;</span>,</span><br><span class="line">        <span class="string">&quot;dist&quot;</span></span><br><span class="line">    ] <span class="comment">// *** 不进行类型检查的文件 ***</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">作者：qyjandroid</span><br><span class="line">链接：https:<span class="comment">//juejin.cn/post/7020972849649156110</span></span><br><span class="line">来源：稀土掘金</span><br><span class="line">著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="引入webpack"><a href="#引入webpack" class="headerlink" title="引入webpack"></a>引入webpack</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i webpack webpack-cli webpack-dev-server --save-dev</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="构建tsx"><a href="#构建tsx" class="headerlink" title="构建tsx"></a>构建tsx</h2><p>关于TS转JS，有三种方案</p>
+<ol>
+<li>tsc 缺点，转换为es5后，一些语法特性不能转换</li>
+<li>ts-loader</li>
+<li>babel-loader+@babel/preset-typescript 插件丰富，后序兼容扩展性强</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i @babel/core @babel/preset-env babel-loader core-js</span><br></pre></td></tr></table></figure>
+
+<p> [babel中文网](<a href="https://link.juejin.cn/?target=https://www.babeljs.cn/docs/usage">https://link.juejin.cn/?target=https%3A%2F%2Fwww.babeljs.cn%2Fdocs%2Fusage</a></p>
+<p>安装必要的webapck插件和Loader</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -D html-webpack-plugin less-loader css-loader style-loader postcss postcss-loader</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="配置webpack-config-js"><a href="#配置webpack-config-js" class="headerlink" title="配置webpack.config.js"></a>配置webpack.config.js</h2><p>解释：path.resolve()方法用于将相对路径转为绝对路径</p>
+<p>它接收多个参数，依次表示所要进入的路径，直到将最后一个参数转为绝对路径，如果根据参数无法得到绝对路径，就以当前所在路径作为基准，除了根目录，该方法的返回值不带尾部斜杠</p>
+<p>例如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 格式</span></span><br><span class="line">path.resolve([<span class="keyword">from</span> ...], to)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实例</span></span><br><span class="line">path.resolve(<span class="string">&#x27;foo/bar&#x27;</span>, <span class="string">&#x27;/tmp/file/&#x27;</span>, <span class="string">&#x27;..&#x27;</span>, <span class="string">&#x27;a/../subfile&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>执行效果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ cd foo/bar</span><br><span class="line">$ cd /tmp/file/</span><br><span class="line">$ cd ..</span><br><span class="line">$ cd a/../subfile</span><br><span class="line">$ pwd</span><br></pre></td></tr></table></figure>
+
+<p>node.js中的文件路径大概有____dirname,___filename,precess.cwd,./或者../</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">__dirname：    获得当前执行文件所在目录的完整目录名</span><br><span class="line">__filename：   获得当前执行文件的带有完整绝对路径的文件名</span><br><span class="line">process.cwd()：获得当前执行node命令时候的文件夹目录名 </span><br><span class="line">./：           文件所在目录</span><br></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> HtmlWebpackPlugin = <span class="built_in">require</span>(<span class="string">&#x27;html-webpack-plugin&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> path=<span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports=&#123;</span><br><span class="line">    <span class="attr">entry</span>:<span class="string">&#x27;./src/index.ts&#x27;</span>,</span><br><span class="line">    <span class="comment">//用来设置引用模块,避免找不到ts和js模块</span></span><br><span class="line">    <span class="attr">resolve</span>: &#123;</span><br><span class="line">        <span class="attr">extensions</span>:[<span class="string">&#x27;.ts&#x27;</span>,<span class="string">&#x27;.js&#x27;</span>]</span><br><span class="line"></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">output</span>:&#123;</span><br><span class="line">        <span class="attr">path</span>:path.resolve(__dirname,<span class="string">&#x27;dist&#x27;</span>),</span><br><span class="line">        <span class="comment">//打包后文件</span></span><br><span class="line">        <span class="attr">filename</span>:<span class="string">&quot;bundle.js&quot;</span>,</span><br><span class="line">        <span class="attr">clean</span>:<span class="literal">true</span>,</span><br><span class="line">        <span class="attr">environment</span>:&#123;</span><br><span class="line">            <span class="attr">arrowFunction</span>: <span class="literal">false</span>,<span class="comment">//关闭webpack的箭头函数，可选</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;,</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//开发模式使用，方便查错误</span></span><br><span class="line">    <span class="attr">devtool</span>:<span class="string">&#x27;inline-source-map&#x27;</span>,</span><br><span class="line">    <span class="attr">devServer</span>: &#123;</span><br><span class="line">        <span class="attr">static</span>:<span class="string">&#x27;./dist&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="attr">module</span>:&#123;</span><br><span class="line">        <span class="attr">rules</span>:[</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">test</span>:<span class="regexp">/\.ts$/</span>,</span><br><span class="line">                use:</span><br><span class="line">                [</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="attr">loader</span>:<span class="string">&quot;babel-loader&quot;</span>,</span><br><span class="line">                        <span class="comment">//设置babel</span></span><br><span class="line">                        <span class="attr">options</span>:&#123;</span><br><span class="line">                            <span class="comment">//设置预定义环境</span></span><br><span class="line">                            <span class="attr">presets</span>:[</span><br><span class="line">                                [</span><br><span class="line">                                    <span class="comment">//指定环境的插件</span></span><br><span class="line">                                    <span class="string">&quot;@babel/preset-env&quot;</span>,</span><br><span class="line">                                    <span class="comment">//配置信息</span></span><br><span class="line">                                    &#123;</span><br><span class="line">                                        <span class="comment">//要兼容的目标浏览器</span></span><br><span class="line">                                        <span class="attr">targets</span>:&#123;</span><br><span class="line">                                            <span class="attr">chrome</span>:<span class="string">&quot;58&quot;</span>,</span><br><span class="line">                                            <span class="attr">ie</span>:<span class="string">&quot;11&quot;</span>,</span><br><span class="line">                                        &#125;,</span><br><span class="line">                                        <span class="comment">//指定corejs版本</span></span><br><span class="line">                                        <span class="attr">corejs</span>:<span class="string">&#x27;3&#x27;</span>,</span><br><span class="line">                                        <span class="comment">//使用corejs的方式&quot;usage&quot;表示按需加载,能够解决ie11旧浏览器中promise无法使用的问题</span></span><br><span class="line">                                        <span class="attr">useBuiltIns</span>:<span class="string">&quot;usage&quot;</span>,</span><br><span class="line"></span><br><span class="line">                                    &#125;</span><br><span class="line">                                ]</span><br><span class="line"></span><br><span class="line">                            ]</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                    &#125;,</span><br><span class="line">                    &#123;</span><br><span class="line">                    <span class="attr">loader</span>:<span class="string">&#x27;ts-loader&#x27;</span>,</span><br><span class="line">                    &#125;,</span><br><span class="line">                ],</span><br><span class="line">                </span><br><span class="line">                <span class="attr">exclude</span>:<span class="regexp">/node-modules/</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">test</span>:<span class="regexp">/\.css$/</span>,</span><br><span class="line">            <span class="comment">//使用哪些loader</span></span><br><span class="line">            use:[</span><br><span class="line">                <span class="comment">//use数组中loader执行顺序从右到左，从下到上一次执行</span></span><br><span class="line">                <span class="comment">//创建style标签，将js中的样式资源插入进行，添加到head中生效</span></span><br><span class="line">                <span class="string">&#x27;style-loader&#x27;</span>,</span><br><span class="line">                <span class="comment">//将css文件变成commonjs模块加载到js中，里面内容是样式字符串</span></span><br><span class="line">                <span class="string">&#x27;css-loader&#x27;</span></span><br><span class="line">            ]&#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">test</span>:<span class="regexp">/\.less$/</span>,</span><br><span class="line">                use:[</span><br><span class="line">                    <span class="string">&#x27;style-loader&#x27;</span>,</span><br><span class="line">                    <span class="string">&#x27;css-loader&#x27;</span>,</span><br><span class="line">                    <span class="comment">//引入postcss</span></span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="attr">loader</span>:<span class="string">&quot;postcss-loader&quot;</span>,</span><br><span class="line">                        <span class="attr">options</span>:&#123;</span><br><span class="line">                            <span class="attr">postcssOptions</span>:&#123;</span><br><span class="line">                                <span class="attr">plugins</span>:[</span><br><span class="line">                                    [</span><br><span class="line">                                        <span class="string">&quot;postcss-preset-env&quot;</span>,</span><br><span class="line">                                        &#123;</span><br><span class="line">                                            <span class="attr">browsers</span>:<span class="string">&#x27;last 2 versions&#x27;</span></span><br><span class="line">                                        &#125;</span><br><span class="line">                                    ]</span><br><span class="line">                                ]</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                    &#125;,</span><br><span class="line">                    <span class="string">&#x27;less-loader&#x27;</span>,<span class="comment">//将less文件编译成css文件</span></span><br><span class="line">                ]</span><br><span class="line">            &#125;,</span><br><span class="line"></span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">plugins</span>:[</span><br><span class="line">        <span class="keyword">new</span> HtmlWebpackPlugin(</span><br><span class="line">            &#123;<span class="attr">template</span>:<span class="string">&#x27;./src/index.html&#x27;</span>&#125;</span><br><span class="line">        )</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">mode</span>:<span class="string">&#x27;development&#x27;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>修改 package.json中scripts</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;test&quot;</span>: <span class="string">&quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;</span>,</span><br><span class="line">    <span class="string">&quot;build&quot;</span>: <span class="string">&quot;webpack-dev-server --open&quot;</span></span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+<p>直接npm run build就能启动webpack-dev-server</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag"># 前端工程化</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/07/07/%E8%A3%85%E9%A5%B0%E5%99%A8/" rel="prev" title="装饰器">
+      <i class="fa fa-chevron-left"></i> 装饰器
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96package-json"><span class="nav-number">1.</span> <span class="nav-text">初始化package.json</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E5%85%A5TypeScript"><span class="nav-number">2.</span> <span class="nav-text">引入TypeScript</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%A8tsc%E5%91%BD%E4%BB%A4%E5%88%9D%E5%A7%8B%E5%8C%96%E7%94%9F%E4%BA%A7tsconfig-json%E6%96%87%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">用tsc命令初始化生产tsconfig.json文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E5%85%A5webpack"><span class="nav-number">4.</span> <span class="nav-text">引入webpack</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E5%BB%BAtsx"><span class="nav-number">4.1.</span> <span class="nav-text">构建tsx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEwebpack-config-js"><span class="nav-number">4.2.</span> <span class="nav-text">配置webpack.config.js</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小柒"
+      src="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+  <p class="site-author-name" itemprop="name">小柒</p>
+  <div class="site-description" itemprop="description">欢迎来到我的世界!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">171</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小柒</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_pv">
+    本站访问量:<span id="busuanzi_value_site_pv"></span>次
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_uv">
+    本站总访客量：<span id="busuanzi_value_site_uv"></span>人
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共148.6k字</span>
+</div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 动态背景 -->
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="../source/js/src/clicklove.js"></script>
+</body>
+</html>
