@@ -182,6 +182,172 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/07/%E8%A6%86%E7%9B%96%E6%9B%B4%E6%96%B0%E4%B8%8E%E5%A2%9E%E9%87%8F%E6%9B%B4%E6%96%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/07/%E8%A6%86%E7%9B%96%E6%9B%B4%E6%96%B0%E4%B8%8E%E5%A2%9E%E9%87%8F%E6%9B%B4%E6%96%B0/" class="post-title-link" itemprop="url">覆盖更新与增量更新</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-07 22:21:34" itemprop="dateCreated datePublished" datetime="2022-05-07T22:21:34+08:00">2022-05-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-08 10:20:39" itemprop="dateModified" datetime="2022-05-08T10:20:39+08:00">2022-05-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="覆盖更新"><a href="#覆盖更新" class="headerlink" title="覆盖更新"></a>覆盖更新</h1><p>实现方案是在引用资源的URL后添加请求参数，比如添加时间戳参数，</p>
+<p>浏览器会将参数不同的URL视为全新的URL，所以浏览器向服务器请求并下载最新资源，我们只更新修改了的资源，为了避免手动改参数，将hash指纹（通过mds算法得到）作为URL的v参数</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&#x27;stylesheet&#x27;</span> <span class="attr">href</span>=<span class="string">&quot;main.home.css?v=858d5483&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;main.home.js?v=bbcadaf73&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>缺点：</p>
+<ul>
+<li>必须保证html文件与改动的静态文件同步更新，否则会出现资源不同步的情况。如果是无服务端渲染的项目，html文件被视为金泰之源，并且与其他今天资源(js/css/图片等)部署到同一台服务器，在这种情况下，我们可以保证资源的同步更新，不会受到覆盖更新的影响。但是对于依赖服务端渲染的项目，大多数的部署方式是将网站的入口HTML和静态资源分开部署，比如，HTML与服务器代码一同部署到域名为ww.app.com对应的服务器，把JS/CSS等静态资源部署到static.app.com对应的服务器，两种资源分开部署必然有先后顺序，这就意味着两种资源的上线存在时间差，不论先部署哪种资源无法保证所有用户访问页面的正确性，即使时间差小，对于淘宝这种访问量庞大的网站来说也会影响用户群，这就是为什么很多团队总是选择在半夜或者凌晨这种访问量较小的时间段发布新版本的原因之一</li>
+<li>不利于版本回滚。由于覆盖更新每次迭代之后的资源都会覆盖服务器上原有的旧版本文件，这对于版本回滚操作很不友好，运维人员吗要么借助于服务器本身的缓存机制要么拿到旧版本文件再次覆盖</li>
+</ul>
+<h1 id="增量更新"><a href="#增量更新" class="headerlink" title="增量更新"></a>增量更新</h1><p>将原本作为参数值的hash指纹作为资源文件名的一部分并且删除用于更新的url参数</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&#x27;stylesheet&#x27;</span> <span class="attr">href</span>=<span class="string">&quot;main.home.858d5483.css&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;main.home.bbcadaf73.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在静态资源使用增量更新前提下可以将静态资源先于动态HTML部署，此时静态资源没有引用入口，不会对线上环境产生影响；动态HTML部署后即可在第一时间访问已存的最新静态资源。解决覆盖更新部署同步问题</p>
+<p>增量更新修改了资源文件名，不会覆盖已存的旧版本文件，运维人员进行回滚操作只需回滚HTML即可，优化了版本控制，支持多版本共存</p>
+<h1 id="按需加载与多模块架构场景的增量更新"><a href="#按需加载与多模块架构场景的增量更新" class="headerlink" title="按需加载与多模块架构场景的增量更新"></a>按需加载与多模块架构场景的增量更新</h1><p>假设一个页面有主模块main.app.js,同步模块module.sync.js，构建后与主模块合并为主文件的main.app.[hash].js，同步加载，异步模块module.async.js,构建后为异步文件app.async.[hash].js</p>
+<p>缺陷：当更新异步文件的hash指纹，主文件的hash没有同步修改，不能获取到最新资源</p>
+<p>解决：</p>
+<p>webpack中的chunkhash：</p>
+<p>hash与chunkhash:</p>
+<p>hash:the hash of compilation,webpack的compilation对象代表某个版本资源对应的编译进程，当使用webpack的development中间件，每次检测到项目文件有改动就会创建一个compilation,进而能够针对改动生产全新的编译文件。compilation对象不是针对单个文件，是针对项目中所有参与构建的文件，只要任何一个文件改动，compilation对象就改变，作为compilation的hash值就相应改变，因此不论同步文件还是异步文件构建输出后均有相同hash，显然不合理</p>
+<p>chunk在webpack中含义可以理解为散列模块经合并后的“块”，比如同步模块module.sync.js和主模块main.app.js合并为一个“块”，异步模块module.async.js是另一个块，chunkhash就是一个个块依据自身代码内容计算所得的hash值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">output:&#123;</span><br><span class="line">	<span class="attr">filename</span>:<span class="string">&#x27;[name].[chunkhahs:8].js&#x27;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>主文件</th>
+<th>异步文件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>原始状态</td>
+<td>main.app.8d136fcd.js</td>
+<td>app.async.67fa68a0.js</td>
+</tr>
+<tr>
+<td>修改主模块main.app.js</td>
+<td>hash改变</td>
+<td>hash不变</td>
+</tr>
+<tr>
+<td>修改同步模块modue.sync.js</td>
+<td>hash改变</td>
+<td>hash不变</td>
+</tr>
+<tr>
+<td>修改异步模块module.async.js</td>
+<td>hash改变</td>
+<td>hash改变</td>
+</tr>
+</tbody></table>
+<p>contenthash</p>
+<p>webpack默认将CSS代码合并到js文件，要把CSS文件抽离处理独立维护，既有利于浏览器的渲染优化，又能够更好利用客户端缓存</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">test</span>:<span class="regexp">/\.css$/</span>,</span><br><span class="line">    use:ExtractTextPlugin.extract(&#123;</span><br><span class="line">        <span class="attr">filename</span>:<span class="string">&#x27;./dest/[name].[contenthash:8].css&#x27;</span></span><br><span class="line">        <span class="attr">use</span>:[&#123;</span><br><span class="line">        	<span class="attr">loader</span>:<span class="string">&#x27;css-loader&#x27;</span>,</span><br><span class="line">        	<span class="attr">options</span>::&#123;</span><br><span class="line">        		<span class="attr">importLoaders</span>:<span class="number">2</span></span><br><span class="line">    		&#125;</span><br><span class="line">        </span><br><span class="line">    	&#125;],</span><br><span class="line">        <span class="attr">publishPath</span>:<span class="string">&#x27;/&#x27;</span></span><br><span class="line">    &#125;)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>contenthash就是解耦js与css文件hash指纹的关键，contenthash是由ExtractTextPlugin插件提供，代表被导出内容计算后的hash值，如果不用contenthash,main.app.css不会参与chunk的chunkhash计算，但也不会作为一个独立的Chunk进行单独计算，编译后的css文件取值与主文件相同</p>
+<p>使用contenthash:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>主文件hash</th>
+<th>异步文件hash</th>
+<th>CSS文件hash</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>修改主模块</td>
+<td>变</td>
+<td>不变</td>
+<td>不变</td>
+</tr>
+<tr>
+<td>修改同步模块</td>
+<td>变</td>
+<td>不变</td>
+<td>不变</td>
+</tr>
+<tr>
+<td>修改异步模块</td>
+<td>不变</td>
+<td>变</td>
+<td>不变</td>
+</tr>
+<tr>
+<td>修改CSS</td>
+<td>不变</td>
+<td>不变</td>
+<td>变</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/07/css%E9%A2%84%E7%BC%96%E8%AF%91%E5%99%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1102,10 +1268,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-05-03 15:53:37 / 修改时间：16:27:20" itemprop="dateCreated datePublished" datetime="2022-05-03T15:53:37+08:00">2022-05-03</time>
+              <time title="创建时间：2022-05-03 15:53:37" itemprop="dateCreated datePublished" datetime="2022-05-03T15:53:37+08:00">2022-05-03</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-09 15:50:08" itemprop="dateModified" datetime="2022-07-09T15:50:08+08:00">2022-07-09</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -1127,7 +1299,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="一、是什么"><a href="#一、是什么" class="headerlink" title="一、是什么"></a>一、是什么</h2><p>diss算法是一种同层的树节点进行比较的高效算法</p>
+          <p>先阅读尤大的文章：</p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/31809713/answer/53544875">https://www.zhihu.com/question/31809713/answer/53544875</a></p>
+<p>比较innerHTML和Virtual DOM的重绘性能消耗</p>
+<p>innerHTML:render html string O(template size)+重新创建所有DOM元素O(DOM size)</p>
+<p>Vitual DOM :render Vitual DOM +diff O(template size)+必要的DOM更新O</p>
+<p><strong>Vitual DOM render+diff显然比渲染html字符慢，但是它依然his纯js层面计算，比DOM操作而言，便宜了很多</strong></p>
+<h2 id="一、是什么"><a href="#一、是什么" class="headerlink" title="一、是什么"></a>一、是什么</h2><p>diff算法是一种同层的树节点进行比较的高效算法</p>
 <p>两个特点：</p>
 <p>比较只会在同层级进行，不会跨层级比较</p>
 <p>在diff比较过程中，循环会从两边向中间比较</p>
@@ -1402,91 +1580,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/" class="post-title-link" itemprop="url">浏览器垃圾回收机制</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-05-02 16:04:33 / 修改时间：16:29:52" itemprop="dateCreated datePublished" datetime="2022-05-02T16:04:33+08:00">2022-05-02</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="标记清理"><a href="#标记清理" class="headerlink" title="标记清理"></a>标记清理</h1><ul>
-<li>变量进入上下文，会加上标记，证明其存在于该上下文</li>
-<li>将所有在上下文中的变量以及上下文中被访问引用的变量标记去掉，表明这些变量活跃有用</li>
-<li>在此之后再被加上标记的变量标记为准备删除的变量，原因是任何在上下文中的变量都访问不到它们</li>
-<li>执行内存清理，销毁标记的所有非活跃值并回收之前被占用的内存</li>
-</ul>
-<h1 id="引用计数"><a href="#引用计数" class="headerlink" title="引用计数"></a>引用计数</h1><p>引用计数策略相对而言不常用，弊端较多，其思路对每个值记录它被引用的次数，通过最后对次数的判断（引用数为0）来决定是否保留，具体规则：</p>
-<ul>
-<li>声明一个变量，赋予它一个引用值，计数+1</li>
-<li>同一值被赋予另外一个变量，引用+1</li>
-<li>保存对该值引用的变量被其他值覆盖，引用+1</li>
-<li>引用为0，回收内存</li>
-</ul>
-<p>局限：容易造成循环引用</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">problem</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> a=<span class="keyword">new</span> <span class="built_in">Object</span>()</span><br><span class="line">    <span class="keyword">let</span> b=<span class="keyword">new</span> <span class="built_in">Object</span>()</span><br><span class="line">    a.c=b;</span><br><span class="line">    b.d=a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>a和b通过各自的属性相互引用，意味着它们的引用数都为2，在函数结束后，这两个对象不再作用域内，在引用计数策略下，a和b在函数结束后还会存在，因为它们的引用数永远捕获变为0，如果函数被多次调用就会导致大量内存永远不会被释放。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1558,18 +1651,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">171</span>
+          <span class="site-state-item-count">172</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">27</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -1619,7 +1712,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共148.6k字</span>
+  <span class="post-count">博客全站共150.1k字</span>
 </div>
         
 
