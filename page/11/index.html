@@ -182,6 +182,111 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/12/HTTPS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/12/HTTPS/" class="post-title-link" itemprop="url">HTTPS</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-12 22:02:46" itemprop="dateCreated datePublished" datetime="2022-04-12T22:02:46+08:00">2022-04-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-07 21:14:10" itemprop="dateModified" datetime="2022-05-07T21:14:10+08:00">2022-05-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/" itemprop="url" rel="index"><span itemprop="name">HTTP</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="HTTP-加密-认证-完整性保护-HTTPS"><a href="#HTTP-加密-认证-完整性保护-HTTPS" class="headerlink" title="HTTP+加密+认证+完整性保护=HTTPS"></a>HTTP+加密+认证+完整性保护=HTTPS</h1><p>HTTPS是HTTP通信接口部分用SSL和TLS协议代替。</p>
+<p><img src="/2022/04/12/HTTPS/hs1.png" alt="1"></p>
+<p>SSL是独立于HTTP的协议</p>
+<h1 id="相互交换密钥的公开密钥加密技术"><a href="#相互交换密钥的公开密钥加密技术" class="headerlink" title="相互交换密钥的公开密钥加密技术"></a>相互交换密钥的公开密钥加密技术</h1><h2 id="共享密钥加密"><a href="#共享密钥加密" class="headerlink" title="共享密钥加密"></a>共享密钥加密</h2><p>加密和解密用一个密钥的方式，也叫做对称密钥加密</p>
+<p><img src="/2022/04/12/HTTPS/hs2.png" alt="2"></p>
+<h2 id="使用两把密钥的公开密钥加密"><a href="#使用两把密钥的公开密钥加密" class="headerlink" title="使用两把密钥的公开密钥加密"></a>使用两把密钥的公开密钥加密</h2><p>使用非对称的密钥，一把叫做私有密钥，另一把叫做公有密钥，私有密钥不能让任何人知道，公有密钥可以随意发布。</p>
+<p>发送密文的一方使用对方的公开密钥进行加密处理，对方收到被加密的信息后，再使用自己的私有密钥进行解密，解密过程是队离散对数的求值。</p>
+<h2 id="HTTPS采用混合加密机制"><a href="#HTTPS采用混合加密机制" class="headerlink" title="HTTPS采用混合加密机制"></a>HTTPS采用混合加密机制</h2><p><img src="/2022/04/12/HTTPS/hs3.png"></p>
+<h2 id="证明公开密钥正确性的证书"><a href="#证明公开密钥正确性的证书" class="headerlink" title="证明公开密钥正确性的证书"></a>证明公开密钥正确性的证书</h2><p><img src="/2022/04/12/HTTPS/hs4.png"></p>
+<h1 id="HTTPS的安全通信机制"><a href="#HTTPS的安全通信机制" class="headerlink" title="HTTPS的安全通信机制"></a>HTTPS的安全通信机制</h1><p><img src="/2022/04/12/HTTPS/hs5.png"></p>
+<ol>
+<li>客户端通过发送Client Hello报文开始SSL通信，报文中包含客户端支持的SSL的指定版本，加密组件列表</li>
+<li>服务器可进行SSL通信时，会以Server Hello报文作为应答，和客户端一样，在报文中包含SSL版本以及加密组件。服务器的加密组件内容是从接收到的客户端加密组件内筛选出来的</li>
+<li>之后服务器发送Certificate报文，报文中包含公开密钥证书</li>
+<li>最后服务器发送Server Hello Done 报告通知客户端，最初阶段的SSL握手协商部分结束</li>
+<li>SSL第一次握手结束后，客户端以Client Key Exchange报文作为回应，报文中包含通信加密中使用的一种被称为Pre-master secret的随机密码串，该报文已用步骤3中的公开密钥进行加密</li>
+<li>接着客户端继续发送Change Cipher Spec报文，该报文会提示服务器，在此报文之后的通信会采用Pre-master secret密钥加密</li>
+<li>客户端发送Finished报文。该报文包含连接至今全部报文的整体校验值。这次握手协商是否能够成功，要以服务器是否正确解密该报文作为判定标准</li>
+<li>服务器同样发送Change Cipher Spec报文</li>
+<li>服务器同样发送Finished报文</li>
+<li>服务端和客户端的Finished报文交换完毕后，SSL连接就建立完成。通信会受到SSL保护，从此开始进行应用层协议通信，即发送HTTP请求</li>
+</ol>
+<p><img src="/2022/04/12/HTTPS/hs6.png"></p>
+<h2 id="SSL缺点："><a href="#SSL缺点：" class="headerlink" title="SSL缺点："></a>SSL缺点：</h2><ul>
+<li>通信慢</li>
+<li>大量消耗CPU及内存资源，导致处理速度慢</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/12/WebSocket/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1346,115 +1451,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/03/21/%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/21/%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/" class="post-title-link" itemprop="url">前后端身份认证</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-21 14:10:19" itemprop="dateCreated datePublished" datetime="2022-03-21T14:10:19+08:00">2022-03-21</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-12 17:45:43" itemprop="dateModified" datetime="2022-04-12T17:45:43+08:00">2022-04-12</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Node/" itemprop="url" rel="index"><span itemprop="name">Node</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="不同身份认证方案："><a href="#不同身份认证方案：" class="headerlink" title="不同身份认证方案："></a>不同身份认证方案：</h1><p>服务端渲染推荐使用Session认证机制</p>
-<p>前后端分离推荐使用JWT认证机制</p>
-<p>Session认证机制</p>
-<h2 id="Cooike"><a href="#Cooike" class="headerlink" title="Cooike:"></a>Cooike:</h2><p>Cookie是存储在用户浏览器中一段不超过4kb的字符串，它由一个名称（Name),y一个值(Value)和几个用于控制Cookie有效期，安全性，使用范围的可选属性组成</p>
-<p>不同域名下的Cookie各自独立，每当客户端发起请求时，会自动把当前域名下所有未过期的Cookie一同发送到服务器。</p>
-<p>Cookie的几大特性：</p>
-<p>自动发送</p>
-<p>域名独立</p>
-<p>过期时限</p>
-<p>4kb限制</p>
-<p>Cookie在身份认证中的作用：</p>
-<p>客户端第一次请求服务器时，服务器通过响应头的形式，向客户端发送一个身份认证的Cookie，客户端会自动将Cookie保存在浏览器中，随后，当客户端浏览器每次请求服务器时浏览器会自动将身份认证相关的Cookie，通过请求头的形式发送给服务器，服务器即可验证客户端身份</p>
-<p>Cookie具有不安全性</p>
-<p>由于Cookie是存储在浏览器中的，因此浏览器也提供了读写Cookie的API，因此Cookie很容易被伪造，不具有安全性，因此Cookie不能存放重要隐私数据</p>
-<h2 id="Session工作原理："><a href="#Session工作原理：" class="headerlink" title="Session工作原理："></a>Session工作原理：</h2><ol>
-<li>客户端把用户ID和密码等登陆信息放入报文的实体部分，通常是以POST请求发送给服务器，而这时使用HTTPS通信来进行HTML表单画面的显示和用户输入数据的发送</li>
-<li>服务器会发放用以识别用户的Session ID,通过验证从客户端送过来的登录信息进行身份认证，人后把用户认证状态与Session ID绑定后记录在服务器端，向客户端返回响应时，会在首部字段Set-Cookie内写入Sessin ID,为避免SessionId被盗，可在Cookie中加入httponly属性</li>
-<li>客户端接收到从服务器发来的Session ID后，会将其作为Cookie保存哎本地，下次向服务器发送请求时，浏览器自动发送Cookie,服务器通过验证接收到的Session ID识别用户和其认证状态</li>
-</ol>
-<p><img src="/2022/03/21/%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/Session.jpg"></p>
-<p>Session认证需要配合Cookie实现，由于Cookie默认不支持跨域访问，所以当涉及前端跨域请求后端接口时需要做额外配置。因此当前端请求后端接口不涉及跨域请求时推荐使用Session身份认证机制，否则使用JWT认证</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> session=<span class="built_in">require</span>(<span class="string">&#x27;express-session&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> cors=<span class="built_in">require</span>(<span class="string">&#x27;cors&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> bodyParser=<span class="built_in">require</span>(<span class="string">&#x27;body-parser&#x27;</span>)</span><br><span class="line"><span class="comment">//var formParser=require(&#x27;express-formidable&#x27;)</span></span><br><span class="line"><span class="keyword">const</span> app=express();</span><br><span class="line">app.use(cors());</span><br><span class="line">app.use(</span><br><span class="line">    session(&#123;</span><br><span class="line">        <span class="attr">secret</span>:<span class="string">&#x27;xiaoqi&#x27;</span>,</span><br><span class="line">        <span class="attr">resave</span>:<span class="literal">false</span>,</span><br><span class="line">        <span class="attr">saveUninitialized</span>:<span class="literal">true</span></span><br><span class="line">    &#125;)</span><br><span class="line">)</span><br><span class="line"><span class="comment">//托管静态页面</span></span><br><span class="line">app.use(express.static(<span class="string">&#x27;./pages&#x27;</span>));</span><br><span class="line"><span class="comment">//自定义解析Post提交过来的表单数据</span></span><br><span class="line">app.use(bodyParser.urlencoded(&#123;<span class="attr">extended</span>:<span class="literal">false</span>&#125;))</span><br><span class="line">app.use(bodyParser.json())</span><br><span class="line"><span class="comment">//登录API接口</span></span><br><span class="line">app.post(<span class="string">&#x27;/api/login&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//判断用户提交的登录信息是否正确</span></span><br><span class="line">    <span class="built_in">console</span>.log(req.body)</span><br><span class="line">    <span class="keyword">if</span>(req.body.username!==<span class="string">&quot;admin&quot;</span>||req.body.password!==<span class="string">&quot;888888&quot;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> res.send(&#123;<span class="attr">status</span>:<span class="number">1</span>,<span class="attr">msg</span>:<span class="string">&#x27;登录失败&#x27;</span>&#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//登录成功则把信息存储在Session中</span></span><br><span class="line">    <span class="built_in">console</span>.log(req.body);</span><br><span class="line">    req.session.user=req.body;<span class="comment">//用户登录信息</span></span><br><span class="line">    req.session.islogin=<span class="literal">true</span>;<span class="comment">//用户登录状态</span></span><br><span class="line">    res.send(&#123;<span class="attr">status</span>:<span class="number">0</span>,<span class="attr">msg</span>:<span class="string">&#x27;登录成功&#x27;</span>&#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//获取用户姓名的接口</span></span><br><span class="line">app.get(<span class="string">&#x27;/api/username&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//从Session中获取用户姓名响应给客户端</span></span><br><span class="line">    <span class="keyword">if</span>(!req.session.islogin)&#123;</span><br><span class="line">        <span class="keyword">return</span> res.send(&#123;<span class="attr">status</span>:<span class="number">1</span>,<span class="attr">msg</span>:<span class="string">&#x27;fail&#x27;</span>&#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    res.send(&#123;</span><br><span class="line">        <span class="attr">status</span>:<span class="number">0</span>,</span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;success&#x27;</span>,</span><br><span class="line">        <span class="attr">username</span>:req.session.user.username,</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//退出登录的接口</span></span><br><span class="line">app.post(<span class="string">&#x27;/api/logout&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//清空当前客户端的session信息</span></span><br><span class="line">    req.session.destroy()</span><br><span class="line">    res.send(&#123;</span><br><span class="line">        <span class="attr">status</span>:<span class="number">0</span>,</span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;退出登录成功&#x27;</span></span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">80</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;运行在http://127.0.0.1&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="JWT认证机制："><a href="#JWT认证机制：" class="headerlink" title="JWT认证机制："></a>JWT认证机制：</h2><p>工作原理</p>
-<p><img src="/2022/03/21/%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/jwt.jpg" alt="jwt"></p>
-<p>jwt组成部分：</p>
-<p>头部.有效荷载.签名</p>
-<p>Header.PayLoad.Signature</p>
-<p>客户端收到服务器返回的JWT后，通常会将它存储在localStorage或者sessionStorage中，此后客户端每次与服务端通信，都要带上这个JWT的字符串，进行身份认证，推荐把JWT放在Http请求头的Authorization字段中</p>
-<blockquote>
-<p>Authorization：Bearer <token></token></p>
-</blockquote>
-<p>在Express中使用JWT</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> app=express();</span><br><span class="line"><span class="keyword">const</span> cors=<span class="built_in">require</span>(<span class="string">&#x27;cors&#x27;</span>);</span><br><span class="line"><span class="comment">//导入用于生成jwt字符串的包</span></span><br><span class="line"><span class="keyword">const</span> jwt=<span class="built_in">require</span>(<span class="string">&#x27;jsonwebtoken&#x27;</span>);</span><br><span class="line"><span class="comment">//导入用于将客户端发送过来的JWT字符串解析还原成JSON对象的包</span></span><br><span class="line"><span class="keyword">const</span> expressJWT=<span class="built_in">require</span>(<span class="string">&quot;express-jwt&quot;</span>);</span><br><span class="line"><span class="comment">//秘钥的本质是字符串</span></span><br><span class="line"><span class="keyword">const</span> secretkey=<span class="string">&#x27;xiaochunzuishuai^_^&#x27;</span>;</span><br><span class="line"><span class="comment">//以/api/开头的不用权限，配置成功了express-jwt这个中间件，就可以把解析出来的用户信息挂载到req.user上</span></span><br><span class="line">app.use(expressJWT(&#123;</span><br><span class="line">    <span class="attr">secret</span>:secretkey,</span><br><span class="line">    <span class="attr">algorithms</span>: [<span class="string">&#x27;HS256&#x27;</span>],</span><br><span class="line">    &#125;).unless(&#123;<span class="attr">path</span>:[<span class="regexp">/^\/api\//</span>]&#125;))</span><br><span class="line"><span class="keyword">const</span> bodyParser=<span class="built_in">require</span>(<span class="string">&#x27;body-parser&#x27;</span>)</span><br><span class="line">app.use(cors());</span><br><span class="line"></span><br><span class="line"><span class="comment">//托管静态页面</span></span><br><span class="line">app.use(express.static(<span class="string">&#x27;./pages&#x27;</span>));</span><br><span class="line"><span class="comment">//自定义解析Post提交过来的表单数据</span></span><br><span class="line">app.use(bodyParser.urlencoded(&#123;<span class="attr">extended</span>:<span class="literal">false</span>&#125;))</span><br><span class="line">app.use(bodyParser.json())</span><br><span class="line"><span class="comment">//登录API接口</span></span><br><span class="line">app.post(<span class="string">&#x27;/api/login&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//判断用户提交的登录信息是否正确</span></span><br><span class="line">   <span class="keyword">const</span> userInfo=req.body;</span><br><span class="line">    <span class="keyword">if</span>(userInfo.username!==<span class="string">&quot;admin&quot;</span>||userInfo.password!==<span class="string">&quot;888888&quot;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> res.send(&#123;<span class="attr">status</span>:<span class="number">1</span>,<span class="attr">msg</span>:<span class="string">&#x27;登录失败&#x27;</span>&#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//登录成功生成JWT字符串，通过token属性响应给客户端</span></span><br><span class="line">    res.send(&#123;</span><br><span class="line">        <span class="attr">satus</span>:<span class="number">0</span>,</span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;success&#x27;</span>,</span><br><span class="line">        <span class="comment">//不要把密码加密到token字符串中</span></span><br><span class="line">        <span class="attr">token</span>:jwt.sign(&#123;<span class="attr">username</span>:userInfo.username&#125;,secretkey,&#123;<span class="attr">expiresIn</span>:<span class="string">&#x27;100s&#x27;</span>&#125;),</span><br><span class="line">        <span class="attr">data</span>:req.user</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//有权限的接口,配置成功了express-jwt这个中间件，有权限的接口就可以通过req.user获取解析出来的用户信息</span></span><br><span class="line">app.get(<span class="string">&#x27;/admin/getInfo&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    res.send(&#123;</span><br><span class="line">        <span class="attr">status</span>:<span class="number">0</span>,</span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;success&#x27;</span>,</span><br><span class="line">        <span class="attr">data</span>:req.user</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//退出登录的接口</span></span><br><span class="line">app.post(<span class="string">&#x27;/api/logout&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    res.send(&#123;</span><br><span class="line">        <span class="attr">status</span>:<span class="number">0</span>,</span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;退出登录成功&#x27;</span></span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//配置全局错误处理中间件</span></span><br><span class="line">app.use(<span class="function">(<span class="params">err,req,res,next</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//token解析失败导致的错误,Token过期或不合法</span></span><br><span class="line">    <span class="keyword">if</span>(err.name===<span class="string">&#x27;UnauthorizedError&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> res.send(&#123;<span class="attr">status</span>:<span class="number">401</span>,<span class="attr">message</span>:<span class="string">&#x27;无效的token&#x27;</span>&#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//其他原因导致的错误</span></span><br><span class="line">    res.send(&#123;<span class="attr">status</span>:<span class="number">500</span>,<span class="attr">message</span>:<span class="string">&#x27;未知错误&#x27;</span>&#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">80</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;运行在http://127.0.0.1&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1526,7 +1522,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">172</span>
+          <span class="site-state-item-count">173</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

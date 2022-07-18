@@ -6,7 +6,7 @@
   <link href="https://coloey.github.io/atom.xml" rel="self"/>
   
   <link href="https://coloey.github.io/"/>
-  <updated>2022-07-10T08:54:15.531Z</updated>
+  <updated>2022-07-17T09:04:34.165Z</updated>
   <id>https://coloey.github.io/</id>
   
   <author>
@@ -15,6 +15,19 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>IOC原理</title>
+    <link href="https://coloey.github.io/2022/07/17/IOC%E5%8E%9F%E7%90%86/"/>
+    <id>https://coloey.github.io/2022/07/17/IOC%E5%8E%9F%E7%90%86/</id>
+    <published>2022-07-17T09:04:33.000Z</published>
+    <updated>2022-07-17T09:04:34.165Z</updated>
+    
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>mini-vue</title>
@@ -444,33 +457,6 @@
     
     
     
-    
-  </entry>
-  
-  <entry>
-    <title>函数柯里化</title>
-    <link href="https://coloey.github.io/2022/05/26/%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96/"/>
-    <id>https://coloey.github.io/2022/05/26/%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96/</id>
-    <published>2022-05-26T08:37:28.000Z</published>
-    <updated>2022-05-29T07:44:27.981Z</updated>
-    
-    <content type="html"><![CDATA[<p>柯里化：把接受多个参数的函数变换成接收一个单一参数（最初函数的第一个参数）的函数，并且返回接收余下的参数而且返回结果的新函数的技术</p><h1 id="柯里化的通用实现方法："><a href="#柯里化的通用实现方法：" class="headerlink" title="柯里化的通用实现方法："></a>柯里化的通用实现方法：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> curry=<span class="function">(<span class="params">fn,...args</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> args.length&lt;fn.length<span class="comment">//函数参数个数可以通过函数.length属性访问，</span></span><br><span class="line">    ?<span class="function">(<span class="params">..._args</span>)=&gt;</span>curry(fn,...args,..._args)<span class="comment">//传入参数小于原始函数fn参数的个数时，继续对当前函数进行柯里化，返回一个接受所有参数（当前参数和剩余参数）的函数</span></span><br><span class="line">    :fn(...args)<span class="comment">//否则直接执行函数</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add1</span>(<span class="params">a,b,c,d</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a+b+c+d;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> add=curry(add1)</span><br><span class="line"><span class="built_in">console</span>.log(add(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>))<span class="comment">//10</span></span><br><span class="line"><span class="built_in">console</span>.log(add(<span class="number">1</span>)(<span class="number">2</span>)(<span class="number">3</span>)(<span class="number">4</span>));<span class="comment">//10</span></span><br><span class="line"><span class="built_in">console</span>.log(add(<span class="number">1</span>,<span class="number">2</span>)(<span class="number">3</span>,<span class="number">4</span>));<span class="comment">//10</span></span><br></pre></td></tr></table></figure><h1 id="柯里化的作用："><a href="#柯里化的作用：" class="headerlink" title="柯里化的作用："></a>柯里化的作用：</h1><h2 id="参数复用"><a href="#参数复用" class="headerlink" title="参数复用"></a>参数复用</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 正常正则验证字符串 reg.test(txt)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数封装后</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">check</span>(<span class="params">reg, txt</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> reg.test(txt)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">check(<span class="regexp">/\d+/g</span>, <span class="string">&#x27;test&#x27;</span>)       <span class="comment">//false</span></span><br><span class="line">check(<span class="regexp">/[a-z]+/g</span>, <span class="string">&#x27;test&#x27;</span>)    <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Currying后</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">curryingCheck</span>(<span class="params">reg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">txt</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> reg.test(txt)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> hasNumber = curryingCheck(<span class="regexp">/\d+/g</span>)</span><br><span class="line"><span class="keyword">var</span> hasLetter = curryingCheck(<span class="regexp">/[a-z]+/g</span>)</span><br><span class="line"></span><br><span class="line">hasNumber(<span class="string">&#x27;test1&#x27;</span>)      <span class="comment">// true</span></span><br><span class="line">hasNumber(<span class="string">&#x27;testtest&#x27;</span>)   <span class="comment">// false</span></span><br><span class="line">hasLetter(<span class="string">&#x27;21212&#x27;</span>)      <span class="comment">// false</span></span><br></pre></td></tr></table></figure><p>第一个参数reg进行了复用</p><h2 id="提前返回"><a href="#提前返回" class="headerlink" title="提前返回"></a>提前返回</h2><p>举个例子，兼容现代浏览器以及IE浏览器的事件添加方法，我们正常情况可能这样写：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> addEvent=<span class="function"><span class="keyword">function</span>(<span class="params">el,type,fn,capture</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">window</span>.addEventListener)&#123;</span><br><span class="line">        el.addEventListener(type,<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">            fn.call(el,e);</span><br><span class="line">        &#125;,capture);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">window</span>.attachEvent)&#123;</span><br><span class="line">        el.attachEvent(<span class="string">&quot;on&quot;</span>+type,<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">            fn.call(el,e);</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>上面的方法我们每次使用addEvent为元素添加事件的时候，都会走一遍if…else if…，其实只要判断一次，用柯里化</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> addEvent=(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">window</span>.addEventListener)&#123;</span><br><span class="line">        el.addEventListener(type,<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">            fn.call(el,e);</span><br><span class="line">        &#125;,capture);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">window</span>.attachEvent)&#123;</span><br><span class="line">        el.attachEvent(<span class="string">&quot;on&quot;</span>+type,<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">            fn.call(el,e);</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure><h2 id="延迟执行"><a href="#延迟执行" class="headerlink" title="延迟执行"></a>延迟执行</h2><p>比如bind方法的实现机制就是柯里化：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.bind=<span class="function"><span class="keyword">function</span>(<span class="params">context</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> self=<span class="built_in">this</span>;</span><br><span class="line">    <span class="keyword">var</span> args=<span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>,<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="title">funtion</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> self.apply(context,args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>参考文章：</p><p><a href="https://juejin.cn/post/6844904093467541517">https://juejin.cn/post/6844904093467541517</a></p><p><a href="https://www.zhangxinxu.com/wordpress/2013/02/js-currying/">https://www.zhangxinxu.com/wordpress/2013/02/js-currying/</a></p><p><a href="https://www.jianshu.com/p/2975c25e4d71">https://www.jianshu.com/p/2975c25e4d71</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;柯里化：把接受多个参数的函数变换成接收一个单一参数（最初函数的第一个参数）的函数，并且返回接收余下的参数而且返回结果的新函数的技术&lt;/p&gt;
-&lt;h1 id=&quot;柯里化的通用实现方法：&quot;&gt;&lt;a href=&quot;#柯里化的通用实现方法：&quot; class=&quot;headerlink&quot; titl</summary>
-      
-    
-    
-    
-    <category term="JavaScript" scheme="https://coloey.github.io/categories/JavaScript/"/>
-    
-    
-    <category term="手撕代码" scheme="https://coloey.github.io/tags/%E6%89%8B%E6%92%95%E4%BB%A3%E7%A0%81/"/>
-    
-    <category term="JavaScript" scheme="https://coloey.github.io/tags/JavaScript/"/>
     
   </entry>
   
