@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"coloey.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="对数组元素或者属性的读取操作：通过索引访问数组元素值:arr[0] 访问数组的长度:arr.length 把数组作为对象，使用for…in循环遍历 使用for…of迭代遍历数组 数组的原型方法，如concat&#x2F;join&#x2F;every&#x2F;some&#x2F;find&#x2F;findIndex&#x2F;includes等，以及不改变原数组的原型方法 1 数组索引与length通过索引设置数组元素的值时，会执行内部方法[[Set]">
+<meta property="og:type" content="article">
+<meta property="og:title" content="代理数组">
+<meta property="og:url" content="https://coloey.github.io/2022/08/04/%E4%BB%A3%E7%90%86%E6%95%B0%E7%BB%84/index.html">
+<meta property="og:site_name" content="小柒">
+<meta property="og:description" content="对数组元素或者属性的读取操作：通过索引访问数组元素值:arr[0] 访问数组的长度:arr.length 把数组作为对象，使用for…in循环遍历 使用for…of迭代遍历数组 数组的原型方法，如concat&#x2F;join&#x2F;every&#x2F;some&#x2F;find&#x2F;findIndex&#x2F;includes等，以及不改变原数组的原型方法 1 数组索引与length通过索引设置数组元素的值时，会执行内部方法[[Set]">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-08-04T03:38:19.000Z">
+<meta property="article:modified_time" content="2022-08-04T06:59:22.296Z">
+<meta property="article:author" content="小柒">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://coloey.github.io/2022/08/04/%E4%BB%A3%E7%90%86%E6%95%B0%E7%BB%84/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>代理数组 | 小柒</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="小柒" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小柒</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">www.xiaoqi.cn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/04/%E4%BB%A3%E7%90%86%E6%95%B0%E7%BB%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h1 class="post-title" itemprop="name headline">
+          代理数组
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-04 11:38:19 / 修改时间：14:59:22" itemprop="dateCreated datePublished" datetime="2022-08-04T11:38:19+08:00">2022-08-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="对数组元素或者属性的读取操作："><a href="#对数组元素或者属性的读取操作：" class="headerlink" title="对数组元素或者属性的读取操作："></a>对数组元素或者属性的读取操作：</h1><p>通过索引访问数组元素值:arr[0]</p>
+<p>访问数组的长度:arr.length</p>
+<p>把数组作为对象，使用for…in循环遍历</p>
+<p>使用for…of迭代遍历数组</p>
+<p>数组的原型方法，如concat/join/every/some/find/findIndex/includes等，以及不改变原数组的原型方法</p>
+<h2 id="1-数组索引与length"><a href="#1-数组索引与length" class="headerlink" title="1 数组索引与length"></a><strong>1 数组索引与length</strong></h2><p>通过索引设置数组元素的值时，会执行内部方法[[Set]],内部方法[[Set]]依赖于[[DefineOwnProperty]],当设置的索引值大于数组当前长度，更新数组length属性，触发与length属性相关联的副作用函数重新执行，修改set拦截函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">set</span>(<span class="params">target,key,newValue</span>)</span>&#123;</span><br><span class="line">            <span class="comment">//如果是只读的打印警告信息</span></span><br><span class="line">            <span class="keyword">if</span>(isReadOnly)&#123;</span><br><span class="line">                <span class="built_in">console</span>.warn(<span class="string">`属性<span class="subst">$&#123;key&#125;</span>是只读的`</span>)</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//获取旧值</span></span><br><span class="line">            <span class="keyword">const</span> oldValue=target[key]</span><br><span class="line">            <span class="comment">//如果代理目标对象是数组，则检测被设置的索引值是否小于数组长度</span></span><br><span class="line">            <span class="comment">//如果是，则为SET操作，否则为ADD操作</span></span><br><span class="line">            <span class="keyword">const</span> type=<span class="built_in">Array</span>.isArray(target)</span><br><span class="line">                        ?<span class="built_in">Number</span>(key)&lt;length?<span class="string">&#x27;SET&#x27;</span>:<span class="string">&#x27;ADD&#x27;</span></span><br><span class="line">                        :<span class="built_in">Object</span>.prototype.hasOwnProperty.call(target,key)?<span class="string">&#x27;SET&#x27;</span>:<span class="string">&#x27;ADD&#x27;</span></span><br><span class="line">           </span><br><span class="line">            <span class="comment">//设置属性值</span></span><br><span class="line">            <span class="keyword">const</span> res=<span class="built_in">Reflect</span>.set(target,key,receiver,newValue)</span><br><span class="line">            <span class="comment">//说明receiver是target的代理对象</span></span><br><span class="line">            <span class="keyword">if</span>(target===receiver.raw)&#123;</span><br><span class="line">                <span class="comment">//比较新值和旧值，只有当它们不全等并且都不是NAN才触发响应</span></span><br><span class="line">                <span class="keyword">if</span>(oldValue!==newValue&amp;&amp;(oldValue===oldValue||newValue===newValue))&#123;</span><br><span class="line">                   <span class="comment">//假如设置数组length属性为0，会影响数组元素，因此要触发新的响应</span></span><br><span class="line">                    trigger(target,key,type,newValue)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">trigger</span>(<span class="params">target,key</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> depsMap=bucket.get(target)</span><br><span class="line">    <span class="keyword">if</span>(!depsMap)<span class="keyword">return</span></span><br><span class="line">    <span class="keyword">const</span> effects=depsMap.get(key)</span><br><span class="line">    <span class="keyword">const</span> effectsToRun=<span class="keyword">new</span> <span class="built_in">Set</span>(effects)</span><br><span class="line">    <span class="comment">//当操作类型是ADD或者DELETE,需要触发与length相关的副作用函数执行</span></span><br><span class="line">    <span class="keyword">if</span>(type===<span class="string">&#x27;ADD&#x27;</span>||type===<span class="string">&#x27;DELETE&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">const</span> iterateEffects=depsMap.get(<span class="string">&#x27;length&#x27;</span>)</span><br><span class="line">        lengthEffects&amp;&amp;lengthEffects.forEach(<span class="function"><span class="params">effectfn</span>=&gt;</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(effectfn!==activeEffect)&#123;</span><br><span class="line">                effectsToRun.add(effectfn)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    effects&amp;&amp;effects.forEach(<span class="function"><span class="params">effectfn</span>=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(activeEffect!=effectfn)&#123;<span class="comment">//只有当trigger触发执行的副作用函数和当前正在执行的副作用函数不相同时才触发执行，否则会出现栈溢出</span></span><br><span class="line">            effectsToRun.add(effectfn)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)   </span><br><span class="line">    effectsToRun.forEach(<span class="function"><span class="params">effectfn</span>=&gt;</span>effectfn())</span><br><span class="line">    <span class="comment">//effect&amp;&amp;effect.forEach(fn=&gt;fn())//会产生无限执行</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-数组查找方法"><a href="#2-数组查找方法" class="headerlink" title="2 数组查找方法"></a>2 数组查找方法</h2><p>arr.includes(arr[0])中arr是代理对象，includes函数执行时this指向的是代理对象，即arr,includes方法会通过索引读取数组元素值，如果值时可以被代理的，那么得到的值就是新的代理对象，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reactive</span>(<span class="params">obj</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//每次调用reactive时都会创建新的代理对象</span></span><br><span class="line">    <span class="keyword">return</span> createReactive(obj)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解决方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//当参数Obj是相同的不用创建新的代理对象</span></span><br><span class="line"><span class="comment">//存储原始对象到代理对象的映射</span></span><br><span class="line"><span class="keyword">const</span> reactiveMap=<span class="keyword">new</span> <span class="built_in">Map</span>()</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reactive</span>(<span class="params">obj</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//优先通过原始对象obj查找之前创建的代理对象，如果找到了，直接返回已有的代理对象</span></span><br><span class="line">    <span class="keyword">const</span> existionProxy=reactiveMap.get(obj)</span><br><span class="line">    <span class="keyword">if</span>(existionProxy)<span class="keyword">return</span> existionProxy</span><br><span class="line">    <span class="comment">//否则创建新的代理对象</span></span><br><span class="line">    proxy=createReactive(obj)</span><br><span class="line">    reactiveMap.set(obj,proxy)</span><br><span class="line">    <span class="keyword">return</span> proxy</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然而，下面这段代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;&#125;;</span><br><span class="line"><span class="keyword">const</span> arr = reactive([obj])</span><br><span class="line"><span class="built_in">console</span>.log(arr.includes[obj])<span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+
+<p>includes内部的this指向的是代理对象arr,并且在获取数组元素时得到的也是代理对象，所以用原始对象obj去查找找不到，返回false,因此我们需要重写includes方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arrInstrumentations=&#123;&#125;</span><br><span class="line"><span class="comment">//重写方法</span></span><br><span class="line">[<span class="string">&#x27;includes&#x27;</span>,<span class="string">&#x27;indexOf&#x27;</span>,<span class="string">&#x27;lastIndexOf&#x27;</span>].forEach(<span class="function"><span class="params">method</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> originMethod=<span class="built_in">Array</span>.prototype[method]</span><br><span class="line">    arrInstrumentations[method]=<span class="function"><span class="keyword">function</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">        <span class="comment">//先在代理对象中查找，结果存储在res实现了arr.includes(obj)的默认方法</span></span><br><span class="line">        <span class="comment">//找不到就去原始数组上查找</span></span><br><span class="line">        <span class="keyword">const</span> res=originMethod.apply(<span class="built_in">this</span>,args)</span><br><span class="line">        <span class="comment">//找不到则在原始对象中查找</span></span><br><span class="line">        <span class="keyword">if</span>(res===<span class="literal">false</span>)&#123;</span><br><span class="line">            res=originMethod.apply(<span class="built_in">this</span>.raw,args)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">get</span>(<span class="params">target,key,receiver</span>)</span>&#123;</span><br><span class="line">            <span class="comment">//通过&quot;raw”属性访问原始对象</span></span><br><span class="line">            <span class="keyword">if</span>(key===<span class="string">&#x27;raw&#x27;</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> target</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//如果操作对象存在于arrInstrumentations上，返回定义在arrInstrumentation上的值</span></span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">Array</span>.isArray(target)&amp;&amp;arrInstrumentations.hasOwnProperty(key))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">Reflect</span>.get(arrInstrumentations,key,receiver)</span><br><span class="line">            &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<h2 id="3-push-pop-shift-unshift等方法"><a href="#3-push-pop-shift-unshift等方法" class="headerlink" title="3 push/pop/shift/unshift等方法"></a>3 push/pop/shift/unshift等方法</h2><p>当调用数组的push方法时，即会读取数组length属性值也会设置数组length属性值，会导致两个独立的副作用函数相互影响，就像</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr=reactive([])</span><br><span class="line">effect=(<span class="function">()=&gt;</span>&#123;arr.push(<span class="number">1</span>)&#125;)</span><br><span class="line">effect=(<span class="function">()=&gt;</span>&#123;arr.push(<span class="number">1</span>)&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>会得到栈溢出的错误</p>
+<p>分析：</p>
+<ul>
+<li>第一个副作用函数执行，在该函数内，调用arr.push方法向数组中添加一个元素，调用数组push方法时会间接读取数组的length属性，所以第一个副作用函数执行完毕会与length属性建立响应联系</li>
+<li>第二个副作用函数执行，同样，与length属性建立响应联系，同时调用arr.push会设置length属性，于是响应式系统尝试把与length有关的副作用函数全部取出执行，就包括第一个副作用函数，此时，第二个副作用函数还未执行完毕就去调用第一个副作用函数</li>
+<li>第一个副作用函数再次执行，也会间接设置数组的length属性，于是响应系统又尝试把所以与length属性相关联娿副作用取出执行，其中包括第二个副作用函数</li>
+<li>循环往复导致栈溢出</li>
+</ul>
+<p>因此，我们可以通过屏蔽对length属性的读取，避免在它与副作用函数之间建立联系</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//一个标记变量，代表是否追踪</span></span><br><span class="line"><span class="keyword">let</span> shouldTrack = <span class="literal">true</span></span><br><span class="line">[<span class="string">&#x27;push&#x27;</span>].forEach(<span class="function"><span class="params">method</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//取得原始push方法</span></span><br><span class="line">    <span class="keyword">const</span> originMethod = <span class="built_in">Array</span>.prototype[method]</span><br><span class="line">    <span class="comment">//重写</span></span><br><span class="line">    arrInstrumentations[method] = <span class="function"><span class="keyword">function</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">        <span class="comment">//在调用方法前禁止追踪</span></span><br><span class="line">        shouldTrack=<span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">let</span> res = originMethod.apply(<span class="built_in">this</span>,args)</span><br><span class="line">        <span class="comment">//调用原始方法后，恢复原来行为，即允许追踪</span></span><br><span class="line">        shouldTrack=<span class="literal">true</span></span><br><span class="line">        <span class="keyword">return</span> res</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>在执行默认行为之前先将shouldTrack置false,禁止追踪，当push方法默认行为执行完毕后，将shouldTrack还原为true,</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">track</span>(<span class="params">target,key</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//禁止追踪时直接返回</span></span><br><span class="line">    <span class="keyword">if</span>(!activeEffect || !shouldTrack)<span class="keyword">return</span> </span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当push方法间接读取length属性，由于此时是禁止追踪状态，所以length属性与副作用函数之间不会建立响应联系，也就不会产生栈溢出</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/07/31/%E4%BB%A3%E7%90%86object/" rel="prev" title="代理object">
+      <i class="fa fa-chevron-left"></i> 代理object
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%B9%E6%95%B0%E7%BB%84%E5%85%83%E7%B4%A0%E6%88%96%E8%80%85%E5%B1%9E%E6%80%A7%E7%9A%84%E8%AF%BB%E5%8F%96%E6%93%8D%E4%BD%9C%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">对数组元素或者属性的读取操作：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%95%B0%E7%BB%84%E7%B4%A2%E5%BC%95%E4%B8%8Elength"><span class="nav-number">1.1.</span> <span class="nav-text">1 数组索引与length</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%95%B0%E7%BB%84%E6%9F%A5%E6%89%BE%E6%96%B9%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">2 数组查找方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-push-pop-shift-unshift%E7%AD%89%E6%96%B9%E6%B3%95"><span class="nav-number">1.3.</span> <span class="nav-text">3 push&#x2F;pop&#x2F;shift&#x2F;unshift等方法</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小柒"
+      src="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+  <p class="site-author-name" itemprop="name">小柒</p>
+  <div class="site-description" itemprop="description">欢迎来到我的世界!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">183</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小柒</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_pv">
+    本站访问量:<span id="busuanzi_value_site_pv"></span>次
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_uv">
+    本站总访客量：<span id="busuanzi_value_site_uv"></span>人
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共157.9k字</span>
+</div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 动态背景 -->
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="../source/js/src/clicklove.js"></script>
+</body>
+</html>
