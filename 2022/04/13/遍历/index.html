@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"coloey.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="for…in 用来遍历对象的可枚举属性列表 forEach(…)用来遍历数组中的所有普值并忽略回调函数的返回值 for…of直接遍历值，会首先向被访问对象请求一个迭代器对象，然后通过调用迭代器对象的next()方法来遍历所有返回值 自定义对象迭代器 1234567891011121314151617181920212223242526272829var myObject&#x3D;&amp;#123;      a">
+  <meta name="description" content="for…in 用来遍历对象的可枚举属性列表，包括原型链上的键， 某些情况下会以任意顺序遍历键名 forEach(…)用来遍历数组中的所有普值并忽略回调函数的返回值， break命令或return 命令不能奏效 for…of直接遍历值，会首先向被访问对象请求一个迭代器对象，然后通过调用迭代器对象的next()方法来遍历所有返回值， 和for…in一样简洁的语法，可以与break,continue和r">
 <meta property="og:type" content="article">
-<meta property="og:title" content="遍历">
+<meta property="og:title" content="js中的遍历">
 <meta property="og:url" content="https://coloey.github.io/2022/04/13/%E9%81%8D%E5%8E%86/index.html">
 <meta property="og:site_name" content="小柒">
-<meta property="og:description" content="for…in 用来遍历对象的可枚举属性列表 forEach(…)用来遍历数组中的所有普值并忽略回调函数的返回值 for…of直接遍历值，会首先向被访问对象请求一个迭代器对象，然后通过调用迭代器对象的next()方法来遍历所有返回值 自定义对象迭代器 1234567891011121314151617181920212223242526272829var myObject&#x3D;&amp;#123;      a">
+<meta property="og:description" content="for…in 用来遍历对象的可枚举属性列表，包括原型链上的键， 某些情况下会以任意顺序遍历键名 forEach(…)用来遍历数组中的所有普值并忽略回调函数的返回值， break命令或return 命令不能奏效 for…of直接遍历值，会首先向被访问对象请求一个迭代器对象，然后通过调用迭代器对象的next()方法来遍历所有返回值， 和for…in一样简洁的语法，可以与break,continue和r">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-04-13T09:33:34.000Z">
-<meta property="article:modified_time" content="2022-04-13T09:56:49.229Z">
+<meta property="article:modified_time" content="2022-08-14T08:22:44.419Z">
 <meta property="article:author" content="小柒">
 <meta name="twitter:card" content="summary">
 
@@ -45,7 +45,7 @@
   };
 </script>
 
-  <title>遍历 | 小柒</title>
+  <title>js中的遍历 | 小柒</title>
   
 
 
@@ -199,7 +199,7 @@
       <header class="post-header">
 
         <h1 class="post-title" itemprop="name headline">
-          遍历
+          js中的遍历
         </h1>
 
         <div class="post-meta">
@@ -208,10 +208,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-04-13 17:33:34 / 修改时间：17:56:49" itemprop="dateCreated datePublished" datetime="2022-04-13T17:33:34+08:00">2022-04-13</time>
+              <time title="创建时间：2022-04-13 17:33:34" itemprop="dateCreated datePublished" datetime="2022-04-13T17:33:34+08:00">2022-04-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-14 16:22:44" itemprop="dateModified" datetime="2022-08-14T16:22:44+08:00">2022-08-14</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -233,9 +239,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>for…in 用来遍历对象的可枚举属性列表</p>
-<p>forEach(…)用来遍历数组中的所有普值并忽略回调函数的返回值</p>
-<p>for…of直接遍历值，会首先向被访问对象请求一个迭代器对象，然后通过调用迭代器对象的next()方法来遍历所有返回值</p>
+        <p>for…in 用来遍历对象的可枚举属性列表，包括原型链上的键，</p>
+<p>某些情况下会以任意顺序遍历键名</p>
+<p>forEach(…)用来遍历数组中的所有普值并忽略回调函数的返回值，</p>
+<p>break命令或return 命令不能奏效</p>
+<p>for…of直接遍历值，会首先向被访问对象请求一个迭代器对象，然后通过调用迭代器对象的next()方法来遍历所有返回值，</p>
+<p>和for…in一样简洁的语法，可以与break,continue和return配合使用，提供了遍历所有数据结构的统一操作接口</p>
 <p>自定义对象迭代器</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myObject=&#123;</span><br><span class="line">      <span class="attr">a</span>:<span class="number">2</span>,</span><br><span class="line">      <span class="attr">b</span>:<span class="number">3</span></span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="built_in">Object</span>.defineProperty(myObject,<span class="built_in">Symbol</span>.iterator,&#123;</span><br><span class="line">      <span class="attr">enumerable</span>:<span class="literal">false</span>,</span><br><span class="line">      <span class="attr">writable</span>:<span class="literal">false</span>,</span><br><span class="line">      <span class="attr">configurable</span>:<span class="literal">true</span>,</span><br><span class="line">      <span class="attr">value</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">          <span class="keyword">var</span> o=<span class="built_in">this</span>;</span><br><span class="line">          <span class="keyword">var</span> idx=<span class="number">0</span>;</span><br><span class="line">          <span class="keyword">var</span> ks=<span class="built_in">Object</span>.keys(o);<span class="comment">//获取Object对象所有键值</span></span><br><span class="line">          <span class="keyword">return</span>&#123;</span><br><span class="line">              <span class="attr">next</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="comment">//next是一个函数</span></span><br><span class="line">                  <span class="keyword">return</span>&#123;</span><br><span class="line">                      <span class="attr">value</span>:o[ks[idx++]],</span><br><span class="line">                      <span class="attr">done</span>:(idx&gt;ks.length)</span><br><span class="line">                  &#125;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">var</span> it=myObject[<span class="built_in">Symbol</span>.iterator]();</span><br><span class="line">  it.next();</span><br><span class="line">  it.next();</span><br><span class="line">  it.next();</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">let</span> v <span class="keyword">of</span> myObject)&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(v);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
@@ -334,7 +343,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">183</span>
+          <span class="site-state-item-count">185</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -395,7 +404,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共157.9k字</span>
+  <span class="post-count">博客全站共160.7k字</span>
 </div>
         
 

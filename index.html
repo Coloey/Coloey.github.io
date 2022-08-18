@@ -182,6 +182,198 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/15/%E5%9F%BA%E4%BA%8E%E8%81%8A%E5%A4%A9%E5%AE%A4%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/15/%E5%9F%BA%E4%BA%8E%E8%81%8A%E5%A4%A9%E5%AE%A4%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">基于聊天室项目的总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-08-15 20:39:18" itemprop="dateCreated datePublished" datetime="2022-08-15T20:39:18+08:00">2022-08-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-17 13:35:11" itemprop="dateModified" datetime="2022-08-17T13:35:11+08:00">2022-08-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">项目总结</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>用node中的express搭建服务器,写接口，登录方式采用jwt登录验证，用mysql存储各个人员信息,用soket.io实现聊天功能，webpack打包项目，以及动态展示功能,支持修改密码，注册用户，一对一实时聊天，发表情包,图片等功能，各个页面之间的跳转用vue-router实现，跳转使用路由懒加载，只会在第一次进入页面时才会获取这个函数，然后使用缓存数据。搭配使用Weui样式库。</p>
+<h1 id="jwt登录认证的实现："><a href="#jwt登录认证的实现：" class="headerlink" title="jwt登录认证的实现："></a>jwt登录认证的实现：</h1><p>jwt组成部分：</p>
+<p>头部.有效荷载.签名</p>
+<p>Header.PayLoad.Signature</p>
+<p>原理：</p>
+<p>当用户使用凭据成功登录后，将返回一个json web token,由于token是凭据，不应该将token保留超过所需要的时间，也不应该将敏感数据存储在浏览器存储中，token在Authotization标头中放，跨域资源共享不会成为问题，因为它不使用cookie,使用jwt认证，应该程序可以使用access token去访问受保护的资源，比如在express中的使用，可以</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//以/api/开头的不用权限，配置成功了express-jwt这个中间件，就可以把解析出来的用户信息挂载到req.user上</span></span><br><span class="line">app.use(expressJWT(&#123;</span><br><span class="line">    <span class="attr">secret</span>:secretkey,</span><br><span class="line">    <span class="attr">algorithms</span>: [<span class="string">&#x27;HS256&#x27;</span>],</span><br><span class="line">    &#125;).unless(&#123;<span class="attr">path</span>:[<span class="regexp">/^\/api\//</span>]&#125;))</span><br></pre></td></tr></table></figure>
+
+<h1 id="性能优化："><a href="#性能优化：" class="headerlink" title="性能优化："></a>性能优化：</h1><h2 id="路由懒加载"><a href="#路由懒加载" class="headerlink" title="路由懒加载"></a>路由懒加载</h2><h3 id="1-什么叫路由懒加载？"><a href="#1-什么叫路由懒加载？" class="headerlink" title="1 什么叫路由懒加载？"></a>1 什么叫路由懒加载？</h3><p>也叫延迟加载，即在需要的时候进行加载</p>
+<h3 id="2-为什么需要路由懒加载？"><a href="#2-为什么需要路由懒加载？" class="headerlink" title="2 为什么需要路由懒加载？"></a>2 为什么需要路由懒加载？</h3><ul>
+<li>首先，路由通常会定义很多不同的页面</li>
+<li>这个页面在项目build打包后，一般情况下，会放在一个单独的js文件中</li>
+<li>但是，如果很多页面都放在同一个js文件中，必然会造成这个页面非常大</li>
+<li>如果我们一次性地从服务器中请求这个页面，可能会花费一定的时间，用户体验不好</li>
+<li>为了避免这种情况，<strong>我们把不同路由对应的组件分割成不同的代码块，然后当路由被访问的时候才加载对应组件，这就是路由懒加载</strong></li>
+</ul>
+<h3 id="实现方式："><a href="#实现方式：" class="headerlink" title="实现方式："></a>实现方式：</h3><h4 id="Vue异步组件"><a href="#Vue异步组件" class="headerlink" title="Vue异步组件"></a>Vue异步组件</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">path</span>:<span class="string">&#x27;/problem&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>:<span class="string">&#x27;problem&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>:<span class="function"><span class="params">resolve</span>=&gt;</span><span class="built_in">require</span>([<span class="string">&#x27;../pages/problemList&#x27;</span>],resolve)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="ES6中的import-—推荐使用"><a href="#ES6中的import-—推荐使用" class="headerlink" title="ES6中的import()—推荐使用"></a>ES6中的import()—推荐使用</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">routes:[&#123;</span><br><span class="line">       <span class="attr">path</span>:<span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">       <span class="attr">name</span>:<span class="string">&quot;通讯录&quot;</span>,</span><br><span class="line">       <span class="attr">component</span>:<span class="function">()=&gt;</span><span class="built_in">Promise</span>.resolve(<span class="keyword">import</span>(<span class="string">&quot;../components/contact/contact.vue&quot;</span>))</span><br><span class="line">   &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h4 id="webpack的require-ensure"><a href="#webpack的require-ensure" class="headerlink" title="webpack的require.ensure()"></a>webpack的require.ensure()</h4><p>多个路由指定相同的chunkName,会合并打包成一个js文件，require.ensure可实现按需加载资源，包括js,css，它会给里面的require文件单独打包，不会和主文件打包在一起。</p>
+<p>第一个参数是数组，表明第二个参数里需要加载的模块，这些会提前加载，</p>
+<p>第二个是回调函数，在这个回调函数里面requrie的文件会被单独打包成一个chunk,不会和主文件打包在一起，这样就生成两个chunk,第一次加载时只加载主文件</p>
+<p>第三个参数是错误回调</p>
+<p>第四个参数是单独打包的chunk的文件名</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> Router <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> HelloWorld=<span class="function"><span class="params">resolve</span>=&gt;</span>&#123;</span><br><span class="line">		<span class="built_in">require</span>.ensure([<span class="string">&#x27;@/components/HelloWorld&#x27;</span>],<span class="function">()=&gt;</span>&#123;</span><br><span class="line">			resolve(<span class="built_in">require</span>(<span class="string">&#x27;@/components/HelloWorld&#x27;</span>))</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;</span><br><span class="line">Vue.use(<span class="string">&#x27;Router&#x27;</span>)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> Router(&#123;</span><br><span class="line">	<span class="attr">routes</span>:[&#123;</span><br><span class="line">	&#123;<span class="attr">path</span>:<span class="string">&#x27;./&#x27;</span>,</span><br><span class="line">	<span class="attr">name</span>:<span class="string">&#x27;HelloWorld&#x27;</span>,</span><br><span class="line">	<span class="attr">component</span>:HelloWorld</span><br><span class="line">	&#125;</span><br><span class="line">	&#125;]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="element-plus按需加载：配置vue-config-js"><a href="#element-plus按需加载：配置vue-config-js" class="headerlink" title="element-plus按需加载：配置vue.config.js"></a>element-plus按需加载：配置vue.config.js</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">configureWebpack:&#123;</span><br><span class="line">      <span class="attr">plugins</span>:[</span><br><span class="line">        <span class="built_in">require</span>(<span class="string">&#x27;unplugin-element-plus/webpack&#x27;</span>)(&#123;</span><br><span class="line"></span><br><span class="line">        &#125;),</span><br><span class="line">   	]</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="UglifyPlugin-Webpack-Plugin-插件用来缩小js文件"><a href="#UglifyPlugin-Webpack-Plugin-插件用来缩小js文件" class="headerlink" title="UglifyPlugin Webpack Plugin 插件用来缩小js文件"></a>UglifyPlugin Webpack Plugin 插件用来缩小js文件</h3><p>vue.config.js:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">configureWebpack:&#123;</span><br><span class="line">    <span class="attr">plugins</span>:[</span><br><span class="line">      <span class="built_in">require</span>(<span class="string">&#x27;unplugin-element-plus/webpack&#x27;</span>)(&#123;</span><br><span class="line"></span><br><span class="line">      &#125;),</span><br><span class="line">        <span class="comment">//代码压缩</span></span><br><span class="line">      <span class="keyword">new</span> UglifyJsPlugin(&#123;</span><br><span class="line">        <span class="attr">uglifyOptions</span>:&#123;</span><br><span class="line">          <span class="attr">compress</span>:&#123;</span><br><span class="line">            <span class="attr">drop_debugger</span>:<span class="literal">true</span>,</span><br><span class="line">            <span class="attr">drop_console</span>:<span class="literal">true</span>,</span><br><span class="line">            <span class="attr">pure_funcs</span>:[<span class="string">&#x27;console.log&#x27;</span>]</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">sourceMap</span>:<span class="literal">false</span>,</span><br><span class="line">        <span class="attr">parallel</span>:<span class="literal">true</span></span><br><span class="line">      &#125;)</span><br><span class="line">    ],</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+<h1 id="封装axios"><a href="#封装axios" class="headerlink" title="封装axios:"></a>封装axios:</h1><p>特征：</p>
+<ul>
+<li>从浏览器创建XMLHttpRequests</li>
+<li>从node.js创建http请求</li>
+<li>支持Promise API</li>
+<li>拦截请求和响应</li>
+<li>转换请求和响应数据</li>
+<li>取消请求</li>
+<li>自动转换JSON数据</li>
+<li>客户端支持防御XSRF</li>
+</ul>
+<p>具体：<a href="https://coloey.github.io/2022/04/11/Vue%E4%B8%AD%E5%B0%81%E8%A3%85axios%E8%AF%B7%E6%B1%82/">https://coloey.github.io/2022/04/11/Vue%E4%B8%AD%E5%B0%81%E8%A3%85axios%E8%AF%B7%E6%B1%82/</a></p>
+<h1 id="跨域处理方法："><a href="#跨域处理方法：" class="headerlink" title="跨域处理方法："></a>跨域处理方法：</h1><h2 id="服务端配置cors"><a href="#服务端配置cors" class="headerlink" title="服务端配置cors:"></a>服务端配置cors:</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> cors=<span class="built_in">require</span>(<span class="string">&#x27;cors&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> io=<span class="built_in">require</span>(<span class="string">&#x27;socket.io&#x27;</span>)(server,&#123;</span><br><span class="line">    <span class="comment">//服务端配置cors</span></span><br><span class="line">    <span class="attr">cors</span>: &#123;</span><br><span class="line">        <span class="attr">origin</span>: <span class="string">&quot;https://coloey.github.io&quot;</span></span><br><span class="line">      &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="本地配置proxy代理转发路由表："><a href="#本地配置proxy代理转发路由表：" class="headerlink" title="本地配置proxy代理转发路由表："></a>本地配置proxy代理转发路由表：</h2><p>如果接口里面有个公共的名字，比如security,可以拿出来做来做跨域配置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    <span class="attr">devServer</span>: &#123;</span><br><span class="line">        <span class="attr">open</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">host</span>: <span class="string">&#x27;localhost&#x27;</span>,</span><br><span class="line">        <span class="attr">port</span>: <span class="number">8000</span>,</span><br><span class="line">        <span class="attr">https</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="comment">//以上的ip和端口是我们本机的;下面为需要跨域的</span></span><br><span class="line">        <span class="attr">proxy</span>: &#123; <span class="comment">//配置跨域</span></span><br><span class="line">            <span class="string">&#x27;/security&#x27;</span>: &#123;</span><br><span class="line">                <span class="attr">target</span>: <span class="string">&#x27;http://127.0.0.1:8000/&#x27;</span>, <span class="comment">//要代理到的api地址</span></span><br><span class="line">                <span class="attr">ws</span>: <span class="literal">true</span>,</span><br><span class="line">                <span class="attr">changOrigin</span>: <span class="literal">true</span>, <span class="comment">//允许跨域</span></span><br><span class="line">                <span class="attr">pathRewrite</span>: &#123;</span><br><span class="line">                    <span class="string">&#x27;^/security/&#x27;</span>: <span class="string">&#x27;/security&#x27;</span> </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果接口中没有公共部分，另外设置一个代理名称，用api设置代理转发，接口请求就需要带上api.HTTP请求代理中多了ws:false属性，如果不加这个属性，浏览器控制台会一直报连接不上socket的错误</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> proxyObj = &#123;&#125;;</span><br><span class="line">proxyObj[<span class="string">&#x27;/ws&#x27;</span>] = &#123;</span><br><span class="line">    <span class="attr">ws</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">target</span>: <span class="string">&quot;ws://localhost:8081&quot;</span>,<span class="comment">//目标服务器</span></span><br><span class="line">&#125;;</span><br><span class="line">proxyObj[<span class="string">&#x27;/api&#x27;</span>] = &#123;</span><br><span class="line">    <span class="attr">ws</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">target</span>: <span class="string">&quot;http://localhost:8081&quot;</span>,</span><br><span class="line">    <span class="attr">changeOrigin</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">pathRewrite</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;^/api&#x27;</span>: <span class="string">&#x27;/api&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    <span class="attr">devServer</span>: &#123;</span><br><span class="line">        <span class="attr">host</span>: <span class="string">&#x27;localhost&#x27;</span>,</span><br><span class="line">        <span class="attr">port</span>: <span class="number">8080</span>,</span><br><span class="line">        <span class="attr">proxy</span>: proxyObj</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>这个设置只有在本地的时候是起作用的，当项目编译打包时，配置不会打包进去。</strong></p>
+<p><strong>生产环境让后台配置cors或者nginx将前端代码拷贝到后端，在nginx.conf中配置，以Vue为例，如果是SPA应用，项目打包后是一个index.html还有几个js,css等文件，这些静态文件上传到服务器，在nginx.conf中配置静态资源访问：</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location ~ .*\.(js|css|ico|png|jpg|eot|svg|ttf|woff|html|txt|pdf|) &#123;</span><br><span class="line">   root /usr/local/nginx/html/;#所有静态文件直接读取硬盘</span><br><span class="line">   expires 30d; #缓存<span class="number">30</span>天</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<p>即后缀为js,css,ico等文件统统不进行请求转发，直接从本地的/usr/local/nginx/html目录下读取并返回到前端（我们需要将静态资源文件上传到/usr/local/nginx/html/目录下）</p>
+<h1 id="聊天功能实现："><a href="#聊天功能实现：" class="headerlink" title="聊天功能实现："></a>聊天功能实现：</h1><p>socket.io的主要靠emit()和on()实现实时聊天，关键在于设计对话的数据结构，对话用一个对象保存，里面包含发送者姓名，接收者姓名，信息，将对话展示在对话页面中主要靠fromUser,toUser识别，<strong>根据路由参数显示对话列表，服务端用一个onLineUsers对象存储登录的用户socket对象，属性为username,这样用onLineUsers[username]就可以获得不同的socket对象，进而实现触发与接收事件</strong></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/12/antd%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A1%A8%E5%8D%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/12/antd%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A1%A8%E5%8D%95/" class="post-title-link" itemprop="url">antd初始化表单</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-08-12 21:41:44" itemprop="dateCreated datePublished" datetime="2022-08-12T21:41:44+08:00">2022-08-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/04/%E4%BB%A3%E7%90%86%E6%95%B0%E7%BB%84/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1040,163 +1232,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/25/%E5%AE%9E%E7%94%A8%E7%A8%8B%E5%BA%8F%E7%B1%BB%E5%9E%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/25/%E5%AE%9E%E7%94%A8%E7%A8%8B%E5%BA%8F%E7%B1%BB%E5%9E%8B/" class="post-title-link" itemprop="url">实用程序类型</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-07-25 15:39:45 / 修改时间：16:08:01" itemprop="dateCreated datePublished" datetime="2022-07-25T15:39:45+08:00">2022-07-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Partial"><a href="#Partial" class="headerlink" title="Partial"></a>Partial<Type></Type></h1><p>构造一个所有属性的Type都设置为可选的类型，返回一个表示给定类型的所有子集的类型</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Todo &#123;</span><br><span class="line">    <span class="attr">title</span>:<span class="built_in">string</span>;</span><br><span class="line">    description:stirng;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateTodo</span>(<span class="params">todo:Todo,fieldsToUpdate:Partial&lt;Todo&gt;</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;...todo,...fieldsToUpdate&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> todo1 = &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&quot;organize desk&quot;</span>,</span><br><span class="line">  <span class="attr">description</span>: <span class="string">&quot;clear clutter&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> todo2 = updateTodo(todo1, &#123;</span><br><span class="line">  <span class="attr">description</span>: <span class="string">&quot;throw out trash&quot;</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h1 id="Required"><a href="#Required" class="headerlink" title="Required"></a>Required<Type></Type></h1><p>构造一个由所有属性类型都是required的类型，与Partial相反</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Props &#123;</span><br><span class="line">  a?: <span class="built_in">number</span>;</span><br><span class="line">  b?: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> obj: Props = &#123; <span class="attr">a</span>: <span class="number">5</span> &#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> obj2: Required&lt;Props&gt; = &#123; <span class="attr">a</span>: <span class="number">5</span> &#125;;</span><br><span class="line"><span class="comment">//Property &#x27;b&#x27; is missing in type &#x27;&#123; a: number; &#125;&#x27; but required in type &#x27;Required&lt;Props&gt;&#x27;.</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="Readonly"><a href="#Readonly" class="headerlink" title="Readonly"></a>Readonly<Type></Type></h1><p>构造一个所有属性的Type都设置为readonly的类型，这意味着构造类型的属性不能重新分配</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Todo &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> todo: Readonly&lt;Todo&gt; = &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&quot;Delete inactive users&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">todo.title = <span class="string">&quot;Hello&quot;</span>;</span><br><span class="line"><span class="comment">//Cannot assign to &#x27;title&#x27; because it is a read-only property.</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="Record-lt-Keys-Type-gt"><a href="#Record-lt-Keys-Type-gt" class="headerlink" title="Record&lt;Keys,Type&gt;"></a>Record&lt;Keys,Type&gt;</h1><p>构造一个对象类型，其属性键为keys，属性值为Type,可用于将一种类型的属性映射到另一种类型</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> CatInfo &#123;</span><br><span class="line">  <span class="attr">age</span>: <span class="built_in">number</span>;</span><br><span class="line">  breed: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> CatName = <span class="string">&quot;miffy&quot;</span> | <span class="string">&quot;boris&quot;</span> | <span class="string">&quot;mordred&quot;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> cats: Record&lt;CatName, CatInfo&gt; = &#123;</span><br><span class="line">  <span class="attr">miffy</span>: &#123; <span class="attr">age</span>: <span class="number">10</span>, <span class="attr">breed</span>: <span class="string">&quot;Persian&quot;</span> &#125;,</span><br><span class="line">  <span class="attr">boris</span>: &#123; <span class="attr">age</span>: <span class="number">5</span>, <span class="attr">breed</span>: <span class="string">&quot;Maine Coon&quot;</span> &#125;,</span><br><span class="line">  <span class="attr">mordred</span>: &#123; <span class="attr">age</span>: <span class="number">16</span>, <span class="attr">breed</span>: <span class="string">&quot;British Shorthair&quot;</span> &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">cats.boris;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//const cats: Record&lt;CatName, CatInfo</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="Pick-lt-Type-Keys-gt"><a href="#Pick-lt-Type-Keys-gt" class="headerlink" title="Pick&lt;Type,Keys&gt;"></a>Pick&lt;Type,Keys&gt;</h1><p>通过从中选择一组属性keys来构造类型Type</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Todo &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="built_in">string</span>;</span><br><span class="line">  description: <span class="built_in">string</span>;</span><br><span class="line">  completed: <span class="built_in">boolean</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> TodoPreview = Pick&lt;Todo, <span class="string">&quot;title&quot;</span> | <span class="string">&quot;completed&quot;</span>&gt;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> todo: TodoPreview = &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&quot;Clean room&quot;</span>,</span><br><span class="line">  <span class="attr">completed</span>: <span class="literal">false</span>,</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">todo;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//const todo: TodoPreview</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="omit-lt-Type-Keys-gt"><a href="#omit-lt-Type-Keys-gt" class="headerlink" title="omit&lt;Type,Keys&gt;"></a>omit&lt;Type,Keys&gt;</h1><p>Type通过从中选择所有属性然后删除keys来构造类型</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Todo &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="built_in">string</span>;</span><br><span class="line">  description: <span class="built_in">string</span>;</span><br><span class="line">  completed: <span class="built_in">boolean</span>;</span><br><span class="line">  createdAt: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> TodoPreview = Omit&lt;Todo, <span class="string">&quot;description&quot;</span>&gt;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> todo: TodoPreview = &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&quot;Clean room&quot;</span>,</span><br><span class="line">  <span class="attr">completed</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">createdAt</span>: <span class="number">1615544252770</span>,</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">todo;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//const todo: TodoPreview</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> TodoInfo = Omit&lt;Todo, <span class="string">&quot;completed&quot;</span> | <span class="string">&quot;createdAt&quot;</span>&gt;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> todoInfo: TodoInfo = &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&quot;Pick up kids&quot;</span>,</span><br><span class="line">  <span class="attr">description</span>: <span class="string">&quot;Kindergarten closes at 5pm&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">todoInfo;</span><br><span class="line">   </span><br><span class="line"><span class="comment">//const todoInfo: TodoInfo</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="Exclude-lt-UnionType-ExcludedMembers-gt"><a href="#Exclude-lt-UnionType-ExcludedMembers-gt" class="headerlink" title="Exclude&lt;UnionType,ExcludedMembers&gt;"></a>Exclude&lt;UnionType,ExcludedMembers&gt;</h1><p>通过从UnionType中排除可以赋值给ExcludedMembers的值</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> T0=Exclude&lt;<span class="string">&quot;a&quot;</span>|<span class="string">&quot;b&quot;</span>|<span class="string">&quot;c&quot;</span>,<span class="string">&quot;a&quot;</span>&gt;</span><br><span class="line"><span class="comment">//type T0=&quot;b&quot;|&quot;c&quot;</span></span><br><span class="line"><span class="keyword">type</span> T1=Exclude&lt;<span class="string">&quot;a&quot;</span>|<span class="string">&quot;b&quot;</span>|<span class="string">&quot;c&quot;</span>,<span class="string">&quot;a&quot;</span>|<span class="string">&quot;b&quot;</span>&gt;;</span><br><span class="line"><span class="comment">//type T1=&quot;c&quot;</span></span><br><span class="line"><span class="keyword">type</span> T2 = Exclude&lt;<span class="built_in">string</span> | <span class="built_in">number</span> | (<span class="function">() =&gt;</span> <span class="built_in">void</span>), <span class="built_in">Function</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T2 = string | number</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="Extract-lt-Type-Union-gt"><a href="#Extract-lt-Type-Union-gt" class="headerlink" title="Extract&lt;Type,Union&gt;"></a>Extract&lt;Type,Union&gt;</h1><p>提取出Type和Union的交集（可以赋值给Union成员的值）</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> T0 = Extract&lt;<span class="string">&quot;a&quot;</span> | <span class="string">&quot;b&quot;</span> | <span class="string">&quot;c&quot;</span>, <span class="string">&quot;a&quot;</span> | <span class="string">&quot;f&quot;</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T0 = &quot;a&quot;</span></span><br><span class="line"><span class="keyword">type</span> T1 = Extract&lt;<span class="built_in">string</span> | <span class="built_in">number</span> | (<span class="function">() =&gt;</span> <span class="built_in">void</span>), <span class="built_in">Function</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T1 = () =&gt; void</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="NonNullable"><a href="#NonNullable" class="headerlink" title="NonNullable"></a>NonNullable<Type></Type></h1><p>构造一个类型，可以从Type中排除null和undefined</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> T0 = NonNullable&lt;<span class="built_in">string</span> | <span class="built_in">number</span> | <span class="literal">undefined</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T0 = string | number</span></span><br><span class="line"><span class="keyword">type</span> T1 = NonNullable&lt;<span class="built_in">string</span>[] | <span class="literal">null</span> | <span class="literal">undefined</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T1 = string[]</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="ReturnType"><a href="#ReturnType" class="headerlink" title="ReturnType"></a>ReturnType<Type></Type></h1><p>由函数返回类型组成（<strong>Type必须是一个（…args:any）=&gt;any)</strong></p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>): </span>&#123; a: <span class="built_in">number</span>; b: <span class="built_in">string</span> &#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> T0 = ReturnType&lt;<span class="function">() =&gt;</span> <span class="built_in">string</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T0 = string</span></span><br><span class="line"><span class="keyword">type</span> T1 = ReturnType&lt;<span class="function">(<span class="params">s: <span class="built_in">string</span></span>) =&gt;</span> <span class="built_in">void</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T1 = void</span></span><br><span class="line"><span class="keyword">type</span> T2 = ReturnType&lt;&lt;T&gt;<span class="function">() =&gt;</span> T&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T2 = unknown</span></span><br><span class="line"><span class="keyword">type</span> T3 = ReturnType&lt;&lt;T <span class="keyword">extends</span> U, U <span class="keyword">extends</span> <span class="built_in">number</span>[]&gt;<span class="function">() =&gt;</span> T&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T3 = number[]</span></span><br><span class="line"><span class="keyword">type</span> T4 = ReturnType&lt;<span class="keyword">typeof</span> f1&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T4 = &#123;</span></span><br><span class="line">  <span class="comment">//  a: number;</span></span><br><span class="line">   <span class="comment">// b: string;</span></span><br><span class="line"><span class="comment">//&#125;</span></span><br><span class="line"><span class="keyword">type</span> T5 = ReturnType&lt;<span class="built_in">any</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T5 = any</span></span><br><span class="line"><span class="keyword">type</span> T6 = ReturnType&lt;<span class="built_in">never</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T6 = never</span></span><br><span class="line"><span class="keyword">type</span> T7 = ReturnType&lt;<span class="built_in">string</span>&gt;;</span><br><span class="line"><span class="comment">//Type &#x27;string&#x27; does not satisfy the constraint &#x27;(...args: any) =&gt; any&#x27;.</span></span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T7 = any</span></span><br><span class="line"><span class="keyword">type</span> T8 = ReturnType&lt;<span class="built_in">Function</span>&gt;;</span><br><span class="line"><span class="comment">//Type &#x27;Function&#x27; does not satisfy the constraint &#x27;(...args: any) =&gt; any&#x27;.</span></span><br><span class="line"><span class="comment">//  Type &#x27;Function&#x27; provides no match for the signature &#x27;(...args: any): any&#x27;.</span></span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T8 = any</span></span><br></pre></td></tr></table></figure>
-
-<p>官网链接：<a target="_blank" rel="noopener" href="https://www.typescriptlang.org/docs/handbook/utility-types.html#returntypetype">https://www.typescriptlang.org/docs/handbook/utility-types.html#returntypetype</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/23/%E7%BA%AF%E5%87%BD%E6%95%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/23/%E7%BA%AF%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">纯函数</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-07-23 16:15:51" itemprop="dateCreated datePublished" datetime="2022-07-23T16:15:51+08:00">2022-07-23</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1268,7 +1303,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">183</span>
+          <span class="site-state-item-count">185</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1329,7 +1364,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共157.9k字</span>
+  <span class="post-count">博客全站共160.7k字</span>
 </div>
         
 

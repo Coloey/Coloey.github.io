@@ -182,6 +182,200 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/03/14/%E5%9F%BA%E4%BA%8Ecors%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/14/%E5%9F%BA%E4%BA%8Ecors%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">基于cors解决跨域问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-03-14 14:29:06 / 修改时间：17:13:22" itemprop="dateCreated datePublished" datetime="2022-03-14T14:29:06+08:00">2022-03-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Node/" itemprop="url" rel="index"><span itemprop="name">Node</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Node/Express/" itemprop="url" rel="index"><span itemprop="name">Express</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">apirouter.js:</span><br><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>)</span><br><span class="line"><span class="comment">//创建web服务器实例</span></span><br><span class="line"><span class="keyword">const</span> router=express.Router()</span><br><span class="line"><span class="comment">//挂载对应路由</span></span><br><span class="line">router.get(<span class="string">&#x27;/get&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    res.send(&#123;</span><br><span class="line">        <span class="attr">status</span>:<span class="number">0</span>,<span class="comment">//0表示成功，1表示失败</span></span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;Get请求成功&#x27;</span>,</span><br><span class="line">        <span class="attr">data</span>:req.query</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//定义post接口</span></span><br><span class="line">router.post(<span class="string">&#x27;/post&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    res.send(&#123;</span><br><span class="line">        <span class="attr">status</span>:<span class="number">0</span>,<span class="comment">//0表示成功，1表示失败</span></span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;Post请求成功&#x27;</span>,</span><br><span class="line">        <span class="attr">data</span>:req.body</span><br><span class="line">        </span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//定义delete接口</span></span><br><span class="line">router.delete(<span class="string">&#x27;/delete&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    res.send(&#123;  </span><br><span class="line">        <span class="attr">status</span>:<span class="number">0</span>,<span class="comment">//0表示成功，1表示失败</span></span><br><span class="line">        <span class="attr">msg</span>:<span class="string">&#x27;Delete请求成功&#x27;</span>,</span><br><span class="line">        </span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">module</span>.exports=router</span><br></pre></td></tr></table></figure>
+
+<p>Get ,Post,Delete接口</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>)</span><br><span class="line"><span class="comment">//创建web服务器</span></span><br><span class="line"><span class="keyword">const</span> app=express()</span><br><span class="line"><span class="comment">//导入路由模块</span></span><br><span class="line"><span class="keyword">const</span> apirouter=<span class="built_in">require</span>(<span class="string">&#x27;./apirouter&#x27;</span>)</span><br><span class="line">app.use(express.urlencoded(&#123;<span class="attr">extended</span>:<span class="literal">false</span>&#125;))</span><br><span class="line"><span class="comment">//在路由之前配置cors中间件,解决跨域问题</span></span><br><span class="line"><span class="keyword">const</span> cors=<span class="built_in">require</span>(<span class="string">&#x27;cors&#x27;</span>)</span><br><span class="line">app.use(cors())</span><br><span class="line"></span><br><span class="line"><span class="comment">//将路由模块注册为全局中间件</span></span><br><span class="line">app.use(<span class="string">&#x27;/api&#x27;</span>,apirouter)</span><br><span class="line">app.listen(<span class="number">80</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;运行在http://127.0.0.1&#x27;</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="解决接口跨域问题"><a href="#解决接口跨域问题" class="headerlink" title="解决接口跨域问题"></a>解决接口跨域问题</h1><p>CORS(主流方案)</p>
+<p>JSONP（有缺陷：只支持Get请求）</p>
+<h1 id="什么是CORS"><a href="#什么是CORS" class="headerlink" title="什么是CORS"></a>什么是CORS</h1><p>CORS(Cross-Origin Resource Sharing,跨域资源共享)，由一系列Http响应头组成，这些Http响应头决定浏览器是否阻止前端JS代码跨域获取资源。</p>
+<p>浏览器的同源安全策略默认会阻止网页“跨域”获取资源，但如果接口服务器配置了CORS相关的HTTP响应头，就可以解决浏览器端的跨域访问限制。</p>
+<p>浏览器：网页==》跨域请求   接口服务器（配置Access-Control-Allow-*相关响应头）</p>
+<p>​                    《==  响应</p>
+<h1 id="CORS响应头部"><a href="#CORS响应头部" class="headerlink" title="CORS响应头部"></a>CORS响应头部</h1><h3 id="Access-Control-Allow-Origin"><a href="#Access-Control-Allow-Origin" class="headerlink" title="Access-Control-Allow-Origin"></a>Access-Control-Allow-Origin</h3><p>响应头部可以携带一个Access-Control-Allow-Origin字段，语法如下：</p>
+<blockquote>
+<p>Access-Control-Allow-Origin:<origin>|*</origin></p>
+</blockquote>
+<p>其中origin参数指定了允许访问该资源的外域URL</p>
+<p>例如：下面字段只允许访问来自<a target="_blank" rel="noopener" href="http://itcast.cn的请求/">http://itcast.cn的请求</a></p>
+<blockquote>
+<p>res.setHeader(‘Access-Control-Allow-Origin’,’<a target="_blank" rel="noopener" href="http://itcast.cn&/#39;">http://itcast.cn&#39;</a>)</p>
+</blockquote>
+<p>*通配符表示允许来自任何域的请求</p>
+<h3 id="Access-Control-Allow-Headers"><a href="#Access-Control-Allow-Headers" class="headerlink" title="Access-Control-Allow-Headers"></a>Access-Control-Allow-Headers</h3><p>默认情况下，CORS仅支持客户端向服务器发送9个请求头：</p>
+<p>Accept,Accept-Language,Content-Language,DPR,Downlink,Save-Data,Viewport-Width,Width,Content-Type(仅限于text-plain,multipart/form-data,application/x-www-form-urlencoded三者之一)</p>
+<p>如果向服务器发送了额外的请求头信息，则需要在服务器端，通过Access-Control-Allow-Headers对额外的请求头进行声明，否则这次请求会失败</p>
+<p>例如，允许客户端向服务器发送Content-Type请求头和X-Custom-Header请求头</p>
+<blockquote>
+<p>res.setHeader(‘Access-Control-Allow-Header’,’Content-Type’,’X-Custom-Header’)</p>
+</blockquote>
+<p>Access-Control-Allow-Methods</p>
+<p>默认情况下，CORS仅支持客户端发起GET,POST,HEAD请求。如果客户端希望通过PUT,DELETE等方式请求服务器的资源，则需要在服务器端，通过Access-Control-Allow-Methods来指明实际请求所允许的HTTP方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">res.setHeader(<span class="string">&#x27;Access-Control-Allow-Methods&#x27;</span>,<span class="string">&#x27;POST,GET,DELETE,HEAD&#x27;</span>)</span><br><span class="line"><span class="comment">//允许所有HTTP请求方法</span></span><br><span class="line">res.setHeader(<span class="string">&#x27;Access-Control-Allow-Methods&#x27;</span>,<span class="string">&#x27;*&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="请求类型"><a href="#请求类型" class="headerlink" title="请求类型"></a>请求类型</h1><h3 id="简单请求"><a href="#简单请求" class="headerlink" title="简单请求"></a>简单请求</h3><p>满足两个条件即为简单请求：</p>
+<p>1 请求方式为GET,POST,HEAD三者之一</p>
+<p>2 HTTP头部信息不超过以下几种字段：无定义头部字段，Accept,Accept-Language,Content-Language,Save-Data,Viewport-Width,Width,Content-Type(仅限于text-plain,multipart/form-data,application/x-www-form-urlencoded三者之一)</p>
+<p>特点：客户端与服务器只发生一次请求</p>
+<h3 id="预检请求"><a href="#预检请求" class="headerlink" title="预检请求"></a>预检请求</h3><p>1 请求方式为GET,POST,HEAD之外的请求方法</p>
+<p>2 请求头中包含自定义头部字段</p>
+<p>3 向服务器发送了application/jso格式的数据</p>
+<p>在浏览器服务器的正式通信之前，浏览器会先发送OPTION请求进行预检，以获知该服务器是否允许该实际请求，这一次OPTION称为预检请求，服务器成功响应预检请求后才会发送真正的请求并且携带真正的数据。</p>
+<p>特点：客户端与服务器只发生两次请求</p>
+<h1 id="CORS注意事项"><a href="#CORS注意事项" class="headerlink" title="CORS注意事项"></a>CORS注意事项</h1><p>1 CORS主要在服务器端进行配置，客户端浏览器无需做任何额外的配置，即可请求开启CORS的接口</p>
+<p>2 CORS在浏览器中有兼容性，只有支持XMLHttpRequest Level2的浏览器才能正常访问开启了CORS的服务端接口（IE10+,Chrome4+等）</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/03/13/%E8%87%AA%E5%AE%9A%E4%B9%89%E8%A1%A8%E5%8D%95%E4%B8%AD%E9%97%B4%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/13/%E8%87%AA%E5%AE%9A%E4%B9%89%E8%A1%A8%E5%8D%95%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="post-title-link" itemprop="url">自定义表单中间件</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-03-13 23:13:46 / 修改时间：23:32:36" itemprop="dateCreated datePublished" datetime="2022-03-13T23:13:46+08:00">2022-03-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Node/" itemprop="url" rel="index"><span itemprop="name">Node</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Node/Express/" itemprop="url" rel="index"><span itemprop="name">Express</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>)</span><br><span class="line"><span class="comment">//创建web服务器实例</span></span><br><span class="line"><span class="keyword">const</span> app=express()</span><br><span class="line"><span class="comment">//导入处理查询字符串的querystring,通过这个模块提供的parse()函数，可以查询字符串，解析成对象的格式</span></span><br><span class="line"><span class="comment">//const qs=require(&#x27;querystring&#x27;)</span></span><br><span class="line"><span class="keyword">const</span> customBodyParser=<span class="built_in">require</span>(<span class="string">&#x27;./custom-body-parser&#x27;</span>)</span><br><span class="line">app.use(customBodyParser)</span><br><span class="line">app.post(<span class="string">&#x27;/user&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    res.send(req.body)</span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">80</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;express server running at http://127.0.0.1&#x27;</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>customBodyParser.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> qs=<span class="built_in">require</span>(<span class="string">&#x27;querystring&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> bodyParser=<span class="function">(<span class="params">req,res,next</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//1 定义一个str字符串，专门用来存储客户端发送过来的请求体数据</span></span><br><span class="line">    <span class="keyword">let</span> str=<span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="comment">//监听req的data事件</span></span><br><span class="line">    req.on(<span class="string">&#x27;data&#x27;</span>,<span class="function">(<span class="params">chunk</span>)=&gt;</span>&#123;</span><br><span class="line">        str+=chunk</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="comment">//监听req的end事件</span></span><br><span class="line">    req.on(<span class="string">&#x27;end&#x27;</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        <span class="comment">//在str存放的是完整的请求体数据，解析成对象格式 调用qs.parse()方法，把查询字符串解析为对象</span></span><br><span class="line">        <span class="keyword">const</span> body=qs.parse(str)</span><br><span class="line">        req.body=body<span class="comment">//将解析处的请求体数据挂载为req.body</span></span><br><span class="line">        next()</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">module</span>.exports=bodyParser</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/03/12/%E8%B7%AF%E7%94%B1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -832,155 +1026,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/02/01/customRef/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/01/customRef/" class="post-title-link" itemprop="url">customRef</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-02-01 16:55:59 / 修改时间：17:03:45" itemprop="dateCreated datePublished" datetime="2022-02-01T16:55:59+08:00">2022-02-01</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">setup()&#123;</span><br><span class="line">        function myRef(value,delay=500)&#123;</span><br><span class="line">            let timeout</span><br><span class="line">            return customRef((track,trigger)=&gt;&#123;</span><br><span class="line">                return &#123;</span><br><span class="line">                    get()&#123;</span><br><span class="line">                        console.log(`有人从myRef中读取了数据:$&#123;value&#125;`)</span><br><span class="line">                        track()//通知Vue追踪value的变化（提前和get商量一下，让它认为这个value是可用的）</span><br><span class="line">                        return value</span><br><span class="line">                    &#125;,</span><br><span class="line">                    set(newValue)&#123;</span><br><span class="line">                        clearTimeout(timeout)</span><br><span class="line">                        console.log(`有人从myRef中修改了数据:$&#123;newValue&#125;`)</span><br><span class="line">                        timeout=setTimeout(()=&gt;&#123;</span><br><span class="line">                            value=newValue</span><br><span class="line">                            trigger()//通知Vue重新解析模板</span><br><span class="line">                        &#125;,delay)</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">        let val=myRef(&quot;hello&quot;)</span><br><span class="line"></span><br><span class="line">        return &#123;</span><br><span class="line">            val</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">       </span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/31/shallowReactive%E5%92%8CshallowRef/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/31/shallowReactive%E5%92%8CshallowRef/" class="post-title-link" itemprop="url">shallowReactive和shallowRef</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-01-31 16:41:52" itemprop="dateCreated datePublished" datetime="2022-01-31T16:41:52+08:00">2022-01-31</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-01 15:57:53" itemprop="dateModified" datetime="2022-02-01T15:57:53+08:00">2022-02-01</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>shallowReactive:只处理对象最外层属性的响应式（浅响应式）</p>
-<p>shallowRef:只处理基本数据类型的响应式，不进行对象的响应式处理</p>
-<p>什么时候使用？</p>
-<p>如果有一个对象数据，结构比较深，但变化时只是外层属性变化==&gt;shallowReactive</p>
-<p>如果有一个对象数据，后续功能不会修改该对象中的属性，而是生新的对象来替换==&gt;shallowRef</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1052,7 +1097,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">183</span>
+          <span class="site-state-item-count">185</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1113,7 +1158,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共157.9k字</span>
+  <span class="post-count">博客全站共160.7k字</span>
 </div>
         
 
