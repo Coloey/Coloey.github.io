@@ -182,6 +182,290 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/13/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/13/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">原型模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-13 22:03:03" itemprop="dateCreated datePublished" datetime="2022-04-13T22:03:03+08:00">2022-04-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-03 00:03:58" itemprop="dateModified" datetime="2022-05-03T00:03:58+08:00">2022-05-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h1><p>构造函数也是函数，与普通函数唯一区别就是调用方式不同。任何函数只要使用new操作符调用就是构造函数，而不适用new操作符调用的函数就是普通函数。</p>
+<h1 id="理解原型"><a href="#理解原型" class="headerlink" title="理解原型"></a>理解原型</h1><p>只要创建一个函数，就会按照特定的规则为这个函数创建一个prototype属性（指向原型对象），默认情况下，所有原型对象会自动获得一个名为constructor指向Person</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="keyword">typeof</span> Person.prototype);</span><br><span class="line">   <span class="built_in">console</span>.log(Person.prototype);</span><br><span class="line">   <span class="comment">//正常原型链都会终止于Object的原型对象</span></span><br><span class="line">   <span class="comment">//Object原型的原型是null</span></span><br><span class="line">   <span class="built_in">console</span>.log(Person.prototype.__proto__===<span class="built_in">Object</span>.prototype);<span class="comment">//true</span></span><br><span class="line">   <span class="built_in">console</span>.log(Person.prototype.__proto__.constructor===<span class="built_in">Object</span>);<span class="comment">//true</span></span><br><span class="line">   <span class="built_in">console</span>.log(Person.prototype.__proto__.__proto__===<span class="literal">null</span>);<span class="comment">//true</span></span><br><span class="line">   <span class="built_in">console</span>.log(Person.prototype.__proto__);<span class="comment">//true</span></span><br><span class="line">   <span class="keyword">let</span> person1=<span class="keyword">new</span> Person(),person2=<span class="keyword">new</span> Person();</span><br><span class="line">   <span class="comment">//构造函数，原型对象和实例是3个完全不同的对象</span></span><br><span class="line">   <span class="built_in">console</span>.log(person1!==Person);<span class="comment">//true</span></span><br><span class="line">   <span class="built_in">console</span>.log(person1!==Person.prototype);<span class="comment">//true</span></span><br><span class="line">   <span class="built_in">console</span>.log(Person.prototype!==Person);<span class="comment">//true</span></span><br><span class="line">   <span class="comment">//实例通过__proto__链接到原型对象，它实际上指向隐藏特性[[Prototype]]</span></span><br><span class="line">   <span class="comment">//实例与构造函数没有联系，与原型对象有直接联系</span></span><br><span class="line">   <span class="built_in">console</span>.log(person1.__proto__===Person.prototype);</span><br><span class="line">   <span class="built_in">console</span>.log(person1.__proto__.constructor===Person);</span><br><span class="line">   <span class="comment">//同一个构造函数创建的两个实例共享同一个原型对象</span></span><br><span class="line">   <span class="built_in">console</span>.log(person1.__proto__===person2.__proto__);</span><br><span class="line">   <span class="comment">//instanceof检查实例的原型链中是否包含指定构造函数的原型</span></span><br><span class="line">   <span class="built_in">console</span>.log(person1 <span class="keyword">instanceof</span> Person);<span class="comment">//true</span></span><br><span class="line">   <span class="built_in">console</span>.log(person1 <span class="keyword">instanceof</span> <span class="built_in">Object</span>);<span class="comment">//true</span></span><br><span class="line">   <span class="built_in">console</span>.log(Person.prototype <span class="keyword">instanceof</span> <span class="built_in">Object</span>);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2022/04/13/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/yuan3.png" alt="原型"></p>
+<p>Person构造函数，Person原型对象和Person现有实例的关系如上：Person.prototype指向原型对象，因此Person.prototye.constructor指回Person构造函数。原型对象包含constructor属性和其他后来添加的属性。Person的两个实例person1,person2有一个内部属性指回Person.prototype,而且两者和构造函数没有直接联系。person1.sayName()可以正常调用，这是由于对象属性查找机制的原因</p>
+<p>虽然不是所有实现都对外暴露[[Prototype]]，但可以使用isPrototypeOf()方法确定两个对象之间的关系，本质上isPrototypeOf()会在传入参数的[[Prototype]]指向调用它的对象时返回true</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(Person.prototype.isprototypeOf(person1));<span class="comment">//true</span></span><br><span class="line"><span class="built_in">console</span>.log(Person.prototype.isprototypeOf(person2));<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>Object类型有一个方法叫Object.getPrototypeOf(),返回参数的内部特性[[Prototype]]的值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.getPrototypeOf(person1)==Person.prototype);<span class="comment">//true</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.getPrototypeOf(person1).name);</span><br></pre></td></tr></table></figure>
+
+<p>使用Object.getPrototypeOf()可以取得一个对象的原型</p>
+<p>Object类型还有一个setPrototypeOf()方法，可以向实例的私有特性[[Prototype]]写入一个新值，这样就可以重写一个对象的原型继承关系</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> biped=&#123;</span><br><span class="line">       <span class="attr">numLegs</span>:<span class="number">2</span></span><br><span class="line">   &#125;;</span><br><span class="line">   <span class="keyword">let</span> person=&#123;</span><br><span class="line">       <span class="attr">name</span>:<span class="string">&#x27;Matt&#x27;</span></span><br><span class="line">   &#125;;</span><br><span class="line">   <span class="built_in">Object</span>.setPrototypeOf(person,biped);</span><br><span class="line">   <span class="built_in">console</span>.log(person.name);</span><br><span class="line">   <span class="built_in">console</span>.log(person.numLegs);</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="built_in">Object</span>.getPrototypeOf(person)===biped);</span><br></pre></td></tr></table></figure>
+
+<p>Object.setPrototypeOf()可能会严重影响代码性能，会涉及所有访问了哪些修改过[[Prototype]]的对象的代码</p>
+<p>可以通过Object.create()创建一个新对象，同时为其指定原型</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> biped=&#123;</span><br><span class="line">    <span class="attr">numLegs</span>:<span class="number">2</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">let</span> person=<span class="built_in">Object</span>.create(biped);</span><br><span class="line">person.name=<span class="string">&#x27;Matt&#x27;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(person.name);</span><br><span class="line"><span class="built_in">console</span>.log(person.numLegs);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.getPrototypeOf(person)===biped);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="原型层级"><a href="#原型层级" class="headerlink" title="原型层级"></a>原型层级</h1><p>通过对象访问属性时会按照这个属性名称开始搜索，搜索开始于对象实例本身，如果在实例上发现给定的名称，则返回该名称对应值，如果没有找到这个属性，则搜索会沿着指针进入原型对象，在原型对象找到属性后返回对应值。</p>
+<p>比如foo不直接存在于myObject中而是存在于原型链上层时，myObject.foo=”bar”会出现三种情况：</p>
+<ol>
+<li><p>如果在[[Prototype]]链上层存在名为foo的普通数据访问属性，并且writable:true,那就会直接在myObject中添加一个名为foo的新属性，它是屏蔽属性</p>
+</li>
+<li><p>如果在[[Prototype]]链上层存在foo,但是它是被标记为只读(writable:false)，那么无法修改已有属性或者在myObject上创建屏蔽属性。如果运行在严格模式下，代码会抛出一个错误。否则，这条赋值语句会被忽略。不会发生屏蔽</p>
+</li>
+<li><p>如果在[[Prototype]]链上层存在foo并且它是一个setter，那就一定会调用这个setter,foo不会添加到myObject，也不会重新定义foo这个setter。</p>
+</li>
+</ol>
+<p>当属性被屏蔽时，可以使用delete删除实例上的这个属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">Person.prototype.name=<span class="string">&#x27;Nicholas&#x27;</span>;</span><br><span class="line">Person.prototype.age=<span class="number">29</span>;</span><br><span class="line"><span class="keyword">let</span> person1=<span class="keyword">new</span> Person();</span><br><span class="line"><span class="keyword">let</span> person2=<span class="keyword">new</span> Person();</span><br><span class="line">person1.name=<span class="string">&quot;Greg&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(person1.name);<span class="comment">//&quot;Greg&quot;,来自实例</span></span><br><span class="line"><span class="built_in">console</span>.log(person2.name);<span class="comment">//Nicholas,来自原型</span></span><br><span class="line"><span class="keyword">delete</span> person1.name;</span><br><span class="line"><span class="built_in">console</span>.log(person1.name);<span class="comment">//Nicholas,来自原型</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="hasOwnProperty-NaN"><a href="#hasOwnProperty-NaN" class="headerlink" title="hasOwnProperty()"></a>hasOwnProperty()</h2><p>hasOwnProperty()方法用于确定某个属性是在实例上还是原型对象上。这个方法继承自Object，会在属性存在于调用它的对象实例善时返回true</p>
+<p><img src="/2022/04/13/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/yuan2-16515074359011.png"></p>
+<h2 id="in操作符"><a href="#in操作符" class="headerlink" title="in操作符"></a>in操作符</h2><p>in操作符会在可以通过对象访问指定属性时返回true，无论该属性是在实例上还是在原型上</p>
+<p>因此如果要确定某个属性是否在原型上可以同时使用hasOwnProperty()和in操作符</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasPrototypeProperty</span>(<span class="params">object,name</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> !<span class="built_in">Object</span>.hasOwnProperty(name)&amp;&amp;(name <span class="keyword">in</span> 		object)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="原型的问题"><a href="#原型的问题" class="headerlink" title="原型的问题"></a>原型的问题</h1><p>弱化了向构造函数传递初始化参数的能力，会导致所有实例默认取得属性相同的值，以及它的共享特性：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        Person.prototype=&#123;</span><br><span class="line">            <span class="attr">constructor</span>:Person,</span><br><span class="line">            <span class="attr">name</span>:<span class="string">&#x27;nic&#x27;</span>,</span><br><span class="line">            <span class="attr">age</span>:<span class="number">29</span>,</span><br><span class="line">            <span class="attr">job</span>:<span class="string">&quot;Software Engineer&quot;</span>,</span><br><span class="line">            <span class="attr">friends</span>:[<span class="string">&#x27;Coloey&#x27;</span>,<span class="string">&#x27;Amy&#x27;</span>],</span><br><span class="line">            <span class="function"><span class="title">sayName</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="built_in">this</span>.name)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> person1=<span class="keyword">new</span> Person();</span><br><span class="line">    <span class="keyword">let</span> person2=<span class="keyword">new</span> Person();</span><br><span class="line">    person1.friends.push(<span class="string">&#x27;Van&#x27;</span>);</span><br><span class="line">    <span class="built_in">console</span>.log(person1.friends===person2.friends);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>不同实例应有不同的副本</strong>。</p>
+<h1 id="原型链"><a href="#原型链" class="headerlink" title="原型链"></a>原型链</h1><p>原型链是ECMAScript的主要继承方式</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      <span class="built_in">this</span>.property=<span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  SuperType.prototype.getSuperValue=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">this</span>.property;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      <span class="built_in">this</span>.subproperty=<span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//继承SuperType</span></span><br><span class="line">  SubType.prototype=<span class="keyword">new</span> SuperType();</span><br><span class="line">  SubType.prototype.getSubValue=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">this</span>.subproperty;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">let</span> instance=<span class="keyword">new</span> SubType();</span><br><span class="line">  <span class="built_in">console</span>.log(instance.getSuperValue());<span class="comment">//true</span></span><br><span class="line">  <span class="built_in">console</span>.log(instance.property)<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/04/13/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/yuan1.png"></p>
+<p>SubType.prototype是SuperType的实例，因此SubType.prototype指向SuperType.prototype,注意，getSuperValue()方法还在SuperType.prototype对象上，而property是一个实例属性，SubType.prototype是SuperType的实例，因此property存在它上面，由于SubType.prototype的constructor属性被重写指向SuperType,所以instance.constructor也指向SuperType.</p>
+<h1 id="原型与继承关系"><a href="#原型与继承关系" class="headerlink" title="原型与继承关系"></a>原型与继承关系</h1><p>使用instanceOf操作符，如果一个实例的原型链出现过相应构造函数则instanceOf返回true</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(instance <span class="keyword">instanceof</span> <span class="built_in">Object</span>);</span><br><span class="line"><span class="built_in">console</span>.loh(instance <span class="keyword">instanceof</span> SubType);</span><br></pre></td></tr></table></figure>
+
+<p>使用**isPrototypeOf()**方法，原型链上的每个原型都可以调用这个方法，只要原型链上包含这个原型就返回true</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.prototype.isPrototypeOf(instance));<span class="comment">//true</span></span><br><span class="line">    <span class="built_in">console</span>.log(SuperType.prototype.isPrototypeOf(instance));<span class="comment">//true</span></span><br><span class="line">    <span class="built_in">console</span>.log(SubType.prototype.isPrototypeOf(instance));<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>以对象字面量的方式创建原型方法会破坏之前的原型链：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">function SuperType()&#123;</span><br><span class="line">        this.property=true;</span><br><span class="line">    &#125;</span><br><span class="line">    SuperType.prototype.getSuperValue=function()&#123;</span><br><span class="line">        return this.property;</span><br><span class="line">    &#125;</span><br><span class="line">    function SubType()&#123;</span><br><span class="line">        this.subproperty=false;</span><br><span class="line">    &#125;</span><br><span class="line">    //继承SuperType</span><br><span class="line">    SubType.prototype=new SuperType();</span><br><span class="line">//通过对象字面量添加新方法，会导致上一行无效</span><br><span class="line">  SubType.prototype=&#123;</span><br><span class="line">        getSubValue()&#123;</span><br><span class="line">            return this.subproperty;</span><br><span class="line">        &#125;,</span><br><span class="line">        someOtherMethod()&#123;</span><br><span class="line">            return false;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    let instance=new SubType();</span><br><span class="line">    console.log(instance.getSuperValue());//出错</span><br></pre></td></tr></table></figure>
+
+<p><strong>原型链的问题就是会在原型中包含的引用值会在实例间共享</strong>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">       <span class="built_in">this</span>.color=[<span class="string">&quot;red&quot;</span>,<span class="string">&quot;blue&quot;</span>,<span class="string">&quot;green&quot;</span>]</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">   &#125;</span><br><span class="line">   SubType.prototype=<span class="keyword">new</span> SuperType();</span><br><span class="line">   <span class="keyword">let</span> intance1=<span class="keyword">new</span> SubType();</span><br><span class="line">   intance1.color.push(<span class="string">&quot;black&quot;</span>);</span><br><span class="line">   <span class="built_in">console</span>.log(intance1.color);</span><br><span class="line">   <span class="keyword">let</span> instance2=<span class="keyword">new</span> SubType();</span><br><span class="line">   <span class="built_in">console</span>.log(instance2.color);</span><br></pre></td></tr></table></figure>
+
+<h1 id="盗用构造函数"><a href="#盗用构造函数" class="headerlink" title="盗用构造函数"></a>盗用构造函数</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.color=[<span class="string">&quot;red&quot;</span>,<span class="string">&quot;blue&quot;</span>,<span class="string">&quot;green&quot;</span>]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//继承SuperType</span></span><br><span class="line">        SuperType.call(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//SubType.prototype=new SuperType();</span></span><br><span class="line">    <span class="keyword">let</span> intance1=<span class="keyword">new</span> SubType();</span><br><span class="line">    intance1.color.push(<span class="string">&quot;black&quot;</span>);</span><br><span class="line">    <span class="built_in">console</span>.log(intance1.color);</span><br><span class="line">    <span class="keyword">let</span> instance2=<span class="keyword">new</span> SubType();</span><br><span class="line">    <span class="built_in">console</span>.log(instance2.color);</span><br></pre></td></tr></table></figure>
+
+<p>使用call()，SuperType构造函数在为SubType的实例创建的新对象的上下文中执行了，相当于新的SubType对象上运行了SuperType()函数的所有初始化代码</p>
+<h2 id="传递参数："><a href="#传递参数：" class="headerlink" title="传递参数："></a>传递参数：</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.color=[<span class="string">&quot;red&quot;</span>,<span class="string">&quot;blue&quot;</span>,<span class="string">&quot;green&quot;</span>]</span><br><span class="line">        arr.forEach(<span class="function"><span class="params">item</span>=&gt;</span><span class="built_in">this</span>.color.push(item));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//继承SuperType</span></span><br><span class="line">        SuperType.call(<span class="built_in">this</span>,[<span class="string">&#x27;black&#x27;</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> intance1=<span class="keyword">new</span> SubType();</span><br><span class="line">    <span class="built_in">console</span>.log(intance1.color);<span class="comment">//[&#x27;red&#x27;, &#x27;blue&#x27;, &#x27;green&#x27;, &#x27;black&#x27;]</span></span><br><span class="line">    <span class="keyword">let</span> instance2=<span class="keyword">new</span> SubType();</span><br><span class="line">    <span class="built_in">console</span>.log(instance2.color);<span class="comment">//[&#x27;red&#x27;, &#x27;blue&#x27;, &#x27;green&#x27;, &#x27;black&#x27;]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h2><p>也是使用构造函数模式自定义类型的问题：必须在构造函数中定义方法，因此函数不能重用，此外，子类也不能访问父类原型上定义的方法，因此所有类型只能使用构造函数模式。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/13/%E9%81%8D%E5%8E%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/13/%E9%81%8D%E5%8E%86/" class="post-title-link" itemprop="url">js中的遍历</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-13 17:33:34" itemprop="dateCreated datePublished" datetime="2022-04-13T17:33:34+08:00">2022-04-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-14 16:22:44" itemprop="dateModified" datetime="2022-08-14T16:22:44+08:00">2022-08-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>for…in 用来遍历对象的可枚举属性列表，包括原型链上的键，</p>
+<p>某些情况下会以任意顺序遍历键名</p>
+<p>forEach(…)用来遍历数组中的所有普值并忽略回调函数的返回值，</p>
+<p>break命令或return 命令不能奏效</p>
+<p>for…of直接遍历值，会首先向被访问对象请求一个迭代器对象，然后通过调用迭代器对象的next()方法来遍历所有返回值，</p>
+<p>和for…in一样简洁的语法，可以与break,continue和return配合使用，提供了遍历所有数据结构的统一操作接口</p>
+<p>自定义对象迭代器</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myObject=&#123;</span><br><span class="line">      <span class="attr">a</span>:<span class="number">2</span>,</span><br><span class="line">      <span class="attr">b</span>:<span class="number">3</span></span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="built_in">Object</span>.defineProperty(myObject,<span class="built_in">Symbol</span>.iterator,&#123;</span><br><span class="line">      <span class="attr">enumerable</span>:<span class="literal">false</span>,</span><br><span class="line">      <span class="attr">writable</span>:<span class="literal">false</span>,</span><br><span class="line">      <span class="attr">configurable</span>:<span class="literal">true</span>,</span><br><span class="line">      <span class="attr">value</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">          <span class="keyword">var</span> o=<span class="built_in">this</span>;</span><br><span class="line">          <span class="keyword">var</span> idx=<span class="number">0</span>;</span><br><span class="line">          <span class="keyword">var</span> ks=<span class="built_in">Object</span>.keys(o);<span class="comment">//获取Object对象所有键值</span></span><br><span class="line">          <span class="keyword">return</span>&#123;</span><br><span class="line">              <span class="attr">next</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="comment">//next是一个函数</span></span><br><span class="line">                  <span class="keyword">return</span>&#123;</span><br><span class="line">                      <span class="attr">value</span>:o[ks[idx++]],</span><br><span class="line">                      <span class="attr">done</span>:(idx&gt;ks.length)</span><br><span class="line">                  &#125;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">var</span> it=myObject[<span class="built_in">Symbol</span>.iterator]();</span><br><span class="line">  it.next();</span><br><span class="line">  it.next();</span><br><span class="line">  it.next();</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">let</span> v <span class="keyword">of</span> myObject)&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(v);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/13/Object/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/13/Object/" class="post-title-link" itemprop="url">Object</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-13 17:25:11 / 修改时间：17:25:12" itemprop="dateCreated datePublished" datetime="2022-04-13T17:25:11+08:00">2022-04-13</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/13/%E7%90%86%E8%A7%A3this/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1090,400 +1374,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/11/%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C%E7%9A%84http%E7%8A%B6%E6%80%81%E7%A0%81/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/11/%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C%E7%9A%84http%E7%8A%B6%E6%80%81%E7%A0%81/" class="post-title-link" itemprop="url">返回结果的http状态码</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-11 19:58:12 / 修改时间：21:30:34" itemprop="dateCreated datePublished" datetime="2022-04-11T19:58:12+08:00">2022-04-11</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/http/" itemprop="url" rel="index"><span itemprop="name">http</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="状态码作用："><a href="#状态码作用：" class="headerlink" title="状态码作用："></a>状态码作用：</h1><p>状态码的职责是当客户端向服务器发送请求时，描述返回的请求结果，借助状态码，用户可以知道服务器时正常处理了请求，还是出现了错误。</p>
-<h1 id="状态码类别："><a href="#状态码类别：" class="headerlink" title="状态码类别："></a>状态码类别：</h1><table>
-<thead>
-<tr>
-<th></th>
-<th>类别</th>
-<th>原因短语</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1xx</td>
-<td>Informational(信息状态码)</td>
-<td>接收的请求正在处理</td>
-</tr>
-<tr>
-<td>2xx</td>
-<td>Success(成功状态码)</td>
-<td>请求正常处理完毕</td>
-</tr>
-<tr>
-<td>3xx</td>
-<td>Redirection(重定向状态码)</td>
-<td>需要进行附加操作以完成请求</td>
-</tr>
-<tr>
-<td>4xx</td>
-<td>Client Error(客户端错误状态码)</td>
-<td>服务器无法处理请求</td>
-</tr>
-<tr>
-<td>5xx</td>
-<td>Server Error(服务器错误状态码)</td>
-<td>服务器处理请求出错</td>
-</tr>
-</tbody></table>
-<h1 id="2xx成功"><a href="#2xx成功" class="headerlink" title="2xx成功"></a>2xx成功</h1><h2 id="200-OK"><a href="#200-OK" class="headerlink" title="200 OK"></a>200 OK</h2><p>表示从客户端发来的请求在服务器端被正常处理了</p>
-<p>在响应报文内，随状态码一起返回的信息会因方法的不同而发生改变。比如，使用Get方法，对应请求支援的实体会作为响应返回；而使用HEAD方法时，对应请求资源的实体首部不随报文实体作为响应返回。（即在响应中只返回首部，不返回实体主体部分）</p>
-<h2 id="204-No-Content"><a href="#204-No-Content" class="headerlink" title="204 No Content"></a>204 No Content</h2><p>该状态码代表服务器接收的请求已成功处理，但在返回的响应报文中不含实体的主体部分。另外，不允许返回任何实体的主体。比如，当从浏览器中发出请求处理后，返回204响应，那么浏览器显示的页面不发生更新。</p>
-<p>一般在只需要从客户端往服务器发送消息，而对客户端不需要发送新消息内容的情况下使用</p>
-<h2 id="206-Partial-Content"><a href="#206-Partial-Content" class="headerlink" title="206 Partial Content"></a>206 Partial Content</h2><p>该状态码表示客户端进行范围请求，而服务器成功执行了这部分的GET请求。响应报文中包含由Content-Range指定范围的实体内容</p>
-<h1 id="3xx重定向"><a href="#3xx重定向" class="headerlink" title="3xx重定向"></a>3xx重定向</h1><p>3xx响应结果表明浏览器需要执行某些特殊的处理以正确处理请求。</p>
-<h2 id="301-Moved-Permanently"><a href="#301-Moved-Permanently" class="headerlink" title="301 Moved Permanently"></a>301 Moved Permanently</h2><p>永久性重定向。该状态码表示请求的资源已被分配了新的URI，以后应该使用资源现在所指的URI，也就是说，如果已经把资源对应的URI保存为书签，这时应该按Location首部字段提示的URI重新保存。</p>
-<p>eg:</p>
-<p><a target="_blank" rel="noopener" href="http://example.com/sample">http://example.com/sample</a></p>
-<p>当指定资源路径的最后忘记添加“/“，就会产生301状态码</p>
-<h2 id="302-Found"><a href="#302-Found" class="headerlink" title="302 Found"></a>302 Found</h2><p>临时性重定向，该状态码表示请求的资源已被分配了新的URI，希望用户（本次）能使用新的URI访问。和301 Moved Permanently状态码相似，但302状态码代表的资源不是被永久移动，只是临时性质。换句话说，已移动的资源对应的URI将来还有可能发生改变。用户把URI保存成书签，但不会像301状态码出现时那样去更新书签，而是仍旧保留返回的302状态码的页面对应的URI。</p>
-<h2 id="303-See-Other"><a href="#303-See-Other" class="headerlink" title="303 See Other"></a>303 See Other</h2><p>该状态码表示由于请求对应的资源存在着另一个URI，应使用GET方法定向获取请求的资源。303状态码和302Found状态码有着相同功能。但303状态码明确表示客户端应当采用GET方法获取资源，这点与302状态码有区别。比如，当使用POST方法访问CGI程序，其执行后的处理结果是希望客户端能以GET方法重定向到另一个URI上去时，返回303状态码。</p>
-<p>当301,302,303返回响应码时，几乎所有浏览器都会把POST改为GET，并删除请求报文的主体，之后请求会自动再次发送。</p>
-<p>301,302标准是禁止将POST改为GET，但实际上大家都这么做。</p>
-<h2 id="304-Not-Modified"><a href="#304-Not-Modified" class="headerlink" title="304 Not Modified"></a>304 Not Modified</h2><p>该状态码表示客户端发送附带条件的请求时，服务器端允许请求访问资源，但未满足条件的情况，304状态码返回时，不包括任何响应的主体部分。304和重定向没有关系。</p>
-<h2 id="307-Temporary-Redirect"><a href="#307-Temporary-Redirect" class="headerlink" title="307 Temporary Redirect"></a>307 Temporary Redirect</h2><p>临时重定向。该状态码与302 Found有着相同的含义。尽管302标准禁止POST变为GET，但实际使用时大家并不遵守。307会按照浏览器标准，不会从POST变成GET。但是，对于处理响应时的行为，每种浏览器有可能出现不同情况。</p>
-<h1 id="4xx客户端错误"><a href="#4xx客户端错误" class="headerlink" title="4xx客户端错误"></a>4xx客户端错误</h1><p>4xx的响应结果表明客户端时发生错误的原因所在</p>
-<h2 id="400-Bad-Request"><a href="#400-Bad-Request" class="headerlink" title="400 Bad Request"></a>400 Bad Request</h2><p>该状态码表示请求报文中存在语法错误，当错误发生时，需修改请求的内容后再次发送请求。另外，浏览器会像200 Ok一样对待状态码</p>
-<h2 id="401-Unauthorized"><a href="#401-Unauthorized" class="headerlink" title="401 Unauthorized"></a>401 Unauthorized</h2><p>该状态码表示发送的请求需要有通过HTTP认证（BASIC认证、DIGEST认证）的认证信息。另外若之前已进行过1次请求，则表示用户认证失败。</p>
-<p>返回含有401的响应必须包含一个适用于被请求资源的WWW-Authenticate首部用于质询用户信息，当浏览器初次接收到401响应，会弹出认证用的对话窗口。</p>
-<h2 id="403-Forbidden"><a href="#403-Forbidden" class="headerlink" title="403 Forbidden"></a>403 Forbidden</h2><p>该状态码表明对请求资源的访问被服务器拒绝了。服务端没有给出拒绝的详细理由，但如果做说明，可以在实体的主体部分对原因进行描述。</p>
-<p>未获得文件系统的访问授权，访问权限出现某些问题（从未授权的源IP地址试图访问）等列举的情况都可能是发生403的原因。</p>
-<h2 id="404-Not-Found"><a href="#404-Not-Found" class="headerlink" title="404 Not Found"></a>404 Not Found</h2><p>该状态码表明服务器上无法找到请求的资源。除此之外，也可以在服务端拒绝请求且不想说理由时使用。</p>
-<h1 id="5xx服务器错误"><a href="#5xx服务器错误" class="headerlink" title="5xx服务器错误"></a>5xx服务器错误</h1><p>5xx的响应结果表明服务器本身发生错误</p>
-<h2 id="500-Internal-Server-Error"><a href="#500-Internal-Server-Error" class="headerlink" title="500 Internal Server Error"></a>500 Internal Server Error</h2><p>表明服务器端在执行请求时发生了错误，也有可能时Web应用存在的bug或某些临时的故障</p>
-<h2 id="503-Service-Unavailable"><a href="#503-Service-Unavailable" class="headerlink" title="503 Service Unavailable"></a>503 Service Unavailable</h2><p>表明服务器暂时处于超负载或正在进行停机维护，现在无法处理请求。如果事先得知解除以上状况需要的时间，最好写入Retry-After首部字段再返回给客户端。</p>
-<p>状态码和状况不一致：</p>
-<p>不少返回的状态码响应都是错误的，但是用户可能察觉不到这点，比如Web应用程序内部发生错误，状态码依然返回200 OK。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/11/http%E8%AF%B7%E6%B1%82%E9%A6%96%E9%83%A8%E5%AD%97%E6%AE%B5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/11/http%E8%AF%B7%E6%B1%82%E9%A6%96%E9%83%A8%E5%AD%97%E6%AE%B5/" class="post-title-link" itemprop="url">http请求首部字段</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-11 19:53:59" itemprop="dateCreated datePublished" datetime="2022-04-11T19:53:59+08:00">2022-04-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-02 23:05:47" itemprop="dateModified" datetime="2022-05-02T23:05:47+08:00">2022-05-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/" itemprop="url" rel="index"><span itemprop="name">HTTP</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Accept"><a href="#Accept" class="headerlink" title="Accept"></a>Accept</h1><blockquote>
-<p>Accept:text/html,application/xhtml+xml,application/xml;q=0.9,<em>/</em>;q=0.8</p>
-</blockquote>
-<p>Accept首部字段通知服务器，用户代理能够处理的媒体类型及媒体类型的相对优先级。可用type/subtype这种形式，一次指定多种媒体类型。</p>
-<p>文本文件：text/html,text/plain,text/css…</p>
-<p>application/xhtml+xml,application/xml…</p>
-<p>图片文件：image/jpg,image/gif…</p>
-<p>视频文件：video/mpeg,video/quicktime…</p>
-<p>应用程序使用的二进制文件：application/octet-stream,application/zip…</p>
-<p>若想给显示的媒体类型增加优先级，使用q=来额外表示权重值，用分号（；）进行分隔，权重值q范围是0~1,（可精确到小数点后3位，且1为最大值。不指定权重值q时，默认权重为q=1.0</p>
-<p>当服务器提供多种内容时，将首先返回权重值最高的媒体类型。</p>
-<h1 id="Accept-Charset"><a href="#Accept-Charset" class="headerlink" title="Accept-Charset"></a>Accept-Charset</h1><blockquote>
-<p>Accept-Charset:iso-8859-5,unicode-1-1;q=0.8</p>
-</blockquote>
-<p>Accept-Charset首部字段可用来通知服务器用户代理支持的字符集及字符集的相对优先顺序。另外，可一次性指定多种字符集。与各首部字段Accept相同的是可用权重q值来表示相对优先级</p>
-<p>该首部字段用于内容协商机制的服务器驱动协商。</p>
-<h1 id="Accept-Encoding"><a href="#Accept-Encoding" class="headerlink" title="Accept-Encoding"></a>Accept-Encoding</h1><blockquote>
-<p>Accept-Encoding:gzip,deflate</p>
-</blockquote>
-<p>Accept-Encoding 首部字段用来告知服务器用户代理支持的内容编码及内容编码的优先级顺序。可一次性指定多种内容编码。</p>
-<p>gzip:由文件压缩程序gzip（GNU zip)生成的编码格式，采用LZ77及32为循环冗余校验</p>
-<p>compress:由UNIX文件压缩程序compress生成的编码格式，采用的算法LZW</p>
-<p>deflate:组合使用zlib格式及由deflate压缩算法生成的编码格式</p>
-<p>identity:不执行压缩或不会变化的默认编码格式</p>
-<p>采用权值q来表示相对优先级，这点与首部字段Accept相同。可用(*)作为通配符，指定任意编码格式</p>
-<h1 id="Accept-Language"><a href="#Accept-Language" class="headerlink" title="Accept-Language"></a>Accept-Language</h1><p>告知服务器用户代理能够处理的自然语言集，以及自然语言集的相对优先级。可一次指定多种自然语言集</p>
-<p>按权重q表示相对优先级。</p>
-<h1 id="Authorization"><a href="#Authorization" class="headerlink" title="Authorization"></a>Authorization</h1><p>首部字段Authorization用来告知服务器，用户代理的认证信息，通常想要通过服务器认证的用户代理会在接收待返回的401状态码后，把首部字段Authorization加入到请求中。共用缓存在接收到含有Authorization首部字段的请求时的操作处理会略有差异。</p>
-<h1 id="Expect"><a href="#Expect" class="headerlink" title="Expect"></a>Expect</h1><blockquote>
-<p>Expect:100-continue</p>
-</blockquote>
-<p>客户端使用首部字段Expect来告知服务器，期望出现的某种特定行为，因服务器无法理解客户端的期望做出回应而发生错误时，会返回417Expectation Failed</p>
-<p>客户端可以利用该首部字段，写明所期望的扩展。虽然HTTP/1.1规范只定义100-continue(状态码100Continue之意)</p>
-<h1 id="From"><a href="#From" class="headerlink" title="From"></a>From</h1><p>首部字段From用来告知服务器使用用户代理的用户的电子邮件地址。通常使用目的是为了显示搜索引擎用户代理的负责人的电子邮件联系方式。使用代理时，尽可能包含From首部字段</p>
-<h1 id="Host"><a href="#Host" class="headerlink" title="Host"></a>Host</h1><p>首部字段Host会告知服务器，请求的资源所处的互联网主机名和端口号。Host首部字段再HTTP/1.1规范内是唯一一个必须被包含在请求内的首部字段。</p>
-<p>请求被发送到服务器时，请求中的主机名会用IP地址直接替换解决，但如果这时相同的IP地址下部署运行着多个域名，那么服务器就无法理解是哪个域名对应的请求。因此，就要使用首部字段Host来明确指出请求的主机名，若服务器未设定主机名，那直接发送空值。</p>
-<p>Host:</p>
-<h1 id="If-Match"><a href="#If-Match" class="headerlink" title="If-Match"></a>If-Match</h1><p>if-xxx为条件请求，服务器接收到附带条件请求后，只有判断指定条件为真，才执行请求。</p>
-<p>首部字段If-Match，属于附带条件之一，它会告知服务器匹配资源所用的实体标记(ETag)值，这时的服务器无法使用弱ETag值，服务器对比If-Match的字段值与资源的ETag值，仅当两者一致时才执行请求，否则，返回状态码412 Precondition Failed</p>
-<p>还可以使用(*)指定If-Match的字段值，针对这种情况，服务器会忽略ETag的值，只要资源存在就处理请求。</p>
-<h1 id="If-Modified-Since"><a href="#If-Modified-Since" class="headerlink" title="If-Modified-Since"></a>If-Modified-Since</h1><blockquote>
-<p>If-Modified-Since: Thu,15 Apr 2004 00:00:00 GMT</p>
-</blockquote>
-<p>首部字段If-Modified-Since属于附带条件之一，它会告知服务器若If-Modified-Since字段值早于资源的更新时间，则希望能处理该请求，而在If-Modified-Since字段值的日期时间后，如果请求的资源都没有更新，返回状态码304Not Modified的响应</p>
-<p>If-Modified-Since用于确认代理或客户端拥有的本地资源的有效性，获取资源的更新时间可通过确认首部字段Last-Modified确定</p>
-<h1 id="If-None-Match"><a href="#If-None-Match" class="headerlink" title="If-None-Match"></a>If-None-Match</h1><p>与If-Match作用相反，用于指定If-None-Match字段值的实体标记（ETag)值与请求资源得到ETag不一致时会告知服务器处理该请求。</p>
-<p>在GET或HEAD方法中使用首部字段If-None-Match可获取最新的源，因此这与使用首部字段If-Modified-Since有些类似。</p>
-<h1 id="If-Range"><a href="#If-Range" class="headerlink" title="If-Range"></a>If-Range</h1><p>If-Range字段值若是和ETag值或更新的日期时间匹配一致，那么就作为范围请求处理，<strong>若不一致返回全部资源</strong></p>
-<p>如果不使用If-Range,而是使用If-Match,服务器端的资源如果更新了，那客户端持有的资源中的一部分也会随之无效，服务器端就会以<strong>402 Precondition Failed</strong>返回，催促客户端再次发请求，与使用If-Range相比，就要花费两倍的功夫。</p>
-<h1 id="If-Unmodified-Since"><a href="#If-Unmodified-Since" class="headerlink" title="If-Unmodified-Since"></a>If-Unmodified-Since</h1><p>与If-Modified-Since作用相反，它的作用是告知服务器，指定的资源只有在字段值内指定的日期时间之后未发生更新得情况下，才能处理请求，如果在指定日期时间后发生了更新，则以状态码412 Precondition Failed作为响应返回</p>
-<h1 id="Max-Forwards"><a href="#Max-Forwards" class="headerlink" title="Max-Forwards"></a>Max-Forwards</h1><p>通过TRACE方法或OPTIONS方法，发送包含首部字段Max-Forwards的请求时，该字段以十进制整数的形式指定可经过的服务器最大数目。服务器在往下一个服务器转发请求前，Max-Forwards的值减1后重新复制，当服务器收到Max-Forwards值为0的请求时则不再进行转发，而是直接返回响应。</p>
-<p>如果代理服务器由于某些原因导致请求转发失败，客户端也就等不到服务器返回的响应。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/11/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/11/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" class="post-title-link" itemprop="url">开发环境</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-11 14:51:43" itemprop="dateCreated datePublished" datetime="2022-04-11T14:51:43+08:00">2022-04-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-07 21:08:25" itemprop="dateModified" datetime="2022-05-07T21:08:25+08:00">2022-05-07</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/webpack/" itemprop="url" rel="index"><span itemprop="name">webpack</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="开发环境中使用source-map"><a href="#开发环境中使用source-map" class="headerlink" title="开发环境中使用source map"></a>开发环境中使用source map</h1><p>当 webpack 打包源代码时，可能会很难追踪到 error(错误) 和 warning(警告) 在源代码中的原始位置。例如，如果将三个源文件（<code>a.js</code>, <code>b.js</code> 和 <code>c.js</code>）打包到一个 bundle（<code>bundle.js</code>）中，而其中一个源文件包含一个错误，那么堆栈跟踪就会直接指向到 <code>bundle.js</code>。你可能需要准确地知道错误来自于哪个源文件，所以这种提示这通常不会提供太多帮助。</p>
-<p>为了更容易地追踪 error 和 warning，JavaScript 提供了 <a target="_blank" rel="noopener" href="http://blog.teamtreehouse.com/introduction-source-maps">source maps</a> 功能，可以将编译后的代码映射回原始源代码。如果一个错误来自于 <code>b.js</code>，source map 就会明确的告诉你。</p>
-<p>source map 有许多 <a target="_blank" rel="noopener" href="https://webpack.docschina.org/configuration/devtool">可用选项</a>，请务必仔细阅读它们，以便可以根据需要进行配置。</p>
-<p>对于本指南，我们将使用 <code>inline-source-map</code> 选项，这有助于解释说明示例意图（此配置仅用于示例，不要用于生产环境）：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path=<span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> HtmlWebpackPlugin=<span class="built_in">require</span>(<span class="string">&quot;html-webpack-plugin&quot;</span>)</span><br><span class="line"><span class="built_in">module</span>.exports=&#123;</span><br><span class="line">    <span class="attr">entry</span>:&#123;</span><br><span class="line">       <span class="attr">index</span>: <span class="string">&#x27;./src/index.js&#x27;</span>,</span><br><span class="line">       <span class="attr">print</span>:<span class="string">&#x27;./src/print.js&#x27;</span></span><br><span class="line"></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">output</span>:&#123;</span><br><span class="line">        <span class="attr">filename</span>:<span class="string">&#x27;[name]bundle.js&#x27;</span>,</span><br><span class="line">        <span class="attr">path</span>:path.resolve(__dirname,<span class="string">&#x27;dist&#x27;</span>),</span><br><span class="line">        <span class="attr">clean</span>:<span class="literal">true</span>,</span><br><span class="line">        <span class="attr">publicPath</span>:<span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">module</span>:&#123;</span><br><span class="line">        <span class="attr">rules</span>:[</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">test</span>: <span class="regexp">/\.css$/i</span>,</span><br><span class="line">                use:[<span class="string">&#x27;style-loader&#x27;</span>,<span class="string">&#x27;css-loader&#x27;</span>],</span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">test</span>:<span class="regexp">/\.(png|jpg|jpeg|svg|gif)$/i</span>,</span><br><span class="line">                type:<span class="string">&#x27;asset/resource&#x27;</span></span><br><span class="line"></span><br><span class="line">            &#125;,</span><br><span class="line">            </span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">devtool</span>:<span class="string">&#x27;inline-source-map&#x27;</span>,</span><br><span class="line">    <span class="attr">devServer</span>:&#123;</span><br><span class="line">        <span class="attr">static</span>:<span class="string">&#x27;./dist&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">plugins</span>:[</span><br><span class="line">        <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">            <span class="attr">title</span>:<span class="string">&#x27;Development&#x27;</span>,</span><br><span class="line">        &#125;)</span><br><span class="line"></span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">mode</span>:<span class="string">&#x27;development&#x27;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="选择开发工具"><a href="#选择开发工具" class="headerlink" title="选择开发工具"></a>选择开发工具</h1><p>webpack 提供几种可选方式，帮助你在代码发生变化后自动编译代码：</p>
-<ol>
-<li>webpack’s <a target="_blank" rel="noopener" href="https://webpack.docschina.org/configuration/watch/#watch">Watch Mode</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/webpack/webpack-dev-server">webpack-dev-server</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/webpack/webpack-dev-middleware">webpack-dev-middleware</a></li>
-</ol>
-<p>多数场景中，你可能需要使用 <code>webpack-dev-server</code>，但是不妨探讨一下以上的所有选项。</p>
-<h2 id="使用watch-mode"><a href="#使用watch-mode" class="headerlink" title="使用watch mode"></a>使用watch mode</h2><p>你可以指示 webpack “watch” 依赖图中所有文件的更改。如果其中一个文件被更新，代码将被重新编译，所以你不必再去手动运行整个构建。</p>
-<p>我们添加一个用于启动 webpack watch mode 的 npm scripts：</p>
-<p><strong>package.json</strong></p>
-<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   &quot;name&quot;: &quot;webpack-demo&quot;,</span><br><span class="line">   &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line">   &quot;description&quot;: &quot;&quot;,</span><br><span class="line">   &quot;private&quot;: true,</span><br><span class="line">   &quot;scripts&quot;: &#123;</span><br><span class="line">     &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,</span><br><span class="line"><span class="addition">+    &quot;watch&quot;: &quot;webpack --watch&quot;,</span></span><br><span class="line">     &quot;build&quot;: &quot;webpack&quot;</span><br><span class="line">   &#125;,</span><br><span class="line">   &quot;keywords&quot;: [],</span><br><span class="line">   &quot;author&quot;: &quot;&quot;,</span><br><span class="line">   &quot;license&quot;: &quot;ISC&quot;,</span><br><span class="line">   &quot;devDependencies&quot;: &#123;</span><br><span class="line">     &quot;html-webpack-plugin&quot;: &quot;^4.5.0&quot;,</span><br><span class="line">     &quot;webpack&quot;: &quot;^5.4.0&quot;,</span><br><span class="line">     &quot;webpack-cli&quot;: &quot;^4.2.0&quot;</span><br><span class="line">   &#125;,</span><br><span class="line">   &quot;dependencies&quot;: &#123;</span><br><span class="line">     &quot;lodash&quot;: &quot;^4.17.20&quot;</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>现在，你可以在命令行中运行 <code>npm run watch</code>，然后就会看到 webpack 是如何编译代码。</p>
-<p>唯一的缺点是，为了看到修改后的实际效果，<strong>你需要刷新浏览器</strong>。如果能够自动刷新浏览器就更好了，因此接下来我们会尝试通过 <code>webpack-dev-server</code> 实现此功能。</p>
-<h2 id="webpack-dev-server"><a href="#webpack-dev-server" class="headerlink" title="webpack-dev-server"></a>webpack-dev-server</h2><p><code>webpack-dev-server</code> 为你提供了一个基本的 web server，并且具有 live reloading(实时重新加载) 功能。设置如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev webpack-dev-server</span><br></pre></td></tr></table></figure>
-
-<p>修改配置文件，告知 dev server，从什么位置查找文件：</p>
-<p><strong>webpack.config.js</strong></p>
-<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"> const path = require(&#x27;path&#x27;);</span><br><span class="line"> const HtmlWebpackPlugin = require(&#x27;html-webpack-plugin&#x27;);</span><br><span class="line"></span><br><span class="line"> module.exports = &#123;</span><br><span class="line">   mode: &#x27;development&#x27;,</span><br><span class="line">   entry: &#123;</span><br><span class="line">     index: &#x27;./src/index.js&#x27;,</span><br><span class="line">     print: &#x27;./src/print.js&#x27;,</span><br><span class="line">   &#125;,</span><br><span class="line">   devtool: &#x27;inline-source-map&#x27;,</span><br><span class="line"><span class="addition">+  devServer: &#123;</span></span><br><span class="line"><span class="addition">+    static: &#x27;./dist&#x27;,</span></span><br><span class="line"><span class="addition">+  &#125;,</span></span><br><span class="line">   plugins: [</span><br><span class="line">     new HtmlWebpackPlugin(&#123;</span><br><span class="line">       title: &#x27;Development&#x27;,</span><br><span class="line">     &#125;),</span><br><span class="line">   ],</span><br><span class="line">   output: &#123;</span><br><span class="line">     filename: &#x27;[name].bundle.js&#x27;,</span><br><span class="line">     path: path.resolve(__dirname, &#x27;dist&#x27;),</span><br><span class="line">     clean: true,</span><br><span class="line">   &#125;,</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
-
-<p>以上配置告知 <code>webpack-dev-server</code>，将 <code>dist</code> 目录下的文件 serve 到 <code>localhost:8080</code> 下。（译注：serve，将资源作为 server 的可访问文件）</p>
-<p>我们添加一个可以直接运行 dev server 的 script：</p>
-<p><strong>package.json</strong></p>
-<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&quot;scripts&quot;: &#123;</span><br><span class="line">     &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,</span><br><span class="line">     &quot;watch&quot;: &quot;webpack --watch&quot;,</span><br><span class="line"><span class="addition">+    &quot;start&quot;: &quot;webpack serve --open&quot;,</span></span><br><span class="line">     &quot;build&quot;: &quot;webpack&quot;</span><br><span class="line">   &#125;,</span><br></pre></td></tr></table></figure>
-
-<p>现在，在命令行中运行 <code>npm start</code>，我们会看到浏览器自动加载页面。如果你更改任何源文件并保存它们，web server 将在编译代码后自动重新加载</p>
-<h2 id="webpack-dev-middleware"><a href="#webpack-dev-middleware" class="headerlink" title="webpack-dev-middleware"></a>webpack-dev-middleware</h2><p><code>webpack-dev-middleware</code> 是一个封装器(wrapper)，它可以把 webpack 处理过的文件发送到一个 server。<code>webpack-dev-server</code> 在内部使用了它，然而它也可以作为一个单独的 package 来使用，以便根据需求进行更多自定义设置。下面是一个 webpack-dev-middleware 配合 express server 的示例。</p>
-<p>首先，安装 <code>express</code> 和 <code>webpack-dev-middleware</code>：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev express webpack-dev-middleware</span><br></pre></td></tr></table></figure>
-
-<p>调整webpack.config,js</p>
-<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"> const path = require(&#x27;path&#x27;);</span><br><span class="line"> const HtmlWebpackPlugin = require(&#x27;html-webpack-plugin&#x27;);</span><br><span class="line"></span><br><span class="line"> module.exports = &#123;</span><br><span class="line">   mode: &#x27;development&#x27;,</span><br><span class="line">   entry: &#123;</span><br><span class="line">     index: &#x27;./src/index.js&#x27;,</span><br><span class="line">     print: &#x27;./src/print.js&#x27;,</span><br><span class="line">   &#125;,</span><br><span class="line">   devtool: &#x27;inline-source-map&#x27;,</span><br><span class="line">   devServer: &#123;</span><br><span class="line">     static: &#x27;./dist&#x27;,</span><br><span class="line">   &#125;,</span><br><span class="line">   plugins: [</span><br><span class="line">     new HtmlWebpackPlugin(&#123;</span><br><span class="line">       title: &#x27;Development&#x27;,</span><br><span class="line">     &#125;),</span><br><span class="line">   ],</span><br><span class="line">   output: &#123;</span><br><span class="line">     filename: &#x27;[name].bundle.js&#x27;,</span><br><span class="line">     path: path.resolve(__dirname, &#x27;dist&#x27;),</span><br><span class="line">     clean: true,</span><br><span class="line"><span class="addition">+    publicPath: &#x27;/&#x27;,</span></span><br><span class="line">   &#125;,</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
-
-<p>我们将会在 server 脚本使用 <code>publicPath</code>，以确保文件资源能够正确地 serve 在 <code>http://localhost:3000</code> 下，稍后我们会指定 port number(端口号)。接下来是设置自定义 <code>express</code> server：</p>
-<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> webpack-demo</span><br><span class="line">  |- package.json</span><br><span class="line">  |- package-lock.json</span><br><span class="line">  |- webpack.config.js</span><br><span class="line"><span class="addition">+ |- server.js</span></span><br><span class="line">  |- /dist</span><br><span class="line">  |- /src</span><br><span class="line">    |- index.js</span><br><span class="line">    |- print.js</span><br><span class="line">  |- /node_modules</span><br></pre></td></tr></table></figure>
-
-<p><strong>server.js</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> webpackDevMiddleware = <span class="built_in">require</span>(<span class="string">&#x27;webpack-dev-middleware&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = express();</span><br><span class="line"><span class="keyword">const</span> config = <span class="built_in">require</span>(<span class="string">&#x27;./webpack.config.js&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> compiler = webpack(config);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 告知 express 使用 webpack-dev-middleware，</span></span><br><span class="line"><span class="comment">// 以及将 webpack.config.js 配置文件作为基础配置。</span></span><br><span class="line">app.use(</span><br><span class="line">  webpackDevMiddleware(compiler, &#123;</span><br><span class="line">    <span class="attr">publicPath</span>: config.output.publicPath,</span><br><span class="line">  &#125;)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将文件 serve 到 port 3000。</span></span><br><span class="line">app.listen(<span class="number">3000</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Example app listening on port 3000!\n&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>现在，添加一个 npm script，以使我们更方便地运行 server：</p>
-<p>package.json</p>
-<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> &quot;scripts&quot;: &#123;</span><br><span class="line">     &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,</span><br><span class="line">     &quot;watch&quot;: &quot;webpack --watch&quot;,</span><br><span class="line">     &quot;start&quot;: &quot;webpack serve --open&quot;,</span><br><span class="line"><span class="addition">+    &quot;server&quot;: &quot;node server.js&quot;,</span></span><br><span class="line">     &quot;build&quot;: &quot;webpack&quot;</span><br><span class="line">   &#125;,</span><br></pre></td></tr></table></figure>
-
-<p>现在，在 terminal(终端) 中执行 <code>npm run server</code></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1551,7 +1445,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">188</span>
+          <span class="site-state-item-count">191</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1612,7 +1506,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共164.5k字</span>
+  <span class="post-count">博客全站共166.5k字</span>
 </div>
         
 
