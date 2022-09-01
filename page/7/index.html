@@ -187,6 +187,97 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/08/%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/08/%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D/" class="post-title-link" itemprop="url">插件以及资源定位</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-08 10:21:32 / 修改时间：11:13:19" itemprop="dateCreated datePublished" datetime="2022-05-08T10:21:32+08:00">2022-05-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/webpack/" itemprop="url" rel="index"><span itemprop="name">webpack</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h2><p>CDN（Connect Delivery Network)是一种部署策略，包括分布式存储，负载均衡，内容管理等模块，CDN的一个重要功能是将静态资源缓存到用户近距离的CDN节点上，不但能提高用户对静态资源的访问速度，还能节省服务器的带宽消耗，降低负载。实现此功能的一个重要前提是将静态资源部署到已接入CDN的专属服务器，而这类服务器通常与Web主页面处于不同域名下，这样做的主要目的是为了充分利用浏览器的并发请求能力，提高页面的加载速度。</p>
+<h2 id="webpack的逆向注入模式"><a href="#webpack的逆向注入模式" class="headerlink" title="webpack的逆向注入模式"></a>webpack的逆向注入模式</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">entry</span>:&#123;</span><br><span class="line">        <span class="string">&#x27;main.app&#x27;</span>:<span class="string">&#x27;./js/main.app.js&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">output</span>:&#123;</span><br><span class="line">        <span class="attr">path</span>:<span class="string">&#x27;./dist&#x27;</span>,</span><br><span class="line">        <span class="attr">filename</span>:<span class="string">&#x27;[namr].[chunkhash].js&#x27;</span>,</span><br><span class="line">        <span class="attr">publicPath</span>:<span class="string">&#x27;//static.app.com/app/&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">module</span>:&#123;</span><br><span class="line">        <span class="attr">rules</span>:[&#123;</span><br><span class="line">            <span class="attr">test</span>:<span class="regexp">/\.js$/</span>,</span><br><span class="line">            loader:<span class="string">&#x27;babel-loader&#x27;</span></span><br><span class="line">        &#125;,&#123;</span><br><span class="line">            <span class="attr">test</span>:<span class="regexp">/\.css$/</span>,</span><br><span class="line">            use:ExtractTextPlugin.extract(&#123;</span><br><span class="line">                <span class="attr">use</span>:<span class="string">&#x27;css-loader&#x27;</span></span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;,</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">        <span class="attr">plugins</span>:[</span><br><span class="line">            newExtractTextPlugin(&#123;</span><br><span class="line">                <span class="attr">filename</span>:<span class="string">&#x27;style/[name].[chunkhash].css&#x27;</span>,</span><br><span class="line">            &#125;),</span><br><span class="line">            <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">                <span class="attr">filename</span>:<span class="string">&#x27;index.html&#x27;</span>,</span><br><span class="line">                <span class="attr">template</span>:<span class="string">&#x27;index.html&#x27;</span>,</span><br><span class="line">                <span class="attr">inject</span>:<span class="literal">true</span></span><br><span class="line">            &#125;)</span><br><span class="line">        ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>index.html源码没有引用main.app.css的<link>标签和main.app.js的script标签，然而构建后的文档内容被注入了对应的引用标签并且引用地址为构建之后的资源地址</li>
+<li>构建之后的资源地址被修改为带有CDN服务器域名和路径信息的完整URL，并且CDN的信息与配置中的publicPath一致，这是webpack提供的可用于指定静态资源CDN服务器信息的配置项</li>
+</ol>
+<p>多页面项目资源定位</p>
+<p>编写一个html-wepack-plugin-before-html-processing插件，保证在html-wepack-plugin-before-html-processing阶段能够执行以下行为：</p>
+<ul>
+<li>获得静态资源构建后的URL</li>
+<li>获得并且修改HTML文档的内容</li>
+</ul>
+<h3 id="编写webpack组件，清楚两个对象：compiler和compilation"><a href="#编写webpack组件，清楚两个对象：compiler和compilation" class="headerlink" title="编写webpack组件，清楚两个对象：compiler和compilation"></a>编写webpack组件，清楚两个对象：compiler和compilation</h3><p>compiler对象代表的是webpack执行环境的完整配置，只会在启动webpack时被创建，并且在webpack运行期间不会被修改</p>
+<p>compilation对象代表某个版本的资源对应的编译进程，当使用webpack的development中间件时，每次检测到项目文件有改动会创建一个compilation，进而能够针对改动生产全新的编译文件，compilation对象包含当前模块资源，待编译文件，有改动的文件和监听依赖的所有信息</p>
+<p>编写一个构造函数用于接收配置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> HtmlWebpackPluginForLocate=<span class="function"><span class="keyword">function</span>(<span class="params">options</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.options=&#123;...options&#125;<span class="comment">//options用来提供给用户配置插件功能的细节</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//针对指定事件阶段编写apply方法</span></span><br><span class="line">HtmlWebpackPluginForLocate.prototype.apply=<span class="function"><span class="params">compiler</span>=&gt;</span>&#123;</span><br><span class="line">    compiler.plugin(<span class="string">&#x27;compilation&#x27;</span>,<span class="function"><span class="params">compilation</span>=&gt;</span>&#123;</span><br><span class="line">        compilation.plugin(<span class="string">&#x27;html-webpack-plugin-before-html-processing&#x27;</span>,<span class="function">(<span class="params">htmlPluginData,callback</span>)=&gt;</span>&#123;</span><br><span class="line">            <span class="comment">//插件行为逻辑</span></span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>html-webpack-plugin-before-html-processing阶段捕获两个对象，callback的作用类似于Express中间件中的next函数，执行完当前插件的逻辑后必须调用callback以便进入后序流程，它属于webpack流程控制的一部分，没有构建相关的信息</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/07/%E8%A6%86%E7%9B%96%E6%9B%B4%E6%96%B0%E4%B8%8E%E5%A2%9E%E9%87%8F%E6%9B%B4%E6%96%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1465,126 +1556,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/02/%E5%BC%BA%E7%BC%93%E5%AD%98%E5%92%8C%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/02/%E5%BC%BA%E7%BC%93%E5%AD%98%E5%92%8C%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/" class="post-title-link" itemprop="url">强缓存和协商缓存</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-05-02 22:40:35" itemprop="dateCreated datePublished" datetime="2022-05-02T22:40:35+08:00">2022-05-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-08 10:01:26" itemprop="dateModified" datetime="2022-05-08T10:01:26+08:00">2022-05-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/" itemprop="url" rel="index"><span itemprop="name">HTTP</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>这里说的缓存是指浏览器（客户端）在本地磁盘中对访问过的资源保存的副本文件。</p>
-<p>浏览器缓存主要有以下几个优点：</p>
-<ul>
-<li>减少重复数据请求，避免通过网络再次加载资源，节省流量。</li>
-<li>降低服务器的压力，提升网站性能。</li>
-<li>加快客户端加载网页的速度， 提升用户体验。</li>
-</ul>
-<p>浏览器缓存分为强缓存和协商缓存，两者有两个比较明显的区别：</p>
-<ul>
-<li>如果浏览器命中强缓存，则不需要给服务器发请求；而协商缓存是由服务器来决定是否使用缓存，即客户端与服务器之间一定存在一次通信。</li>
-<li>在 chrome 中强缓存（虽然没有发出真实的 http 请求）的请求状态码返回是 200 (from cache)；而协商缓存如果命中走缓存的话，请求的状态码是 304 (not modified)。 不同浏览器的策略不同，在 Fire Fox中，from cache 状态码是 304.</li>
-</ul>
-<h2 id="请求流程"><a href="#请求流程" class="headerlink" title="请求流程"></a>请求流程</h2><p>浏览器在第一次请求后缓存资源，再次请求时，会进行下面两个步骤：</p>
-<ul>
-<li>浏览器会获取该缓存资源的 header 中的信息，根据 response header 中的 expires 和 cache-control 来判断是否命中强缓存，如果命中则直接从缓存中获取资源。</li>
-<li>如果没有命中强缓存，浏览器就会发送请求到服务器，这次请求会带上 IF-Modified-Since 或者 IF-None-Match, 它们的值分别是第一次请求返回 Last-Modified或者 Etag，由服务器来对比这一对字段来判断是否命中。如果命中，则服务器返回 304 状态码，并且不会返回资源内容，浏览器会直接从缓存获取；否则服务器最终会返回资源的实际内容，并更新 header 中的相关缓存字段。</li>
-</ul>
-<h2 id="强缓存"><a href="#强缓存" class="headerlink" title="强缓存"></a>强缓存</h2><p>强缓存是根据返回头中的 Expires 或者 Cache-Control 两个字段来控制的，都是表示资源的缓存有效时间。</p>
-<ul>
-<li>Expires 是 http 1.0 的规范，值是一个GMT 格式的时间点字符串，比如 Expires:Mon,18 Oct 2066 23:59:59 GMT 。这个时间点代表资源失效的时间，如果当前的时间戳在这个时间之前，则判定命中缓存。有一个缺点是，失效时间是一个<strong>绝对时间</strong>，以服务器的时间为准，如果服务器时间与客户端时间偏差较大时，就会导致缓存混乱。而服务器的时间跟用户的实际时间是不一样是很正常的，所以 Expires 在实际使用中会带来一些麻烦。</li>
-<li>Cache-Control这个字段是 http 1.1 的规范，一般常用该字段的 max-age 值来进行判断，它是一个<strong>相对时间</strong>，比如 .Cache-Control:max-age=3600 代表资源的有效期是 3600 秒。并且返回头中的 Date 表示消息发送的时间，表示当前资源在 Date ~ Date +3600s 这段时间里都是有效的。不过我在实际使用中常常遇到设置了 max-age 之后，在 max-age 时间内重新访问资源却会返回 304 not modified ，这是由于服务器的时间与本地的时间不同造成的。当然 Cache-Control 还有其他几个值可以设置， 不过相对来说都很少用了：<ul>
-<li><strong>no-cache 不使用本地缓存。需要使用协商缓存。</strong></li>
-<li>no-store直接禁止浏览器缓存数据，每次请求资源都会向服务器要完整的资源， 类似于 network 中的 disabled cache。</li>
-<li>public 可以被所有用户缓存，包括终端用户和 cdn 等中间件代理服务器。</li>
-<li>private 只能被终端用户的浏览器缓存。</li>
-</ul>
-</li>
-</ul>
-<p>如果 Cache-Control与 Expires 同时存在的话， Cache-Control 的优先级高于 Expires 。</p>
-<p><img src="/2022/05/02/%E5%BC%BA%E7%BC%93%E5%AD%98%E5%92%8C%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/store1.png"></p>
-<h2 id="协商缓存"><a href="#协商缓存" class="headerlink" title="协商缓存"></a>协商缓存</h2><p>协商缓存是由服务器来确定缓存资源是否可用。 主要涉及到两对属性字段，都是成对出现的，即第一次请求的响应头带上某个字, Last-Modified 或者 Etag，则后续请求则会带上对应的请求字段 If-Modified-Since或者 If-None-Match，若响应头没有 Last-Modified 或者 Etag 字段，则请求头也不会有对应的字段。</p>
-<ul>
-<li>Last-Modified/If-Modified-Since 二者的值都是 GMT 格式的时间字符串， Last-Modified 标记最后文件修改时间， 下一次请求时，请求头中会带上 If-Modified-Since 值就是 Last-Modified 告诉服务器我本地缓存的文件最后修改的时间，在服务器上根据文件的最后修改时间判断资源是否有变化， 如果文件没有变更则返回 304 Not Modified ，请求不会返回资源内容，浏览器直接使用本地缓存。当服务器返回 304 Not Modified 的响应时，response header 中不会再添加的 Last-Modified 去试图更新本地缓存的 Last-Modified， 因为既然资源没有变化，那么 Last-Modified 也就不会改变；如果资源有变化，就正常返回返回资源内容，新的 Last-Modified 会在 response header 返回，并在下次请求之前更新本地缓存的 Last-Modified，下次请求时，If-Modified-Since会启用更新后的 Last-Modified。</li>
-<li>Etag/If-None-Match， 值都是由服务器为每一个资源生成的唯一标识串，只要资源有变化就这个值就会改变。服务器根据文件本身算出一个哈希值并通过 ETag字段返回给浏览器，接收到 If-None-Match 字段以后，服务器通过比较两者是否一致来判定文件内容是否被改变。与 Last-Modified 不一样的是，当服务器返回 304 Not Modified 的响应时，由于在服务器上ETag 重新计算过，response header中还会把这个 ETag 返回，即使这个 ETag 跟之前的没有变化。</li>
-</ul>
-<p>HTTP 中并没有指定如何生成 ETag，可以由开发者自行生成，哈希是比较理想的选择。</p>
-<h1 id="ETag的出现，主要是为了解决-Last-Modified-无法解决的一些问题："><a href="#ETag的出现，主要是为了解决-Last-Modified-无法解决的一些问题：" class="headerlink" title="ETag的出现，主要是为了解决 Last-Modified 无法解决的一些问题："></a>ETag的出现，主要是为了解决 Last-Modified 无法解决的一些问题：</h1><ul>
-<li>某些服务器不能精确得到文件的最后修改时间， 这样就无法通过最后修改时间来判断文件是否更新了。</li>
-<li>某些文件的修改非常频繁，在秒以下的时间内进行修改. Last-Modified只能精确到秒。</li>
-<li>一些文件的最后修改时间改变了，但是内容并未改变。 我们不希望客户端认为这个文件修改了</li>
-</ul>
-<p><img src="/2022/05/02/%E5%BC%BA%E7%BC%93%E5%AD%98%E5%92%8C%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/store2.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1656,7 +1627,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">192</span>
+          <span class="site-state-item-count">193</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1730,7 +1701,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共168.5k字</span>
+  <span class="post-count">博客全站共170.7k字</span>
 </div>
         
 
