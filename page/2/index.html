@@ -187,6 +187,571 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/24/%E8%AF%A6%E8%A7%A3useEffect/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/24/%E8%AF%A6%E8%A7%A3useEffect/" class="post-title-link" itemprop="url">详解useEffect</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-24 15:06:04 / 修改时间：23:36:42" itemprop="dateCreated datePublished" datetime="2022-08-24T15:06:04+08:00">2022-08-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="每次渲染都有它自己的Effects"><a href="#每次渲染都有它自己的Effects" class="headerlink" title="每次渲染都有它自己的Effects"></a>每次渲染都有它自己的Effects</h2><p><code>count</code>是某个特定渲染中的常量。事件处理函数“看到”的是属于它那次特定渲染中的<code>count</code>状态值。对于effects也同样如此：</p>
+<p><strong>并不是<code>count</code>的值在“不变”的effect中发生了改变，而是effect 函数本身在每一次渲染中都不相同,概念上它是组件输出的一部分，可以看到属于某次特定渲染的props和state</strong></p>
+<h2 id="Effects的清除"><a href="#Effects的清除" class="headerlink" title="Effects的清除"></a>Effects的清除</h2><p>effects有时候需要有一个清理步骤，目的是消除副作用，<strong>React只会在浏览器绘制后运行effects</strong>，这使得你的应用更流畅，因为大多数effects不会阻塞屏幕的更新，<strong>effects的清除同样被延迟，上一次的effect会在重新渲染后被清除</strong></p>
+<ul>
+<li><strong>React 渲染<code>&#123;id: 20&#125;</code>的UI。</strong></li>
+<li>浏览器绘制。我们在屏幕上看到<code>&#123;id: 20&#125;</code>的UI。</li>
+<li><strong>React 清除<code>&#123;id: 10&#125;</code>的effect。</strong></li>
+<li>React 运行<code>&#123;id: 20&#125;</code>的effect。</li>
+</ul>
+<p><strong>effect的清除不会读取最新的props，它只能读取到定义它的那次渲染中华的prop值</strong></p>
+<h2 id="告诉React去比对你的Effects"><a href="#告诉React去比对你的Effects" class="headerlink" title="告诉React去比对你的Effects"></a>告诉React去比对你的Effects</h2><p>这是为什么你如果想要避免effects不必要的重复调用，你可以提供给<code>useEffect</code>一个依赖数组参数(deps)：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">document</span>.title = <span class="string">&#x27;Hello, &#x27;</span> + name;</span><br><span class="line">&#125;, [name]); <span class="comment">// Our deps</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>这好比你告诉React：“Hey，我知道你看不到这个函数里的东西，但我可以保证只使用了渲染中的<code>name</code>，别无其他。”</strong></p>
+<p>移除依赖</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> id = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      setCount(count + <span class="number">1</span>);</span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="built_in">clearInterval</span>(id);</span><br><span class="line">  &#125;, [count]);</span><br></pre></td></tr></table></figure>
+
+<p>定时器会在每一次<code>count</code>改变后清除和重新设定</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> id = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      setCount(<span class="function"><span class="params">c</span> =&gt;</span> c + <span class="number">1</span>);</span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="built_in">clearInterval</span>(id);</span><br><span class="line">  &#125;, []);</span><br></pre></td></tr></table></figure>
+
+<p><strong>React已经知道当前的count,我们需要告知React的仅仅是去递增状态，不管它现在具体是什么值</strong></p>
+<p>解耦来自Actions的更新</p>
+<p>当你写setSomething(something=&gt;…)这种代码时可以考虑使用reducer,reducer可以让你把组件内发生了什么和状态如何响应并更新分开描述</p>
+<p>我们用一个dispatch依赖去替换effect的step依赖</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, dispatch] = useReducer(reducer, initialState);</span><br><span class="line"><span class="keyword">const</span> &#123; count, step &#125; = state;</span><br><span class="line"></span><br><span class="line">useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> id = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    dispatch(&#123; <span class="attr">type</span>: <span class="string">&#x27;tick&#x27;</span> &#125;); <span class="comment">// Instead of setCount(c =&gt; c + step);</span></span><br><span class="line">  &#125;, <span class="number">1000</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="built_in">clearInterval</span>(id);</span><br><span class="line">&#125;, [dispatch]);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> initialState = &#123;</span><br><span class="line">  <span class="attr">count</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="attr">step</span>: <span class="number">1</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reducer</span>(<span class="params">state, action</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; count, step &#125; = state;</span><br><span class="line">  <span class="keyword">if</span> (action.type === <span class="string">&#x27;tick&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="attr">count</span>: count + step, step &#125;;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (action.type === <span class="string">&#x27;step&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; count, <span class="attr">step</span>: action.step &#125;;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>React保证dispatch在每次渲染中都是一样的，所以可以在依赖中去掉它，不会引起effect不必要的重复执行，当dispatch时，React只记住了action,它会在下一次渲染中再次调用reducer</p>
+<h2 id="无限重复请求问题："><a href="#无限重复请求问题：" class="headerlink" title="无限重复请求问题："></a>无限重复请求问题：</h2><p>1 没有依赖数组，那么每次渲染都会触发这个副作用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    fetchData()</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>2 设置了依赖数组，但是依赖数组里的变量一直在变</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [data,setData] = useState()</span><br><span class="line"></span><br><span class="line">useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> fetchData = <span class="keyword">async</span>() =&gt; &#123;</span><br><span class="line">        <span class="keyword">const</span> res = <span class="keyword">await</span> fetchNewData()</span><br><span class="line">        setData(res.data)</span><br><span class="line">    &#125;</span><br><span class="line">    fetchData()</span><br><span class="line">&#125;,[data])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="定义函数请求"><a href="#定义函数请求" class="headerlink" title="定义函数请求"></a>定义函数请求</h2><ul>
+<li><p>某些函数只在effect中使用，那就在effect中定义</p>
+</li>
+<li><p>某些函数在多个地方使用，就独立定义，最好用useCallBack包裹，并且在依赖数组里把依赖项写全</p>
+<p>eg:</p>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SearchResults</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [query, setQuery] = useState(<span class="string">&#x27;react&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ✅ Preserves identity until query changes</span></span><br><span class="line">  <span class="keyword">const</span> getFetchUrl = useCallback(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;https://hn.algolia.com/api/v1/search?query=&#x27;</span> + query;</span><br><span class="line">  &#125;, [query]);  <span class="comment">// ✅ Callback deps are OK</span></span><br><span class="line"></span><br><span class="line">  useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> url = getFetchUrl();</span><br><span class="line">    <span class="comment">// ... Fetch data and do something ...</span></span><br><span class="line">  &#125;, [getFetchUrl]); <span class="comment">// ✅ Effect deps are OK</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果query不变，getFetchUrl也会保持不变，effect也不会重新运行，反之，query改变了，getFetchUrl也会随之改变</p>
+<p>参考：</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/24/%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/24/%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">发布订阅模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-24 11:58:59 / 修改时间：12:09:26" itemprop="dateCreated datePublished" datetime="2022-08-24T11:58:59+08:00">2022-08-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="发布订阅模式的实现："><a href="#发布订阅模式的实现：" class="headerlink" title="发布订阅模式的实现："></a>发布订阅模式的实现：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EventEmitter</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.events=&#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">on</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!<span class="built_in">this</span>.events[type])&#123;</span><br><span class="line">            <span class="built_in">this</span>.events[type]=[]</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.events[type].push(handler)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">addListener</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.on(type,handler)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">prependListener</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!<span class="built_in">this</span>.events[type])&#123;</span><br><span class="line">            <span class="built_in">this</span>.events[type]=[]</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.events[type].unshift(handler)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">removeListener</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!<span class="built_in">this</span>.events[type])&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.events[type]=<span class="built_in">this</span>.events[type].filter(<span class="function"><span class="params">item</span>=&gt;</span>item !== handler)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">off</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.removeListener(type,handler)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">emit</span>(<span class="params">type,...args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!events[type]||events[type].length==<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.events[type].forEach(<span class="function"><span class="params">item</span>=&gt;</span>&#123;</span><br><span class="line">            <span class="built_in">Reflect</span>.apply(item,<span class="built_in">this</span>,args);</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">once</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">temp</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">            handler(args)</span><br><span class="line">            <span class="built_in">this</span>.off(type,handler)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.on(type,temp)<span class="comment">//为事件注册单次监听器</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h1><ul>
+<li>时间解耦</li>
+<li>对象之间解耦</li>
+<li>应用上：可以用在异步编程</li>
+<li>架构上：MVC和MVVM都有发布订阅模式的参与，JavaScript本身是一门基于事件驱动的语言</li>
+</ul>
+<h1 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h1><p>创建订阅者本身需要消耗一定的时间和内存，而且当你订阅一个消息后，如果该消息最后都未发生，那么这个订阅者会始终存储在内存中。另外，发布订阅模式虽然会弱化对向之间的联系，但是过度使用，，对象和对象之间的必要联系会被深埋在背后，导致程序难以维护和理解</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/23/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/23/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">代理模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-23 11:25:07 / 修改时间：13:18:02" itemprop="dateCreated datePublished" datetime="2022-08-23T11:25:07+08:00">2022-08-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="虚拟代理"><a href="#虚拟代理" class="headerlink" title="虚拟代理"></a>虚拟代理</h1><p>虚拟代理会把一些开销很大的对象，延迟到真正需要它的时候再执行</p>
+<h1 id="虚拟代理实现图片预加载"><a href="#虚拟代理实现图片预加载" class="headerlink" title="虚拟代理实现图片预加载"></a>虚拟代理实现图片预加载</h1><p>代理负责预加载图片，预加载操作完成后将请求重新交给本体MyImage，降低耦合度</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> myImage=(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> ImageNode = <span class="built_in">document</span>.createElement(<span class="string">&#x27;img&#x27;</span>)</span><br><span class="line">    <span class="built_in">document</span>.body.appendChild(ImageNode)</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">src</span>)</span>&#123;</span><br><span class="line">        ImageNode.src = src</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)()</span><br><span class="line"><span class="keyword">let</span> proxyImage = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> img = <span class="keyword">new</span> Image</span><br><span class="line">    img.onload=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        myImage(<span class="built_in">this</span>.src)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        myImage(<span class="string">&#x27;file://C:/Users/sevenaeng/Desktop/loading.jpg&#x27;</span>)</span><br><span class="line">        img.src=src</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)()</span><br><span class="line">proxyImage(<span class="string">&#x27;http://imgcache.qq.com/music/a.jpg&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="虚拟代理合并https请求"><a href="#虚拟代理合并https请求" class="headerlink" title="虚拟代理合并https请求"></a>虚拟代理合并https请求</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//虚拟代理合并http请求</span></span><br><span class="line"><span class="keyword">let</span> synchronusFile = <span class="function"><span class="keyword">function</span>(<span class="params">id</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;开始同步文件,id为:&#x27;</span>+id)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> proxySynchronousFile=(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> cache = [],timer;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        cache.push(id)</span><br><span class="line">        <span class="keyword">if</span>(timer)&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        timer=<span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            synchronusFile(cache.join(<span class="string">&#x27;,&#x27;</span>))<span class="comment">//两秒内向本体发送需要同步的ID集合</span></span><br><span class="line">            <span class="built_in">clearTimeout</span>(timer)</span><br><span class="line">            timer=<span class="literal">null</span></span><br><span class="line">            cache.length=<span class="number">0</span><span class="comment">//清空ID集合</span></span><br><span class="line">        &#125;,<span class="number">2000</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)()</span><br><span class="line"><span class="keyword">let</span> checkbox = <span class="built_in">document</span>.getElementsByTagName(<span class="string">&#x27;input&#x27;</span>)</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="number">0</span>;c;c=checkbox[i++])&#123;</span><br><span class="line">    c.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">this</span>.checked === <span class="literal">true</span>)&#123;</span><br><span class="line">            proxySynchronousFile(<span class="built_in">this</span>.id)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="缓存代理："><a href="#缓存代理：" class="headerlink" title="缓存代理："></a>缓存代理：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//缓存代理计算乘积</span></span><br><span class="line"><span class="keyword">let</span> mult =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> a = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="number">0</span>;i&lt;<span class="built_in">arguments</span>.length;i++)&#123;</span><br><span class="line">        a= a*<span class="built_in">arguments</span>[i]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> a</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//缓存代理工厂</span></span><br><span class="line"><span class="keyword">let</span> createProxyFactory=<span class="function"><span class="keyword">function</span>(<span class="params">fn</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> cache=&#123;&#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">let</span> args = <span class="built_in">Array</span>.prototype.join.call(<span class="built_in">arguments</span>,<span class="string">&#x27;,&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span>(args <span class="keyword">in</span> cache)&#123;</span><br><span class="line">            <span class="keyword">return</span> cache[args]</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> cache[args]=fn.apply(<span class="built_in">this</span>,<span class="built_in">arguments</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> proxyMult = createProxyFactory(mult)</span><br></pre></td></tr></table></figure>
+
+<p>代理的意义：</p>
+<p><strong>实现单一职责原则</strong>，指的是一个类，应该仅有一个引起它变化的原因，如果一个对象承担了多个职责，这个对象将会变得巨大，引起它变化的原因也会很多，这些耦合在一起会导致脆弱和低内聚的设计</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/20/vue%E5%92%8Creact%E7%9A%84%E5%8C%BA%E5%88%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/20/vue%E5%92%8Creact%E7%9A%84%E5%8C%BA%E5%88%AB/" class="post-title-link" itemprop="url">vue和react的区别</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-20 18:07:13 / 修改时间：18:24:31" itemprop="dateCreated datePublished" datetime="2022-08-20T18:07:13+08:00">2022-08-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Vue和React的相同点很多："><a href="#Vue和React的相同点很多：" class="headerlink" title="Vue和React的相同点很多："></a>Vue和React的相同点很多：</h1><p>都使用Virtual DOM</p>
+<p>都使用组件化的思想</p>
+<p>都是响应式，使用MVVM模式</p>
+<p>都有自己的构建工具，Vue的vue-cli,React的create-react-app</p>
+<h1 id="区别："><a href="#区别：" class="headerlink" title="区别："></a>区别：</h1><h2 id="数据流向不同"><a href="#数据流向不同" class="headerlink" title="数据流向不同"></a>数据流向不同</h2><p>react从诞生开始就推崇单向数据流，而Vue是双向数据流</p>
+<p>Vue基于template模板+Option API/Compnent API,React本质核心只有一个Virtual DOM+Diff算法，Api非常少</p>
+<h2 id="响应式原理不同："><a href="#响应式原理不同：" class="headerlink" title="响应式原理不同："></a>响应式原理不同：</h2><p>Vue依赖收集，自动优化，数据可变</p>
+<p>Vue递归监听data的所有属性，直接修改</p>
+<p>当数据改变时，自动找到引用组件重新渲染</p>
+<p>React:</p>
+<p>React基于状态机，手动优化，数据不可变，需要setState驱动新的State替换旧的State</p>
+<p>当数据改变时，以组件为根目录，默认全部重新渲染</p>
+<h2 id="diff算法不同："><a href="#diff算法不同：" class="headerlink" title="diff算法不同："></a>diff算法不同：</h2><p>两者思维相似，都是基于两个假设：</p>
+<p>不同的组件产生不同的DOM结构，当type不同时，对应DOM操作就是直接销毁老的DOM，创建新的DOM</p>
+<p>同一层次的一组子节点，可以通过唯一的key区分</p>
+<p>源码实现上有区分：</p>
+<p>Vue Diff使用双向指针，边对比边更新DOM</p>
+<p>React主要使用diff队列保存需要更新的DOM，得到patch树，再统一操作批量更新DOM</p>
+<h2 id="事件机制不同"><a href="#事件机制不同" class="headerlink" title="事件机制不同"></a>事件机制不同</h2><p>Vue</p>
+<ul>
+<li><code>Vue原生事件使用标准Web事件</code></li>
+<li>Vue组件自定义事件机制，是父子组件通信基础</li>
+<li>Vue合理利用了snabbdom库的模块插件</li>
+</ul>
+<p>React</p>
+<ul>
+<li><code>React原生事件被包装</code>，所有事件都冒泡到顶层document监听，然后在这里合成事件下发。基于这套，可以跨端使用事件机制，而不是和Web DOM强绑定。</li>
+<li>React组件上无事件，父子组件通信使用props</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/15/%E5%9F%BA%E4%BA%8E%E8%81%8A%E5%A4%A9%E5%AE%A4%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/15/%E5%9F%BA%E4%BA%8E%E8%81%8A%E5%A4%A9%E5%AE%A4%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">基于聊天室项目的总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-08-15 20:39:18" itemprop="dateCreated datePublished" datetime="2022-08-15T20:39:18+08:00">2022-08-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-23 00:01:18" itemprop="dateModified" datetime="2022-08-23T00:01:18+08:00">2022-08-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">项目总结</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>用node中的express搭建服务器,写接口，登录方式采用jwt登录验证，用mysql存储各个人员信息,用soket.io实现聊天功能，webpack打包项目，以及动态展示功能,支持修改密码，注册用户，一对一实时聊天，发表情包,图片等功能，各个页面之间的跳转用vue-router实现，跳转使用路由懒加载，只会在第一次进入页面时才会获取这个函数，然后使用缓存数据。搭配使用Weui样式库。</p>
+<h1 id="jwt登录认证的实现："><a href="#jwt登录认证的实现：" class="headerlink" title="jwt登录认证的实现："></a>jwt登录认证的实现：</h1><p>jwt组成部分：</p>
+<p>头部.有效荷载.签名</p>
+<p>Header.PayLoad.Signature</p>
+<p>头部：包含了JWT类型和使用的Hash算法</p>
+<p>负载：包含了一些声明，通常是一个User信息</p>
+<p>签名：是对前两部分的签名，防止数据篡改</p>
+<p>原理：</p>
+<p>当用户使用凭据成功登录后，将返回一个json web token,由于token是凭据，不应该将token保留超过所需要的时间，也不应该将敏感数据存储在浏览器存储中，token在Authotization标头中放，跨域资源共享不会成为问题，因为它不使用cookie,使用jwt认证，程序可以使用access token去访问受保护的资源，比如在express中的使用，可以</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//以/api/开头的不用权限，配置成功了express-jwt这个中间件，就可以把解析出来的用户信息挂载到req.user上</span></span><br><span class="line">app.use(expressJWT(&#123;</span><br><span class="line">    <span class="attr">secret</span>:secretkey,</span><br><span class="line">    <span class="attr">algorithms</span>: [<span class="string">&#x27;HS256&#x27;</span>],</span><br><span class="line">    &#125;).unless(&#123;<span class="attr">path</span>:[<span class="regexp">/^\/api\//</span>]&#125;))</span><br></pre></td></tr></table></figure>
+
+<h2 id="JWT优点："><a href="#JWT优点：" class="headerlink" title="JWT优点："></a>JWT优点：</h2><p>不需要在服务端保存会话信息，所以易于应用的扩展，即信息不保存在服务端，不会存在Session扩展不方便的情况</p>
+<p>JWT中的负载可以存储常用信息，用于信息交换，有效地使用JWT，可以降低服务端查询数据库的次数</p>
+<h2 id="JWT缺点："><a href="#JWT缺点：" class="headerlink" title="JWT缺点："></a>JWT缺点：</h2><p>到期问题：由于服务器不保存Session状态，因此无法在使用过程中废除某个Token,或者更改token的权限，也就是说，一旦JWT一旦签发，在到期之前就会始终有效，除非服务器部署额外的逻辑</p>
+<h1 id="性能优化："><a href="#性能优化：" class="headerlink" title="性能优化："></a>性能优化：</h1><h2 id="路由懒加载"><a href="#路由懒加载" class="headerlink" title="路由懒加载"></a>路由懒加载</h2><h3 id="1-什么叫路由懒加载？"><a href="#1-什么叫路由懒加载？" class="headerlink" title="1 什么叫路由懒加载？"></a>1 什么叫路由懒加载？</h3><p>也叫延迟加载，即在需要的时候进行加载</p>
+<h3 id="2-为什么需要路由懒加载？"><a href="#2-为什么需要路由懒加载？" class="headerlink" title="2 为什么需要路由懒加载？"></a>2 为什么需要路由懒加载？</h3><ul>
+<li>首先，路由通常会定义很多不同的页面</li>
+<li>这个页面在项目build打包后，一般情况下，会放在一个单独的js文件中</li>
+<li>但是，如果很多页面都放在同一个js文件中，必然会造成这个页面非常大</li>
+<li>如果我们一次性地从服务器中请求这个页面，可能会花费一定的时间，用户体验不好</li>
+<li>为了避免这种情况，<strong>我们把不同路由对应的组件分割成不同的代码块，然后当路由被访问的时候才加载对应组件，这就是路由懒加载</strong></li>
+</ul>
+<h3 id="实现方式："><a href="#实现方式：" class="headerlink" title="实现方式："></a>实现方式：</h3><h4 id="Vue异步组件"><a href="#Vue异步组件" class="headerlink" title="Vue异步组件"></a>Vue异步组件</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">path</span>:<span class="string">&#x27;/problem&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>:<span class="string">&#x27;problem&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>:<span class="function"><span class="params">resolve</span>=&gt;</span><span class="built_in">require</span>([<span class="string">&#x27;../pages/problemList&#x27;</span>],resolve)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="ES6中的import-—推荐使用"><a href="#ES6中的import-—推荐使用" class="headerlink" title="ES6中的import()—推荐使用"></a>ES6中的import()—推荐使用</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">routes:[&#123;</span><br><span class="line">       <span class="attr">path</span>:<span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">       <span class="attr">name</span>:<span class="string">&quot;通讯录&quot;</span>,</span><br><span class="line">       <span class="attr">component</span>:<span class="function">()=&gt;</span><span class="built_in">Promise</span>.resolve(<span class="keyword">import</span>(<span class="string">&quot;../components/contact/contact.vue&quot;</span>))</span><br><span class="line">   &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h4 id="webpack的require-ensure"><a href="#webpack的require-ensure" class="headerlink" title="webpack的require.ensure()"></a>webpack的require.ensure()</h4><p>多个路由指定相同的chunkName,会合并打包成一个js文件，require.ensure可实现按需加载资源，包括js,css，它会给里面的require文件单独打包，不会和主文件打包在一起。</p>
+<p>第一个参数是数组，表明第二个参数里需要加载的模块，这些会提前加载，</p>
+<p>第二个是回调函数，在这个回调函数里面requrie的文件会被单独打包成一个chunk,不会和主文件打包在一起，这样就生成两个chunk,第一次加载时只加载主文件</p>
+<p>第三个参数是错误回调</p>
+<p>第四个参数是单独打包的chunk的文件名</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> Router <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> HelloWorld=<span class="function"><span class="params">resolve</span>=&gt;</span>&#123;</span><br><span class="line">		<span class="built_in">require</span>.ensure([<span class="string">&#x27;@/components/HelloWorld&#x27;</span>],<span class="function">()=&gt;</span>&#123;</span><br><span class="line">			resolve(<span class="built_in">require</span>(<span class="string">&#x27;@/components/HelloWorld&#x27;</span>))</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;</span><br><span class="line">Vue.use(<span class="string">&#x27;Router&#x27;</span>)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> Router(&#123;</span><br><span class="line">	<span class="attr">routes</span>:[&#123;</span><br><span class="line">	&#123;<span class="attr">path</span>:<span class="string">&#x27;./&#x27;</span>,</span><br><span class="line">	<span class="attr">name</span>:<span class="string">&#x27;HelloWorld&#x27;</span>,</span><br><span class="line">	<span class="attr">component</span>:HelloWorld</span><br><span class="line">	&#125;</span><br><span class="line">	&#125;]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="element-plus按需加载：配置vue-config-js"><a href="#element-plus按需加载：配置vue-config-js" class="headerlink" title="element-plus按需加载：配置vue.config.js"></a>element-plus按需加载：配置vue.config.js</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">configureWebpack:&#123;</span><br><span class="line">      <span class="attr">plugins</span>:[</span><br><span class="line">        <span class="built_in">require</span>(<span class="string">&#x27;unplugin-element-plus/webpack&#x27;</span>)(&#123;</span><br><span class="line"></span><br><span class="line">        &#125;),</span><br><span class="line">   	]</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="UglifyPlugin-Webpack-Plugin-插件用来缩小js文件"><a href="#UglifyPlugin-Webpack-Plugin-插件用来缩小js文件" class="headerlink" title="UglifyPlugin Webpack Plugin 插件用来缩小js文件"></a>UglifyPlugin Webpack Plugin 插件用来缩小js文件</h3><p>vue.config.js:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">configureWebpack:&#123;</span><br><span class="line">    <span class="attr">plugins</span>:[</span><br><span class="line">      <span class="built_in">require</span>(<span class="string">&#x27;unplugin-element-plus/webpack&#x27;</span>)(&#123;</span><br><span class="line"></span><br><span class="line">      &#125;),</span><br><span class="line">        <span class="comment">//代码压缩</span></span><br><span class="line">      <span class="keyword">new</span> UglifyJsPlugin(&#123;</span><br><span class="line">        <span class="attr">uglifyOptions</span>:&#123;</span><br><span class="line">          <span class="attr">compress</span>:&#123;</span><br><span class="line">            <span class="attr">drop_debugger</span>:<span class="literal">true</span>,</span><br><span class="line">            <span class="attr">drop_console</span>:<span class="literal">true</span>,</span><br><span class="line">            <span class="attr">pure_funcs</span>:[<span class="string">&#x27;console.log&#x27;</span>]</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">sourceMap</span>:<span class="literal">false</span>,</span><br><span class="line">        <span class="attr">parallel</span>:<span class="literal">true</span></span><br><span class="line">      &#125;)</span><br><span class="line">    ],</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+<h1 id="封装axios"><a href="#封装axios" class="headerlink" title="封装axios:"></a>封装axios:</h1><p>特征：</p>
+<ul>
+<li>从浏览器创建XMLHttpRequests</li>
+<li>从node.js创建http请求</li>
+<li>支持Promise API</li>
+<li>拦截请求和响应</li>
+<li>转换请求和响应数据</li>
+<li>取消请求</li>
+<li>自动转换JSON数据</li>
+<li>客户端支持防御XSRF</li>
+</ul>
+<p>具体：<a href="https://coloey.github.io/2022/04/11/Vue%E4%B8%AD%E5%B0%81%E8%A3%85axios%E8%AF%B7%E6%B1%82/">https://coloey.github.io/2022/04/11/Vue%E4%B8%AD%E5%B0%81%E8%A3%85axios%E8%AF%B7%E6%B1%82/</a></p>
+<h1 id="跨域处理方法："><a href="#跨域处理方法：" class="headerlink" title="跨域处理方法："></a>跨域处理方法：</h1><h2 id="服务端配置cors"><a href="#服务端配置cors" class="headerlink" title="服务端配置cors:"></a>服务端配置cors:</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> cors=<span class="built_in">require</span>(<span class="string">&#x27;cors&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> io=<span class="built_in">require</span>(<span class="string">&#x27;socket.io&#x27;</span>)(server,&#123;</span><br><span class="line">    <span class="comment">//服务端配置cors</span></span><br><span class="line">    <span class="attr">cors</span>: &#123;</span><br><span class="line">        <span class="attr">origin</span>: <span class="string">&quot;https://coloey.github.io&quot;</span></span><br><span class="line">      &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="本地配置proxy代理转发路由表："><a href="#本地配置proxy代理转发路由表：" class="headerlink" title="本地配置proxy代理转发路由表："></a>本地配置proxy代理转发路由表：</h2><p>原理：在本地运行的npm run serve 等命令实际上是用node运行了一个服务器，因此，proxyTable实际上是将请求转发给自己的服务器，再由服务器转发给后台服务器，做了一层代理，vue的proxyTable用了proxy-middleware中间件，不会出现跨域问题</p>
+<p>如果接口里面有个公共的名字，比如security,可以拿出来做来做跨域配置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    <span class="attr">devServer</span>: &#123;</span><br><span class="line">        <span class="attr">open</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">host</span>: <span class="string">&#x27;localhost&#x27;</span>,</span><br><span class="line">        <span class="attr">port</span>: <span class="number">8000</span>,</span><br><span class="line">        <span class="attr">https</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="comment">//以上的ip和端口是我们本机的;下面为需要跨域的</span></span><br><span class="line">        <span class="attr">proxy</span>: &#123; <span class="comment">//配置跨域</span></span><br><span class="line">            <span class="string">&#x27;/security&#x27;</span>: &#123;</span><br><span class="line">                <span class="attr">target</span>: <span class="string">&#x27;http://127.0.0.1:8000/&#x27;</span>, <span class="comment">//要代理到的api地址</span></span><br><span class="line">                <span class="attr">ws</span>: <span class="literal">true</span>,</span><br><span class="line">                <span class="attr">changOrigin</span>: <span class="literal">true</span>, <span class="comment">//允许跨域</span></span><br><span class="line">                <span class="attr">pathRewrite</span>: &#123;</span><br><span class="line">                    <span class="string">&#x27;^/security/&#x27;</span>: <span class="string">&#x27;/security&#x27;</span> </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果接口中没有公共部分，另外设置一个代理名称，用api设置代理转发，接口请求就需要带上api.HTTP请求代理中多了ws:false属性，如果不加这个属性，浏览器控制台会一直报连接不上socket的错误</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> proxyObj = &#123;&#125;;</span><br><span class="line">proxyObj[<span class="string">&#x27;/ws&#x27;</span>] = &#123;</span><br><span class="line">    <span class="attr">ws</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">target</span>: <span class="string">&quot;ws://localhost:8081&quot;</span>,<span class="comment">//目标服务器</span></span><br><span class="line">&#125;;</span><br><span class="line">proxyObj[<span class="string">&#x27;/api&#x27;</span>] = &#123;</span><br><span class="line">    <span class="attr">ws</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">target</span>: <span class="string">&quot;http://localhost:8081&quot;</span>,</span><br><span class="line">    <span class="attr">changeOrigin</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">pathRewrite</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;^/api&#x27;</span>: <span class="string">&#x27;/api&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    <span class="attr">devServer</span>: &#123;</span><br><span class="line">        <span class="attr">host</span>: <span class="string">&#x27;localhost&#x27;</span>,</span><br><span class="line">        <span class="attr">port</span>: <span class="number">8080</span>,</span><br><span class="line">        <span class="attr">proxy</span>: proxyObj</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>这个设置只有在本地的时候是起作用的，当项目编译打包时，配置不会打包进去。</strong></p>
+<p><strong>生产环境让后台配置cors或者nginx将前端代码拷贝到后端，在nginx.conf中配置，以Vue为例，如果是SPA应用，项目打包后是一个index.html还有几个js,css等文件，这些静态文件上传到服务器，在nginx.conf中配置静态资源访问：</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location ~ .*\.(js|css|ico|png|jpg|eot|svg|ttf|woff|html|txt|pdf|) &#123;</span><br><span class="line">   root /usr/local/nginx/html/;#所有静态文件直接读取硬盘</span><br><span class="line">   expires 30d; #缓存<span class="number">30</span>天</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<p>即后缀为js,css,ico等文件统统不进行请求转发，直接从本地的/usr/local/nginx/html目录下读取并返回到前端（我们需要将静态资源文件上传到/usr/local/nginx/html/目录下）</p>
+<h1 id="聊天功能实现："><a href="#聊天功能实现：" class="headerlink" title="聊天功能实现："></a>聊天功能实现：</h1><p>socket.io的主要靠emit()和on()实现实时聊天，关键在于设计对话的数据结构，对话用一个对象保存，里面包含发送者姓名，接收者姓名，信息，将对话展示在对话页面中主要靠fromUser,toUser识别，<strong>根据路由参数显示对话列表，每个用户登录将用户名作为参数通过emit触发服务端addUser，服务端用一个onLineUsers对象存储socket对象，键为用户名，值为用户socket对象，每个socket对象是唯一的，服务端on监听sendMessage事件，客户端emit触发sendMessage事件,当服务端的sendMessage事件被客户端触发后回调函数执行，触发客户端展示消息的函数</strong>，表情包发送是通过写一个emoji表情包子组件，通过和对话列表父组件进行通信，点击表情包Icon,展示一个表情包列表，点击里面任意一个表情，子组件触发emit(chooseEmoji,emoji),传递emoji信息给父组件的chooseEmoji函数，父组件就能在输入框中显示被选中的emoji</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/12/antd%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A1%A8%E5%8D%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/12/antd%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A1%A8%E5%8D%95/" class="post-title-link" itemprop="url">antd初始化表单</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-08-12 21:41:44" itemprop="dateCreated datePublished" datetime="2022-08-12T21:41:44+08:00">2022-08-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/04/%E4%BB%A3%E7%90%86%E6%95%B0%E7%BB%84/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -589,635 +1154,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/28/%E8%99%9A%E6%8B%9FDOM/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/28/%E8%99%9A%E6%8B%9FDOM/" class="post-title-link" itemprop="url">虚拟DOM</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-07-28 22:07:37" itemprop="dateCreated datePublished" datetime="2022-07-28T22:07:37+08:00">2022-07-28</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-25 10:07:25" itemprop="dateModified" datetime="2022-08-25T10:07:25+08:00">2022-08-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="命令式框架与声明式框架："><a href="#命令式框架与声明式框架：" class="headerlink" title="命令式框架与声明式框架："></a>命令式框架与声明式框架：</h1><p>命令式框架：关注过程(Jquery)</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">&#x27;#app&#x27;</span>)</span><br><span class="line"> .text(<span class="string">&#x27;hello world&#x27;</span>)</span><br><span class="line"> .on(<span class="string">&#x27;click&#x27;</span>,<span class="function">()=&gt;</span>alert(<span class="string">&#x27;ok&#x27;</span>))</span><br></pre></td></tr></table></figure>
-
-<p>声明式框架：关注结果(Vue.js)</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div @click=<span class="string">&#x27;()=&gt;alert(&#x27;</span>ok<span class="string">&#x27;)&#x27;</span>&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-
-<p><strong>结论</strong>：声明式代码的性能不优于命令式代码的性能</p>
-<p><strong>声明式代码的更新性能消耗=找出差异的性能消耗+直接修改的性能消耗</strong></p>
-<h1 id="Vue3中虚拟DOM的性能："><a href="#Vue3中虚拟DOM的性能：" class="headerlink" title="Vue3中虚拟DOM的性能："></a>Vue3中虚拟DOM的性能：</h1><p>创建JavaScript对象的计算量+创建真实DOM的计算量</p>
-<h2 id="比较："><a href="#比较：" class="headerlink" title="比较："></a>比较：</h2><p>纯JavaScript:Js运算+DOM运算（性能因素）</p>
-<p>虚拟DOM：创建Js对象（Vnode)+Diff+必要的DOM更新（与数据量变化有关）</p>
-<p>innerHTML:渲染HTML字符串+销毁所有旧DOM，新建所有新DOM（与模板大小有关）</p>
-<h2 id="结论："><a href="#结论：" class="headerlink" title="结论："></a>结论：</h2><p><strong>性能</strong>：</p>
-<p>innerHTML&lt;虚拟DOM&lt;原始JavaScript</p>
-<p><strong>心智负担</strong>：</p>
-<p>虚拟DOM&lt;innerHTML&lt;原生JavaScript</p>
-<p><strong>可维护性</strong>：</p>
-<p>虚拟DOM&gt;innerHTML和原生JS</p>
-<h1 id="框架的设计可以有三种选择："><a href="#框架的设计可以有三种选择：" class="headerlink" title="框架的设计可以有三种选择："></a>框架的设计可以有三种选择：</h1><ul>
-<li>纯运行时</li>
-<li>运行时+编译时（Vue3)</li>
-<li>纯编译时</li>
-</ul>
-<h2 id="1-纯运行时"><a href="#1-纯运行时" class="headerlink" title="1.纯运行时"></a>1.纯运行时</h2><p>一个树型结构的数据对象</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj=&#123;</span><br><span class="line">    <span class="attr">tag</span>:<span class="string">&#x27;div&#x27;</span>,</span><br><span class="line">    <span class="attr">children</span>:[</span><br><span class="line">        &#123;<span class="attr">tag</span>:<span class="string">&#x27;span&#x27;</span>,<span class="attr">children</span>:<span class="string">&#x27;hello world&#x27;</span>&#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>tag:标签名，children:子节点</p>
-<p>render:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Render</span>(<span class="params">obj,root</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> el = <span class="built_in">document</span>.createElement(obj.tag)</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> children ===<span class="string">&#x27;string&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">const</span> text=<span class="built_in">document</span>.createTextNode(obj,children)</span><br><span class="line">        el.appendChild(text)</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(obj.children)&#123;</span><br><span class="line">        obj.children.forEach(<span class="function">(<span class="params">child</span>)=&gt;</span>Render(child,el))</span><br><span class="line">    &#125;</span><br><span class="line">    root.appendChild(el) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Render(obj,<span class="built_in">document</span>.body)</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-运行时-编译时"><a href="#2-运行时-编译时" class="headerlink" title="2.运行时+编译时"></a>2.运行时+编译时</h2><p>编写一个Compiler函数，把HTML标签编译成树型结构的对象</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> html=<span class="string">`&lt;div&gt;</span></span><br><span class="line"><span class="string">			&lt;span&gt;Hello world&lt;/span&gt;</span></span><br><span class="line"><span class="string">			&lt;/div&gt;`</span></span><br><span class="line"><span class="keyword">const</span> obj=Compiler(html)</span><br><span class="line">Render(obj,<span class="built_in">document</span>.body)</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-纯编译式：-Svelte"><a href="#3-纯编译式：-Svelte" class="headerlink" title="3.纯编译式：(Svelte)"></a>3.纯编译式：(Svelte)</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;<span class="xml"><span class="tag">&lt;<span class="name">span</span>&gt;</span>hello world<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span>&lt;/div&gt;</span><br><span class="line"> <span class="comment">//就是</span></span><br><span class="line"><span class="keyword">const</span> div=<span class="built_in">document</span>.createElement(<span class="string">&#x27;div&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> span=<span class="built_in">document</span>.createElement(<span class="string">&#x27;span&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> text=<span class="built_in">document</span>.createElement(<span class="string">&#x27;hello wrold&#x27;</span>)</span><br><span class="line">span.appendChild(text)</span><br><span class="line">div.appendChild(span)</span><br><span class="line"><span class="built_in">document</span>.body.appendChild(div)</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/27/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/27/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" class="post-title-link" itemprop="url">生命周期</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-07-27 18:00:55 / 修改时间：22:55:32" itemprop="dateCreated datePublished" datetime="2022-07-27T18:00:55+08:00">2022-07-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img src="/2022/07/27/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/smzq.jpg" alt="image-20220727225427188"></p>
-<p>生命周期执行顺序：</p>
-<p>创建时：</p>
-<ul>
-<li><p>constructor()</p>
-</li>
-<li><p>static getDerivedStateFromProps()</p>
-</li>
-<li><p>render()</p>
-<p>是class组件中唯一必须实现的方法，用于渲染dom,render()方法必须返回reactDOM</p>
-<p>不要在render里面setState,否则会触发死循环导致内存崩溃</p>
-</li>
-<li><p>componentDidMount()</p>
-<p><strong>在组件挂载后立即调用，componentDidMount()是发送网络请求，启用事件监听方法的好时机，并且可以在此钩子函数里直接调用setState()</strong></p>
-</li>
-</ul>
-<p>更新时：</p>
-<ul>
-<li><p>static getDerivedStateFromProps()</p>
-</li>
-<li><p>shouldComponentUpdate()</p>
-<p>在组件更新之前调用，可以控制组件是否进行更新，返回true组件更新，返回false则不更新</p>
-<p>shouldComponentUpdate(nextProps,nextState),第一个是即将更新的props值，第二个是即将更新后的state值，可以根据更新前后的props或state来比较加一些限制条件，决定是否更新，进行性能优化，不要 <code>shouldComponentUpdate</code> 中调用 setState()，否则会导致无限循环调用更新、渲染，直至浏览器内存崩溃</p>
-</li>
-<li><p>render()</p>
-</li>
-<li><p>getSnapshotBeforeUpdate()</p>
-</li>
-<li><p>componentDidUpdate()</p>
-<p>会在更新后被立即调用，首次渲染不会执行。包含三个参数，第一个是上一次props值，第二个是上一次state值，如果组件实现了getSnapshotBeforeUpdate()生命周期，第三个snapshot参数传递</p>
-</li>
-</ul>
-<p>卸载时：</p>
-<ul>
-<li>componentWillUnmount()</li>
-</ul>
-<p>在组件即将被卸载或销毁时进行调用，是取消网络请求，移除监听事件，清理DOM元素，清理定时器等操作的好时机</p>
-<p>新生命周期钩子：</p>
-<p>1.</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> getDerivedStateFromProps(props,state)</span><br></pre></td></tr></table></figure>
-
-<p><code>getDerivedStateFromProps</code> 会在调用 render 方法之前调用，并且在初始挂载及后续更新时都会被调用。它应返回一个对象来更新 state，如果返回 <code>null</code> 则不更新任何内容。</p>
-<p>此方法适用于<a target="_blank" rel="noopener" href="https://zh-hans.reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#when-to-use-derived-state">罕见的用例</a>，即 state 的值在任何时候都取决于 props。</p>
-<p>2.</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">getSnapshotBeforeUpdate(prevProps,prevState)</span><br></pre></td></tr></table></figure>
-
-<p>getSnapshotBeforeUpdate()在最近一次渲染输出（提交到DOM结点）之前调用，它使得组件能在发生更改之前从DOM中捕获一些信息，此生命周期方法的任何值返回值将作为参数传递给componentDidUpdate()</p>
-<p>例子：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ScrollingList</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params">props</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">super</span>(props);</span><br><span class="line">        <span class="built_in">this</span>.listRef=React.createRef();</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">getSnapshotBeforeUpdate</span>(<span class="params">prevProps,prevState</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(prevProps.list.length&lt;<span class="built_in">this</span>.props.list.length)&#123;</span><br><span class="line">            <span class="keyword">const</span> list = <span class="built_in">this</span>.listRef.current;</span><br><span class="line">            <span class="keyword">return</span> list.scrollHeight-list.scrollTop</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">componentDidUpdate</span>(<span class="params">prevProps,prevState,snapshot</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(snapshot!=<span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="keyword">const</span> list=<span class="built_in">this</span>.listRef.current;</span><br><span class="line">            list.scrollTop=list.scrollHeight-snapshot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">render</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span>(</span><br><span class="line">            <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">ref</span>=<span class="string">&#123;this.listRef&#125;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/27/Context/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/27/Context/" class="post-title-link" itemprop="url">Context</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-07-27 11:02:34 / 修改时间：15:54:21" itemprop="dateCreated datePublished" datetime="2022-07-27T11:02:34+08:00">2022-07-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="理解："><a href="#理解：" class="headerlink" title="理解："></a>理解：</h1><p>一种组件间通信方式，用于祖组件和后代组件之间的通信</p>
-<p>1.使用Context</p>
-<p>2.创建Context容器对象</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> xxxContext = React.createContext(defaultValue)</span><br></pre></td></tr></table></figure>
-
-<p>3.渲染子组件，外面包裹xxxContext.Provider,通过value属性给后代组件传递数据</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;xxxContext.Provider value=&#123;数据&#125;&gt;</span><br><span class="line">&lt;/xxxContext.Provider&gt;</span><br></pre></td></tr></table></figure>
-
-<p>4.后代组件读取数据<br>第一种适用于类组件：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> contextType = xxxContext;<span class="comment">//声明接收context</span></span><br><span class="line"><span class="built_in">this</span>.context<span class="comment">//context是一个对象，读取context中value的值</span></span><br></pre></td></tr></table></figure>
-
-<p>第二种函数组件和类组件都可以：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;xxxContext.Consumer&gt;</span><br><span class="line">    &#123;</span><br><span class="line">    	<span class="function"><span class="params">value</span>=&gt;</span>(<span class="comment">//value是context中的value数据</span></span><br><span class="line">    		要显示的内容</span><br><span class="line">    	)</span><br><span class="line">    </span><br><span class="line">	&#125;</span><br><span class="line">&lt;/xxxContext.Consumer&gt;</span><br></pre></td></tr></table></figure>
-
-<p>例子：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ThemeContext = React.createContext(&#123;</span><br><span class="line">    <span class="attr">value</span>:<span class="string">&quot;blue&quot;</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params">props</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">super</span>(props)</span><br><span class="line">        <span class="built_in">this</span>.state=&#123;<span class="attr">value</span>:<span class="string">&quot;red&quot;</span>&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">render</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span>(</span><br><span class="line">            <span class="xml"><span class="tag">&lt;<span class="name">ThemeContext.Provider</span> <span class="attr">value</span>=<span class="string">&#123;this.state&#125;</span>&gt;</span></span></span><br><span class="line"><span class="xml">            	<span class="tag">&lt;<span class="name">B</span>/&gt;</span></span></span><br><span class="line"><span class="xml">            <span class="tag">&lt;/<span class="name">ThemeContext.Provider</span>&gt;</span></span></span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">B</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">        <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">        	<span class="tag">&lt;<span class="name">C</span>/&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">C</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        <span class="xml"><span class="tag">&lt;<span class="name">ThemeContext.Consumer</span>&gt;</span></span></span><br><span class="line"><span class="xml">        &#123;(&#123;value&#125;)=&gt;(</span></span><br><span class="line"><span class="xml">        	<span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;value&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="xml">    	)&#125;</span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">ThemeContext.Consumer</span>&gt;</span></span></span><br><span class="line">        </span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>context一般用于封装react插件</p>
-<h1 id="使用useContext"><a href="#使用useContext" class="headerlink" title="使用useContext"></a>使用useContext</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> value = useContext(MyContext)</span><br></pre></td></tr></table></figure>
-
-<p>接收一个<strong>context对象</strong>（React.createContext的返回值）并返回该context的当前值，当前的context值由上层㢟中距离当前组件最近的&lt;MyContext.Provider&gt;的value prop角色</p>
-<p>当组件上层最近的&lt;MyContext.Provider&gt;更新时，该Hook会触发重渲染，使用最新传递给MyContext provider的context value值。</p>
-<p><strong>useContext(MyContext)相当于static contextType=MyContext或者&lt;MyContext.Consumer&gt;</strong></p>
-<p><code>useContext(MyContext)</code> 只是让你能够<em>读取</em> context 的值以及订阅 context 的变化。你仍然需要在上层组件树中使用 <code>&lt;MyContext.Provider&gt;</code> 来为下层组件<em>提供</em> context。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/26/redux/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/26/redux/" class="post-title-link" itemprop="url">redux</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-07-26 23:48:24" itemprop="dateCreated datePublished" datetime="2022-07-26T23:48:24+08:00">2022-07-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-27 00:30:29" itemprop="dateModified" datetime="2022-07-27T00:30:29+08:00">2022-07-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="概念："><a href="#概念：" class="headerlink" title="概念："></a>概念：</h1><p>Redux 是一个使用”actions”的事件管理和更新应用状态的模式和工具库,以集中式Store的方式对整个应用中使用的状态进行集中管理，其规则确保状态只能以<strong>可预测</strong>的方式更新</p>
-<p>Redux 在以下情况下更有用：</p>
-<ul>
-<li>在应用的大量地方，都存在大量的状态</li>
-<li>应用状态会随着时间的推移而频繁更新</li>
-<li>更新该状态的逻辑可能很复杂</li>
-<li>中型和大型代码量的应用，很多人协同开发</li>
-</ul>
-<h1 id="store"><a href="#store" class="headerlink" title="store:"></a>store:</h1><p>保存应用程序的全局state的容器，是一个Js对象，store是通过传入一个reducer来创建的，并且有一个名为getState的方法，它返回当前状态值</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;configureStore&#125; <span class="keyword">from</span> <span class="string">&quot;@reduxjs/toolkit&quot;</span></span><br><span class="line"><span class="keyword">const</span> store=configureStore(&#123;<span class="attr">reducer</span>:counterReducer&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(store.getState())</span><br><span class="line"><span class="comment">//&#123;value:0&#125;</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="action"><a href="#action" class="headerlink" title="action:"></a>action:</h1><p>是一个具有type字段的普通js对象，可以将action视为描述应用程序中发生了什么事件，type字段是一个字符串，给这个action一个描述性的名字，比如”todos/todoAdded”(域/事件名称)，第一部分是这个action所属的特征和类别，第二部分是具体发生的具体事情</p>
-<p>action对象可以有其他字段，将其放在名为payload的字段中</p>
-<p><strong>action创建函数</strong>：就是生成action的方法，action创建函数只是简单返回一个action</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addTodo</span>(<span class="params">text</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">type</span>: ADD_TODO,</span><br><span class="line">    text</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="reducers"><a href="#reducers" class="headerlink" title="reducers"></a>reducers</h1><p>reducer是一个函数，接收当前的state和一个action对象，必要时决定如何更新状态，并返回新状态，函数签名(state,action)=&gt;newState,可以将reducer视为一个事件监听器，它根据接收到的action类型处理事件</p>
-<p>reducer必须是一个纯函数：</p>
-<ul>
-<li>仅使用 <code>state</code> 和 <code>action</code> 参数计算新的状态值</li>
-<li>禁止直接修改 <code>state</code>。必须通过复制现有的 <code>state</code> 并对复制的值进行更改的方式来做 <em>不可变更新（immutable updates）</em>。</li>
-<li>禁止任何异步逻辑、依赖随机值或导致其他“副作用”的代码</li>
-</ul>
-<p>reducer 函数内部的逻辑通常遵循以下步骤：</p>
-<ul>
-<li>检查 reducer 是否关心这个 action<ul>
-<li>如果是，则复制 state，使用新值更新 state 副本，然后返回新 state</li>
-</ul>
-</li>
-<li>否则，返回原来的 state 不变</li>
-</ul>
-<h1 id="dispatch"><a href="#dispatch" class="headerlink" title="dispatch"></a>dispatch</h1><p>更新state的唯一方法是调用store.dispatch()并传入一个action对象，store将执行所有reducer函数并计算出更新后的state,调用getState()可以获取更新的state</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">store.dispatch(&#123;<span class="attr">type</span>:<span class="string">&#x27;counter/increamented&#x27;</span>&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(store.getStore())</span><br><span class="line"><span class="comment">//&#123;value:1&#125;</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="Selectors"><a href="#Selectors" class="headerlink" title="Selectors:"></a>Selectors:</h1><p>Selector函数可以从store状态树中提取指定的片段，随着应用变大，遇到不同应用程序的不同部分需要读取相同数据，selector可以避免重复这样的状态逻辑</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> selectCounterValue=<span class="function"><span class="params">state</span>=&gt;</span>state.value</span><br><span class="line"><span class="keyword">const</span> currentValue = selectCounterValue(store.getState())</span><br><span class="line"><span class="built_in">console</span>.log(currentValue)</span><br><span class="line"><span class="comment">//2</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="核心概念："><a href="#核心概念：" class="headerlink" title="核心概念："></a>核心概念：</h1><p><strong>单一数据源</strong>：应用程序的<strong>全局状态</strong>作为对象存储在单个 <strong>store</strong> 中。任何给定的数据片段都应仅存在于一个位置，而不是在许多位置重复。</p>
-<p><strong>state只读</strong>：</p>
-<p>更改状态的唯一方法是 dispatch 一个 <strong>action</strong>，这是一个描述所发生情况的对象。</p>
-<p>这样，UI 就不会意外覆盖数据，并且更容易跟踪发生状态更新的原因。由于 actions 是普通的 JS 对象，因此可以记录、序列化、存储这些操作，并在以后重放这些操作以进行调试或测试。</p>
-<p><strong>使用reducer纯函数进行更改：</strong></p>
-<p>Reducers 是纯函数，它们采用旧 state 和 action，并返回新 state。</p>
-<h1 id="redux数据流："><a href="#redux数据流：" class="headerlink" title="redux数据流："></a>redux数据流：</h1><p><strong>单向数据流：</strong></p>
-<p>root reducer函数创建Redux store=&gt;store调用一次root reducer,并将返回值保存为它的初始state=&gt;UI首次渲染时，UI组件访问Redux store的当前state,并将数据渲染为内容，监听store的更新：</p>
-<p>应用更新=&gt;dispatch一个action到Redux store=&gt;store用之前的state和当前的action再次运行reducer函数，并将返回值保存为新的state=&gt;store通知所有订阅过的UI,通知store更新=&gt;每个订阅过store数据的UI组件就会检查它们需要的state部分是否被更新=&gt;发现更新，每个组件强制使用新数据渲染，更新网页</p>
-<h1 id="明确两个概念："><a href="#明确两个概念：" class="headerlink" title="明确两个概念："></a>明确两个概念：</h1><p><strong>UI组件：</strong>不能使用任何redux的api,只负责页面的呈现，交互</p>
-<p><strong>容器组件</strong>：负责和redux通信，将结果交给UI组件</p>
-<ul>
-<li><strong>创建一个容器组件</strong>：靠react-redux的connect函数，connect(mapStateToProps,mapDispatchToProps)(UI组件)</li>
-<li>mapStateToProps:映射状态：返回值时一个对象</li>
-<li>mapDispatchToProps:映射操作状态的方法，返回值是一个对象</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; connect &#125; <span class="keyword">from</span> <span class="string">&#x27;react-redux&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; toggleTodo &#125; <span class="keyword">from</span> <span class="string">&#x27;../actions&#x27;</span></span><br><span class="line"><span class="keyword">import</span> TodoList <span class="keyword">from</span> <span class="string">&#x27;../components/TodoList&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> getVisibleTodos = <span class="function">(<span class="params">todos, filter</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">switch</span> (filter) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;SHOW_COMPLETED&#x27;</span>:</span><br><span class="line">      <span class="keyword">return</span> todos.filter(<span class="function"><span class="params">t</span> =&gt;</span> t.completed)</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;SHOW_ACTIVE&#x27;</span>:</span><br><span class="line">      <span class="keyword">return</span> todos.filter(<span class="function"><span class="params">t</span> =&gt;</span> !t.completed)</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;SHOW_ALL&#x27;</span>:</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">return</span> todos</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mapStateToProps = <span class="function"><span class="params">state</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">todos</span>: getVisibleTodos(state.todos, state.visibilityFilter)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mapDispatchToProps = <span class="function"><span class="params">dispatch</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">onTodoClick</span>: <span class="function"><span class="params">id</span> =&gt;</span> &#123;</span><br><span class="line">      dispatch(toggleTodo(id))</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> VisibleTodoList = connect(</span><br><span class="line">  mapStateToProps,</span><br><span class="line">  mapDispatchToProps</span><br><span class="line">)(TodoList)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> VisibleTodoList</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>容器组件中的store是靠props传进去，而不是在容器组件中直接引入</li>
-</ul>
-<h1 id="优化："><a href="#优化：" class="headerlink" title="优化："></a>优化：</h1><ul>
-<li>容器组件和UI组件整合为一个文件</li>
-<li>不用给容器组件传递store,给<APP>包裹一个<Provider store="{store}">即可</Provider></APP></li>
-<li>使用react-redux后不用自己检测redux状态的变化，容器组件自己完成这个工作</li>
-<li>mapDispatchToProps写成一个对象</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">onTodoClick</span>:toggleTodo</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="总结：一个组件与redux打交道步骤："><a href="#总结：一个组件与redux打交道步骤：" class="headerlink" title="总结：一个组件与redux打交道步骤："></a>总结：一个组件与redux打交道步骤：</h1><ul>
-<li>定义UI组件不暴露</li>
-<li>引入connect生成一个容器组件：connect(state=&gt;{key:value}),{key:xxxAction})(UI组件)</li>
-<li>在UI组件中通过this.props.xxx读取和操作状态</li>
-</ul>
-<p>todoList例子：</p>
-<p><a target="_blank" rel="noopener" href="https://www.redux.org.cn/docs/basics/ExampleTodoList.html">https://www.redux.org.cn/docs/basics/ExampleTodoList.html</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/25/%E5%AE%9E%E7%94%A8%E7%A8%8B%E5%BA%8F%E7%B1%BB%E5%9E%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/25/%E5%AE%9E%E7%94%A8%E7%A8%8B%E5%BA%8F%E7%B1%BB%E5%9E%8B/" class="post-title-link" itemprop="url">实用程序类型</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-07-25 15:39:45 / 修改时间：16:08:01" itemprop="dateCreated datePublished" datetime="2022-07-25T15:39:45+08:00">2022-07-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Partial"><a href="#Partial" class="headerlink" title="Partial"></a>Partial<Type></Type></h1><p>构造一个所有属性的Type都设置为可选的类型，返回一个表示给定类型的所有子集的类型</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Todo &#123;</span><br><span class="line">    <span class="attr">title</span>:<span class="built_in">string</span>;</span><br><span class="line">    description:stirng;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateTodo</span>(<span class="params">todo:Todo,fieldsToUpdate:Partial&lt;Todo&gt;</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;...todo,...fieldsToUpdate&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> todo1 = &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&quot;organize desk&quot;</span>,</span><br><span class="line">  <span class="attr">description</span>: <span class="string">&quot;clear clutter&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> todo2 = updateTodo(todo1, &#123;</span><br><span class="line">  <span class="attr">description</span>: <span class="string">&quot;throw out trash&quot;</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h1 id="Required"><a href="#Required" class="headerlink" title="Required"></a>Required<Type></Type></h1><p>构造一个由所有属性类型都是required的类型，与Partial相反</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Props &#123;</span><br><span class="line">  a?: <span class="built_in">number</span>;</span><br><span class="line">  b?: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> obj: Props = &#123; <span class="attr">a</span>: <span class="number">5</span> &#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> obj2: Required&lt;Props&gt; = &#123; <span class="attr">a</span>: <span class="number">5</span> &#125;;</span><br><span class="line"><span class="comment">//Property &#x27;b&#x27; is missing in type &#x27;&#123; a: number; &#125;&#x27; but required in type &#x27;Required&lt;Props&gt;&#x27;.</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="Readonly"><a href="#Readonly" class="headerlink" title="Readonly"></a>Readonly<Type></Type></h1><p>构造一个所有属性的Type都设置为readonly的类型，这意味着构造类型的属性不能重新分配</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Todo &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> todo: Readonly&lt;Todo&gt; = &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&quot;Delete inactive users&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">todo.title = <span class="string">&quot;Hello&quot;</span>;</span><br><span class="line"><span class="comment">//Cannot assign to &#x27;title&#x27; because it is a read-only property.</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="Record-lt-Keys-Type-gt"><a href="#Record-lt-Keys-Type-gt" class="headerlink" title="Record&lt;Keys,Type&gt;"></a>Record&lt;Keys,Type&gt;</h1><p>构造一个对象类型，其属性键为keys，属性值为Type,可用于将一种类型的属性映射到另一种类型</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> CatInfo &#123;</span><br><span class="line">  <span class="attr">age</span>: <span class="built_in">number</span>;</span><br><span class="line">  breed: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> CatName = <span class="string">&quot;miffy&quot;</span> | <span class="string">&quot;boris&quot;</span> | <span class="string">&quot;mordred&quot;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> cats: Record&lt;CatName, CatInfo&gt; = &#123;</span><br><span class="line">  <span class="attr">miffy</span>: &#123; <span class="attr">age</span>: <span class="number">10</span>, <span class="attr">breed</span>: <span class="string">&quot;Persian&quot;</span> &#125;,</span><br><span class="line">  <span class="attr">boris</span>: &#123; <span class="attr">age</span>: <span class="number">5</span>, <span class="attr">breed</span>: <span class="string">&quot;Maine Coon&quot;</span> &#125;,</span><br><span class="line">  <span class="attr">mordred</span>: &#123; <span class="attr">age</span>: <span class="number">16</span>, <span class="attr">breed</span>: <span class="string">&quot;British Shorthair&quot;</span> &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">cats.boris;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//const cats: Record&lt;CatName, CatInfo</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="Pick-lt-Type-Keys-gt"><a href="#Pick-lt-Type-Keys-gt" class="headerlink" title="Pick&lt;Type,Keys&gt;"></a>Pick&lt;Type,Keys&gt;</h1><p>通过从中选择一组属性keys来构造类型Type</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Todo &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="built_in">string</span>;</span><br><span class="line">  description: <span class="built_in">string</span>;</span><br><span class="line">  completed: <span class="built_in">boolean</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> TodoPreview = Pick&lt;Todo, <span class="string">&quot;title&quot;</span> | <span class="string">&quot;completed&quot;</span>&gt;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> todo: TodoPreview = &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&quot;Clean room&quot;</span>,</span><br><span class="line">  <span class="attr">completed</span>: <span class="literal">false</span>,</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">todo;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//const todo: TodoPreview</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="omit-lt-Type-Keys-gt"><a href="#omit-lt-Type-Keys-gt" class="headerlink" title="omit&lt;Type,Keys&gt;"></a>omit&lt;Type,Keys&gt;</h1><p>Type通过从中选择所有属性然后删除keys来构造类型</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Todo &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="built_in">string</span>;</span><br><span class="line">  description: <span class="built_in">string</span>;</span><br><span class="line">  completed: <span class="built_in">boolean</span>;</span><br><span class="line">  createdAt: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> TodoPreview = Omit&lt;Todo, <span class="string">&quot;description&quot;</span>&gt;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> todo: TodoPreview = &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&quot;Clean room&quot;</span>,</span><br><span class="line">  <span class="attr">completed</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">createdAt</span>: <span class="number">1615544252770</span>,</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">todo;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//const todo: TodoPreview</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> TodoInfo = Omit&lt;Todo, <span class="string">&quot;completed&quot;</span> | <span class="string">&quot;createdAt&quot;</span>&gt;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> todoInfo: TodoInfo = &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&quot;Pick up kids&quot;</span>,</span><br><span class="line">  <span class="attr">description</span>: <span class="string">&quot;Kindergarten closes at 5pm&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">todoInfo;</span><br><span class="line">   </span><br><span class="line"><span class="comment">//const todoInfo: TodoInfo</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="Exclude-lt-UnionType-ExcludedMembers-gt"><a href="#Exclude-lt-UnionType-ExcludedMembers-gt" class="headerlink" title="Exclude&lt;UnionType,ExcludedMembers&gt;"></a>Exclude&lt;UnionType,ExcludedMembers&gt;</h1><p>通过从UnionType中排除可以赋值给ExcludedMembers的值</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> T0=Exclude&lt;<span class="string">&quot;a&quot;</span>|<span class="string">&quot;b&quot;</span>|<span class="string">&quot;c&quot;</span>,<span class="string">&quot;a&quot;</span>&gt;</span><br><span class="line"><span class="comment">//type T0=&quot;b&quot;|&quot;c&quot;</span></span><br><span class="line"><span class="keyword">type</span> T1=Exclude&lt;<span class="string">&quot;a&quot;</span>|<span class="string">&quot;b&quot;</span>|<span class="string">&quot;c&quot;</span>,<span class="string">&quot;a&quot;</span>|<span class="string">&quot;b&quot;</span>&gt;;</span><br><span class="line"><span class="comment">//type T1=&quot;c&quot;</span></span><br><span class="line"><span class="keyword">type</span> T2 = Exclude&lt;<span class="built_in">string</span> | <span class="built_in">number</span> | (<span class="function">() =&gt;</span> <span class="built_in">void</span>), <span class="built_in">Function</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T2 = string | number</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="Extract-lt-Type-Union-gt"><a href="#Extract-lt-Type-Union-gt" class="headerlink" title="Extract&lt;Type,Union&gt;"></a>Extract&lt;Type,Union&gt;</h1><p>提取出Type和Union的交集（可以赋值给Union成员的值）</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> T0 = Extract&lt;<span class="string">&quot;a&quot;</span> | <span class="string">&quot;b&quot;</span> | <span class="string">&quot;c&quot;</span>, <span class="string">&quot;a&quot;</span> | <span class="string">&quot;f&quot;</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T0 = &quot;a&quot;</span></span><br><span class="line"><span class="keyword">type</span> T1 = Extract&lt;<span class="built_in">string</span> | <span class="built_in">number</span> | (<span class="function">() =&gt;</span> <span class="built_in">void</span>), <span class="built_in">Function</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T1 = () =&gt; void</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="NonNullable"><a href="#NonNullable" class="headerlink" title="NonNullable"></a>NonNullable<Type></Type></h1><p>构造一个类型，可以从Type中排除null和undefined</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> T0 = NonNullable&lt;<span class="built_in">string</span> | <span class="built_in">number</span> | <span class="literal">undefined</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T0 = string | number</span></span><br><span class="line"><span class="keyword">type</span> T1 = NonNullable&lt;<span class="built_in">string</span>[] | <span class="literal">null</span> | <span class="literal">undefined</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T1 = string[]</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="ReturnType"><a href="#ReturnType" class="headerlink" title="ReturnType"></a>ReturnType<Type></Type></h1><p>由函数返回类型组成（<strong>Type必须是一个（…args:any）=&gt;any)</strong></p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>): </span>&#123; a: <span class="built_in">number</span>; b: <span class="built_in">string</span> &#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> T0 = ReturnType&lt;<span class="function">() =&gt;</span> <span class="built_in">string</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T0 = string</span></span><br><span class="line"><span class="keyword">type</span> T1 = ReturnType&lt;<span class="function">(<span class="params">s: <span class="built_in">string</span></span>) =&gt;</span> <span class="built_in">void</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T1 = void</span></span><br><span class="line"><span class="keyword">type</span> T2 = ReturnType&lt;&lt;T&gt;<span class="function">() =&gt;</span> T&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T2 = unknown</span></span><br><span class="line"><span class="keyword">type</span> T3 = ReturnType&lt;&lt;T <span class="keyword">extends</span> U, U <span class="keyword">extends</span> <span class="built_in">number</span>[]&gt;<span class="function">() =&gt;</span> T&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T3 = number[]</span></span><br><span class="line"><span class="keyword">type</span> T4 = ReturnType&lt;<span class="keyword">typeof</span> f1&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T4 = &#123;</span></span><br><span class="line">  <span class="comment">//  a: number;</span></span><br><span class="line">   <span class="comment">// b: string;</span></span><br><span class="line"><span class="comment">//&#125;</span></span><br><span class="line"><span class="keyword">type</span> T5 = ReturnType&lt;<span class="built_in">any</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T5 = any</span></span><br><span class="line"><span class="keyword">type</span> T6 = ReturnType&lt;<span class="built_in">never</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T6 = never</span></span><br><span class="line"><span class="keyword">type</span> T7 = ReturnType&lt;<span class="built_in">string</span>&gt;;</span><br><span class="line"><span class="comment">//Type &#x27;string&#x27; does not satisfy the constraint &#x27;(...args: any) =&gt; any&#x27;.</span></span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T7 = any</span></span><br><span class="line"><span class="keyword">type</span> T8 = ReturnType&lt;<span class="built_in">Function</span>&gt;;</span><br><span class="line"><span class="comment">//Type &#x27;Function&#x27; does not satisfy the constraint &#x27;(...args: any) =&gt; any&#x27;.</span></span><br><span class="line"><span class="comment">//  Type &#x27;Function&#x27; provides no match for the signature &#x27;(...args: any): any&#x27;.</span></span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T8 = any</span></span><br></pre></td></tr></table></figure>
-
-<p>官网链接：<a target="_blank" rel="noopener" href="https://www.typescriptlang.org/docs/handbook/utility-types.html#returntypetype">https://www.typescriptlang.org/docs/handbook/utility-types.html#returntypetype</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/23/%E7%BA%AF%E5%87%BD%E6%95%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/23/%E7%BA%AF%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">纯函数</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-07-23 16:15:51" itemprop="dateCreated datePublished" datetime="2022-07-23T16:15:51+08:00">2022-07-23</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1285,14 +1225,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">193</span>
+          <span class="site-state-item-count">201</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-count">24</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -1359,7 +1299,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共170.7k字</span>
+  <span class="post-count">博客全站共180.8k字</span>
 </div>
         
 

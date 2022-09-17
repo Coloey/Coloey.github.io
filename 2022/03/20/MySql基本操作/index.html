@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"coloey.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="使用MySql Workbench管理数据库table中的数据类型： int:整数 varchar(len):字符串 tinyint(1)：布尔值 字段的特殊标识： PK(Primary Key):主键，唯一标识 NN(Not Null):值不允许为空 UQ（Unique):值唯一 AI(Auto Increment):值自动增长 Sql语句增：insert into 表名 (列名，列名…) va">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySql基本操作">
+<meta property="og:url" content="https://coloey.github.io/2022/03/20/MySql%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/index.html">
+<meta property="og:site_name" content="小柒">
+<meta property="og:description" content="使用MySql Workbench管理数据库table中的数据类型： int:整数 varchar(len):字符串 tinyint(1)：布尔值 字段的特殊标识： PK(Primary Key):主键，唯一标识 NN(Not Null):值不允许为空 UQ（Unique):值唯一 AI(Auto Increment):值自动增长 Sql语句增：insert into 表名 (列名，列名…) va">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-03-20T06:47:45.000Z">
+<meta property="article:modified_time" content="2022-09-17T13:52:40.248Z">
+<meta property="article:author" content="小柒">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://coloey.github.io/2022/03/20/MySql%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>MySql基本操作 | 小柒</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="小柒" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小柒</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">www.xiaoqi.cn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/03/20/MySql%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h1 class="post-title" itemprop="name headline">
+          MySql基本操作
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-20 14:47:45" itemprop="dateCreated datePublished" datetime="2022-03-20T14:47:45+08:00">2022-03-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-09-17 21:52:40" itemprop="dateModified" datetime="2022-09-17T21:52:40+08:00">2022-09-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MySql/" itemprop="url" rel="index"><span itemprop="name">MySql</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="使用MySql-Workbench管理数据库"><a href="#使用MySql-Workbench管理数据库" class="headerlink" title="使用MySql Workbench管理数据库"></a>使用MySql Workbench管理数据库</h1><p>table中的数据类型：</p>
+<p>int:整数</p>
+<p>varchar(len):字符串</p>
+<p>tinyint(1)：布尔值</p>
+<p>字段的特殊标识：</p>
+<p>PK(Primary Key):主键，唯一标识</p>
+<p>NN(Not Null):值不允许为空</p>
+<p>UQ（Unique):值唯一</p>
+<p>AI(Auto Increment):值自动增长</p>
+<h1 id="Sql语句"><a href="#Sql语句" class="headerlink" title="Sql语句"></a>Sql语句</h1><h3 id="增："><a href="#增：" class="headerlink" title="增："></a>增：</h3><p>insert into 表名 (列名，列名…) values(‘值’,…)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> users (username,password) <span class="keyword">values</span>(<span class="string">&#x27;李四&#x27;</span>,<span class="string">&#x27;54321&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="删："><a href="#删：" class="headerlink" title="删："></a>删：</h3><p>delete from 表名 where 列 运算符 值</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 删除id为4的用户</span></span><br><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> users <span class="keyword">where</span> id<span class="operator">=</span><span class="string">&#x27;4&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="改："><a href="#改：" class="headerlink" title="改："></a>改：</h3><p>update 表名 set 列=新值 where 列 运算符 值</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- update用于修改数据</span></span><br><span class="line">update users <span class="keyword">set</span> password <span class="operator">=</span><span class="string">&#x27;88888888&#x27;</span> <span class="keyword">where</span> id<span class="operator">=</span><span class="string">&#x27;4&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="查："><a href="#查：" class="headerlink" title="查："></a>查：</h3><p>select 列名 from 表名</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users</span><br><span class="line"><span class="comment">-- 从users表把username,password两列查询</span></span><br><span class="line"><span class="keyword">select</span> username, password <span class="keyword">from</span> users;</span><br></pre></td></tr></table></figure>
+
+<h3 id="where子句："><a href="#where子句：" class="headerlink" title="where子句："></a>where子句：</h3><p>用于限定选择的标准，常见运算符：</p>
+<p>等于：=</p>
+<p>不等于:&lt;&gt;或者!=</p>
+<p>大于:&gt;</p>
+<p>小于:&lt;</p>
+<p>在某个范围:BETWEEN</p>
+<p>搜索某种样式:LIKE</p>
+<h3 id="OR-AND："><a href="#OR-AND：" class="headerlink" title="OR,AND："></a>OR,AND：</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> users <span class="keyword">where</span> status<span class="operator">=</span><span class="number">0</span> <span class="keyword">and</span> id<span class="operator">&gt;</span><span class="number">1</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> users <span class="keyword">where</span> status<span class="operator">=</span><span class="number">0</span> <span class="keyword">or</span> id<span class="operator">&gt;</span><span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="实现排序："><a href="#实现排序：" class="headerlink" title="实现排序："></a>实现排序：</h3><p>order by：用于根据指定列对结果集进行排序,默认按照升序排序，想按照降序排序用desc关键字</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- order by asc实现升序排序</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> users <span class="keyword">order</span> <span class="keyword">by</span> status;</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> users <span class="keyword">order</span> <span class="keyword">by</span> status <span class="keyword">asc</span>;</span><br><span class="line"><span class="comment">-- order by desc实现降序排序</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> users <span class="keyword">order</span> <span class="keyword">by</span> status <span class="keyword">desc</span>;</span><br><span class="line"><span class="comment">-- 多重排序</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> users <span class="keyword">order</span> <span class="keyword">by</span> status <span class="keyword">desc</span>,username <span class="keyword">asc</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="count-统计"><a href="#count-统计" class="headerlink" title="count(*)统计"></a>count(*)统计</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">count</span>(<span class="operator">*</span>）统计</span><br><span class="line"><span class="comment">-- 查询users表中状态为0的用户总数量</span></span><br><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> users <span class="keyword">where</span> status<span class="operator">=</span><span class="string">&#x27;0&#x27;</span>;</span><br><span class="line"><span class="comment">-- as 将列名改为total</span></span><br><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">as</span> total <span class="keyword">from</span> users <span class="keyword">where</span> status<span class="operator">=</span><span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="使用mysql模块"><a href="#使用mysql模块" class="headerlink" title="使用mysql模块"></a>使用mysql模块</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">const mysql<span class="operator">=</span>require(<span class="string">&#x27;mysql&#x27;</span>)</span><br><span class="line"><span class="operator">/</span><span class="operator">/</span>建立MYSQL与数据库的联系</span><br><span class="line">const db<span class="operator">=</span>mysql.createPool(&#123;</span><br><span class="line">    host:<span class="string">&#x27;127.0.0.1&#x27;</span>,<span class="operator">/</span><span class="operator">/</span>数据库的ip地址</span><br><span class="line">    <span class="keyword">user</span>:<span class="string">&#x27;root&#x27;</span>,</span><br><span class="line">    password:<span class="string">&#x27;123456&#x27;</span>,</span><br><span class="line">    database:<span class="string">&#x27;my_db_01&#x27;</span>,<span class="operator">/</span><span class="operator">/</span>指定要操作哪个数据库</span><br><span class="line">&#125;)</span><br><span class="line"><span class="operator">/</span><span class="operator">/</span>测试mysql能否正常工作</span><br><span class="line"> db.query(<span class="string">&#x27;select 1&#x27;</span>,(err,<span class="keyword">result</span>)<span class="operator">=</span><span class="operator">&gt;</span>&#123;</span><br><span class="line">    <span class="operator">/</span><span class="operator">/</span>mysql工作期间报错</span><br><span class="line">     if(err)<span class="keyword">return</span> console.<span class="built_in">log</span>(err.message)</span><br><span class="line">    <span class="operator">/</span><span class="operator">/</span>能成功执行<span class="keyword">SQL</span>语句</span><br><span class="line">    console.<span class="built_in">log</span>(<span class="keyword">result</span>);</span><br><span class="line"> &#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="增：-1"><a href="#增：-1" class="headerlink" title="增："></a>增：</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">/</span><span class="operator">/</span>要插入到users表中的数据对象</span><br><span class="line">const users<span class="operator">=</span>&#123;username:<span class="string">&#x27;王五&#x27;</span>,password:<span class="string">&#x27;ww123&#x27;</span>&#125;;</span><br><span class="line"><span class="operator">/</span><span class="operator">/</span>待执行的<span class="keyword">SQL</span>语句，其中英文?代表占位符</span><br><span class="line">const sqlStr<span class="operator">=</span><span class="string">&#x27;insert into users (username,password) values(?,?)&#x27;</span></span><br><span class="line"><span class="operator">/</span><span class="operator">/</span>使用数组的形式为占位符指定具体的值,返回的<span class="keyword">result</span>是一个对象，通过affectedRows判读是否插入成功</span><br><span class="line">db.query(sqlStr,[users.username,users.password],(err,<span class="keyword">result</span>)<span class="operator">=</span><span class="operator">&gt;</span>&#123;</span><br><span class="line">    if(err)<span class="keyword">return</span> console.<span class="built_in">log</span>(err.message)</span><br><span class="line">    if(result.affectedRows<span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="number">1</span>)&#123;console.<span class="built_in">log</span>(<span class="string">&#x27;插入数据成功&#x27;</span>)&#125;<span class="operator">/</span><span class="operator">/</span>成功</span><br><span class="line">&#125;)</span><br><span class="line"><span class="operator">/</span><span class="operator">/</span>插入数据的便捷方式</span><br><span class="line">const <span class="keyword">user</span><span class="operator">=</span>&#123;username:<span class="string">&#x27;小煜&#x27;</span>,password:<span class="string">&#x27;ww123&#x27;</span>&#125;;</span><br><span class="line">const sqlStr<span class="operator">=</span>&quot;insert into users set ?&quot;;</span><br><span class="line">db.query(sqlStr,<span class="keyword">user</span>,(err,<span class="keyword">result</span>)<span class="operator">=</span><span class="operator">&gt;</span>&#123;</span><br><span class="line">    if(err)<span class="keyword">return</span> console.<span class="built_in">log</span>(err.message)</span><br><span class="line">    if(result.affectedRows<span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="number">1</span>)&#123;console.<span class="built_in">log</span>(<span class="keyword">result</span>)&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="删：-1"><a href="#删：-1" class="headerlink" title="删："></a>删：</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">/</span><span class="operator">/</span>删除数据</span><br><span class="line">const sqlStr<span class="operator">=</span>&quot;delete from users where id=?&quot;</span><br><span class="line"><span class="operator">/</span><span class="operator">/</span>如果<span class="keyword">SQL</span>语句有多个占位符则必须使用数组为每个占位符指定具体的值</span><br><span class="line"><span class="operator">/</span><span class="operator">/</span>如果<span class="keyword">SQL</span>语句只有一个占位符，则可以省略数组</span><br><span class="line">db.query(sqlStr,<span class="number">12</span>,(err,res)<span class="operator">=</span><span class="operator">&gt;</span>&#123;</span><br><span class="line">    if(err)<span class="keyword">return</span> console.<span class="built_in">log</span>(err.message)</span><br><span class="line">    if(res.affectedRows<span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="number">1</span>)&#123;console.<span class="built_in">log</span>(res);&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>标记删除：使用delete语句会把数据从表中真正的删除，为了保险起见。推荐使用标记删除的形式来模拟删除的动作，就是在表中设置类似于status这样的状态字段，来标记当前这条数据是否被删除</p>
+<p>当用户执行删除操作时，并没有执行DELETE语句把数据删除，而是执行了UPDATE语句，将这条数据对应的status字段标记为删除即可</p>
+<h3 id="改：-1"><a href="#改：-1" class="headerlink" title="改："></a>改：</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const <span class="keyword">user</span><span class="operator">=</span>&#123;id:<span class="number">11</span>,username:<span class="string">&#x27;王五&#x27;</span>,password:<span class="string">&#x27;ww000&#x27;</span>&#125;;</span><br><span class="line">const sqlStr<span class="operator">=</span>&quot;update users set ? where id=?&quot;;</span><br><span class="line">db.query(sqlStr,[<span class="keyword">user</span>,user.id],(err,<span class="keyword">result</span>)<span class="operator">=</span><span class="operator">&gt;</span>&#123;</span><br><span class="line">    if(err)<span class="keyword">return</span> console.<span class="built_in">log</span>(err.message)</span><br><span class="line">    if(result.affectedRows<span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="number">1</span>)&#123;console.<span class="built_in">log</span>(<span class="keyword">result</span>)&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>小柒
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://coloey.github.io/2022/03/20/MySql%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/" title="MySql基本操作">https://coloey.github.io/2022/03/20/MySql基本操作/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/20/node%E8%BF%9E%E6%8E%A5MySql%E6%8A%A5%E9%94%99ER-NOT-SUPPORTED-AUTH-MODE/" rel="prev" title="node连接MySql报错ER_NOT_SUPPORTED_AUTH_MODE">
+      <i class="fa fa-chevron-left"></i> node连接MySql报错ER_NOT_SUPPORTED_AUTH_MODE
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/03/21/axios%E5%8F%91%E9%80%81%E8%AF%B7%E6%B1%82%E6%97%B6%E5%90%8E%E5%8F%B0%E6%8E%A5%E6%94%B6%E7%9A%84req-body%E4%B8%BA%E7%A9%BA/" rel="next" title="axios发送请求时后台接收的req.body为空">
+      axios发送请求时后台接收的req.body为空 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8MySql-Workbench%E7%AE%A1%E7%90%86%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.</span> <span class="nav-text">使用MySql Workbench管理数据库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Sql%E8%AF%AD%E5%8F%A5"><span class="nav-number">2.</span> <span class="nav-text">Sql语句</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A2%9E%EF%BC%9A"><span class="nav-number">2.0.1.</span> <span class="nav-text">增：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%EF%BC%9A"><span class="nav-number">2.0.2.</span> <span class="nav-text">删：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%EF%BC%9A"><span class="nav-number">2.0.3.</span> <span class="nav-text">改：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%EF%BC%9A"><span class="nav-number">2.0.4.</span> <span class="nav-text">查：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#where%E5%AD%90%E5%8F%A5%EF%BC%9A"><span class="nav-number">2.0.5.</span> <span class="nav-text">where子句：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OR-AND%EF%BC%9A"><span class="nav-number">2.0.6.</span> <span class="nav-text">OR,AND：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%8E%92%E5%BA%8F%EF%BC%9A"><span class="nav-number">2.0.7.</span> <span class="nav-text">实现排序：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#count-%E7%BB%9F%E8%AE%A1"><span class="nav-number">2.0.8.</span> <span class="nav-text">count(*)统计</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8mysql%E6%A8%A1%E5%9D%97"><span class="nav-number">3.</span> <span class="nav-text">使用mysql模块</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A2%9E%EF%BC%9A-1"><span class="nav-number">3.0.1.</span> <span class="nav-text">增：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%EF%BC%9A-1"><span class="nav-number">3.0.2.</span> <span class="nav-text">删：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%EF%BC%9A-1"><span class="nav-number">3.0.3.</span> <span class="nav-text">改：</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小柒"
+      src="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+  <p class="site-author-name" itemprop="name">小柒</p>
+  <div class="site-description" itemprop="description">欢迎来到我的世界!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">201</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Coloey" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Coloey" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/487336863@qq.com" title="E-Mail → 487336863@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小柒</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_pv">
+    本站访问量:<span id="busuanzi_value_site_pv"></span>次
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_uv">
+    本站总访客量：<span id="busuanzi_value_site_uv"></span>人
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共180.8k字</span>
+</div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 动态背景 -->
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="../source/js/src/clicklove.js"></script>
+</body>
+</html>
