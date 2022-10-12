@@ -187,6 +187,662 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/09/%E5%B7%A5%E4%BD%9C%E6%B5%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/09/%E5%B7%A5%E4%BD%9C%E6%B5%81/" class="post-title-link" itemprop="url">工作流</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-09 22:25:05 / 修改时间：22:59:46" itemprop="dateCreated datePublished" datetime="2022-05-09T22:25:05+08:00">2022-05-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="本地工作流"><a href="#本地工作流" class="headerlink" title="本地工作流"></a>本地工作流</h1><p>本地工作流是本地工具链阶段的前端工程体系所对应的<strong>工作模式</strong>，此阶段的各个功能模块均由开发人员在本机环境下执行，所有功能模块的两个要素：</p>
+<ul>
+<li>执行人：前端开发人员</li>
+<li>执行环境：分散的本地开发环境</li>
+</ul>
+<h2 id="代码分离与测试沙箱"><a href="#代码分离与测试沙箱" class="headerlink" title="代码分离与测试沙箱"></a>代码分离与测试沙箱</h2><h3 id="代码分离："><a href="#代码分离：" class="headerlink" title="代码分离："></a>代码分离：</h3><p>基本原则是单独编写一个适应各环境的“配置文件”,假设我们将此文件命名为manifest.js:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Domain=<span class="built_in">window</span>.location.host;</span><br><span class="line"><span class="keyword">if</span>(Domain===<span class="string">&#x27;test.app.com&#x27;</span>)&#123;</span><br><span class="line">    <span class="comment">//测试环境</span></span><br><span class="line">    <span class="built_in">window</span>.ASYNC_API_DOMAIN=<span class="string">&#x27;apitest.app.com&#x27;</span>;</span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span>(Domain===<span class="string">&#x27;www.app.com&#x27;</span>)&#123;</span><br><span class="line">    <span class="comment">//生产环境</span></span><br><span class="line">    <span class="built_in">window</span>.ASYNC_DOMAIN=<span class="string">&#x27;api.app.com&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将主站域名区分测试环境和生产环境，并将对应的异步API域名以全局变量的形式暴露出来。随后在业务逻辑代码main.app.js中使用全局变量：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">    <span class="attr">url</span>:<span class="string">`https://<span class="subst">$&#123;<span class="built_in">window</span>.ASYNC_API_DOMAIN&#125;</span>/login`</span>,</span><br><span class="line">    <span class="attr">dataType</span>:<span class="string">&#x27;jsonp&#x27;</span>,</span><br><span class="line">    <span class="function"><span class="title">success</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>manifest.app.js可以作为一个通用模块不参与构建，并且必须在业务js文件之前引入：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">&quot;text/javascript&quot;</span> src=<span class="string">&quot;//static.app.com/common/manifest.js&quot;</span>&gt;</span><br><span class="line"> </span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;//static.app.com/common/main.app.js&quot;</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>manifest.js作为一个通用模块，无法保证更新后完全兼容历史项目</p>
+<p>代码分离的本质是架构层面的细节设计，架构是跟着业务需求的变动而不断改变的，所以manifest.js只能作为一种临时性的解决方法，而不是从工程角度出发的高度可适应方案</p>
+<h3 id="测试沙箱"><a href="#测试沙箱" class="headerlink" title="测试沙箱"></a>测试沙箱</h3><p>测试沙箱的原则是搭建一个仿真的生产环境，在工作流中加入测试沙箱的支持后，前端只需执行一次针对生产环境的构建行为即可，测试通过后可直接部署上线，无需二次构建</p>
+<p><img src="/2022/05/09/%E5%B7%A5%E4%BD%9C%E6%B5%81/ceshi1.png" alt="image-20220509224958318"></p>
+<p>测试沙箱只需要模拟一个前端仿真环境，比如实现域名的映射，最原始的方案就是通过修改测试人员本地host文件实现，如果要统一规范可以搭建一个专属的VPN服务，所有参与测试的任意统一使用此VPN代理访问测试沙箱。测试沙箱的复杂度取决于生成环境的复杂度</p>
+<h1 id="云平台工作流"><a href="#云平台工作流" class="headerlink" title="云平台工作流"></a>云平台工作流</h1><p>云平台工作流在本地工作流的基础上，将容易因个体差异产生问题的功能模块（比如构建，部署等）提升到云平台运行，通过严谨的流程控制增强开发规范性，云平台的目标不仅是实现功能的集中管理，而且要在此基础上进一步优化工作流程。功能集中的同时以为着权限集中，这也是实现自动构建和自动部署的必要前提</p>
+<p><img src="/2022/05/09/%E5%B7%A5%E4%BD%9C%E6%B5%81/yun.png"></p>
+<p>开发人员负责一线开发工作</p>
+<p>开发负责人汇总开发人员的各个分支并将其合并到dev分支</p>
+<p>云平台管理人员负责项目的发起以及部署队列的控制</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/08/Mock%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/08/Mock%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">Mock服务器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-08 22:04:17" itemprop="dateCreated datePublished" datetime="2022-05-08T22:04:17+08:00">2022-05-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-25 10:08:19" itemprop="dateModified" datetime="2022-08-25T10:08:19+08:00">2022-08-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="动态构建："><a href="#动态构建：" class="headerlink" title="动态构建："></a>动态构建：</h2><h3 id="webpack-dev-middleware"><a href="#webpack-dev-middleware" class="headerlink" title="webpack-dev-middleware:"></a>webpack-dev-middleware:</h3><p>将webpack构建输出的文件存储在内存中，正常情况下，webpack构建产出的文件会存储在output配置项指定的硬盘目录中，webpack-dev-middleware在此基础上建立一个文件映射机制，每当匹配到一个webpack构建产出文件的请求后便会将内存中与其对应的数据返回给发起请求的客户端，由于是内存的文件系统，没有好使的硬盘读写，数据更新很快，这也是webpack相较其他同类工具的优势之一</p>
+<p>实际上，webpacl-dev-server是在Express和webpack-dev-middleware基础上进行的封装，但由于不具备Mock服务，我们需要自己封装本地开发服务器，注意：</p>
+<ul>
+<li>如何启用源文件的监听并触发动态编译</li>
+<li>如何令客户端可访问由HTML引用但是并未参与构建的本地静态文件，比如jQuery等第三方库，这类文件由独立的script标签引入，不参与webpack构建</li>
+</ul>
+<h4 id="webpack-dev-middleware配置项："><a href="#webpack-dev-middleware配置项：" class="headerlink" title="webpack-dev-middleware配置项："></a>webpack-dev-middleware配置项：</h4><ul>
+<li>lazy:是否开启惰性模式</li>
+<li>watchOptions-监听细节配置（默认）</li>
+<li>aggregateTimeouy:指定webpack的执行频率，webpack将在此段时间内针对源代码所有修改都聚合到一次重新编译行为中</li>
+<li>ignored:指定不参与监听的文件</li>
+<li>poll:指定webpack监听无效时轮询检验文件的频率</li>
+</ul>
+<p>实际开发中并非所有的静态文件都参与构建，一些常用第三方库通常用单独的script和link标签引入，此类文件不参与构建，不在webpack-dev-middleware的监听范围内，也就不能通过文件映射策略将其对应的请求映射到内存文件系统中，只能借助express内置的static中间件将这些文件作为静态内容开放给Http服务，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.use(<span class="string">&#x27;/libs&#x27;</span>,express.static(path.join(process.cwd(),<span class="string">&#x27;static&#x27;</span>)))</span><br></pre></td></tr></table></figure>
+
+<p>第一个参数/libs是客户端请求静态资源的路径，express.static的参数时本地存放静态资源的绝对路径，上述代码将/libs路径的http请求映射到本地项目的static目录</p>
+<h3 id="创建一个本地开发服务器："><a href="#创建一个本地开发服务器：" class="headerlink" title="创建一个本地开发服务器："></a>创建一个本地开发服务器：</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> webpack=<span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> path=<span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> webpackdevmiddleware=<span class="built_in">require</span>(<span class="string">&#x27;webpack-dev-middleware&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> app=express()</span><br><span class="line"><span class="keyword">const</span> compiler=webpack(&#123;</span><br><span class="line">    <span class="comment">//webpack配置</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//配置中间件</span></span><br><span class="line">app.use(<span class="string">&#x27;/libs&#x27;</span>,express.static(path.join(process.cwd(),<span class="string">&#x27;static&#x27;</span>)))</span><br><span class="line">.use(webpackdevmiddleware(compiler,&#123;</span><br><span class="line">    <span class="attr">lazy</span>:<span class="literal">false</span>,</span><br><span class="line">    <span class="attr">watchOprtions</span>:&#123;</span><br><span class="line">        <span class="attr">aggregateTimeout</span>:<span class="number">300</span>,</span><br><span class="line">        <span class="attr">ignored</span>:<span class="regexp">/node_modules/</span>,</span><br><span class="line">        poll:<span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;))</span><br><span class="line">app.listen(<span class="number">8888</span>,<span class="function"><span class="params">err</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(err)&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(err)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Mock"><a href="#Mock" class="headerlink" title="Mock"></a>Mock</h2><h3 id="1-假数据"><a href="#1-假数据" class="headerlink" title="1 假数据"></a>1 假数据</h3><h3 id="2-客户端Mock"><a href="#2-客户端Mock" class="headerlink" title="2 客户端Mock"></a>2 客户端Mock</h3><p>Mock进化的第二种形态就是以Mock.js为代表的客户端Mock,工作原理是在客户端拦截JavaScript代码发出的ajax请求并返回由Mock.js创建的假数据</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="string">&quot;/libs/js/mock.js&quot;</span>&gt;&lt;/script&gt;</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span></span><br><span class="line"><span class="javascript"><span class="xml">    Mock.mock(<span class="string">&#x27;/api&#x27;</span>,&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="string">&#x27;code|1&#x27;</span>:&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="number">200</span>,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="number">404</span>,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="number">500</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">    &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="string">&#x27;errMsg|1&#x27;</span>:[</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="string">&#x27;资源未找到&#x27;</span>,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="string">&#x27;服务器错误&#x27;</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">    ],</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="string">&#x27;data&#x27;</span>:&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="string">&#x27;a&#x27;</span>:<span class="number">1</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">    &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">&#125;)</span></span></span><br><span class="line"><span class="javascript"><span class="xml">loading=<span class="literal">true</span>;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">$.ajax(&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="attr">url</span>:<span class="string">&#x27;/api&#x27;</span>,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="attr">dataType</span>:<span class="string">&#x27;jsonp&#x27;</span>,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="function"><span class="title">success</span>(<span class="params">res</span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="keyword">if</span>(res.code===<span class="number">200</span>&amp;&amp;res.response)&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            data=res.response.data</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        &#125;<span class="keyword">else</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            alert(res.errMsg)</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="function"><span class="title">fail</span>(<span class="params"></span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        alert(<span class="string">&#x27;操作失败&#x27;</span>)</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="function"><span class="title">complete</span>(<span class="params"></span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        loading=<span class="literal">false</span>;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">&#125;)</span></span></span><br><span class="line"><span class="javascript"><span class="xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>Mock.js可以随机创建假数据，还可以处理各种异常状态，然而几遍客户端Mock提供了许多便利，Mock相关代码或文件仍然必须存在于业务代码中，上线之前仍然需要删除，这对于产品质量保障始终存在一定隐患。</p>
+<h3 id="3-Mock-Server"><a href="#3-Mock-Server" class="headerlink" title="3 Mock Server"></a>3 Mock Server</h3><p>在开发阶段使用Mock Server提供的与真实接口规范和逻辑一致的本地接口进行开发</p>
+<p>开发完成后，在构建阶段将Mock的地址修改为已完成的真实服务器端接口地址</p>
+<p>Mock Server最普遍的使用场景就是模拟异步数据接口，比如使用Ajax或者JSONP获取和提交数据，模拟的方式通常有两种：</p>
+<ul>
+<li>Local:本地模式，使用本地JSON数据作为异步接口的请求响应</li>
+<li>Proxy：代理模式，将异步接口代理到线上的其他接口地址，类似于转接者角色</li>
+</ul>
+<p>Mock Server本质上是一个简化版的Web Server,最基础的组件就是负责分发的路由</p>
+<h4 id="Local模式："><a href="#Local模式：" class="headerlink" title="Local模式："></a>Local模式：</h4><p>在开发阶段使用本地API代替真实API地址，使用本地JSON作为接口的返回数据，具体搭建流程：</p>
+<p>通过路由创建一个可访问的本地域名API代替真实API，比如使用/login代替<a target="_blank" rel="noopener" href="http://auth.app.com/login">http://auth.app.com/login</a></p>
+<p>在路由响应函数内对请求进行校验，比如是否为JSONP请求，然后返回本地JSON数据</p>
+<p>前端工程师在开发阶段的业务代码中将<a target="_blank" rel="noopener" href="http://auth.app.com/login%E4%BF%AE%E6%94%B9%E4%B8%BAAPI/login">http://auth.app.com/login修改为API/login</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Path=<span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> express=<span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> app=express()</span><br><span class="line">app.get(<span class="string">&#x27;/login&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//path.join(process.cwd())//返回的是当前Node.js进程执行时的工作目录</span></span><br><span class="line">    <span class="keyword">const</span> MockData=<span class="built_in">require</span>(path.join(process.cwd(),<span class="string">&#x27;./mockdata.login.js&#x27;</span>));</span><br><span class="line">    req.query.callback?res.jsonp(MockData):res.json(MockData);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line">);</span><br><span class="line">app.listen(<span class="number">8888</span>,<span class="function"><span class="params">err</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(err)&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(err)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="DefinePlugin和环境变量"><a href="#DefinePlugin和环境变量" class="headerlink" title="DefinePlugin和环境变量"></a>DefinePlugin和环境变量</h4><p>开发环境使用Mock Server将所有真实接口地址修改为本地域名地址，在部署测试和生产环境之前必须将接口的地址复原。</p>
+<p>接口地址的修改需求涉及两个方面：</p>
+<p>执行环境：开发，测试，生产环境下的接口地址均不同，所以必须能够依据部署目标环境将接口修改为对应地址</p>
+<p>字符串修改：对于JavaScript代码来说，接口地址就是一个字符串，我们要做的就是将该字符串修改为指定的值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">entry:&#123;</span><br><span class="line">    <span class="string">&#x27;main.app&#x27;</span>:<span class="string">&#x27;./js/main.app.js&#x27;</span></span><br><span class="line">&#125;,</span><br><span class="line">    <span class="attr">plugins</span>:[</span><br><span class="line">        <span class="keyword">new</span> webpack.DefinePlugin(&#123;</span><br><span class="line">            <span class="attr">AUTH_API_DOMAIN</span>:<span class="string">&#x27;//auth.app.com&#x27;</span>,</span><br><span class="line">            <span class="attr">HMOE_API_DOMAIN</span>:<span class="string">&#x27;//www.app.com&#x27;</span></span><br><span class="line">        &#125;)</span><br><span class="line">    ]</span><br></pre></td></tr></table></figure>
+
+<p>源代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//请求位于auth.app.com域名下的login接口</span></span><br><span class="line">$.ajax(&#123;</span><br><span class="line">    <span class="attr">url</span>:<span class="string">`<span class="subst">$&#123;AUTH_API_DOMAIN&#125;</span>/login`</span>,</span><br><span class="line">    <span class="function"><span class="title">success</span>(<span class="params">res</span>)</span>&#123;&#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//请求位于www.app.com域名下的login接口</span></span><br><span class="line">$.ajax(&#123;</span><br><span class="line">    <span class="attr">url</span>:<span class="string">`<span class="subst">$&#123;HOME_API_DOMAIN&#125;</span>/login`</span>,</span><br><span class="line">    <span class="function"><span class="title">success</span>(<span class="params">res</span>)</span>&#123;&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>经过构建后</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//请求位于auth.app.com域名下的login接口</span></span><br><span class="line">$.ajax(&#123;</span><br><span class="line">    <span class="attr">url</span>:<span class="string">`//auth.app.com/login`</span>,</span><br><span class="line">    <span class="function"><span class="title">success</span>(<span class="params">res</span>)</span>&#123;&#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//请求位于www.app.com域名下的login接口</span></span><br><span class="line">$.ajax(&#123;</span><br><span class="line">    <span class="attr">url</span>:<span class="string">`//www.app.com/login`</span>,</span><br><span class="line">    <span class="function"><span class="title">success</span>(<span class="params">res</span>)</span>&#123;&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>结合环境变量，配置DefinePlugin指定不同环境下的替换值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> webpack.DefinePlugin(&#123;</span><br><span class="line">    <span class="attr">AUTH_API_DOMAIN</span>:process.env.NODE_ENV===<span class="string">&#x27;dev&#x27;</span>?<span class="string">&#x27;&#x27;</span>:<span class="string">&#x27;//auth.app.com&#x27;</span>,</span><br><span class="line">    <span class="attr">HOME_API_DOMAIN</span>:process.env.NODE_ENV===<span class="string">&#x27;dev&#x27;</span>?<span class="string">&#x27;&#x27;</span>:<span class="string">&#x27;//www.app.com&#x27;</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>以上代码在开发环境下将接口映射到本地的Mock Server,非开发环境下修改为真实域名的地址</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/08/%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/08/%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D/" class="post-title-link" itemprop="url">插件以及资源定位</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-08 10:21:32 / 修改时间：11:13:19" itemprop="dateCreated datePublished" datetime="2022-05-08T10:21:32+08:00">2022-05-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/webpack/" itemprop="url" rel="index"><span itemprop="name">webpack</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h2><p>CDN（Connect Delivery Network)是一种部署策略，包括分布式存储，负载均衡，内容管理等模块，CDN的一个重要功能是将静态资源缓存到用户近距离的CDN节点上，不但能提高用户对静态资源的访问速度，还能节省服务器的带宽消耗，降低负载。实现此功能的一个重要前提是将静态资源部署到已接入CDN的专属服务器，而这类服务器通常与Web主页面处于不同域名下，这样做的主要目的是为了充分利用浏览器的并发请求能力，提高页面的加载速度。</p>
+<h2 id="webpack的逆向注入模式"><a href="#webpack的逆向注入模式" class="headerlink" title="webpack的逆向注入模式"></a>webpack的逆向注入模式</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">entry</span>:&#123;</span><br><span class="line">        <span class="string">&#x27;main.app&#x27;</span>:<span class="string">&#x27;./js/main.app.js&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">output</span>:&#123;</span><br><span class="line">        <span class="attr">path</span>:<span class="string">&#x27;./dist&#x27;</span>,</span><br><span class="line">        <span class="attr">filename</span>:<span class="string">&#x27;[namr].[chunkhash].js&#x27;</span>,</span><br><span class="line">        <span class="attr">publicPath</span>:<span class="string">&#x27;//static.app.com/app/&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">module</span>:&#123;</span><br><span class="line">        <span class="attr">rules</span>:[&#123;</span><br><span class="line">            <span class="attr">test</span>:<span class="regexp">/\.js$/</span>,</span><br><span class="line">            loader:<span class="string">&#x27;babel-loader&#x27;</span></span><br><span class="line">        &#125;,&#123;</span><br><span class="line">            <span class="attr">test</span>:<span class="regexp">/\.css$/</span>,</span><br><span class="line">            use:ExtractTextPlugin.extract(&#123;</span><br><span class="line">                <span class="attr">use</span>:<span class="string">&#x27;css-loader&#x27;</span></span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;,</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">        <span class="attr">plugins</span>:[</span><br><span class="line">            newExtractTextPlugin(&#123;</span><br><span class="line">                <span class="attr">filename</span>:<span class="string">&#x27;style/[name].[chunkhash].css&#x27;</span>,</span><br><span class="line">            &#125;),</span><br><span class="line">            <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">                <span class="attr">filename</span>:<span class="string">&#x27;index.html&#x27;</span>,</span><br><span class="line">                <span class="attr">template</span>:<span class="string">&#x27;index.html&#x27;</span>,</span><br><span class="line">                <span class="attr">inject</span>:<span class="literal">true</span></span><br><span class="line">            &#125;)</span><br><span class="line">        ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>index.html源码没有引用main.app.css的<link>标签和main.app.js的script标签，然而构建后的文档内容被注入了对应的引用标签并且引用地址为构建之后的资源地址</li>
+<li>构建之后的资源地址被修改为带有CDN服务器域名和路径信息的完整URL，并且CDN的信息与配置中的publicPath一致，这是webpack提供的可用于指定静态资源CDN服务器信息的配置项</li>
+</ol>
+<p>多页面项目资源定位</p>
+<p>编写一个html-wepack-plugin-before-html-processing插件，保证在html-wepack-plugin-before-html-processing阶段能够执行以下行为：</p>
+<ul>
+<li>获得静态资源构建后的URL</li>
+<li>获得并且修改HTML文档的内容</li>
+</ul>
+<h3 id="编写webpack组件，清楚两个对象：compiler和compilation"><a href="#编写webpack组件，清楚两个对象：compiler和compilation" class="headerlink" title="编写webpack组件，清楚两个对象：compiler和compilation"></a>编写webpack组件，清楚两个对象：compiler和compilation</h3><p>compiler对象代表的是webpack执行环境的完整配置，只会在启动webpack时被创建，并且在webpack运行期间不会被修改</p>
+<p>compilation对象代表某个版本的资源对应的编译进程，当使用webpack的development中间件时，每次检测到项目文件有改动会创建一个compilation，进而能够针对改动生产全新的编译文件，compilation对象包含当前模块资源，待编译文件，有改动的文件和监听依赖的所有信息</p>
+<p>编写一个构造函数用于接收配置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> HtmlWebpackPluginForLocate=<span class="function"><span class="keyword">function</span>(<span class="params">options</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.options=&#123;...options&#125;<span class="comment">//options用来提供给用户配置插件功能的细节</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//针对指定事件阶段编写apply方法</span></span><br><span class="line">HtmlWebpackPluginForLocate.prototype.apply=<span class="function"><span class="params">compiler</span>=&gt;</span>&#123;</span><br><span class="line">    compiler.plugin(<span class="string">&#x27;compilation&#x27;</span>,<span class="function"><span class="params">compilation</span>=&gt;</span>&#123;</span><br><span class="line">        compilation.plugin(<span class="string">&#x27;html-webpack-plugin-before-html-processing&#x27;</span>,<span class="function">(<span class="params">htmlPluginData,callback</span>)=&gt;</span>&#123;</span><br><span class="line">            <span class="comment">//插件行为逻辑</span></span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>html-webpack-plugin-before-html-processing阶段捕获两个对象，callback的作用类似于Express中间件中的next函数，执行完当前插件的逻辑后必须调用callback以便进入后序流程，它属于webpack流程控制的一部分，没有构建相关的信息</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/07/%E8%A6%86%E7%9B%96%E6%9B%B4%E6%96%B0%E4%B8%8E%E5%A2%9E%E9%87%8F%E6%9B%B4%E6%96%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/07/%E8%A6%86%E7%9B%96%E6%9B%B4%E6%96%B0%E4%B8%8E%E5%A2%9E%E9%87%8F%E6%9B%B4%E6%96%B0/" class="post-title-link" itemprop="url">覆盖更新与增量更新</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-07 22:21:34" itemprop="dateCreated datePublished" datetime="2022-05-07T22:21:34+08:00">2022-05-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-08 10:20:39" itemprop="dateModified" datetime="2022-05-08T10:20:39+08:00">2022-05-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="覆盖更新"><a href="#覆盖更新" class="headerlink" title="覆盖更新"></a>覆盖更新</h1><p>实现方案是在引用资源的URL后添加请求参数，比如添加时间戳参数，</p>
+<p>浏览器会将参数不同的URL视为全新的URL，所以浏览器向服务器请求并下载最新资源，我们只更新修改了的资源，为了避免手动改参数，将hash指纹（通过mds算法得到）作为URL的v参数</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&#x27;stylesheet&#x27;</span> <span class="attr">href</span>=<span class="string">&quot;main.home.css?v=858d5483&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;main.home.js?v=bbcadaf73&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>缺点：</p>
+<ul>
+<li>必须保证html文件与改动的静态文件同步更新，否则会出现资源不同步的情况。如果是无服务端渲染的项目，html文件被视为金泰之源，并且与其他今天资源(js/css/图片等)部署到同一台服务器，在这种情况下，我们可以保证资源的同步更新，不会受到覆盖更新的影响。但是对于依赖服务端渲染的项目，大多数的部署方式是将网站的入口HTML和静态资源分开部署，比如，HTML与服务器代码一同部署到域名为ww.app.com对应的服务器，把JS/CSS等静态资源部署到static.app.com对应的服务器，两种资源分开部署必然有先后顺序，这就意味着两种资源的上线存在时间差，不论先部署哪种资源无法保证所有用户访问页面的正确性，即使时间差小，对于淘宝这种访问量庞大的网站来说也会影响用户群，这就是为什么很多团队总是选择在半夜或者凌晨这种访问量较小的时间段发布新版本的原因之一</li>
+<li>不利于版本回滚。由于覆盖更新每次迭代之后的资源都会覆盖服务器上原有的旧版本文件，这对于版本回滚操作很不友好，运维人员吗要么借助于服务器本身的缓存机制要么拿到旧版本文件再次覆盖</li>
+</ul>
+<h1 id="增量更新"><a href="#增量更新" class="headerlink" title="增量更新"></a>增量更新</h1><p>将原本作为参数值的hash指纹作为资源文件名的一部分并且删除用于更新的url参数</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&#x27;stylesheet&#x27;</span> <span class="attr">href</span>=<span class="string">&quot;main.home.858d5483.css&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;main.home.bbcadaf73.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在静态资源使用增量更新前提下可以将静态资源先于动态HTML部署，此时静态资源没有引用入口，不会对线上环境产生影响；动态HTML部署后即可在第一时间访问已存的最新静态资源。解决覆盖更新部署同步问题</p>
+<p>增量更新修改了资源文件名，不会覆盖已存的旧版本文件，运维人员进行回滚操作只需回滚HTML即可，优化了版本控制，支持多版本共存</p>
+<h1 id="按需加载与多模块架构场景的增量更新"><a href="#按需加载与多模块架构场景的增量更新" class="headerlink" title="按需加载与多模块架构场景的增量更新"></a>按需加载与多模块架构场景的增量更新</h1><p>假设一个页面有主模块main.app.js,同步模块module.sync.js，构建后与主模块合并为主文件的main.app.[hash].js，同步加载，异步模块module.async.js,构建后为异步文件app.async.[hash].js</p>
+<p>缺陷：当更新异步文件的hash指纹，主文件的hash没有同步修改，不能获取到最新资源</p>
+<p>解决：</p>
+<p>webpack中的chunkhash：</p>
+<p>hash与chunkhash:</p>
+<p>hash:the hash of compilation,webpack的compilation对象代表某个版本资源对应的编译进程，当使用webpack的development中间件，每次检测到项目文件有改动就会创建一个compilation,进而能够针对改动生产全新的编译文件。compilation对象不是针对单个文件，是针对项目中所有参与构建的文件，只要任何一个文件改动，compilation对象就改变，作为compilation的hash值就相应改变，因此不论同步文件还是异步文件构建输出后均有相同hash，显然不合理</p>
+<p>chunk在webpack中含义可以理解为散列模块经合并后的“块”，比如同步模块module.sync.js和主模块main.app.js合并为一个“块”，异步模块module.async.js是另一个块，chunkhash就是一个个块依据自身代码内容计算所得的hash值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">output:&#123;</span><br><span class="line">	<span class="attr">filename</span>:<span class="string">&#x27;[name].[chunkhahs:8].js&#x27;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>主文件</th>
+<th>异步文件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>原始状态</td>
+<td>main.app.8d136fcd.js</td>
+<td>app.async.67fa68a0.js</td>
+</tr>
+<tr>
+<td>修改主模块main.app.js</td>
+<td>hash改变</td>
+<td>hash不变</td>
+</tr>
+<tr>
+<td>修改同步模块modue.sync.js</td>
+<td>hash改变</td>
+<td>hash不变</td>
+</tr>
+<tr>
+<td>修改异步模块module.async.js</td>
+<td>hash改变</td>
+<td>hash改变</td>
+</tr>
+</tbody></table>
+<p>contenthash</p>
+<p>webpack默认将CSS代码合并到js文件，要把CSS文件抽离处理独立维护，既有利于浏览器的渲染优化，又能够更好利用客户端缓存</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">test</span>:<span class="regexp">/\.css$/</span>,</span><br><span class="line">    use:ExtractTextPlugin.extract(&#123;</span><br><span class="line">        <span class="attr">filename</span>:<span class="string">&#x27;./dest/[name].[contenthash:8].css&#x27;</span></span><br><span class="line">        <span class="attr">use</span>:[&#123;</span><br><span class="line">        	<span class="attr">loader</span>:<span class="string">&#x27;css-loader&#x27;</span>,</span><br><span class="line">        	<span class="attr">options</span>::&#123;</span><br><span class="line">        		<span class="attr">importLoaders</span>:<span class="number">2</span></span><br><span class="line">    		&#125;</span><br><span class="line">        </span><br><span class="line">    	&#125;],</span><br><span class="line">        <span class="attr">publishPath</span>:<span class="string">&#x27;/&#x27;</span></span><br><span class="line">    &#125;)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>contenthash就是解耦js与css文件hash指纹的关键，contenthash是由ExtractTextPlugin插件提供，代表被导出内容计算后的hash值，如果不用contenthash,main.app.css不会参与chunk的chunkhash计算，但也不会作为一个独立的Chunk进行单独计算，编译后的css文件取值与主文件相同</p>
+<p>使用contenthash:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>主文件hash</th>
+<th>异步文件hash</th>
+<th>CSS文件hash</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>修改主模块</td>
+<td>变</td>
+<td>不变</td>
+<td>不变</td>
+</tr>
+<tr>
+<td>修改同步模块</td>
+<td>变</td>
+<td>不变</td>
+<td>不变</td>
+</tr>
+<tr>
+<td>修改异步模块</td>
+<td>不变</td>
+<td>变</td>
+<td>不变</td>
+</tr>
+<tr>
+<td>修改CSS</td>
+<td>不变</td>
+<td>不变</td>
+<td>变</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/07/css%E9%A2%84%E7%BC%96%E8%AF%91%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/07/css%E9%A2%84%E7%BC%96%E8%AF%91%E5%99%A8/" class="post-title-link" itemprop="url">css预编译器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-07 17:42:43 / 修改时间：18:11:32" itemprop="dateCreated datePublished" datetime="2022-05-07T17:42:43+08:00">2022-05-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>CSS的弱编程能力，CSS通过”delector-properties”的模式为HTML文档增加样式，但CSS不支持嵌套，运算，变量，复用等。</p>
+<h2 id="CSS预编译器原理："><a href="#CSS预编译器原理：" class="headerlink" title="CSS预编译器原理："></a>CSS预编译器原理：</h2><p>提供便捷的语法和特性供开发者编写源代码，随后经过专门的编译工具将源代码转化为CSS语法，最早的CSS预编译器是2007年起源于Ruby on Rails社区的SASS，目前不叫流行的如LESS,Stylus在一定程度上收到SASS影响</p>
+<h2 id="CSS预编译器提升了CSS开发效率："><a href="#CSS预编译器提升了CSS开发效率：" class="headerlink" title="CSS预编译器提升了CSS开发效率："></a>CSS预编译器提升了CSS开发效率：</h2><p>1 增强编程能力</p>
+<p>2 增强源码可复用性，让CSS开发符合DRY(Don’t repeat yourself)的原则</p>
+<p>3 增强源码可维护性</p>
+<p>4 更便于解决浏览器兼容性</p>
+<p>实现</p>
+<ul>
+<li>嵌套</li>
+<li>变量</li>
+<li>mixin/继承</li>
+<li>运算</li>
+<li>模块化</li>
+</ul>
+<p>嵌套是所有预编译器都支持的语法特性，mixin/继承是为了解决hack和代码复用，变量和运算增强了源码的可编程能力；模块化的支持不仅更利于代码复用，同时提高了源码的可维护性</p>
+<h2 id="PostCSS"><a href="#PostCSS" class="headerlink" title="PostCSS"></a>PostCSS</h2><p>PostCSS鼓励开发者使用规范的CSS原生语法编写源代码，然后配置浏览器需要兼容的浏览器版本，最后经过编译将源码转化为目标浏览器可用的CSS代码。PostCSS提供了丰富的插件用于实现不同场景的编译需求，最常用的比如autoprefix,Sprited等</p>
+<p>PostCSS不是另一种CSS预编译器，与SASS LESS等预编译器不冲突，目前普遍方案将CSS预编译与PostCSS综合：</p>
+<p>使用CSS预编译器弥补CSS源码的弱编程能力。比如变量，运算，继承等</p>
+<p>使用PostCSS处理针对浏览器的需求，比如autoprefix,自动CSS Sprites</p>
+<p>webpack结合预编译与PostCSS实现CSS构建</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">test</span>:<span class="regexp">/\.less$/</span></span><br><span class="line">    use:[&#123;</span><br><span class="line">        	<span class="attr">loader</span>:<span class="string">&#x27;style-loader&#x27;</span>,</span><br><span class="line">        	<span class="attr">options</span>:&#123;&#125;<span class="comment">//style-loader options</span></span><br><span class="line">    	 &#125;,</span><br><span class="line">         &#123;</span><br><span class="line">             <span class="attr">loader</span>:<span class="string">&#x27;css-loader&#x27;</span>,</span><br><span class="line">             <span class="attr">options</span>:&#123;</span><br><span class="line">                 <span class="attr">importLoaders</span>:<span class="number">2</span><span class="comment">//css-loader options</span></span><br><span class="line">             &#125;</span><br><span class="line">             </span><br><span class="line">         &#125;,</span><br><span class="line">         &#123;</span><br><span class="line">             <span class="attr">loader</span>:<span class="string">&#x27;postcss-loader&#x27;</span>,</span><br><span class="line">             <span class="attr">options</span>:&#123;&#125;<span class="comment">//postcss-loader</span></span><br><span class="line">         &#125;</span><br><span class="line">         &#123;</span><br><span class="line">             <span class="attr">loader</span>:<span class="string">&#x27;less-loader&#x27;</span>,</span><br><span class="line">             <span class="attr">options</span>:&#123;&#125;<span class="comment">//less-loader options</span></span><br><span class="line">             </span><br><span class="line">         &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>css-loader中的importLoaders选项的作用是：用于配置css-loader作用于@import的资源之前需要经过的其他loader的个数，@import用于CSS源码中引用其他模块的关键字，如果你的项目中确定不会涉及到模块化，可以忽略此配置项</p>
+<p>如果需要将编译后的css文件独立导出，则需将style-loader替换为extract-text-webpack-plugin</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">test</span>:<span class="regexp">/\.less$/</span></span><br><span class="line">    use:ExtractTextPlugin.extract(&#123;</span><br><span class="line">        <span class="attr">use</span>:[&#123;</span><br><span class="line">        	<span class="attr">loader</span>:<span class="string">&#x27;style-loader&#x27;</span>,</span><br><span class="line">        	<span class="attr">options</span>:&#123;&#125;<span class="comment">//style-loader options</span></span><br><span class="line">    	 &#125;,</span><br><span class="line">         &#123;</span><br><span class="line">             <span class="attr">loader</span>:<span class="string">&#x27;css-loader&#x27;</span>,</span><br><span class="line">             <span class="attr">options</span>:&#123;</span><br><span class="line">                 <span class="attr">importLoaders</span>:<span class="number">2</span><span class="comment">//css-loader options</span></span><br><span class="line">             &#125;</span><br><span class="line">             </span><br><span class="line">         &#125;,</span><br><span class="line">         &#123;</span><br><span class="line">             <span class="attr">loader</span>:<span class="string">&#x27;postcss-loader&#x27;</span>,</span><br><span class="line">             <span class="attr">options</span>:&#123;&#125;<span class="comment">//postcss-loader</span></span><br><span class="line">         &#125;</span><br><span class="line">         &#123;</span><br><span class="line">             <span class="attr">loader</span>:<span class="string">&#x27;less-loader&#x27;</span>,</span><br><span class="line">             <span class="attr">options</span>:&#123;&#125;<span class="comment">//less-loader options</span></span><br><span class="line">             </span><br><span class="line">         &#125;],</span><br><span class="line">        <span class="attr">publicPath</span>:<span class="string">&#x27;/&#x27;</span></span><br><span class="line">	&#125;</span><br><span class="line">        </span><br><span class="line">&#125;)</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<h2 id="区分css-loader和style-loader"><a href="#区分css-loader和style-loader" class="headerlink" title="区分css-loader和style-loader"></a>区分css-loader和style-loader</h2><p>css-loader:用于解析css源文件并获得其引用资源，比如@import引用的模块，url()引用的图片等，然后根据webpack配置编译这些资源</p>
+<p>style-loader:负责将CSS代码通过style标签插入HTML文档中，所以如果独立导出CSS文件就不再需要style-loader，css-loader必须在style-loader之前执行</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/06/vue-router%E4%B8%ADhash%E6%A8%A1%E5%BC%8F%E5%92%8Chistory%E6%A8%A1%E5%BC%8F%E5%8C%BA%E5%88%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/06/vue-router%E4%B8%ADhash%E6%A8%A1%E5%BC%8F%E5%92%8Chistory%E6%A8%A1%E5%BC%8F%E5%8C%BA%E5%88%AB/" class="post-title-link" itemprop="url">vue-router中hash模式和history模式区别</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-06 18:26:08 / 修改时间：22:31:27" itemprop="dateCreated datePublished" datetime="2022-05-06T18:26:08+08:00">2022-05-06</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="vue-router的本质："><a href="#vue-router的本质：" class="headerlink" title="vue-router的本质："></a>vue-router的本质：</h1><p>路由就是SPA（单页应用）的路径管理器，vue-router的单页应用中，则是路径之间的切换，也就是组件的切换，<strong>路由模块的本质就是建立起url和页面之间的映射关系</strong></p>
+<p>为什么不能用a标签，这是因为Vue左的是单页应用，当你的项目准备打包时，会生成dist文件夹，这里面只有静态资源和一个index.html页面，所有a标签跳转页面不起作用</p>
+<p>单页应用的核心之一就是：<strong>更新视图而不重新请求页面，vue-router在实现单页面前端路由时</strong>，提供两种方式：Hash模式和History模式，根据mode参数来决定使用哪一种</p>
+<h2 id="Hash模式"><a href="#Hash模式" class="headerlink" title="Hash模式"></a>Hash模式</h2><p>vue-router默认hash模式，使用URL的hash模拟一个完整的URL,于是URL改变时，页面不会重新加载，<strong>hash(#)是URL的锚点，代表网页中的一个位置，单单改变#后的部分，浏览器只会滚动到相应位置，不会重新加载页面，也就是hash出现在URL中（#后面的值），但不会被包含在http请求中，对后端没有影响，因此改变hash不会重新加载页面；同时每一次改变#后的部分，都会在浏览器的访问历史中增加一个记录，使用“后退”按钮，就可以回到上一个位置，所以Hash模式通过锚点值的改变，根据不同的值，渲染指定DOM位置的不同数据，hash模式原理是onhashchange事件(监测hash值变化)，可以在window对象上监听这个事件</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Router</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//存储hash与callback键值对</span></span><br><span class="line">        <span class="built_in">this</span>.routes=&#123;&#125;;</span><br><span class="line">        <span class="comment">//当前hash</span></span><br><span class="line">        <span class="built_in">this</span>.currentUrl=<span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="comment">//记录出现过的hash</span></span><br><span class="line">        <span class="built_in">this</span>.history=[];</span><br><span class="line">        <span class="comment">//作为指针，默认指向this.history的末尾，根据后退前进指向history中不同的hash</span></span><br><span class="line">        <span class="built_in">this</span>.currentIndex=<span class="built_in">this</span>.history.length-<span class="number">1</span>;</span><br><span class="line">        <span class="built_in">this</span>.refresh=<span class="built_in">this</span>.refresh.bind(<span class="built_in">this</span>);</span><br><span class="line">        <span class="built_in">this</span>.backoff=<span class="built_in">this</span>.backoff.bind(<span class="built_in">this</span>)</span><br><span class="line">        <span class="comment">//默认不是后退操作</span></span><br><span class="line">        <span class="built_in">this</span>.isBack=<span class="literal">false</span></span><br><span class="line">        <span class="built_in">window</span>.addEventListener(<span class="string">&#x27;load&#x27;</span>,<span class="built_in">this</span>.refresh,<span class="literal">false</span>)</span><br><span class="line">        <span class="built_in">window</span>.addEventListener(<span class="string">&#x27;hashchange&#x27;</span>,<span class="built_in">this</span>.refresh,<span class="literal">false</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">route</span>(<span class="params">path,callback</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.routes[path]=callback||<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">refresh</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//不能包括&#x27;#&#x27;</span></span><br><span class="line">        <span class="built_in">this</span>.currentUrl=location.hash.slice(<span class="number">1</span>)||<span class="string">&#x27;/&#x27;</span>;</span><br><span class="line">        <span class="comment">//不是后退操作</span></span><br><span class="line">        <span class="keyword">if</span>(!<span class="built_in">this</span>.isBack)&#123;</span><br><span class="line">            <span class="comment">//如果当前指针小于数组总长度，直接截取之前的部分储存下来，避免点击后退按钮后指针后移一位，当再次正常跳转时，指针前进一位，</span></span><br><span class="line">            <span class="comment">//而在数组中添加新hash路由</span></span><br><span class="line">            <span class="comment">//导致指针和路由不匹配</span></span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">this</span>.currentIndex&lt;<span class="built_in">this</span>.history.length-<span class="number">1</span>)&#123;</span><br><span class="line">                <span class="built_in">this</span>.history=<span class="built_in">this</span>.history.slice(<span class="number">0</span>,<span class="built_in">this</span>.currentIndex+<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">this</span>.history.push(<span class="built_in">this</span>.currentUrl)</span><br><span class="line">            <span class="built_in">this</span>.currentIndex++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.routes[<span class="built_in">this</span>.currentUrl]()</span><br><span class="line">        <span class="built_in">this</span>.isBack=<span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">backoff</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.isBack=<span class="literal">true</span></span><br><span class="line">        <span class="built_in">this</span>.currentIndex&lt;=<span class="number">0</span></span><br><span class="line">        ?(<span class="built_in">this</span>.currentIndex=<span class="number">0</span>)</span><br><span class="line">        :(<span class="built_in">this</span>.currentIndex=<span class="built_in">this</span>.currentIndex-<span class="number">1</span>)</span><br><span class="line">        <span class="comment">//找到后退后的哈希地址</span></span><br><span class="line">        location.hash=<span class="string">`#<span class="subst">$&#123;<span class="built_in">this</span>.history[<span class="built_in">this</span>.currentIndex]&#125;</span>`</span></span><br><span class="line">        <span class="comment">//调用后退后的地址对应的函数</span></span><br><span class="line">        <span class="built_in">this</span>.routes[<span class="built_in">this</span>.history[<span class="built_in">this</span>.currentIndex]]</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">window</span>.Router=<span class="keyword">new</span> Routers()</span><br><span class="line"><span class="keyword">const</span> content=<span class="built_in">document</span>.querySelector(<span class="string">&#x27;body&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> button=<span class="built_in">document</span>.querySelector(<span class="string">&#x27;button&#x27;</span>)</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">changeBgColor</span>(<span class="params">color</span>)</span>&#123;</span><br><span class="line">    content.style.background=color</span><br><span class="line">&#125;</span><br><span class="line">Router.route(<span class="string">&#x27;/blue&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    changeBgColor(<span class="string">&#x27;blue&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line">Router.route(<span class="string">&#x27;/green&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    changeBgColor(<span class="string">&#x27;green&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line">Router.route(<span class="string">&#x27;/red&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    changeBgColor(<span class="string">&#x27;red&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line">button.addEventListener(<span class="string">&#x27;click&#x27;</span>,Router.backoff,<span class="literal">false</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="history模式"><a href="#history模式" class="headerlink" title="history模式"></a>history模式</h1><p>hash模式在url中自带#,比较丑，可以用路由的history模式，只需要在配置路由规则时，加上’mode:history’</p>
+<p><strong>这种模式利用了html5  history Interface中新增的pushState()和replaceState()方法</strong>，这两个方法应用于浏览器记录栈，在当前已有的back,forwarc,go基础上，它们提供了对历史记录修改的功能，<strong>只是当修改时，虽然改变了当前的URL，但浏览器不会去请求服务器该路径下的资源，</strong>一旦刷新就会暴露，显示404，<strong>因此这种模式下需要后端的支持，在服务端增加一个覆盖所有情况的候选资源：如果URL匹配不到任何静态资源，就返回一个Index.html页面，这个页面就是app依赖的页面</strong></p>
+<p>export const routes=[</p>
+<p>​    {path:”*”,redirect:’/‘}</p>
+<p>]</p>
+<p>history.pushState用于在浏览器中添加历史记录，但不触发跳转，此方法接收三个参数：</p>
+<ul>
+<li><p>state:一个与指定网址相关的状态对象，popstate事件触发时，该对象会传入回调函数，不需要这个对象时此处就填null</p>
+</li>
+<li><p>title:新页面标题，但是所有浏览器目前都忽略这个值，因此这里填null</p>
+</li>
+<li><p>url:新的网址，必须与当前页面处在同一个域，浏览器的地址栏将显示这个网址</p>
+<p>新标准下路由的实现</p>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Router</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.routes=&#123;&#125;;</span><br><span class="line">        <span class="built_in">this</span>.bindPopState();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">init</span>(<span class="params">path</span>)</span>&#123;</span><br><span class="line">        history.replaceState(&#123;<span class="attr">path</span>:path&#125;,<span class="literal">null</span>,path)</span><br><span class="line">        <span class="built_in">this</span>.routes[path]&amp;&amp;<span class="built_in">this</span>.routes[path]()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">route</span>(<span class="params">path,callback</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.routes[path]=callback||<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">go</span>(<span class="params">path</span>)</span>&#123;</span><br><span class="line">        history.pushState(&#123;<span class="attr">path</span>:path&#125;,<span class="literal">null</span>,path)</span><br><span class="line">        <span class="built_in">this</span>.routes[path]&amp;&amp;<span class="built_in">this</span>.routes[path]()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">_bindPopState</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">window</span>.addEventListener(<span class="string">&#x27;popstate&#x27;</span>,<span class="function"><span class="params">e</span>=&gt;</span>&#123;</span><br><span class="line">            <span class="keyword">const</span> path=e.state&amp;&amp;e.state.path;</span><br><span class="line">            <span class="built_in">this</span>.routes[path]&amp;&amp;<span class="built_in">this</span>.routes[path]()</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">window</span>.Router = <span class="keyword">new</span> Routers();</span><br><span class="line">Router.init(location.pathname);</span><br><span class="line"><span class="keyword">const</span> content = <span class="built_in">document</span>.querySelector(<span class="string">&#x27;body&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> ul = <span class="built_in">document</span>.querySelector(<span class="string">&#x27;ul&#x27;</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">changeBgColor</span>(<span class="params">color</span>) </span>&#123;</span><br><span class="line">  content.style.backgroundColor = color;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Router.route(<span class="string">&#x27;/&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  changeBgColor(<span class="string">&#x27;yellow&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line">Router.route(<span class="string">&#x27;/blue&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  changeBgColor(<span class="string">&#x27;blue&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line">Router.route(<span class="string">&#x27;/green&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  changeBgColor(<span class="string">&#x27;green&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/05/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -899,742 +1555,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">Vue diff算法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-05-03 15:53:37" itemprop="dateCreated datePublished" datetime="2022-05-03T15:53:37+08:00">2022-05-03</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-09 15:50:08" itemprop="dateModified" datetime="2022-07-09T15:50:08+08:00">2022-07-09</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>先阅读尤大的文章：</p>
-<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/31809713/answer/53544875">https://www.zhihu.com/question/31809713/answer/53544875</a></p>
-<p>比较innerHTML和Virtual DOM的重绘性能消耗</p>
-<p>innerHTML:render html string O(template size)+重新创建所有DOM元素O(DOM size)</p>
-<p>Vitual DOM :render Vitual DOM +diff O(template size)+必要的DOM更新O</p>
-<p><strong>Vitual DOM render+diff显然比渲染html字符慢，但是它依然his纯js层面计算，比DOM操作而言，便宜了很多</strong></p>
-<h2 id="一、是什么"><a href="#一、是什么" class="headerlink" title="一、是什么"></a>一、是什么</h2><p>diff算法是一种同层的树节点进行比较的高效算法</p>
-<p>两个特点：</p>
-<p>比较只会在同层级进行，不会跨层级比较</p>
-<p>在diff比较过程中，循环会从两边向中间比较</p>
-<p><code>diff</code> 算法的在很多场景下都有应用，在 <code>vue</code> 中，作用于虚拟 <code>dom</code> 渲染成真实 <code>dom</code> 的新旧 <code>VNode</code> 节点比较</p>
-<h2 id="二、比较方式"><a href="#二、比较方式" class="headerlink" title="二、比较方式"></a>二、比较方式</h2><p><code>diff</code>整体策略为：深度优先，同层比较</p>
-<ol>
-<li>比较只会在同层级进行, 不会跨层级比较</li>
-</ol>
-<img src="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/91e9c9519a11caa0c5bf70714383f054.png" alt="img" style="zoom:50%;">
-
-<ol>
-<li>比较的过程中，循环从两边向中间收拢</li>
-</ol>
-<img src="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/2dcd6ad5cf82c65b9cfc43a27ba1e4ec.png" alt="img" style="zoom:50%;">
-
-<p>下面举个<code>vue</code>通过<code>diff</code>算法更新的例子：</p>
-<p>新旧<code>VNode</code>节点如下图所示：</p>
-<p><img src="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/diff1.png"></p>
-<p>第一次循环后，发现旧节点D与新节点D相同，直接复用旧节点D作为<code>diff</code>后的第一个真实节点，同时旧节点<code>endIndex</code>移动到C，新节点的 <code>startIndex</code> 移动到了 C</p>
-<p><img src="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/diff2.png"></p>
-<p>第二次循环后，同样是旧节点的末尾和新节点的开头(都是 C)相同，同理，<code>diff</code> 后创建了 C 的真实节点插入到第一次创建的 B 节点后面。同时旧节点的 <code>endIndex</code> 移动到了 B，新节点的 <code>startIndex</code> 移动到了 E</p>
-<p><img src="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/diff3.png"></p>
-<p>第三次循环中，发现E没有找到，这时候只能直接创建新的真实节点 E，插入到第二次创建的 C 节点之后。同时新节点的 <code>startIndex</code> 移动到了 A。旧节点的 <code>startIndex</code> 和 <code>endIndex</code> 都保持不动</p>
-<p><img src="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/diff4.png"></p>
-<p>第四次循环中，发现了新旧节点的开头(都是 A)相同，于是 <code>diff</code> 后创建了 A 的真实节点，插入到前一次创建的 E 节点后面。同时旧节点的 <code>startIndex</code> 移动到了 B，新节点的<code> startIndex</code> 移动到了 B</p>
-<p><img src="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/diff5.png"></p>
-<p>第五次循环中，情形同第四次循环一样，因此 <code>diff</code> 后创建了 B 真实节点 插入到前一次创建的 A 节点后面。同时旧节点的 <code>startIndex </code>移动到了 C，新节点的 startIndex 移动到了 F</p>
-<p><img src="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/diff6.png"></p>
-<p>新节点的 <code>startIndex</code> 已经大于 <code>endIndex</code> 了，需要创建 <code>newStartIdx</code> 和 <code>newEndIdx</code> 之间的所有节点，也就是节点F，直接创建 F 节点对应的真实节点放到 B 节点后面</p>
-<p><img src="/2022/05/03/Vue-diff%E7%AE%97%E6%B3%95/diff7.png"></p>
-<h2 id="三、原理分析"><a href="#三、原理分析" class="headerlink" title="三、原理分析"></a>三、原理分析</h2><p>当数据发生改变时，<code>set</code>方法会调用<code>Dep.notify</code>通知所有订阅者<code>Watcher</code>，订阅者就会调用<code>patch</code>给真实的<code>DOM</code>打补丁，更新相应的视图</p>
-<p>源码位置：src/core/vdom/patch.js</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">patch</span>(<span class="params">oldVnode, vnode, hydrating, removeOnly</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (isUndef(vnode)) &#123; <span class="comment">// 没有新节点，直接执行destory钩子函数</span></span><br><span class="line">        <span class="keyword">if</span> (isDef(oldVnode)) invokeDestroyHook(oldVnode)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> isInitialPatch = <span class="literal">false</span></span><br><span class="line">    <span class="keyword">const</span> insertedVnodeQueue = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (isUndef(oldVnode)) &#123;</span><br><span class="line">        isInitialPatch = <span class="literal">true</span></span><br><span class="line">        createElm(vnode, insertedVnodeQueue) <span class="comment">// 没有旧节点，直接用新节点生成dom元素</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> isRealElement = isDef(oldVnode.nodeType)</span><br><span class="line">        <span class="keyword">if</span> (!isRealElement &amp;&amp; sameVnode(oldVnode, vnode)) &#123;</span><br><span class="line">            <span class="comment">// 判断旧节点和新节点自身一样，一致执行patchVnode</span></span><br><span class="line">            patchVnode(oldVnode, vnode, insertedVnodeQueue, <span class="literal">null</span>, <span class="literal">null</span>, removeOnly)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 否则直接销毁及旧节点，根据新节点生成dom元素</span></span><br><span class="line">            <span class="keyword">if</span> (isRealElement) &#123;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (oldVnode.nodeType === <span class="number">1</span> &amp;&amp; oldVnode.hasAttribute(SSR_ATTR)) &#123;</span><br><span class="line">                    oldVnode.removeAttribute(SSR_ATTR)</span><br><span class="line">                    hydrating = <span class="literal">true</span></span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (isTrue(hydrating)) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (hydrate(oldVnode, vnode, insertedVnodeQueue)) &#123;</span><br><span class="line">                        invokeInsertHook(vnode, insertedVnodeQueue, <span class="literal">true</span>)</span><br><span class="line">                        <span class="keyword">return</span> oldVnode</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                oldVnode = emptyNodeAt(oldVnode)</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> vnode.elm</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>patch</code>函数前两个参数位为<code>oldVnode</code> 和 <code>Vnode</code> ，分别代表旧的节点和新节点，主要做了四个判断：</p>
-<ul>
-<li>没有新节点，直接触发旧节点的<code>destory</code>钩子</li>
-<li>没有旧节点，说明是页面刚开始初始化的时候，此时，根本不需要比较了，直接全是新建，所以只调用 <code>createElm</code></li>
-<li>旧节点和新节点自身一样，通过 <code>sameVnode</code> 判断节点是否一样，一样时，直接调用 <code>patchVnode </code>去处理这两个节点</li>
-<li>旧节点和新节点自身不一样，当两个节点不一样的时候，直接创建新节点，删除旧节点</li>
-</ul>
-<p>下面主要讲的是<code>patchVnode</code>部分</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">patchVnode</span> (<span class="params">oldVnode, vnode, insertedVnodeQueue, removeOnly</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 如果新旧节点一致，什么都不做</span></span><br><span class="line">    <span class="keyword">if</span> (oldVnode === vnode) &#123;</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 让vnode.el引用到现在的真实dom，当el修改时，vnode.el会同步变化</span></span><br><span class="line">    <span class="keyword">const</span> elm = vnode.elm = oldVnode.elm</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 异步占位符</span></span><br><span class="line">    <span class="keyword">if</span> (isTrue(oldVnode.isAsyncPlaceholder)) &#123;</span><br><span class="line">      <span class="keyword">if</span> (isDef(vnode.asyncFactory.resolved)) &#123;</span><br><span class="line">        hydrate(oldVnode.elm, vnode, insertedVnodeQueue)</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        vnode.isAsyncPlaceholder = <span class="literal">true</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果新旧都是静态节点，并且具有相同的key</span></span><br><span class="line">    <span class="comment">// 当vnode是克隆节点或是v-once指令控制的节点时，只需要把oldVnode.elm和oldVnode.child都复制到vnode上</span></span><br><span class="line">    <span class="comment">// 也不用再有其他操作</span></span><br><span class="line">    <span class="keyword">if</span> (isTrue(vnode.isStatic) &amp;&amp;</span><br><span class="line">      isTrue(oldVnode.isStatic) &amp;&amp;</span><br><span class="line">      vnode.key === oldVnode.key &amp;&amp;</span><br><span class="line">      (isTrue(vnode.isCloned) || isTrue(vnode.isOnce))</span><br><span class="line">    ) &#123;</span><br><span class="line">      vnode.componentInstance = oldVnode.componentInstance</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> i</span><br><span class="line">    <span class="keyword">const</span> data = vnode.data</span><br><span class="line">    <span class="keyword">if</span> (isDef(data) &amp;&amp; isDef(i = data.hook) &amp;&amp; isDef(i = i.prepatch)) &#123;</span><br><span class="line">      i(oldVnode, vnode)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> oldCh = oldVnode.children</span><br><span class="line">    <span class="keyword">const</span> ch = vnode.children</span><br><span class="line">    <span class="keyword">if</span> (isDef(data) &amp;&amp; isPatchable(vnode)) &#123;</span><br><span class="line">      <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; cbs.update.length; ++i) cbs.update[i](oldVnode, vnode)</span><br><span class="line">      <span class="keyword">if</span> (isDef(i = data.hook) &amp;&amp; isDef(i = i.update)) i(oldVnode, vnode)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果vnode不是文本节点或者注释节点</span></span><br><span class="line">    <span class="keyword">if</span> (isUndef(vnode.text)) &#123;</span><br><span class="line">      <span class="comment">// 并且都有子节点</span></span><br><span class="line">      <span class="keyword">if</span> (isDef(oldCh) &amp;&amp; isDef(ch)) &#123;</span><br><span class="line">        <span class="comment">// 并且子节点不完全一致，则调用updateChildren</span></span><br><span class="line">        <span class="keyword">if</span> (oldCh !== ch) updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果只有新的vnode有子节点</span></span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isDef(ch)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (isDef(oldVnode.text)) nodeOps.setTextContent(elm, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        <span class="comment">// elm已经引用了老的dom节点，在老的dom节点上添加子节点</span></span><br><span class="line">        addVnodes(elm, <span class="literal">null</span>, ch, <span class="number">0</span>, ch.length - <span class="number">1</span>, insertedVnodeQueue)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果新vnode没有子节点，而Oldvnode有子节点，直接删除老的oldCh</span></span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isDef(oldCh)) &#123;</span><br><span class="line">        removeVnodes(elm, oldCh, <span class="number">0</span>, oldCh.length - <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果老节点是文本节点</span></span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isDef(oldVnode.text)) &#123;</span><br><span class="line">        nodeOps.setTextContent(elm, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 如果新vnode和老vnode是文本节点或注释节点</span></span><br><span class="line">      <span class="comment">// 但是vnode.text != oldVnode.text时，只需要更新vnode.elm的文本内容就可以</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (oldVnode.text !== vnode.text) &#123;</span><br><span class="line">      nodeOps.setTextContent(elm, vnode.text)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (isDef(data)) &#123;</span><br><span class="line">      <span class="keyword">if</span> (isDef(i = data.hook) &amp;&amp; isDef(i = i.postpatch)) i(oldVnode, vnode)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>patchVnode</code>主要做了几个判断：</p>
-<ul>
-<li>新节点是否是文本节点，如果是，则直接更新<code>dom</code>的文本内容为新节点的文本内容</li>
-<li>新节点和旧节点如果都有子节点，则处理比较更新子节点</li>
-<li>只有新节点有子节点，旧节点没有，那么不用比较了，所有节点都是全新的，所以直接全部新建就好了，新建是指创建出所有新<code>DOM</code>，并且添加进父节点</li>
-<li>只有旧节点有子节点而新节点没有，说明更新后的页面，旧节点全部都不见了，那么要做的，就是把所有的旧节点删除，也就是直接把<code>DOM</code> 删除</li>
-</ul>
-<p>子节点不完全一致，则调用<code>updateChildren</code></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateChildren</span> (<span class="params">parentElm, oldCh, newCh, insertedVnodeQueue, removeOnly</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> oldStartIdx = <span class="number">0</span> <span class="comment">// 旧头索引</span></span><br><span class="line">    <span class="keyword">let</span> newStartIdx = <span class="number">0</span> <span class="comment">// 新头索引</span></span><br><span class="line">    <span class="keyword">let</span> oldEndIdx = oldCh.length - <span class="number">1</span> <span class="comment">// 旧尾索引</span></span><br><span class="line">    <span class="keyword">let</span> newEndIdx = newCh.length - <span class="number">1</span> <span class="comment">// 新尾索引</span></span><br><span class="line">    <span class="keyword">let</span> oldStartVnode = oldCh[<span class="number">0</span>] <span class="comment">// oldVnode的第一个child</span></span><br><span class="line">    <span class="keyword">let</span> oldEndVnode = oldCh[oldEndIdx] <span class="comment">// oldVnode的最后一个child</span></span><br><span class="line">    <span class="keyword">let</span> newStartVnode = newCh[<span class="number">0</span>] <span class="comment">// newVnode的第一个child</span></span><br><span class="line">    <span class="keyword">let</span> newEndVnode = newCh[newEndIdx] <span class="comment">// newVnode的最后一个child</span></span><br><span class="line">    <span class="keyword">let</span> oldKeyToIdx, idxInOld, vnodeToMove, refElm</span><br><span class="line"></span><br><span class="line">    <span class="comment">// removeOnly is a special flag used only by &lt;transition-group&gt;</span></span><br><span class="line">    <span class="comment">// to ensure removed elements stay in correct relative positions</span></span><br><span class="line">    <span class="comment">// during leaving transitions</span></span><br><span class="line">    <span class="keyword">const</span> canMove = !removeOnly</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果oldStartVnode和oldEndVnode重合，并且新的也都重合了，证明diff完了，循环结束</span></span><br><span class="line">    <span class="keyword">while</span> (oldStartIdx &lt;= oldEndIdx &amp;&amp; newStartIdx &lt;= newEndIdx) &#123;</span><br><span class="line">      <span class="comment">// 如果oldVnode的第一个child不存在</span></span><br><span class="line">      <span class="keyword">if</span> (isUndef(oldStartVnode)) &#123;</span><br><span class="line">        <span class="comment">// oldStart索引右移</span></span><br><span class="line">        oldStartVnode = oldCh[++oldStartIdx] <span class="comment">// Vnode has been moved left</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">// 如果oldVnode的最后一个child不存在</span></span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isUndef(oldEndVnode)) &#123;</span><br><span class="line">        <span class="comment">// oldEnd索引左移</span></span><br><span class="line">        oldEndVnode = oldCh[--oldEndIdx]</span><br><span class="line"></span><br><span class="line">      <span class="comment">// oldStartVnode和newStartVnode是同一个节点</span></span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sameVnode(oldStartVnode, newStartVnode)) &#123;</span><br><span class="line">        <span class="comment">// patch oldStartVnode和newStartVnode， 索引左移，继续循环</span></span><br><span class="line">        patchVnode(oldStartVnode, newStartVnode, insertedVnodeQueue)</span><br><span class="line">        oldStartVnode = oldCh[++oldStartIdx]</span><br><span class="line">        newStartVnode = newCh[++newStartIdx]</span><br><span class="line"></span><br><span class="line">      <span class="comment">// oldEndVnode和newEndVnode是同一个节点</span></span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sameVnode(oldEndVnode, newEndVnode)) &#123;</span><br><span class="line">        <span class="comment">// patch oldEndVnode和newEndVnode，索引右移，继续循环</span></span><br><span class="line">        patchVnode(oldEndVnode, newEndVnode, insertedVnodeQueue)</span><br><span class="line">        oldEndVnode = oldCh[--oldEndIdx]</span><br><span class="line">        newEndVnode = newCh[--newEndIdx]</span><br><span class="line"></span><br><span class="line">      <span class="comment">// oldStartVnode和newEndVnode是同一个节点</span></span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sameVnode(oldStartVnode, newEndVnode)) &#123; <span class="comment">// Vnode moved right</span></span><br><span class="line">        <span class="comment">// patch oldStartVnode和newEndVnode</span></span><br><span class="line">        patchVnode(oldStartVnode, newEndVnode, insertedVnodeQueue)</span><br><span class="line">        <span class="comment">// 如果removeOnly是false，则将oldStartVnode.eml移动到oldEndVnode.elm之后</span></span><br><span class="line">        canMove &amp;&amp; nodeOps.insertBefore(parentElm, oldStartVnode.elm, nodeOps.nextSibling(oldEndVnode.elm))</span><br><span class="line">        <span class="comment">// oldStart索引右移，newEnd索引左移</span></span><br><span class="line">        oldStartVnode = oldCh[++oldStartIdx]</span><br><span class="line">        newEndVnode = newCh[--newEndIdx]</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 如果oldEndVnode和newStartVnode是同一个节点</span></span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sameVnode(oldEndVnode, newStartVnode)) &#123; <span class="comment">// Vnode moved left</span></span><br><span class="line">        <span class="comment">// patch oldEndVnode和newStartVnode</span></span><br><span class="line">        patchVnode(oldEndVnode, newStartVnode, insertedVnodeQueue)</span><br><span class="line">        <span class="comment">// 如果removeOnly是false，则将oldEndVnode.elm移动到oldStartVnode.elm之前</span></span><br><span class="line">        canMove &amp;&amp; nodeOps.insertBefore(parentElm, oldEndVnode.elm, oldStartVnode.elm)</span><br><span class="line">        <span class="comment">// oldEnd索引左移，newStart索引右移</span></span><br><span class="line">        oldEndVnode = oldCh[--oldEndIdx]</span><br><span class="line">        newStartVnode = newCh[++newStartIdx]</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 如果都不匹配</span></span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (isUndef(oldKeyToIdx)) oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 尝试在oldChildren中寻找和newStartVnode的具有相同的key的Vnode</span></span><br><span class="line">        idxInOld = isDef(newStartVnode.key)</span><br><span class="line">          ? oldKeyToIdx[newStartVnode.key]</span><br><span class="line">          : findIdxInOld(newStartVnode, oldCh, oldStartIdx, oldEndIdx)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果未找到，说明newStartVnode是一个新的节点</span></span><br><span class="line">        <span class="keyword">if</span> (isUndef(idxInOld)) &#123; <span class="comment">// New element</span></span><br><span class="line">          <span class="comment">// 创建一个新Vnode</span></span><br><span class="line">          createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果找到了和newStartVnodej具有相同的key的Vnode，叫vnodeToMove</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          vnodeToMove = oldCh[idxInOld]</span><br><span class="line">          <span class="comment">/* istanbul ignore if */</span></span><br><span class="line">          <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">&#x27;production&#x27;</span> &amp;&amp; !vnodeToMove) &#123;</span><br><span class="line">            warn(</span><br><span class="line">              <span class="string">&#x27;It seems there are duplicate keys that is causing an update error. &#x27;</span> +</span><br><span class="line">              <span class="string">&#x27;Make sure each v-for item has a unique key.&#x27;</span></span><br><span class="line">            )</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="comment">// 比较两个具有相同的key的新节点是否是同一个节点</span></span><br><span class="line">          <span class="comment">//不设key，newCh和oldCh只会进行头尾两端的相互比较，设key后，除了头尾两端的比较外，还会从用key生成的对象oldKeyToIdx中查找匹配的节点，所以为节点设置key可以更高效的利用dom。</span></span><br><span class="line">          <span class="keyword">if</span> (sameVnode(vnodeToMove, newStartVnode)) &#123;</span><br><span class="line">            <span class="comment">// patch vnodeToMove和newStartVnode</span></span><br><span class="line">            patchVnode(vnodeToMove, newStartVnode, insertedVnodeQueue)</span><br><span class="line">            <span class="comment">// 清除</span></span><br><span class="line">            oldCh[idxInOld] = <span class="literal">undefined</span></span><br><span class="line">            <span class="comment">// 如果removeOnly是false，则将找到的和newStartVnodej具有相同的key的Vnode，叫vnodeToMove.elm</span></span><br><span class="line">            <span class="comment">// 移动到oldStartVnode.elm之前</span></span><br><span class="line">            canMove &amp;&amp; nodeOps.insertBefore(parentElm, vnodeToMove.elm, oldStartVnode.elm)</span><br><span class="line"></span><br><span class="line">          <span class="comment">// 如果key相同，但是节点不相同，则创建一个新的节点</span></span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// same key but different element. treat as new element</span></span><br><span class="line">            createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 右移</span></span><br><span class="line">        newStartVnode = newCh[++newStartIdx]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>while</code>循环主要处理了以下五种情景：</p>
-<ul>
-<li>当新老 <code>VNode</code> 节点的 <code>start</code> 相同时，直接 <code>patchVnode</code> ，同时新老 <code>VNode</code> 节点的开始索引都加 1</li>
-<li>当新老 <code>VNode</code> 节点的 <code>end</code>相同时，同样直接 <code>patchVnode</code> ，同时新老 <code>VNode</code> 节点的结束索引都减 1</li>
-<li>当老 <code>VNode</code> 节点的 <code>start</code> 和新 <code>VNode</code> 节点的 <code>end</code> 相同时，这时候在 <code>patchVnode</code> 后，还需要将当前真实 <code>dom</code> 节点移动到 <code>oldEndVnode</code> 的后面，同时老 <code>VNode</code> 节点开始索引加 1，新 <code>VNode</code> 节点的结束索引减 1</li>
-<li>当老 <code>VNode</code> 节点的 <code>end</code> 和新 <code>VNode</code> 节点的 <code>start</code> 相同时，这时候在 <code>patchVnode</code> 后，还需要将当前真实 <code>dom</code> 节点移动到 <code>oldStartVnode</code> 的前面，同时老 <code>VNode</code> 节点结束索引减 1，新 <code>VNode</code> 节点的开始索引加 1</li>
-<li>如果都不满足以上四种情形，那说明没有相同的节点可以复用，则会分为以下两种情况：<ul>
-<li>从旧的 <code>VNode</code> 为 <code>key</code> 值，对应 <code>index</code> 序列为 <code>value</code> 值的哈希表中找到与 <code>newStartVnode</code> 一致 <code>key</code> 的旧的 <code>VNode</code> 节点，再进行<code>patchVnode </code>，同时将这个真实 <code>dom </code>移动到 <code>oldStartVnode</code> 对应的真实 <code>dom</code> 的前面</li>
-<li>调用 <code>createElm</code> 创建一个新的 <code>dom</code> 节点放到当前 <code>newStartIdx</code> 的位置</li>
-</ul>
-</li>
-</ul>
-<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ul>
-<li><p>当数据发生改变时，订阅者<code>watcher</code>就会调用<code>patch</code>给真实的<code>DOM</code>打补丁</p>
-</li>
-<li><p>通过<code>isSameVnode</code>进行判断，相同则调用<code>patchVnode</code>方法</p>
-</li>
-<li><p>```<br>patchVnode</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  做了以下操作：</span><br><span class="line"></span><br><span class="line">  - 找到对应的真实`dom`，称为`el`</span><br><span class="line">  - 如果都有文本节点且不相等，将`el`文本节点设置为`Vnode`的文本节点</span><br><span class="line">  - 如果`oldVnode`有子节点而`VNode`没有，则删除`el`子节点</span><br><span class="line">  - 如果`oldVnode`没有子节点而`VNode`有，则将`VNode`的子节点真实化后添加到`el`</span><br><span class="line">  - 如果两者都有子节点，则执行`updateChildren`函数比较子节点</span><br><span class="line"></span><br><span class="line">- ```</span><br><span class="line">  updateChildren</span><br></pre></td></tr></table></figure>
-
-<p>主要做了以下操作：</p>
-<ul>
-<li>设置新旧<code>VNode</code>的头尾指针</li>
-<li>新旧头尾指针进行比较，循环向中间靠拢，根据情况调用<code>patchVnode</code>进行<code>patch</code>重复流程、调用<code>createElem</code>创建一个新节点，从哈希表寻找 <code>key</code>一致的<code>VNode</code> 节点再分情况操作</li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/03/Composition-API-%E4%B8%8EOptions-API/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/03/Composition-API-%E4%B8%8EOptions-API/" class="post-title-link" itemprop="url">Composition API 与Options API</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-05-03 14:46:26" itemprop="dateCreated datePublished" datetime="2022-05-03T14:46:26+08:00">2022-05-03</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/02/%E5%BC%BA%E7%BC%93%E5%AD%98%E5%92%8C%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/02/%E5%BC%BA%E7%BC%93%E5%AD%98%E5%92%8C%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/" class="post-title-link" itemprop="url">强缓存和协商缓存</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-05-02 22:40:35" itemprop="dateCreated datePublished" datetime="2022-05-02T22:40:35+08:00">2022-05-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-08 10:01:26" itemprop="dateModified" datetime="2022-05-08T10:01:26+08:00">2022-05-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/" itemprop="url" rel="index"><span itemprop="name">HTTP</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>这里说的缓存是指浏览器（客户端）在本地磁盘中对访问过的资源保存的副本文件。</p>
-<p>浏览器缓存主要有以下几个优点：</p>
-<ul>
-<li>减少重复数据请求，避免通过网络再次加载资源，节省流量。</li>
-<li>降低服务器的压力，提升网站性能。</li>
-<li>加快客户端加载网页的速度， 提升用户体验。</li>
-</ul>
-<p>浏览器缓存分为强缓存和协商缓存，两者有两个比较明显的区别：</p>
-<ul>
-<li>如果浏览器命中强缓存，则不需要给服务器发请求；而协商缓存是由服务器来决定是否使用缓存，即客户端与服务器之间一定存在一次通信。</li>
-<li>在 chrome 中强缓存（虽然没有发出真实的 http 请求）的请求状态码返回是 200 (from cache)；而协商缓存如果命中走缓存的话，请求的状态码是 304 (not modified)。 不同浏览器的策略不同，在 Fire Fox中，from cache 状态码是 304.</li>
-</ul>
-<h2 id="请求流程"><a href="#请求流程" class="headerlink" title="请求流程"></a>请求流程</h2><p>浏览器在第一次请求后缓存资源，再次请求时，会进行下面两个步骤：</p>
-<ul>
-<li>浏览器会获取该缓存资源的 header 中的信息，根据 response header 中的 expires 和 cache-control 来判断是否命中强缓存，如果命中则直接从缓存中获取资源。</li>
-<li>如果没有命中强缓存，浏览器就会发送请求到服务器，这次请求会带上 IF-Modified-Since 或者 IF-None-Match, 它们的值分别是第一次请求返回 Last-Modified或者 Etag，由服务器来对比这一对字段来判断是否命中。如果命中，则服务器返回 304 状态码，并且不会返回资源内容，浏览器会直接从缓存获取；否则服务器最终会返回资源的实际内容，并更新 header 中的相关缓存字段。</li>
-</ul>
-<h2 id="强缓存"><a href="#强缓存" class="headerlink" title="强缓存"></a>强缓存</h2><p>强缓存是根据返回头中的 Expires 或者 Cache-Control 两个字段来控制的，都是表示资源的缓存有效时间。</p>
-<ul>
-<li>Expires 是 http 1.0 的规范，值是一个GMT 格式的时间点字符串，比如 Expires:Mon,18 Oct 2066 23:59:59 GMT 。这个时间点代表资源失效的时间，如果当前的时间戳在这个时间之前，则判定命中缓存。有一个缺点是，失效时间是一个<strong>绝对时间</strong>，以服务器的时间为准，如果服务器时间与客户端时间偏差较大时，就会导致缓存混乱。而服务器的时间跟用户的实际时间是不一样是很正常的，所以 Expires 在实际使用中会带来一些麻烦。</li>
-<li>Cache-Control这个字段是 http 1.1 的规范，一般常用该字段的 max-age 值来进行判断，它是一个<strong>相对时间</strong>，比如 .Cache-Control:max-age=3600 代表资源的有效期是 3600 秒。并且返回头中的 Date 表示消息发送的时间，表示当前资源在 Date ~ Date +3600s 这段时间里都是有效的。不过我在实际使用中常常遇到设置了 max-age 之后，在 max-age 时间内重新访问资源却会返回 304 not modified ，这是由于服务器的时间与本地的时间不同造成的。当然 Cache-Control 还有其他几个值可以设置， 不过相对来说都很少用了：<ul>
-<li><strong>no-cache 不使用本地缓存。需要使用协商缓存。</strong></li>
-<li>no-store直接禁止浏览器缓存数据，每次请求资源都会向服务器要完整的资源， 类似于 network 中的 disabled cache。</li>
-<li>public 可以被所有用户缓存，包括终端用户和 cdn 等中间件代理服务器。</li>
-<li>private 只能被终端用户的浏览器缓存。</li>
-</ul>
-</li>
-</ul>
-<p>如果 Cache-Control与 Expires 同时存在的话， Cache-Control 的优先级高于 Expires 。</p>
-<p><img src="/2022/05/02/%E5%BC%BA%E7%BC%93%E5%AD%98%E5%92%8C%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/store1.png"></p>
-<h2 id="协商缓存"><a href="#协商缓存" class="headerlink" title="协商缓存"></a>协商缓存</h2><p>协商缓存是由服务器来确定缓存资源是否可用。 主要涉及到两对属性字段，都是成对出现的，即第一次请求的响应头带上某个字, Last-Modified 或者 Etag，则后续请求则会带上对应的请求字段 If-Modified-Since或者 If-None-Match，若响应头没有 Last-Modified 或者 Etag 字段，则请求头也不会有对应的字段。</p>
-<ul>
-<li>Last-Modified/If-Modified-Since 二者的值都是 GMT 格式的时间字符串， Last-Modified 标记最后文件修改时间， 下一次请求时，请求头中会带上 If-Modified-Since 值就是 Last-Modified 告诉服务器我本地缓存的文件最后修改的时间，在服务器上根据文件的最后修改时间判断资源是否有变化， 如果文件没有变更则返回 304 Not Modified ，请求不会返回资源内容，浏览器直接使用本地缓存。当服务器返回 304 Not Modified 的响应时，response header 中不会再添加的 Last-Modified 去试图更新本地缓存的 Last-Modified， 因为既然资源没有变化，那么 Last-Modified 也就不会改变；如果资源有变化，就正常返回返回资源内容，新的 Last-Modified 会在 response header 返回，并在下次请求之前更新本地缓存的 Last-Modified，下次请求时，If-Modified-Since会启用更新后的 Last-Modified。</li>
-<li>Etag/If-None-Match， 值都是由服务器为每一个资源生成的唯一标识串，只要资源有变化就这个值就会改变。服务器根据文件本身算出一个哈希值并通过 ETag字段返回给浏览器，接收到 If-None-Match 字段以后，服务器通过比较两者是否一致来判定文件内容是否被改变。与 Last-Modified 不一样的是，当服务器返回 304 Not Modified 的响应时，由于在服务器上ETag 重新计算过，response header中还会把这个 ETag 返回，即使这个 ETag 跟之前的没有变化。</li>
-</ul>
-<p>HTTP 中并没有指定如何生成 ETag，可以由开发者自行生成，哈希是比较理想的选择。</p>
-<h1 id="ETag的出现，主要是为了解决-Last-Modified-无法解决的一些问题："><a href="#ETag的出现，主要是为了解决-Last-Modified-无法解决的一些问题：" class="headerlink" title="ETag的出现，主要是为了解决 Last-Modified 无法解决的一些问题："></a>ETag的出现，主要是为了解决 Last-Modified 无法解决的一些问题：</h1><ul>
-<li>某些服务器不能精确得到文件的最后修改时间， 这样就无法通过最后修改时间来判断文件是否更新了。</li>
-<li>某些文件的修改非常频繁，在秒以下的时间内进行修改. Last-Modified只能精确到秒。</li>
-<li>一些文件的最后修改时间改变了，但是内容并未改变。 我们不希望客户端认为这个文件修改了</li>
-</ul>
-<p><img src="/2022/05/02/%E5%BC%BA%E7%BC%93%E5%AD%98%E5%92%8C%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/store2.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/" class="post-title-link" itemprop="url">浏览器垃圾回收机制</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-05-02 16:04:33 / 修改时间：16:29:52" itemprop="dateCreated datePublished" datetime="2022-05-02T16:04:33+08:00">2022-05-02</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="标记清理"><a href="#标记清理" class="headerlink" title="标记清理"></a>标记清理</h1><ul>
-<li>变量进入上下文，会加上标记，证明其存在于该上下文</li>
-<li>将所有在上下文中的变量以及上下文中被访问引用的变量标记去掉，表明这些变量活跃有用</li>
-<li>在此之后再被加上标记的变量标记为准备删除的变量，原因是任何在上下文中的变量都访问不到它们</li>
-<li>执行内存清理，销毁标记的所有非活跃值并回收之前被占用的内存</li>
-</ul>
-<h1 id="引用计数"><a href="#引用计数" class="headerlink" title="引用计数"></a>引用计数</h1><p>引用计数策略相对而言不常用，弊端较多，其思路对每个值记录它被引用的次数，通过最后对次数的判断（引用数为0）来决定是否保留，具体规则：</p>
-<ul>
-<li>声明一个变量，赋予它一个引用值，计数+1</li>
-<li>同一值被赋予另外一个变量，引用+1</li>
-<li>保存对该值引用的变量被其他值覆盖，引用+1</li>
-<li>引用为0，回收内存</li>
-</ul>
-<p>局限：容易造成循环引用</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">problem</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> a=<span class="keyword">new</span> <span class="built_in">Object</span>()</span><br><span class="line">    <span class="keyword">let</span> b=<span class="keyword">new</span> <span class="built_in">Object</span>()</span><br><span class="line">    a.c=b;</span><br><span class="line">    b.d=a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>a和b通过各自的属性相互引用，意味着它们的引用数都为2，在函数结束后，这两个对象不再作用域内，在引用计数策略下，a和b在函数结束后还会存在，因为它们的引用数永远捕获变为0，如果函数被多次调用就会导致大量内存永远不会被释放。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/" class="post-title-link" itemprop="url">浏览器事件循环机制和Node中的事件循环机制</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-05-02 11:58:28" itemprop="dateCreated datePublished" datetime="2022-05-02T11:58:28+08:00">2022-05-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-03 00:00:45" itemprop="dateModified" datetime="2022-05-03T00:00:45+08:00">2022-05-03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="浏览器的事件循环机制："><a href="#浏览器的事件循环机制：" class="headerlink" title="浏览器的事件循环机制："></a>浏览器的事件循环机制：</h1><h2 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h2><p><code>JavaScript</code> 在设计之初便是单线程，即指程序运行时，只有一个线程存在，同一时间只能做一件事</p>
-<p>为什么要这么设计，跟<code>JavaScript</code>的应用场景有关</p>
-<p><code>JavaScript</code> 初期作为一门浏览器脚本语言，通常用于操作 <code>DOM</code> ，如果是多线程，一个线程进行了删除 <code>DOM</code> ，另一个添加 <code>DOM</code>，此时浏览器该如何处理？</p>
-<p>为了解决单线程运行阻塞问题，<code>JavaScript</code>用到了计算机系统的一种运行机制，这种机制就叫做事件循环（Event Loop）</p>
-<h3 id="事件循环（Event-Loop）"><a href="#事件循环（Event-Loop）" class="headerlink" title="事件循环（Event Loop）"></a>事件循环（Event Loop）</h3><p>在<code>JavaScript</code>中，所有的任务都可以分为</p>
-<ul>
-<li>同步任务：立即执行的任务，同步任务一般会直接进入到主线程中执行</li>
-<li>异步任务：异步执行的任务，比如<code>ajax</code>网络请求，<code>setTimeout </code>定时函数等</li>
-</ul>
-<p><img src="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/node1.png"></p>
-<p>从上面我们可以看到，同步任务进入主线程，即主执行栈，异步任务进入任务队列，主线程内的任务执行完毕为空，会去任务队列读取对应的任务，推入主线程执行。上述过程的不断重复就是事件循环</p>
-<h2 id="宏任务与微任务"><a href="#宏任务与微任务" class="headerlink" title="宏任务与微任务"></a>宏任务与微任务</h2><p>如果将任务划分为同步任务和异步任务并不是那么的准确，举个例子：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">console.log(1)</span><br><span class="line"></span><br><span class="line">setTimeout(()=&gt;&#123;</span><br><span class="line">    console.log(2)</span><br><span class="line">&#125;, 0)</span><br><span class="line"></span><br><span class="line">new Promise((resolve, reject)=&gt;&#123;</span><br><span class="line">    console.log(&#x27;new Promise&#x27;)</span><br><span class="line">    resolve()</span><br><span class="line">&#125;).then(()=&gt;&#123;</span><br><span class="line">    console.log(&#x27;then&#x27;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">console.log(3)</span><br></pre></td></tr></table></figure>
-
-<p>如果按照上面流程图来分析代码，我们会得到下面的执行步骤：</p>
-<ul>
-<li><code>console.log(1) </code>，同步任务，主线程中执行</li>
-<li><code>setTimeout()</code> ，异步任务，放到 <code>Event Table</code>，0 毫秒后<code>console.log(2) </code>回调推入 <code>Event Queue</code> 中</li>
-<li><code>new Promise</code> ，同步任务，主线程直接执行</li>
-<li><code>.then</code> ，异步任务，放到 <code>Event Table</code></li>
-<li><code>console.log(3)</code>，同步任务，主线程执行</li>
-</ul>
-<p>所以按照分析，它的结果应该是 <code>1</code> =&gt; <code>&#39;new Promise&#39;</code> =&gt; <code>3</code> =&gt; <code>2</code> =&gt; <code>&#39;then&#39;</code></p>
-<p>但是实际结果是：<code>1</code>=&gt;<code>&#39;new Promise&#39;</code>=&gt; <code>3</code> =&gt; <code>&#39;then&#39;</code> =&gt; <code>2</code></p>
-<p>出现分歧的原因在于异步任务执行顺序，事件队列其实是一个“先进先出”的数据结构，排在前面的事件会优先被主线程读取</p>
-<p>例子中 <code>setTimeout</code>回调事件是先进入队列中的，按理说应该先于 <code>.then</code> 中的执行，但是结果却偏偏相反</p>
-<p>原因在于异步任务还可以细分为微任务与宏任务</p>
-<h3 id="微任务"><a href="#微任务" class="headerlink" title="微任务"></a>微任务</h3><p>一个需要异步执行的函数，执行时机是在主函数执行结束之后、当前宏任务结束之前</p>
-<p>常见的微任务有：</p>
-<ul>
-<li>Promise.then</li>
-<li>MutaionObserver</li>
-<li>Object.observe（已废弃；Proxy 对象替代）</li>
-<li>process.nextTick（Node.js）</li>
-</ul>
-<h3 id="宏任务"><a href="#宏任务" class="headerlink" title="宏任务"></a>宏任务</h3><p>宏任务的时间粒度比较大，执行的时间间隔是不能精确控制的，对一些高实时性的需求就不太符合</p>
-<p>常见的宏任务有：</p>
-<ul>
-<li>script (可以理解为外层同步代码)</li>
-<li>setTimeout/setInterval</li>
-<li>UI rendering/UI事件</li>
-<li>postMessage、MessageChannel</li>
-<li>setImmediate、I/O（Node.js）</li>
-</ul>
-<p>按照这个流程，它的执行机制是：</p>
-<ul>
-<li>执行一个宏任务，如果遇到微任务就将它放到微任务的事件队列中</li>
-<li>当前宏任务执行完成后，会查看微任务的事件队列，<strong>然后将里面的所有微任务依次执行完</strong></li>
-</ul>
-<p>回到上面的题目</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">console.log(1)</span><br><span class="line">setTimeout(()=&gt;&#123;</span><br><span class="line">    console.log(2)</span><br><span class="line">&#125;, 0)</span><br><span class="line">new Promise((resolve, reject)=&gt;&#123;</span><br><span class="line">    console.log(&#x27;new Promise&#x27;)</span><br><span class="line">    resolve()</span><br><span class="line">&#125;).then(()=&gt;&#123;</span><br><span class="line">    console.log(&#x27;then&#x27;)</span><br><span class="line">&#125;)</span><br><span class="line">console.log(3)</span><br></pre></td></tr></table></figure>
-
-<p>流程如下</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 遇到 console.log(1) ，直接打印 1</span><br><span class="line">// 遇到定时器，属于新的宏任务，留着后面执行</span><br><span class="line">// 遇到 new Promise，这个是直接执行的，打印 &#x27;new Promise&#x27;</span><br><span class="line">// .then 属于微任务，放入微任务队列，后面再执行</span><br><span class="line">// 遇到 console.log(3) 直接打印 3</span><br><span class="line">// 好了本轮宏任务执行完毕，现在去微任务列表查看是否有微任务，发现 .then 的回调，执行它，打印 &#x27;then&#x27;</span><br><span class="line">// 当一次宏任务执行完，再去执行新的宏任务，这里就剩一个定时器的宏任务了，执行它，打印 2</span><br></pre></td></tr></table></figure>
-
-<h2 id="async与await"><a href="#async与await" class="headerlink" title="async与await"></a>async与await</h2><p><code>async</code> 是异步的意思，<code>await </code>则可以理解为等待</p>
-<p>放到一起可以理解<code>async</code>就是用来声明一个异步方法，而 <code>await </code>是用来等待异步方法执行</p>
-<h3 id="async"><a href="#async" class="headerlink" title="async"></a>async</h3><p><code>async</code>函数返回一个<code>promise</code>对象，下面两种方法是等效的</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">function f() &#123;</span><br><span class="line">    return Promise.resolve(&#x27;TEST&#x27;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// asyncF is equivalent to f!</span><br><span class="line">async function asyncF() &#123;</span><br><span class="line">    return &#x27;TEST&#x27;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="await"><a href="#await" class="headerlink" title="await"></a>await</h3><p>正常情况下，<code>await</code>命令后面是一个 <code>Promise </code>对象，返回该对象的结果。如果不是 <code>Promise </code>对象，就直接返回对应的值</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">async function f()&#123;</span><br><span class="line">    // 等同于</span><br><span class="line">    // return 123</span><br><span class="line">    return await 123</span><br><span class="line">&#125;</span><br><span class="line">f().then(v =&gt; console.log(v)) // 123</span><br></pre></td></tr></table></figure>
-
-<p>不管<code>await</code>后面跟着的是什么，<code>await</code>都会阻塞后面的代码</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">async function fn1 ()&#123;</span><br><span class="line">    console.log(1)</span><br><span class="line">    await fn2()</span><br><span class="line">    console.log(2) // 阻塞</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">async function fn2 ()&#123;</span><br><span class="line">    console.log(&#x27;fn2&#x27;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn1()</span><br><span class="line">console.log(3)</span><br></pre></td></tr></table></figure>
-
-<p>上面的例子中，<code>await</code> 会阻塞下面的代码（即加入微任务队列），先执行 <code>async </code>外面的同步代码，同步代码执行完，再回到 <code>async</code> 函数中，再执行之前阻塞的代码</p>
-<p>所以上述输出结果为：<code>1</code>，<code>fn2</code>，<code>3</code>，<code>2</code></p>
-<h1 id="Node中的事件循环机制"><a href="#Node中的事件循环机制" class="headerlink" title="Node中的事件循环机制"></a>Node中的事件循环机制</h1><p>事件循环分为6个阶段：</p>
-<p><img src="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/node2.png"></p>
-<p>timers:执行timer的回调，即setTimeout,setInterval里面的回调函数</p>
-<p>I/O事件回调阶段：执行延迟到下一个循环迭代的I/O阶段，即上一轮循环中未被执行的一些I/O回调</p>
-<p>idle,prepare(闲置阶段):仅内部使用</p>
-<p>poll(轮询阶段)：检查新的I/O事件，执行与I/O相关的回调，（几乎所有情况下，除了关闭的回调函数，那些由计时器和setImmediate（）调度的之外），其余情况node将在适当的时候在此阻塞</p>
-<p>check(检查阶段)：setImmediate()回调函数在这里执行</p>
-<p>close callback（关闭事件回调阶段）：一些关闭的回调函数，如socket.on(‘close’,…)</p>
-<p>除了上述6个阶段，还存在process.nextTick,其不属于事件循环的任何一个阶段，<strong>它属于该阶段与下阶段之间的过渡，即本阶段执行结束，进入下一个阶段前要执行的回调，类似插队</strong></p>
-<p><img src="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/node3.png"></p>
-<p>在Node中，同样存在宏任务和微任务，与浏览器的事件循环相似</p>
-<p>微任务：</p>
-<ul>
-<li>next tick queue:process.nextTick</li>
-<li>other queue:Promise的then回调，queueMicrotask</li>
-</ul>
-<p>宏任务：</p>
-<ul>
-<li>timer queue:setTimeout,setInterval</li>
-<li>poll queue:IO事件</li>
-<li>check queue:setImmediate</li>
-<li>close queue:close事件</li>
-</ul>
-<p>执行顺序：</p>
-<ul>
-<li>next tick microtask queue</li>
-<li>other microtask queue</li>
-<li>timer queue</li>
-<li>poll queue</li>
-<li>check queue</li>
-<li>close queue</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">async1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;async1 start&#x27;</span>)</span><br><span class="line">    <span class="keyword">await</span> async2()</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;async1 end&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">async2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;async2&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;script start&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;setTimeout0&#x27;</span>)</span><br><span class="line">&#125;, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;setTimeout2&#x27;</span>)</span><br><span class="line">&#125;, <span class="number">300</span>)</span><br><span class="line"></span><br><span class="line">setImmediate(<span class="function">() =&gt;</span> <span class="built_in">console</span>.log(<span class="string">&#x27;setImmediate&#x27;</span>));</span><br><span class="line"></span><br><span class="line">process.nextTick(<span class="function">() =&gt;</span> <span class="built_in">console</span>.log(<span class="string">&#x27;nextTick1&#x27;</span>));</span><br><span class="line"></span><br><span class="line">async1();</span><br><span class="line"></span><br><span class="line">process.nextTick(<span class="function">() =&gt;</span> <span class="built_in">console</span>.log(<span class="string">&#x27;nextTick2&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;promise1&#x27;</span>)</span><br><span class="line">    resolve();</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;promise2&#x27;</span>)</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;promise3&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;script end&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
-<p>分析过程：</p>
-<ul>
-<li>先找到同步任务，输出script start</li>
-<li>遇到第一个 setTimeout，将里面的回调函数放到 timer 队列中</li>
-<li>遇到第二个 setTimeout，300ms后将里面的回调函数放到 timer 队列中</li>
-<li>遇到第一个setImmediate，将里面的回调函数放到 check 队列中</li>
-<li>遇到第一个 nextTick，将其里面的回调函数放到本轮同步任务执行完毕后执行</li>
-<li>执行 async1函数，输出 async1 start</li>
-<li>执行 async2 函数，输出 async2，async2 后面的输出 async1 end进入微任务，等待下一轮的事件循环</li>
-<li>遇到第二个，将其里面的回调函数放到本轮同步任务执行完毕后执行</li>
-<li>遇到 new Promise，执行里面的立即执行函数，输出 promise1、promise2</li>
-<li>then里面的回调函数进入微任务队列</li>
-<li>遇到同步任务，输出 script end</li>
-<li>执行下一轮回到函数，先依次输出 nextTick 的函数，分别是 nextTick1、nextTick2</li>
-<li>然后执行微任务队列，依次输出 async1 end、promise3</li>
-<li>执行timer 队列，依次输出 setTimeout0</li>
-<li>接着执行 check 队列，依次输出 setImmediate</li>
-<li>300ms后，timer 队列存在任务，执行输出 setTimeout2</li>
-</ul>
-<p>执行结果如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">script start</span><br><span class="line">async1 start</span><br><span class="line">async2</span><br><span class="line">promise1</span><br><span class="line">promise2</span><br><span class="line">script end</span><br><span class="line">nextTick1</span><br><span class="line">nextTick2</span><br><span class="line">async1 end</span><br><span class="line">promise3</span><br><span class="line">setTimeout0</span><br><span class="line">setImmediate</span><br><span class="line">setTimeout2</span><br></pre></td></tr></table></figure>
-
-<p>最后有一道是关于<code>setTimeout</code>与<code>setImmediate</code>的输出顺序</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;setTimeout&quot;</span>);</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">setImmediate(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;setImmediate&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>输出情况：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">情况一：</span><br><span class="line"><span class="built_in">setTimeout</span></span><br><span class="line">setImmediate</span><br><span class="line"></span><br><span class="line">情况二：</span><br><span class="line">setImmediate</span><br><span class="line"><span class="built_in">setTimeout</span></span><br></pre></td></tr></table></figure>
-
-<p>分析下流程：</p>
-<ul>
-<li>外层同步代码一次性全部执行完，遇到异步API就塞到对应的阶段</li>
-<li>遇到<code>setTimeout</code>，虽然设置的是0毫秒触发，但实际上会被强制改成1ms，时间到了然后塞入<code>times</code>阶段</li>
-<li>遇到<code>setImmediate</code>塞入<code>check</code>阶段</li>
-<li>同步代码执行完毕，进入Event Loop</li>
-<li>先进入<code>times</code>阶段，检查当前时间过去了1毫秒没有，如果过了1毫秒，满足<code>setTimeout</code>条件，执行回调，如果没过1毫秒，跳过</li>
-<li>跳过空的阶段，进入check阶段，执行<code>setImmediate</code>回调</li>
-</ul>
-<p>这里的关键在于这1ms，如果同步代码执行时间较长，进入<code>Event Loop</code>的时候1毫秒已经过了，<code>setTimeout</code>先执行，如果1毫秒还没到，就先执行了<code>setImmediate</code></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/02/%E7%AE%AD%E5%A4%B4%E5%87%BD%E6%95%B0%E5%92%8C%E6%99%AE%E9%80%9A%E5%87%BD%E6%95%B0%E5%8C%BA%E5%88%AB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/02/%E7%AE%AD%E5%A4%B4%E5%87%BD%E6%95%B0%E5%92%8C%E6%99%AE%E9%80%9A%E5%87%BD%E6%95%B0%E5%8C%BA%E5%88%AB/" class="post-title-link" itemprop="url">箭头函数和普通函数区别</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-05-02 11:21:43 / 修改时间：11:37:43" itemprop="dateCreated datePublished" datetime="2022-05-02T11:21:43+08:00">2022-05-02</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="箭头函数和普通函数区别"><a href="#箭头函数和普通函数区别" class="headerlink" title="箭头函数和普通函数区别"></a>箭头函数和普通函数区别</h1><ol>
-<li><p>语法更加简洁清晰</p>
-</li>
-<li><p>箭头函数不会创建自己的this</p>
-</li>
-</ol>
-<p>所以它不会有自己的this,它只会从<strong>自己的作用域链的上一层继承this</strong>，作用域链包括全局作用域，块作用域和函数作用域</p>
-<ol start="3">
-<li>箭头函数继承而来的this指向永远不变</li>
-</ol>
-<p>对象obj的方法b时用箭头函数定义的，这个函数中的this永远指向它<strong>定义时所处的全局环境中的this</strong>,即使这个函数是作为对象obj的方法调用，它依然指向window对象</p>
-<ol start="4">
-<li>call()/apply()/bind()无法改变箭头函数中this得指向</li>
-</ol>
-<p>call()/apply()/bind()方法可以用来动态修改this的指向，但由于箭头函数的this定义时就已经确定且永远不会改变，所以使用这些犯法永远也改变不了箭头函数this的指向，但是代码也不会报错</p>
-<ol start="5">
-<li>箭头函数不能用作构造函数调用</li>
-</ol>
-<p>构造函数的new原理：</p>
-<p>箭头函数是ES6中的提出来的，<strong>它没有prototype，也没有自己的this指向，更不可以使用arguments参数</strong>，所以不能New一个箭头函数。</p>
-<p>new操作符的实现步骤如下：</p>
-<p>1、创建一个空的简单JavaScript对象（即{}）；</p>
-<p>2、为步骤1新创建的对象添加属性__proto__，将该属性链接至构造函数的原型对象 ；</p>
-<p>3、将步骤1新创建的对象作为this的上下文 ；</p>
-<p>4、如果该函数没有返回对象，则返回this。</p>
-<p>所以，上面的第二、三步，箭头函数都是没有办法执行的。</p>
-<ol start="6">
-<li>箭头函数不能用作Generator函数，不能使用yield关键字</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1706,14 +1626,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">201</span>
+          <span class="site-state-item-count">207</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -1780,7 +1700,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共180.8k字</span>
+  <span class="post-count">博客全站共187.8k字</span>
 </div>
         
 
