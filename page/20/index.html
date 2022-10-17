@@ -187,6 +187,195 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/15/watch/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/15/watch/" class="post-title-link" itemprop="url">watch</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-15 14:39:59" itemprop="dateCreated datePublished" datetime="2022-01-15T14:39:59+08:00">2022-01-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-30 23:44:57" itemprop="dateModified" datetime="2022-01-30T23:44:57+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="watch"><a href="#watch" class="headerlink" title="watch()"></a>watch()</h1><p>监视属性watch：</p>
+<p>1 当被监视的属性变化时（也可以监视计算属性），回调函数自动调用，进行相关操作</p>
+<p>2 监视的属性必须存在才能好进行监视</p>
+<p>3 监视的两种写法：</p>
+<p>（1）在Vue.createApp时传入watch配置</p>
+<p>（2）通过vm.$watch监视</p>
+<p>4 深度监视</p>
+<p>（1）Vue中的watch默认不监视对象内部值的改变（一层）</p>
+<p>（2）配置deep为true,可以检测对象内部值改变（多层）</p>
+<p>监视多级结构中某个属性的变化：’number.a’</p>
+<p>监视多级结构中所有属性第1变化，用deep:true</p>
+<p>PS：（1）Vue自身可以检测对象内部值的改变但是Vue提供的watch默认不可以</p>
+<p>（2）使用watch时根据数据的具体结构，决定是否采用深度监视</p>
+<p>vm.$watch(expOrFn,callback,[options])</p>
+<ul>
+<li>expOrFn:{string/Function}</li>
+<li>callback:{Function/Object}</li>
+<li>options:{Object}<ol>
+<li> deep:{boolean}</li>
+<li>immediate:{boolean}</li>
+</ol>
+</li>
+</ul>
+<p>返回值：unwatch函数</p>
+<p>用处：观察Vue实例上的一个表达式或者一个函数计算结果的变化，回调函数得到的参数为新值和旧值。表达式只接受简单的键路径，对于复杂表达式，用函数取代</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//HTML</span></span><br><span class="line">&lt;div id=<span class="string">&quot;app&quot;</span>&gt;</span><br><span class="line">        &#123;&#123;a&#125;&#125;,&#123;&#123;b&#125;&#125;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"><span class="comment">//键路径</span></span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="javascript"></span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="keyword">var</span> vm=<span class="keyword">new</span> Vue(&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            <span class="attr">el</span>:<span class="string">&quot;#app&quot;</span>,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            <span class="attr">data</span>:&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">               <span class="attr">a</span>:&#123;<span class="attr">value1</span>:<span class="string">&#x27;hello&#x27;</span>&#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">               <span class="attr">b</span>:&#123;<span class="attr">value2</span>:<span class="string">&#x27;beautiful&#x27;</span>&#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        </span></span></span><br><span class="line"><span class="javascript"><span class="xml">        &#125;);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">       vm.$watch(<span class="string">&#x27;b.value2&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params">newVal,oldVal</span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">           <span class="built_in">console</span>.log(newVal,oldVal);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">       &#125;);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">       vm.b.value2=<span class="string">&#x27;bind&#x27;</span>;<span class="comment">//bind beautiful</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">       <span class="comment">//修改对象内部的值但是侦听的是对象，对其属性或元素的更改不会触发侦听器，因为他们引用相同对象</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml"> vm.$watch(<span class="string">&#x27;a&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params">newVal,oldVal</span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">           <span class="built_in">console</span>.log(newVal,oldVal);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">       &#125;);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">       vm.a.value1=<span class="string">&#x27;hei&#x27;</span>;<span class="comment">//没有侦听到</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="comment">//为了发现对象内部值的变化，可以在选项参数中指定 deep: true。这个选项同样适用于监听数组变更。</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">       vm.$watch(<span class="string">&#x27;a&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params">newVal,oldVal</span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">           <span class="built_in">console</span>.log(newVal,oldVal);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">       &#125;,&#123;<span class="attr">deep</span>:<span class="literal">true</span>&#125;);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">       vm.a.value1=<span class="string">&#x27;hei&#x27;</span>;<span class="comment">//</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="comment">//在选项参数中指定 immediate: true 将立即以表达式的当前值触发回调</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">       vm.$watch(<span class="string">&#x27;a&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params">newVal,oldVal</span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">           <span class="built_in">console</span>.log(newVal,oldVal);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">       &#125;,&#123;<span class="attr">immediate</span>:<span class="literal">true</span>&#125;);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">       vm.a=&#123;&#125;<span class="comment">//&#123;_ob_:Observer&#125;undefined &#123;_ob_:Observer&#125;&#123;_ob_:Observer&#125;</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>在带有immediate选项时不能在第一次回调时取消侦听给定的property</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> unwatch=vm.$watch(</span><br><span class="line">          <span class="string">&#x27;a&#x27;</span>,</span><br><span class="line">          <span class="function"><span class="keyword">function</span>(<span class="params">newVal,oldVal</span>)</span>&#123;</span><br><span class="line">           <span class="built_in">console</span>.log(newVal,oldVal);</span><br><span class="line">           unwatch()</span><br><span class="line">          &#125;,&#123;<span class="attr">immediate</span>:<span class="literal">true</span>&#125;</span><br><span class="line">      )<span class="comment">//报错</span></span><br></pre></td></tr></table></figure>
+
+<p>要在回调函数里调用一个取消侦听的函数应该先检查其函数的可用性</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> unwatch=<span class="literal">null</span>;</span><br><span class="line">       unwatch=vm.$watch(</span><br><span class="line">           <span class="string">&#x27;a&#x27;</span>,</span><br><span class="line">           <span class="function"><span class="keyword">function</span>(<span class="params">newVal,oldVal</span>)</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(newVal,oldVal);</span><br><span class="line">            <span class="keyword">if</span>(unwatch)&#123;unwatch();&#125;</span><br><span class="line">           &#125;,&#123;<span class="attr">immediate</span>:<span class="literal">true</span>&#125;</span><br><span class="line">       )</span><br></pre></td></tr></table></figure>
+
+<h1 id="Vue3中的watch"><a href="#Vue3中的watch" class="headerlink" title="Vue3中的watch"></a>Vue3中的watch</h1><h2 id="两个“坑”："><a href="#两个“坑”：" class="headerlink" title="两个“坑”："></a>两个“坑”：</h2><ol>
+<li><p>watch监视的是reactive定义的响应式数据则无法正确获得oldValue，watch监视的是reactive定义的响应式数据则强制开启深度监视,只能获取newValue,无法获取oldValue</p>
+</li>
+<li><p>监视reactive定义的某个对象中的属性（也是对象）,deep有效,仍然无法获取oldValue</p>
+</li>
+</ol>
+<h2 id="关于-value"><a href="#关于-value" class="headerlink" title="关于.value:"></a>关于.value:</h2><ol>
+<li>如果ref定义的是一个数字或者字符，比如ref(0)不能用.value</li>
+<li>如果ref定义的是一个对象，则里面的属性本质上是由reactive定义，如果要监视里面的属性则得用.value，.value后由reactive定义，则自动开启深度监视，或者开启深度监视</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"> setup()&#123;</span><br><span class="line">        let person=reactive(&#123;</span><br><span class="line">            firstName:&quot;张&quot;,</span><br><span class="line">            lastName:&quot;三&quot;,</span><br><span class="line">            fullName:&#x27;&#x27;,</span><br><span class="line">            job:&#123;</span><br><span class="line">                one:&#x27;doctor&#x27;,</span><br><span class="line">                tow:&#x27;teacher&#x27;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;)</span><br><span class="line">        let sum=ref(0)</span><br><span class="line">        let msg=ref(&quot;你好呀&quot;)</span><br><span class="line">//情况一：监视ref定义的响应式数据</span><br><span class="line">        watch(sum,(newValue,oldValue)=&gt;&#123;</span><br><span class="line">            console.log(&quot;sum变化了&quot;,newValue,oldValue)</span><br><span class="line">        &#125;)</span><br><span class="line">       //情况二：监视多个ref定义的响应式数据</span><br><span class="line">        watch([sum,msg],(newValue,oldValue)=&gt;&#123;</span><br><span class="line">            console.log(&quot;sum或msg变化了&quot;,newValue,oldValue)</span><br><span class="line">        &#125;)</span><br><span class="line">        //情况三：监视reactive定义的响应式数据：若watch监视的是reactive定义的响应式数据则无法正确获得oldValue，watch监视的是reactive定义的响应式数据则强制开启深度监视,只能获取newValue,无法获取oldValue</span><br><span class="line">        watch(person,(newValue,oldValue)=&gt;&#123;</span><br><span class="line">            console.log(&quot;person变化了&quot;,newValue,oldValue)</span><br><span class="line">        &#125;,&#123;deep:false&#125;)//deep配置无效</span><br><span class="line">        //情况四:监视reactive定义的响应式数据中的某个属性</span><br><span class="line">         watch(()=&gt;person.firstName,(newValue,oldValue)=&gt;&#123;</span><br><span class="line">            console.log(&quot;person的firstName变化了&quot;,newValue,oldValue)</span><br><span class="line">        &#125;)</span><br><span class="line">       </span><br><span class="line">        //情况五：监视reactive定义的一个响应式数据中的某些属性</span><br><span class="line">        watch([()=&gt;person.firstName,()=&gt;person.lastName],(newValue,oldValue)=&gt;&#123;</span><br><span class="line">            console.log(&quot;person的firstName/lastName变化了&quot;,newValue,oldValue)</span><br><span class="line">        &#125;)</span><br><span class="line">        //特殊情况监视reactive定义的某个对象中的属性（也是对象）,deep有效,仍然无法获取oldValue</span><br><span class="line">         watch(()=&gt;person.job,(newValue,oldValue)=&gt;&#123;</span><br><span class="line">            console.log(&quot;person的job变化了&quot;,newValue,oldValue)</span><br><span class="line">        &#125;,&#123;deep:true&#125;)</span><br><span class="line"> person.fullName=computed(&#123;</span><br><span class="line">            get()&#123;</span><br><span class="line">                return person.firstName+&#x27;-&#x27;+person.lastName</span><br><span class="line"></span><br><span class="line">            &#125;,</span><br><span class="line">            set(value)&#123;</span><br><span class="line">                const nameArr=value.split(&#x27;-&#x27;)</span><br><span class="line">                person.firstName=nameArr[0]</span><br><span class="line">                person.lastName=nameArr[1]</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        watch()</span><br><span class="line">        return &#123;</span><br><span class="line">            person,</span><br><span class="line">            sum,</span><br><span class="line">            msg</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/10/addLoadEvent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/10/addLoadEvent/" class="post-title-link" itemprop="url">addLoadEvent</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-10 17:41:16 / 修改时间：17:47:57" itemprop="dateCreated datePublished" datetime="2022-01-10T17:41:16+08:00">2022-01-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addLoadEvent</span>(<span class="params">func</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">var</span> oldonload=<span class="built_in">window</span>.onload;</span><br><span class="line">       <span class="keyword">if</span>(<span class="keyword">typeof</span> oldonload!=<span class="string">&#x27;function&#x27;</span>)&#123;</span><br><span class="line">           <span class="built_in">window</span>.onload=func;<span class="comment">//如果处理函数还没有绑定任何函数，就添加新函数</span></span><br><span class="line">       &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">           <span class="built_in">window</span>.onload=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">               oldonload();</span><br><span class="line">               func();</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/07/reduce/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1058,222 +1247,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2021/12/12/%E8%A1%A8%E5%8D%95%E5%BA%8F%E5%88%97%E5%8C%96/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/12/%E8%A1%A8%E5%8D%95%E5%BA%8F%E5%88%97%E5%8C%96/" class="post-title-link" itemprop="url">表单序列化</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-12 19:09:55" itemprop="dateCreated datePublished" datetime="2021-12-12T19:09:55+08:00">2021-12-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-12-30 15:17:55" itemprop="dateModified" datetime="2021-12-30T15:17:55+08:00">2021-12-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>表单在js中可以使用表单字段的type属性连同其name属性和value属性来进行序列化</p>
-<ul>
-<li><p>字段名和值是 URL 编码的并以和号（&amp;）分隔。</p>
-</li>
-<li><p> 禁用字段不会发送。</p>
-</li>
-<li><p>复选框或单选按钮只在被选中时才发送。</p>
-</li>
-<li><p>类型为”reset”或”button”的按钮不会发送。</p>
-</li>
-<li><p>多选字段的每个选中项都有一个值。</p>
-</li>
-<li><p>通过点击提交按钮提交表单时，会发送该提交按钮；否则，不会发送提交按钮。类型为”image”<br>的<input>元素视同提交按钮。</p>
-</li>
-<li><p>select元素的值是被选中option元素的 value 属性。如果<option>元素没有 value 属<br>性，则该值是它的文本</option></p>
-<p>返回的结果是查询字符串的格式</p>
-</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">serialize</span>(<span class="params">form</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> parts=[];</span><br><span class="line">    <span class="keyword">let</span> optValue;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> field <span class="keyword">of</span> form.elements)&#123;</span><br><span class="line">        <span class="keyword">switch</span>(field.type)&#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;select-one&quot;</span>:</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;select-multiple&quot;</span>:</span><br><span class="line">                <span class="keyword">if</span>(field.name.length)&#123;</span><br><span class="line">                    <span class="keyword">for</span>(<span class="keyword">let</span> option <span class="keyword">of</span> field.options)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(option.selected)&#123;</span><br><span class="line">                            <span class="keyword">if</span>(option.hasAttribute)&#123;</span><br><span class="line">                                optValue=(option.hasAttribute(<span class="string">&quot;value&quot;</span>)?option.value:option.text);</span><br><span class="line">                            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                                optValue=(option.attributes[<span class="string">&quot;value&quot;</span>].specified?option.value:option.text);</span><br><span class="line">                            &#125;</span><br><span class="line">                            parts.push(<span class="string">`<span class="subst">$&#123;<span class="built_in">encodeURIComponent</span>(field.name)&#125;</span>=`</span>+<span class="string">`<span class="subst">$&#123;<span class="built_in">encodeURIComponent</span>(optValue)&#125;</span>`</span>);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="literal">undefined</span>:<span class="comment">//字段集</span></span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;file&quot;</span>:<span class="comment">//文件输入</span></span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;submit&quot;</span>:<span class="comment">//提交按钮</span></span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;reset&quot;</span>:<span class="comment">//重置按钮</span></span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;button&quot;</span>:<span class="comment">//自定义按钮</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;radio&quot;</span>:<span class="comment">//单选按钮</span></span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;checkbox&quot;</span>:<span class="comment">//复选框</span></span><br><span class="line">                <span class="keyword">if</span>(!field.checked)&#123;<span class="comment">//没被选中，跳出switch，否则进入default分支，将字段的名字和值编码后添加进parts数组</span></span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            <span class="attr">default</span>:</span><br><span class="line">                <span class="comment">//不包含没有名字的表单字段</span></span><br><span class="line">                <span class="keyword">if</span>(field.name.length)&#123;</span><br><span class="line">                    parts.push(<span class="string">`<span class="subst">$&#123;<span class="built_in">encodeURIComponent</span>(field.name)&#125;</span>=`</span>+<span class="string">`<span class="subst">$&#123;<span class="built_in">encodeURIComponent</span>(field.value)&#125;</span>`</span>)</span><br><span class="line">                &#125;          </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> parts.join(<span class="string">&quot;&amp;&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2021/12/12/DOM-DOM%E7%BC%96%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/12/DOM-DOM%E7%BC%96%E7%A8%8B/" class="post-title-link" itemprop="url">DOM编程</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-12 17:15:15" itemprop="dateCreated datePublished" datetime="2021-12-12T17:15:15+08:00">2021-12-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-24 16:12:45" itemprop="dateModified" datetime="2022-01-24T16:12:45+08:00">2022-01-24</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="DOM编程"><a href="#DOM编程" class="headerlink" title="DOM编程"></a>DOM编程</h1><h2 id="动态脚本"><a href="#动态脚本" class="headerlink" title="动态脚本"></a>动态脚本</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loadScriptString</span>(<span class="params">code</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> script=<span class="built_in">document</span>.createElement(<span class="string">&quot;script&quot;</span>);</span><br><span class="line">    script.type=<span class="string">&quot;text/javascript&quot;</span>;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        script.appendChild(<span class="built_in">document</span>.createTextNode(code));<span class="comment">//旧版本的IE浏览器可能出问题</span></span><br><span class="line">    &#125;<span class="keyword">catch</span>(ex)&#123;</span><br><span class="line">        script.text=code;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">document</span>.body.appendChild(script);</span><br><span class="line">&#125;</span><br><span class="line">loadScriptString(<span class="string">&quot;function sayHi()&#123;alert(&#x27;hi&#x27;);&#125;&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="动态样式"><a href="#动态样式" class="headerlink" title="动态样式"></a>动态样式</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loadStyleString</span>(<span class="params">css</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> style=<span class="built_in">document</span>.createElement(<span class="string">&quot;style&quot;</span>);</span><br><span class="line">    style.type=<span class="string">&quot;text/css&quot;</span>;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        style.appendChild(<span class="built_in">document</span>.createTextNode(css));</span><br><span class="line">    &#125;<span class="keyword">catch</span>(ex)&#123;</span><br><span class="line">        style.styleSheet.cssText=css;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> head=<span class="built_in">document</span>.getElementsByTagName(<span class="string">&quot;head&quot;</span>)[<span class="number">0</span>];</span><br><span class="line">    head.appendChild(style);</span><br><span class="line">&#125;</span><br><span class="line">loadStyleString(<span class="string">&quot;body[background-color:red&#125;&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>对于IE，要小心使用styleSheet.cssText，如果重用同一个style元素并设置该属性超过一次，则可能导致浏览器崩溃，将cssText设置为空字符串也可能导致浏览器崩溃</p>
-<h2 id="表单"><a href="#表单" class="headerlink" title="表单"></a>表单</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> table=<span class="built_in">document</span>.createElement(<span class="string">&quot;table&quot;</span>);</span><br><span class="line">table.border=<span class="number">1</span>;</span><br><span class="line">table.width=<span class="string">&quot;100%&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> tbody=<span class="built_in">document</span>.createElement(<span class="string">&quot;tbody&quot;</span>);</span><br><span class="line">table.appendChild(tbody);</span><br><span class="line"></span><br><span class="line">table.insertRow(<span class="number">0</span>);</span><br><span class="line">tbody.rows[<span class="number">0</span>].insertCell(<span class="number">0</span>);</span><br><span class="line">tbody.rows[<span class="number">0</span>].cells[<span class="number">0</span>].appendChild(<span class="built_in">document</span>.createTextNode(<span class="string">&quot;Cell 1,1&quot;</span>));</span><br><span class="line">tbody.rows[<span class="number">0</span>].insertCell(<span class="number">1</span>);</span><br><span class="line">tbody.rows[<span class="number">0</span>].cells[<span class="number">1</span>].appendChild(<span class="built_in">document</span>.createTextNode(<span class="string">&quot;Cell 2,1&quot;</span>));</span><br><span class="line"></span><br><span class="line">table.insertRow(<span class="number">1</span>);</span><br><span class="line">tbody.rows[<span class="number">1</span>].insertCell(<span class="number">0</span>);</span><br><span class="line">tbody.rows[<span class="number">1</span>].cells[<span class="number">0</span>].appendChild(<span class="built_in">document</span>.createTextNode(<span class="string">&quot;Cell 1,2&quot;</span>));</span><br><span class="line">tbody.rows[<span class="number">1</span>].insertCell(<span class="number">1</span>);</span><br><span class="line">tbody.rows[<span class="number">1</span>].cells[<span class="number">1</span>].appendChild(<span class="built_in">document</span>.createTextNode(<span class="string">&quot;Cell 2,2&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="built_in">document</span>.body.appendChild(table);</span><br></pre></td></tr></table></figure>
-
-<h2 id="NodeList"><a href="#NodeList" class="headerlink" title="NodeList"></a>NodeList</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> divs=<span class="built_in">document</span>.getElementsByTagName(<span class="string">&quot;div&quot;</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="number">0</span>,len=divs.length;i&lt;len;i++)&#123;</span><br><span class="line">    <span class="keyword">let</span> div=doocument.createElement(<span class="string">&quot;div&quot;</span>);</span><br><span class="line">    <span class="built_in">document</span>.body.appendChild(div);</span><br><span class="line">&#125;<span class="comment">//避免导致无穷循环</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="Mutationobserver接口"><a href="#Mutationobserver接口" class="headerlink" title="Mutationobserver接口"></a>Mutationobserver接口</h1><p>在DOM被修改时异步执行回调，使用MutationObserver可以观察整个文档，DOM树的一部分或某个元素</p>
-<p>MutationObserver的实例通过调用MutationObserver构造函数并传入一个回调函数创建</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> observer=<span class="keyword">new</span> MutationObserver(<span class="function">()=&gt;</span><span class="built_in">console</span>.log(<span class="string">&#x27;DOM was mutated&#x27;</span>));</span><br></pre></td></tr></table></figure>
-
-<h2 id="observe-方法"><a href="#observe-方法" class="headerlink" title="observe()方法"></a>observe()方法</h2><p>接收两个参数：要观察其变化的DOM节点，以及一个MutationObserverInit对象（用于控制观察哪些方面的变化，是一个键值对形式配置选项的字典）</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> observer=<span class="keyword">new</span> MutationObserver(<span class="function">()=&gt;</span><span class="built_in">console</span>.log(<span class="string">&#x27;&lt;body&gt; attributes changed&#x27;</span>));</span><br><span class="line">observer.observe(<span class="built_in">document</span>.body,&#123;<span class="attr">attributes</span>:<span class="literal">true</span>&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>body元素上任何属性发生变化都会被这个MutationObserver实例发现，然后异步执行注册的回调函数,body元素后代修改或其他非属性修改不会触发回调进入任务</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> observer=<span class="keyword">new</span> MutationObserver(<span class="function">()=&gt;</span><span class="built_in">console</span>.log(<span class="string">&#x27;&lt;body&gt; attributes changed&#x27;</span>));</span><br><span class="line">observer.observe(<span class="built_in">document</span>.body,&#123;<span class="attr">attributes</span>:<span class="literal">true</span>&#125;);</span><br><span class="line"><span class="built_in">document</span>.body.className=<span class="string">&#x27;foo&#x27;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;Changed body class&#x27;</span>);</span><br><span class="line"><span class="comment">//Changed body class</span></span><br><span class="line"><span class="comment">//&lt;body&gt; attributes changed</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="回调与MutationRecord"><a href="#回调与MutationRecord" class="headerlink" title="回调与MutationRecord"></a>回调与MutationRecord</h2><p>每次回调都会收到一个MutationRecord实例的数组,包含的信息发生了什么变化以及DOM哪一部分受到影响</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> observer=<span class="keyword">new</span> MutationObserver(<span class="function">(<span class="params">mutationRecords</span>)=&gt;</span><span class="built_in">console</span>.log(mutationRecords));[</span><br><span class="line">observer.observe(<span class="built_in">document</span>.body,&#123;<span class="attr">attributes</span>:<span class="literal">true</span>&#125;);</span><br><span class="line"><span class="built_in">document</span>.body.setAttributeNS(<span class="string">&#x27;foo&#x27;</span>,<span class="string">&#x27;bar&#x27;</span>,<span class="string">&#x27;baz&#x27;</span>);</span><br><span class="line"><span class="comment">//连续修改多个MutationRecord实例，回调函数就会受到包含这些实例的数组，顺序为变化事件的顺序</span></span><br><span class="line"><span class="keyword">let</span> observer=<span class="keyword">new</span> MutationObserver(<span class="function">(<span class="params">mutationRecords</span>)=&gt;</span><span class="built_in">console</span>.log(mutationRecords));</span><br><span class="line">observer.observe(<span class="built_in">document</span>.body,&#123;<span class="attr">attributes</span>:<span class="literal">true</span>&#125;);</span><br><span class="line"><span class="built_in">document</span>.body.className=<span class="string">&#x27;foo&#x27;</span>;</span><br><span class="line"><span class="built_in">document</span>.body.className=<span class="string">&#x27;bar&#x27;</span>;</span><br><span class="line"><span class="comment">//[MutationRecord, MutationRecord]</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="disconnect-方法"><a href="#disconnect-方法" class="headerlink" title="disconnect()方法"></a>disconnect()方法</h2><p>会停止此后变化事件的回调，也会抛弃已经加入任务队列要异步执行的回调</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> observer=<span class="keyword">new</span> MutationObserver(<span class="function">()=&gt;</span><span class="built_in">console</span>.log(<span class="string">&#x27;&lt;body&gt;attributes changed&#x27;</span>));</span><br><span class="line">observer.observe(<span class="built_in">document</span>.body,&#123;<span class="attr">attributes</span>:<span class="literal">true</span>&#125;);</span><br><span class="line"><span class="built_in">document</span>.body.className=<span class="string">&#x27;foo&#x27;</span>;</span><br><span class="line">observer.disconnect();</span><br><span class="line"><span class="built_in">document</span>.body.className=<span class="string">&#x27;bar&#x27;</span>;<span class="comment">//无日志输出</span></span><br><span class="line"><span class="comment">//让已经入队的回调函数执行完毕后再调用disconnect()</span></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    observer.disconnect();</span><br><span class="line">    <span class="built_in">document</span>.body.className=<span class="string">&#x27;bar&#x27;</span>;</span><br><span class="line"></span><br><span class="line">&#125;,<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="复用MutationObserver"><a href="#复用MutationObserver" class="headerlink" title="复用MutationObserver"></a>复用MutationObserver</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> observer=<span class="keyword">new</span> MutationObserver(<span class="function">(<span class="params">mutationRecords</span>)=&gt;</span><span class="built_in">console</span>.log(mutationRecords.map(<span class="function">(<span class="params">x</span>)=&gt;</span>x.target)));</span><br><span class="line"><span class="keyword">let</span> childA=<span class="built_in">document</span>.createElement(<span class="string">&#x27;div&#x27;</span>);</span><br><span class="line">    childB=<span class="built_in">document</span>.createElement(<span class="string">&#x27;span&#x27;</span>);</span><br><span class="line"><span class="built_in">document</span>.body.appendChild(childA);</span><br><span class="line"><span class="built_in">document</span>.body.appendChild(childB);</span><br><span class="line">observer.observe(childA,&#123;<span class="attr">attributes</span>:<span class="literal">true</span>&#125;);</span><br><span class="line">observer.observe(childB,&#123;<span class="attr">attributes</span>:<span class="literal">true</span>&#125;);</span><br><span class="line">childA.setAttribute(<span class="string">&#x27;foo&#x27;</span>,<span class="string">&#x27;bar&#x27;</span>);</span><br><span class="line">childB.setAttribute(<span class="string">&#x27;foo&#x27;</span>,<span class="string">&#x27;bar&#x27;</span>);</span><br><span class="line"><span class="comment">//[div, span]</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="重用MutationObserver"><a href="#重用MutationObserver" class="headerlink" title="重用MutationObserver"></a>重用MutationObserver</h2><p>调用diaconnect()不会结束MutationObserver的生命，还可以重新使用这个观察者，再将它关联到新的目标结点</p>
-<h1 id="MutationObserverInit与观察范围"><a href="#MutationObserverInit与观察范围" class="headerlink" title="MutationObserverInit与观察范围"></a>MutationObserverInit与观察范围</h1><h2 id="观察属性"><a href="#观察属性" class="headerlink" title="观察属性"></a>观察属性</h2><p>设置attributes为true,观察所有属性</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> observer=<span class="keyword">new</span> MutationObserver(<span class="function">(<span class="params">mutationRecords</span>)=&gt;</span><span class="built_in">console</span>.log(mutationRecords));</span><br><span class="line">observer.observe(<span class="built_in">document</span>.body,&#123;<span class="attr">attributes</span>:<span class="literal">true</span>&#125;);</span><br><span class="line"><span class="comment">//添加属性</span></span><br><span class="line"><span class="built_in">document</span>.body.setAttribute(<span class="string">&#x27;foo&#x27;</span>,<span class="string">&#x27;bar&#x27;</span>);</span><br><span class="line"><span class="comment">//修改属性</span></span><br><span class="line"><span class="built_in">document</span>.body.setAttribute(<span class="string">&#x27;foo&#x27;</span>,<span class="string">&#x27;baz&#x27;</span>);</span><br><span class="line"><span class="comment">//移除属性</span></span><br><span class="line"><span class="built_in">document</span>.body.removeAttribute(<span class="string">&#x27;foo&#x27;</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>用attributeFilter添加白名单属性</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> observer=<span class="keyword">new</span> MutationObserver(<span class="function">(<span class="params">mutationRecords</span>)=&gt;</span><span class="built_in">console</span>.log(mutationRecords));</span><br><span class="line">observer.observe(<span class="built_in">document</span>.body,&#123;<span class="attr">attributeFilter</span>:[<span class="string">&#x27;foo&#x27;</span>]&#125;);</span><br><span class="line"><span class="comment">//添加白名单属性</span></span><br><span class="line"><span class="built_in">document</span>.body.setAttribute(<span class="string">&#x27;foo&#x27;</span>,<span class="string">&#x27;bar&#x27;</span>);</span><br><span class="line"><span class="comment">//添加被排除的属性</span></span><br><span class="line"><span class="built_in">document</span>.body.setAttribute(<span class="string">&#x27;baz&#x27;</span>,<span class="string">&#x27;qux&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>在记录中保存属性原来的值</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> observer=<span class="keyword">new</span> MutationObserver(<span class="function">(<span class="params">mutationRecords</span>)=&gt;</span><span class="built_in">console</span>.log(mutationRecords.map(<span class="function">(<span class="params">x</span>)=&gt;</span>x.oldValue)));</span><br><span class="line">observer.observe(<span class="built_in">document</span>.body,&#123;<span class="attr">attributeOldValue</span>:<span class="literal">true</span>&#125;);</span><br><span class="line"><span class="built_in">document</span>.body.setAttribute(<span class="string">&#x27;foo&#x27;</span>,<span class="string">&#x27;bar&#x27;</span>);</span><br><span class="line"><span class="built_in">document</span>.body.setAttribute(<span class="string">&#x27;foo&#x27;</span>,<span class="string">&#x27;baz&#x27;</span>);</span><br><span class="line"><span class="built_in">document</span>.body.setAttribute(<span class="string">&#x27;foo&#x27;</span>,<span class="string">&#x27;qux&#x27;</span>);</span><br><span class="line"><span class="comment">//[null, &#x27;bar&#x27;, &#x27;baz&#x27;]</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="观察字符数据"><a href="#观察字符数据" class="headerlink" title="观察字符数据"></a>观察字符数据</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> observer=<span class="keyword">new</span> MutationObserver(<span class="built_in">document</span>.body.firstChild,&#123;<span class="attr">characterData</span>:<span class="literal">true</span>&#125;);</span><br><span class="line"><span class="built_in">document</span>.body.firstChild.textContent=<span class="string">&#x27;foo&#x27;</span>;<span class="comment">//创建要观察的文本节点</span></span><br><span class="line">observer.observe(<span class="built_in">document</span>.body.firstChild,&#123;<span class="attr">characterData</span>:<span class="literal">true</span>&#125;);</span><br><span class="line"><span class="built_in">document</span>.body.firstChild.textContent=<span class="string">&#x27;foo&#x27;</span>;</span><br><span class="line"><span class="built_in">document</span>.body.firstChild.textContent=<span class="string">&#x27;bar&#x27;</span>;</span><br><span class="line"><span class="built_in">document</span>.body.firstChild.textContent=<span class="string">&#x27;baz&#x27;</span>;</span><br><span class="line"><span class="comment">//使用characterDataOldValue</span></span><br><span class="line"><span class="keyword">let</span> observer=<span class="keyword">new</span> MutationObserver(<span class="function">(<span class="params">mutationRecords</span>)=&gt;</span><span class="built_in">console</span>.log(mutationRecords.map(<span class="function">(<span class="params">x</span>)=&gt;</span>x.oldValue)));</span><br><span class="line"><span class="built_in">document</span>.body.firstChild.textContent=<span class="string">&#x27;foo&#x27;</span>;<span class="comment">//创建要观察的文本节点</span></span><br><span class="line">observer.observe(<span class="built_in">document</span>.body.firstChild,&#123;<span class="attr">characterDataOldValue</span>:<span class="literal">true</span>&#125;);</span><br><span class="line"><span class="built_in">document</span>.body.firstChild.textContent=<span class="string">&#x27;foo&#x27;</span>;</span><br><span class="line"><span class="built_in">document</span>.body.firstChild.textContent=<span class="string">&#x27;bar&#x27;</span>;</span><br><span class="line"><span class="built_in">document</span>.body.firstChild.textContent=<span class="string">&#x27;baz&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<h2 id="观察子节点"><a href="#观察子节点" class="headerlink" title="观察子节点"></a>观察子节点</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.body.innerHTML=<span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="keyword">let</span> observer=<span class="keyword">new</span> MutationObserver(<span class="function">(<span class="params">mutationRecords</span>)=&gt;</span><span class="built_in">console</span>.log(mutationRecords));</span><br><span class="line"><span class="comment">//创建两个初始子节点</span></span><br><span class="line"><span class="built_in">document</span>.body.appendChild(<span class="built_in">document</span>.createElement(<span class="string">&#x27;div&#x27;</span>));</span><br><span class="line"><span class="built_in">document</span>.body.appendChild(<span class="built_in">document</span>.createElement(<span class="string">&#x27;span&#x27;</span>));</span><br><span class="line">observer.observe(<span class="built_in">document</span>.body,&#123;<span class="attr">childList</span>:<span class="literal">true</span>&#125;);</span><br><span class="line"><span class="built_in">document</span>.body.insertBefore(<span class="built_in">document</span>.body.lastChild,<span class="built_in">document</span>.body.firstChild);</span><br><span class="line"><span class="comment">//发生两次变化，先移除节点再添加节点</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="观察子树"><a href="#观察子树" class="headerlink" title="观察子树"></a>观察子树</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.body.innerHTML=<span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="keyword">let</span> observer=<span class="keyword">new</span> MutationObserver(<span class="function">(<span class="params">mutationRecords</span>)=&gt;</span><span class="built_in">console</span>.log(mutationRecords));</span><br><span class="line"><span class="built_in">document</span>.body.appendChild(<span class="built_in">document</span>.createElement(<span class="string">&#x27;div&#x27;</span>));</span><br><span class="line">observer.observe(<span class="built_in">document</span>.body,&#123;<span class="attr">attributes</span>:<span class="literal">true</span>,<span class="attr">subtree</span>:<span class="literal">true</span>&#125;);</span><br><span class="line"><span class="built_in">document</span>.body.firstChild.setAttribute(<span class="string">&#x27;foo&#x27;</span>,<span class="string">&#x27;baz&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="异步回调与记录队列"><a href="#异步回调与记录队列" class="headerlink" title="异步回调与记录队列"></a>异步回调与记录队列</h2><h3 id="takeRecords-方法"><a href="#takeRecords-方法" class="headerlink" title="takeRecords()方法"></a>takeRecords()方法</h3><p>清空记录队列，取出并·返回其中的所有MutationRecord实例,可以用在希望断开与观察目标的联系，但又希望处理由于disconnect()而被抛弃的记录队列中的MutationRecord实例</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> observer=<span class="keyword">new</span> MutationObserver(<span class="function">(<span class="params">mutationRecords</span>)=&gt;</span><span class="built_in">console</span>.log(mutationRecords));</span><br><span class="line">observer.observe(<span class="built_in">document</span>.body,&#123;<span class="attr">attributes</span>:<span class="literal">true</span>&#125;);</span><br><span class="line"><span class="built_in">document</span>.body.className=<span class="string">&#x27;foo&#x27;</span>;</span><br><span class="line"><span class="built_in">document</span>.body.className=<span class="string">&#x27;bar&#x27;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(observer.takeRecords());</span><br><span class="line"><span class="built_in">console</span>.log(observer.takeRecords());</span><br><span class="line"><span class="comment">//[MutationRecord, MutationRecord]</span></span><br><span class="line"><span class="comment">//[]</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1345,7 +1318,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">207</span>
+          <span class="site-state-item-count">209</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1419,7 +1392,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共187.8k字</span>
+  <span class="post-count">博客全站共189.7k字</span>
 </div>
         
 
