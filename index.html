@@ -187,6 +187,254 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/22/%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E6%8F%92%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/22/%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E6%8F%92%E4%BB%B6/" class="post-title-link" itemprop="url">编写一个插件</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-10-22 16:11:26 / 修改时间：18:10:24" itemprop="dateCreated datePublished" datetime="2022-10-22T16:11:26+08:00">2022-10-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/webpack/" itemprop="url" rel="index"><span itemprop="name">webpack</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="webpack插件由以下组成："><a href="#webpack插件由以下组成：" class="headerlink" title="webpack插件由以下组成："></a>webpack插件由以下组成：</h1><p>一个javaScript命名函数或者JavaScript类</p>
+<p>由插件函数的prototype上定义的一个apply方法</p>
+<p>指定一个绑定到webpack自身的事件钩子</p>
+<p>处理webpack内部实例的特定数据</p>
+<p>功能完成后调用webpack提供的回调</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一个 JavaScript 类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyExampleWebpackPlugin</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 在插件函数的 prototype 上定义一个 `apply` 方法，以 compiler 为参数。</span></span><br><span class="line">  <span class="function"><span class="title">apply</span>(<span class="params">compiler</span>)</span> &#123;</span><br><span class="line">    <span class="comment">// 指定一个挂载到 webpack 自身的事件钩子。</span></span><br><span class="line">    compiler.hooks.emit.tapAsync(</span><br><span class="line">      <span class="string">&#x27;MyExampleWebpackPlugin&#x27;</span>,</span><br><span class="line">      <span class="function">(<span class="params">compilation, callback</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;这是一个示例插件！&#x27;</span>);</span><br><span class="line">        <span class="built_in">console</span>.log(</span><br><span class="line">          <span class="string">&#x27;这里表示了资源的单次构建的 `compilation` 对象：&#x27;</span>,</span><br><span class="line">          compilation</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 用 webpack 提供的插件 API 处理构建过程</span></span><br><span class="line">        compilation.addModule(<span class="comment">/* ... */</span>);</span><br><span class="line"></span><br><span class="line">        callback();</span><br><span class="line">      &#125;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>webpack通过plugin机制让其更加灵活，以适应各种应用场景，在webpack运行的生命周期中会广播出许多事件，plugin可以监听这些事件，在合适的时机通过webpack提供的api改变输出结果</p>
+<h1 id="Compiler和Compilation"><a href="#Compiler和Compilation" class="headerlink" title="Compiler和Compilation"></a>Compiler和Compilation</h1><p>插件开发中最重要的两个资源就是compiler和compilation对象，理解它们的角色是扩展webpack引擎重要的第一步</p>
+<p>compiler对象代表了完整的webpack环境配置，这个对象在<strong>启动webpack时被一次性实例化</strong>，可以简单理解为webpack实例，并配置好所有可操作的设置，包括options,loader和plugin。当在webpack环境中启用一个插件时，插件将受到compiler对象的引用，可以使用它来访问webpack的主环境</p>
+<p>compilation对象代表一次资源版本构建，当运行webpack开发环境中间件时，每当检测一个文件变化，就会创建一个新的compilation，从而生成一组新的编译资源，一个compilation对象表现了当前的模块资源、编译生成资源、变化的文件、以及被跟踪依赖大的状态信息。compilation对象也提供了很多关键时机的回调，以供插件做自定义处理时选择使用，通过compilation也能读取到compiler对象</p>
+<p><strong>compiler和compilation区别在于：compiler代表了整个webpack从启动到关闭的生命周期，而compilation只是代表了一次新的编译</strong></p>
+<h1 id="基本插件架构"><a href="#基本插件架构" class="headerlink" title="基本插件架构"></a>基本插件架构</h1><p>插件是由具有apply方法的prototype对象所实例化出来的，这个apply方法在安装插件时，会被webpack compiler调用一次，apply方法可以接受一个webpack compiler对象的引用，从而可以在回调函数中访问到compiler对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HelloWorldPlugin</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">apply</span>(<span class="params">compiler</span>)</span> &#123;</span><br><span class="line">    compiler.hooks.done.tap(</span><br><span class="line">      <span class="string">&#x27;Hello World Plugin&#x27;</span>,</span><br><span class="line">      <span class="function">(<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="function">        stats <span class="comment">/* 绑定 done 钩子后，stats 会作为参数传入。 */</span></span></span></span><br><span class="line"><span class="params"><span class="function">      </span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;Hello World!&#x27;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = HelloWorldPlugin;</span><br></pre></td></tr></table></figure>
+
+<p>安装插件：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line"><span class="keyword">var</span> HelloWorldPlugin = <span class="built_in">require</span>(<span class="string">&#x27;hello-world&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="comment">// ... 这里是其他配置 ...</span></span><br><span class="line">  <span class="attr">plugins</span>: [<span class="keyword">new</span> HelloWorldPlugin(&#123; <span class="attr">options</span>: <span class="literal">true</span> &#125;)],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/20/%E5%AE%9E%E4%B9%A0%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/20/%E5%AE%9E%E4%B9%A0%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">实习遇到的问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-20 18:01:08" itemprop="dateCreated datePublished" datetime="2022-10-20T18:01:08+08:00">2022-10-20</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/19/HTML-CSS%E5%92%8CJs%E5%A6%82%E4%BD%95%E5%8F%98%E6%88%90%E9%A1%B5%E9%9D%A2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/19/HTML-CSS%E5%92%8CJs%E5%A6%82%E4%BD%95%E5%8F%98%E6%88%90%E9%A1%B5%E9%9D%A2/" class="post-title-link" itemprop="url">HTML,CSS和Js如何变成页面</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-10-19 19:55:01 / 修改时间：21:14:53" itemprop="dateCreated datePublished" datetime="2022-10-19T19:55:01+08:00">2022-10-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">浏览器</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="构建DOM树"><a href="#构建DOM树" class="headerlink" title="构建DOM树"></a>构建DOM树</h2><p>将HTML转换为浏览器能够理解的DOM树结构</p>
+<h2 id="样式计算"><a href="#样式计算" class="headerlink" title="样式计算"></a>样式计算</h2><p>生成DOM树后，根据CSS样式表，计算出DOM树中所有节点的样式</p>
+<h2 id="布局阶段"><a href="#布局阶段" class="headerlink" title="布局阶段"></a>布局阶段</h2><p>1.构建布局树：</p>
+<ul>
+<li>遍历DOM树中所有可见结点，并把这些结点加到布局中</li>
+<li>不可见的结点会被布局树忽略，如head标签下大雾全部内容，以及display:none的元素</li>
+</ul>
+<p>2.布局计算</p>
+<p>计算布局树中节点的坐标位置</p>
+<h2 id="分层"><a href="#分层" class="headerlink" title="分层"></a>分层</h2><p>1拥有层叠上下文属性的元素会被提升为单独的一层</p>
+<p>2需要剪裁的地方也会被创建为图层</p>
+<p>例如：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">      <span class="selector-tag">div</span> &#123;</span></span><br><span class="line"><span class="css">            <span class="attribute">width</span>: <span class="number">200</span>;</span></span><br><span class="line"><span class="css">            <span class="attribute">height</span>: <span class="number">200</span>;</span></span><br><span class="line"><span class="css">            <span class="attribute">overflow</span>:auto;</span></span><br><span class="line"><span class="css">            <span class="attribute">background</span>: gray;</span></span><br><span class="line"><span class="css">        &#125; </span></span><br><span class="line"><span class="css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> &gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>所以元素有了层叠上下文的属性或者需要被剪裁，那么就会被提升成为单独一层，你可以参看下图：<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>从上图我们可以看到，document层上有A和B层，而B层之上又有两个图层。这些图层组织在一起也是一颗树状结构。<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>图层树是基于布局树来创建的，为了找出哪些元素需要在哪些层中，渲染引擎会遍历布局树来创建层树（Update LayerTree）。<span class="tag">&lt;/<span class="name">p</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>当div里面文字内容过多，文字显示区域超出200*200面积，产生了剪裁，渲染引擎会把裁剪文字内容的一部分用于显示在div区域，出现裁剪情况时，渲染引擎会为文字不烦单独创建一个层，如果出现滚动条，滚动条也会被提升为单独的层</p>
+<h2 id="图层绘制"><a href="#图层绘制" class="headerlink" title="图层绘制"></a>图层绘制</h2><p>图层树构建完成后，渲染引擎会对图层树中每个图层进行绘制</p>
+<p>渲染引擎会把图层的绘制拆分成很多小的绘制指令，然后把这些指令按照顺序组成一个待绘制列表</p>
+<h2 id="栅格化操作"><a href="#栅格化操作" class="headerlink" title="栅格化操作"></a>栅格化操作</h2><p>绘制列表是用来记录绘制顺序和绘制指令的列表，实际上绘制操作是由渲染引擎中的合成线程完成的，当图层的绘制列表准备好后，主线程会把绘制列表提交给合成线程，合成线程会把图层划分为图块，这些图块的大小通常为256x256或512*x512,合成线程按照视口附近的图块优先生成位图，实际生成的位图由栅格化来执行，栅格化就是将图块转为位图，渲染进程维护了一个栅格化的线程池，所有的图块栅格化都是在线程池内执行。使用GPU生成位图的过程叫做快速栅格化。</p>
+<h2 id="合成和显示"><a href="#合成和显示" class="headerlink" title="合成和显示"></a>合成和显示</h2><p>图块栅格化完成后，合成线程就会生成一个绘制图块命令”DrawQuad”，将该命令提交给浏览器进程，浏览器进程有一个viz组件，用来接收合成线程发过来的DrawQuad命令，根据该命令，将页面内容绘制到内存中，最后将内存显示在屏幕上</p>
+<p><img src="/2022/10/19/HTML-CSS%E5%92%8CJs%E5%A6%82%E4%BD%95%E5%8F%98%E6%88%90%E9%A1%B5%E9%9D%A2/1-16661850075471.png"></p>
+<h2 id="渲染流程总结："><a href="#渲染流程总结：" class="headerlink" title="渲染流程总结："></a>渲染流程总结：</h2><ul>
+<li>渲染进程将HTML内容转换为浏览器能读懂的DOM树结构</li>
+<li>渲染引擎将CSS样式表转化为浏览器能理解的styleSheets,计算出DOM结点样式</li>
+<li>创建布局树，并计算元素的布局信息</li>
+<li>对布局树进行分层，并生成分层树</li>
+<li>为每个图层生成绘制列表，并将其提交到合成线程</li>
+<li>合成线程将图层分层图块，并在光栅化线程池中将图块转为位图</li>
+<li>合成线程发送绘制图块命令DrawQuad给浏览器进程</li>
+<li>浏览器进程根据DrawQuad消息生成页面，并显示到显示器上</li>
+</ul>
+<p>参考链接：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.poetries.top/browser-working-principle/guide/part1/lesson06.html#_1-%E6%9B%B4%E6%96%B0%E4%BA%86%E5%85%83%E7%B4%A0%E7%9A%84%E5%87%A0%E4%BD%95%E5%B1%9E%E6%80%A7%EF%BC%88%E9%87%8D%E6%8E%92%EF%BC%89">https://blog.poetries.top/browser-working-principle/guide/part1/lesson06.html#_1-%E6%9B%B4%E6%96%B0%E4%BA%86%E5%85%83%E7%B4%A0%E7%9A%84%E5%87%A0%E4%BD%95%E5%B1%9E%E6%80%A7%EF%BC%88%E9%87%8D%E6%8E%92%EF%BC%89</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/15/%E5%A3%B0%E6%98%8E%E7%A9%BA%E9%97%B4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -681,17 +929,23 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-10-05 20:53:13 / 修改时间：21:03:12" itemprop="dateCreated datePublished" datetime="2022-10-05T20:53:13+08:00">2022-10-05</time>
+              <time title="创建时间：2022-10-05 20:53:13" itemprop="dateCreated datePublished" datetime="2022-10-05T20:53:13+08:00">2022-10-05</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-10-22 16:12:22" itemprop="dateModified" datetime="2022-10-22T16:12:22+08:00">2022-10-22</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/TypeSctipt/" itemprop="url" rel="index"><span itemprop="name">TypeSctipt</span></a>
+                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
                 </span>
             </span>
 
@@ -824,294 +1078,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/09/18/AST%E7%9A%84%E6%9E%84%E5%BB%BA%E4%B8%8E%E8%BD%AC%E6%8D%A2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/18/AST%E7%9A%84%E6%9E%84%E5%BB%BA%E4%B8%8E%E8%BD%AC%E6%8D%A2/" class="post-title-link" itemprop="url">Vue.js模板编译器原理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-09-18 10:53:58" itemprop="dateCreated datePublished" datetime="2022-09-18T10:53:58+08:00">2022-09-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-09-22 22:29:03" itemprop="dateModified" datetime="2022-09-22T22:29:03+08:00">2022-09-22</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Vue-js模板编译器用于把模板编译为渲染函数："><a href="#Vue-js模板编译器用于把模板编译为渲染函数：" class="headerlink" title="Vue.js模板编译器用于把模板编译为渲染函数："></a>Vue.js模板编译器用于把模板编译为渲染函数：</h1><ul>
-<li>分析模板，将其解析为AST</li>
-<li>将模板AST转换为用于描述渲染函数的JavaScript AST</li>
-<li>根据JavaScript AST生成渲染函数代码</li>
-</ul>
-<h1 id="解析Token"><a href="#解析Token" class="headerlink" title="解析Token"></a>解析Token</h1><p>为Vue.js模板构造AST，AST在结构上和模板同构</p>
-<p>首先，将模板解析为一个个token,利用有限状态自动机构造一个词法分析器，词法分析的过程就是状态机在不同状态之间迁移的过程，在此过程中，状态机会产出一个个token,生成一个token列表我们使用该token列表来构造用于描述模板的AST</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义状态机状态</span></span><br><span class="line"><span class="keyword">const</span> State = &#123;</span><br><span class="line">  <span class="attr">initial</span>: <span class="number">1</span>, <span class="comment">//初始状态</span></span><br><span class="line">  <span class="attr">tagOpen</span>: <span class="number">2</span>, <span class="comment">//标签开始状态</span></span><br><span class="line">  <span class="attr">tagName</span>: <span class="number">3</span>, <span class="comment">//标签名称状态</span></span><br><span class="line">  <span class="attr">text</span>: <span class="number">4</span>, <span class="comment">//文本状态</span></span><br><span class="line">  <span class="attr">tagEnd</span>: <span class="number">5</span>, <span class="comment">//结束状态</span></span><br><span class="line">  <span class="attr">tagEndName</span>: <span class="number">6</span>, <span class="comment">//结束标签名称状态</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//一个辅助函数，用于判断是否是字母</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isAlpha</span>(<span class="params">char</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (char &gt;= <span class="string">&quot;a&quot;</span> &amp;&amp; char &lt;= <span class="string">&quot;z&quot;</span>) || (char &gt;= <span class="string">&quot;A&quot;</span> &amp;&amp; char &lt;= <span class="string">&quot;Z&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//接收模板字符串作为参数，并将模板切割为Token返回</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">tokenize</span>(<span class="params">str</span>) </span>&#123;</span><br><span class="line">  <span class="comment">//设置状态机的当前状态为初始状态</span></span><br><span class="line">  <span class="keyword">let</span> currentState = State.initial;</span><br><span class="line">  <span class="comment">//用于缓存字符</span></span><br><span class="line">  <span class="keyword">const</span> chars = [];</span><br><span class="line">  <span class="comment">//生成的token会存储到tokens中，并作为函数返回值返回</span></span><br><span class="line">  <span class="keyword">const</span> tokens = [];</span><br><span class="line">  <span class="comment">//使用while循环开启自动机，只要模板字符串没有被消费完，自动机一直运行</span></span><br><span class="line">  <span class="keyword">while</span> (str) &#123;</span><br><span class="line">    <span class="comment">//查看第一个字符只是查看，没有消费</span></span><br><span class="line">    <span class="keyword">const</span> char = str[<span class="number">0</span>];</span><br><span class="line">    <span class="comment">//switch语句匹配状态</span></span><br><span class="line">    <span class="keyword">switch</span> (currentState) &#123;</span><br><span class="line">      <span class="comment">//状态机处于初始状态</span></span><br><span class="line">      <span class="keyword">case</span> State.initial:</span><br><span class="line">        <span class="comment">//遇到字符&lt;</span></span><br><span class="line">        <span class="keyword">if</span> (char === <span class="string">&quot;&lt;&quot;</span>) &#123;</span><br><span class="line">          <span class="comment">//切换到标签开始状态</span></span><br><span class="line">          currentState = State.tagOpen;</span><br><span class="line">          <span class="comment">//消费字符</span></span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isAlpha(str)) &#123;</span><br><span class="line">          <span class="comment">//初始状态下遇到文本，切换到文本状态</span></span><br><span class="line">          currentState = State.text;</span><br><span class="line">          <span class="comment">//将当前文本存到chars数组</span></span><br><span class="line">          chars.push(char);</span><br><span class="line">          <span class="comment">//消费字符</span></span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="comment">//状态机处于标签开始状态</span></span><br><span class="line">      <span class="keyword">case</span> State.tagOpen:</span><br><span class="line">        <span class="comment">//遇到字母，切换到标签名称状态</span></span><br><span class="line">        <span class="keyword">if</span> (isAlpha(char)) &#123;</span><br><span class="line">          currentState = State.tagName;</span><br><span class="line">          <span class="comment">//将当前字符缓存到chars数组</span></span><br><span class="line">          chars.push(char);</span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (char === <span class="string">&quot;/&quot;</span>) &#123;</span><br><span class="line">          <span class="comment">//遇到&quot;/&quot;切换到标签结束状态</span></span><br><span class="line">          currentState = State.tagEnd;</span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="comment">//状态机处于标签名状态</span></span><br><span class="line">      <span class="keyword">case</span> State.tagName:</span><br><span class="line">        <span class="comment">//遇到字母，仍然处于标签名状态，不需要切换状态</span></span><br><span class="line">        <span class="comment">//但需要将字符缓存进chars数组</span></span><br><span class="line">        <span class="keyword">if</span> (isAlpha(char)) &#123;</span><br><span class="line">          chars.push(char);</span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (char === <span class="string">&quot;&gt;&quot;</span>) &#123;</span><br><span class="line">          <span class="comment">//切换到初始状态</span></span><br><span class="line">          currentState = State.initial;</span><br><span class="line">          <span class="comment">//同时创建一个标签Token,并添加到tokens数组</span></span><br><span class="line">          <span class="comment">//此时chars数组中缓存的就是标签名</span></span><br><span class="line">          tokens.push(&#123;</span><br><span class="line">            <span class="attr">type</span>: <span class="string">&quot;tag&quot;</span>,</span><br><span class="line">            <span class="attr">name</span>: chars.join(<span class="string">&quot;&quot;</span>),</span><br><span class="line">          &#125;);</span><br><span class="line">          <span class="comment">//chars数组已经被消费，清空</span></span><br><span class="line">          chars.length = <span class="number">0</span>;</span><br><span class="line">          <span class="comment">//同时消费当前字符&gt;</span></span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="comment">//状态机处于文本状态</span></span><br><span class="line">      <span class="keyword">case</span> State.text:</span><br><span class="line">        <span class="keyword">if</span> (isAlpha(char)) &#123;</span><br><span class="line">          chars.push(char);</span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (char === <span class="string">&quot;&lt;&quot;</span>) &#123;</span><br><span class="line">          <span class="comment">//切换标签开始状态</span></span><br><span class="line">          currentState = State.tagOpen;</span><br><span class="line">          <span class="comment">//从文本状态到标签开始状态，此时应该创建文本Token,并添加到tokens数组</span></span><br><span class="line">          <span class="comment">//chars数组中的内容就是文本内容</span></span><br><span class="line">          tokens.push(&#123;</span><br><span class="line">            <span class="attr">type</span>: <span class="string">&quot;text&quot;</span>,</span><br><span class="line">            <span class="attr">content</span>: chars.join(<span class="string">&quot;&quot;</span>),</span><br><span class="line">          &#125;);</span><br><span class="line">          <span class="comment">//清空数组内容</span></span><br><span class="line">          chars.length = <span class="number">0</span>;</span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="comment">//状态机处于标签结束状态</span></span><br><span class="line">      <span class="keyword">case</span> State.tagEnd:</span><br><span class="line">        <span class="comment">///遇到字母切换到标签结束名</span></span><br><span class="line">        <span class="keyword">if</span> (isAlpha(char)) &#123;</span><br><span class="line">          currentState = State.tagEndName;</span><br><span class="line">          chars.push(char);</span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="comment">//状态机处于结束标签名称状态</span></span><br><span class="line">      <span class="keyword">case</span> State.tagEndName:</span><br><span class="line">        <span class="keyword">if</span> (isAlpha(char)) &#123;</span><br><span class="line">          chars.push(char);</span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (char === <span class="string">&quot;&gt;&quot;</span>) &#123;</span><br><span class="line">          currentState = State.initial;</span><br><span class="line">          tokens.push(&#123;</span><br><span class="line">            <span class="attr">type</span>: <span class="string">&quot;tagEnd&quot;</span>,</span><br><span class="line">            <span class="attr">name</span>: chars.join(<span class="string">&quot;&quot;</span>),</span><br><span class="line">          &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">        chars.length = <span class="number">0</span>;</span><br><span class="line">        str = str.slice(<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//最后返回tokens</span></span><br><span class="line">  <span class="keyword">return</span> tokens;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>比如：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> tokens = tokenize(<span class="string">`&lt;div&gt;&lt;p&gt;Vue&lt;/p&gt;&lt;/div&gt;)</span></span><br></pre></td></tr></table></figure>
-
-<p>得到：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> tokens = [</span><br><span class="line">    &#123;<span class="attr">type</span>:<span class="string">&quot;tag&quot;</span>,<span class="attr">name</span>:<span class="string">&quot;div&quot;</span>&#125;,<span class="comment">//div开始标签</span></span><br><span class="line">    &#123;<span class="attr">type</span>:<span class="string">&#x27;tag&#x27;</span>,<span class="attr">name</span>:<span class="string">&#x27;p&#x27;</span>&#125;,<span class="comment">//p开始标签</span></span><br><span class="line">    &#123;<span class="attr">type</span>:<span class="string">&#x27;text&#x27;</span>,<span class="attr">context</span>:<span class="string">&#x27;Vue&#x27;</span>&#125;,<span class="comment">//文本节点</span></span><br><span class="line">    &#123;<span class="attr">type</span>:<span class="string">&#x27;tagEnd&#x27;</span>,<span class="attr">name</span>:<span class="string">&#x27;p&#x27;</span>&#125;,<span class="comment">//p结束标签</span></span><br><span class="line">    &#123;<span class="attr">type</span>:<span class="string">&#x27;tagEnd&#x27;</span>,<span class="attr">name</span>:<span class="string">&#x27;div&#x27;</span>&#125;<span class="comment">//div结束标签</span></span><br><span class="line">    </span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
-<h1 id="构建AST："><a href="#构建AST：" class="headerlink" title="构建AST："></a>构建AST：</h1><p>接下来，扫描token列表构建AST：</p>
-<p>扫描Token列表维护一个标签栈，每当扫描到一个开始标签结点，将其压入栈顶，栈顶的结点始终作为下一个扫描的结点的父结点，这样，当所有token扫描完，构建一颗AST树</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//扫描token列表构建AST</span></span><br><span class="line"><span class="comment">//parse函数接收模板作为参数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">parse</span>(<span class="params">str</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//首先对模板标记化，得到tokens</span></span><br><span class="line">    <span class="keyword">const</span> tokens = tokenize(str)</span><br><span class="line">    <span class="comment">//创建Root节点</span></span><br><span class="line">    <span class="keyword">const</span> root = &#123;</span><br><span class="line">        <span class="attr">type</span>: <span class="string">&#x27;Root&#x27;</span>,</span><br><span class="line">        <span class="attr">children</span>: []</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//创建elementStack，起初里面只有Root根结点</span></span><br><span class="line">    <span class="keyword">const</span> elementStack = [root]</span><br><span class="line">    <span class="comment">//开启一个while循环扫描tokens,直到所有Token都被扫描完毕为止</span></span><br><span class="line">    <span class="keyword">while</span>(tokens.length) &#123;</span><br><span class="line">        <span class="comment">//获取栈顶节点作为父结点</span></span><br><span class="line">        <span class="keyword">const</span> parent = elementStack[elementStack.length-<span class="number">1</span>]</span><br><span class="line">        <span class="comment">//当前扫描的Token</span></span><br><span class="line">        <span class="keyword">const</span> t = tokens[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">switch</span>(t.type)&#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;tag&#x27;</span>:</span><br><span class="line">                <span class="comment">//如果当前token是开始标签，则创建Element类型的AST节点</span></span><br><span class="line">                <span class="keyword">const</span> elementNode = &#123;</span><br><span class="line">                    <span class="attr">type</span>: <span class="string">&#x27;Element&#x27;</span>,</span><br><span class="line">                    <span class="attr">tag</span>: t.name,</span><br><span class="line">                    <span class="attr">children</span>: []</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//将其添加到父级节点的children</span></span><br><span class="line">                parent.children.push(elementNode)</span><br><span class="line">                <span class="comment">//将当前结点压入栈</span></span><br><span class="line">                elementStack.push(elementNode)</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;text&#x27;</span>:</span><br><span class="line">                <span class="keyword">const</span> textNode = &#123;</span><br><span class="line">                    <span class="attr">type</span>: <span class="string">&#x27;Text&#x27;</span>,</span><br><span class="line">                    <span class="attr">tag</span>: t.content</span><br><span class="line">                &#125;</span><br><span class="line">                parent.children.push(textNode)</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;tagEnd&#x27;</span>:</span><br><span class="line">                <span class="comment">//遇到结束标签，将栈顶节点弹出</span></span><br><span class="line">                elementStack.pop()</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//消费已经扫描过的token</span></span><br><span class="line">        tokens.shift()</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="AST的转换"><a href="#AST的转换" class="headerlink" title="AST的转换"></a>AST的转换</h1><p>AST的转换，即对AST的一系列操作</p>
-<p>transform函数完成AST的转换</p>
-<p>为了解耦结点的访问和操作，设计了插件化架构，将结点的操作封装到独立的转换函数，这些转换函数可以通过context.nodeTransforms来注册，这里的context称为转换上下文，上下文对象维护程序的当前状态,可以实现结点的替换删除功能，但是有时候，当前结点的转换工作依赖于子节点的转换结果，所以为了优先执行子节点的转换，我们将整个转换过程分为“进入阶段“和”退出阶段“，每个转换函数分成两个阶段执行，这样可以实现更加细粒度的转换控制</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//首先需要编写一个深度优先遍历算法</span></span><br><span class="line"><span class="comment">//转换上下文context看做是在程序中某个范围内的全局变量,下面，所有AST转换函数都可以通过context共享数据</span></span><br><span class="line"><span class="comment">//将对结点的访问和操作进行解耦</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">traverseNode</span>(<span class="params">ast,context</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//设置当前转换的结点信息context.currentNode</span></span><br><span class="line">    context.currentNode = ast</span><br><span class="line">    <span class="keyword">const</span> transforms = context.nodeTransforms</span><br><span class="line">    <span class="comment">//执行对结点的操作</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>;i&lt;transforms.length;i++)&#123;</span><br><span class="line">        transforms[i](context.currentNode,context)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> children = context.currentNode.children</span><br><span class="line">    <span class="comment">//执行对结点的深度遍历访问</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>;i&lt;children.length;i++)&#123;</span><br><span class="line">        <span class="comment">//递归调用traverseNode转换子节点之前，将当前结点设置为父结点</span></span><br><span class="line">        context.parent = context.currentNode</span><br><span class="line">        <span class="comment">//设置位置索引</span></span><br><span class="line">        context.childIndex = i</span><br><span class="line">        <span class="comment">//递归调用时，将context透传</span></span><br><span class="line">        traverseNode(children[i],context)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">transformElement</span>(<span class="params">node,context</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(node.type === <span class="string">&#x27;Element&#x27;</span> &amp;&amp; node.tag === <span class="string">&#x27;p&#x27;</span>) &#123;</span><br><span class="line">        context.removeNode()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">transformText</span>(<span class="params">node,context</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(node.type === <span class="string">&#x27;Text&#x27;</span>) &#123;</span><br><span class="line">        context.replaceNode(&#123;</span><br><span class="line">            <span class="attr">type</span>:<span class="string">&#x27;Element&#x27;</span>,</span><br><span class="line">            <span class="attr">tag</span>: <span class="string">&#x27;span&#x27;</span></span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">transform</span>(<span class="params">ast</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> context = &#123;</span><br><span class="line">        <span class="comment">//增加currentNode用来存储当前正在转换的结点</span></span><br><span class="line">        <span class="attr">currentNode</span>:<span class="literal">null</span>,</span><br><span class="line">        <span class="comment">//增加currentIndex，用来存储当前结点在父结点的children中的位置索引</span></span><br><span class="line">        <span class="attr">childIndex</span>: <span class="number">0</span>,</span><br><span class="line">        <span class="comment">//增加parant用来存储当前转换结点的父结点</span></span><br><span class="line">        <span class="attr">parent</span>: <span class="literal">null</span>,</span><br><span class="line">        <span class="comment">//用于替换结点的函数，接收新节点作为参数</span></span><br><span class="line">        <span class="function"><span class="title">replaceNode</span>(<span class="params">node</span>)</span>&#123;</span><br><span class="line">            <span class="comment">//为了替换结点，需要修改AST</span></span><br><span class="line">            <span class="comment">//找到当前结点在父结点的children位置：context.childIndex</span></span><br><span class="line">            <span class="comment">//使用新节点替换</span></span><br><span class="line">            context.parent.children[context.childIndex]=node</span><br><span class="line">            context.currentNode = node</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="comment">//用于移除当前访问结点</span></span><br><span class="line">        <span class="function"><span class="title">removeNode</span>(<span class="params">node</span>)</span>&#123;</span><br><span class="line">            <span class="comment">//根据当前结点在父结点中的索引删除结点</span></span><br><span class="line">            context.parent.children.splice(context.childIndex,<span class="number">1</span>)</span><br><span class="line">            context.currentNode = <span class="literal">null</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">nodeTransforms</span>: [</span><br><span class="line">            transformElement,</span><br><span class="line">            transformText</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">    traverseNode(ast,context)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>增加回退功能的traverseNode:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">traverseNode</span>(<span class="params">ast, context</span>) </span>&#123;</span><br><span class="line">  <span class="comment">//增加一个退出阶段回调函数数组</span></span><br><span class="line">  <span class="keyword">const</span> exitFns = []</span><br><span class="line">  <span class="comment">//设置当前转换的结点信息context.currentNode</span></span><br><span class="line">  context.currentNode = ast;</span><br><span class="line">  <span class="keyword">const</span> transforms = context.nodeTransforms;</span><br><span class="line">  <span class="comment">//执行对结点的操作</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; transforms.length; i++) &#123;</span><br><span class="line">    <span class="keyword">const</span> onExit = transforms[i](context.currentNode, context);</span><br><span class="line">    <span class="keyword">if</span>(onExit)&#123;</span><br><span class="line">      <span class="comment">//将退出阶段的回调函数添加到exitFns数组中</span></span><br><span class="line">      exitFns.push(onExit)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> children = context.currentNode.children;</span><br><span class="line">  <span class="comment">//执行对结点的深度遍历访问</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; children.length; i++) &#123;</span><br><span class="line">    <span class="comment">//递归调用traverseNode转换子节点之前，将当前结点设置为父结点</span></span><br><span class="line">    context.parent = context.currentNode;</span><br><span class="line">    <span class="comment">//设置位置索引</span></span><br><span class="line">    context.childIndex = i;</span><br><span class="line">    <span class="comment">//递归调用时，将context透传</span></span><br><span class="line">    traverseNode(children[i], context);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//在节点处理的最后阶段执行缓存到exitFns中的回调函数</span></span><br><span class="line">  <span class="keyword">let</span> i = exitFns.length</span><br><span class="line">  <span class="keyword">while</span>(i--)&#123;</span><br><span class="line">    exitFns[i]()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="将模板AST转为JavaScript-AST"><a href="#将模板AST转为JavaScript-AST" class="headerlink" title="将模板AST转为JavaScript AST"></a>将模板AST转为JavaScript AST</h1><p>代码生成的过程就是字符串的拼接过程，需要为不同AST结点编写对应的代码生成函数。</p>
-<p>这段模板：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line">        Vue</span><br><span class="line">    <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line">        Template</span><br><span class="line">    <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>等价于下面这段渲染函数：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> h(<span class="string">&#x27;div&#x27;</span>,[</span><br><span class="line">        h(<span class="string">&#x27;p&#x27;</span>,<span class="string">&#x27;Vue&#x27;</span>),</span><br><span class="line">        h(<span class="string">&#x27;p&#x27;</span>,<span class="string">&#x27;Template&#x27;</span>)</span><br><span class="line">    ])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>等价于下面这段JavaScript AST:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> FunctionDeclNode = &#123;</span><br><span class="line">  <span class="attr">type</span>: <span class="string">&#x27;FunctionDecl&#x27;</span>,</span><br><span class="line">  <span class="comment">//函数名称是一个标识符，标识符本身也是一个结点</span></span><br><span class="line">  <span class="attr">id</span>: &#123;</span><br><span class="line">    <span class="attr">type</span>:<span class="string">&#x27;identifier&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>:<span class="string">&#x27;render&#x27;</span>,<span class="comment">//存储标识符名称，这里是渲染函数render</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">params</span>:[],<span class="comment">//参数</span></span><br><span class="line">  <span class="attr">body</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">type</span>: <span class="string">&#x27;ReturnStatement&#x27;</span>,</span><br><span class="line">      <span class="comment">//最外层的h函数调用</span></span><br><span class="line">      <span class="attr">return</span>: &#123;</span><br><span class="line">        <span class="comment">//函数调用语句</span></span><br><span class="line">        <span class="attr">type</span>: <span class="string">&#x27;CallExpression&#x27;</span>,</span><br><span class="line">        <span class="comment">//被调用函数的名称，是一个标识符</span></span><br><span class="line">        <span class="attr">callee</span>: &#123;<span class="attr">type</span>:<span class="string">&#x27;identifier&#x27;</span>,<span class="attr">name</span>:<span class="string">&#x27;h&#x27;</span>&#125;,</span><br><span class="line">        <span class="attr">arguments</span>: [</span><br><span class="line">          <span class="comment">//第一个参数是字符串字面量div</span></span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">type</span>: <span class="string">&#x27;StringLiteral&#x27;</span>,</span><br><span class="line">            <span class="attr">value</span>:<span class="string">&#x27;div&#x27;</span></span><br><span class="line">          &#125;,</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="comment">//第二个参数是一个数组</span></span><br><span class="line">            <span class="attr">type</span>: <span class="string">&#x27;ArrayExpression&#x27;</span>,</span><br><span class="line">            <span class="attr">elements</span>: [</span><br><span class="line">              <span class="comment">//数组第一个元素时h函数的调用</span></span><br><span class="line">              &#123;</span><br><span class="line">                <span class="attr">type</span>:<span class="string">&#x27;CallExpression&#x27;</span>,</span><br><span class="line">                <span class="attr">callee</span>: &#123;<span class="attr">type</span>:<span class="string">&#x27;identifier&#x27;</span>,<span class="attr">name</span>:<span class="string">&#x27;h&#x27;</span>&#125;,</span><br><span class="line">                <span class="attr">arguments</span>:[</span><br><span class="line">                  <span class="comment">//该h函数调用的第一个参数是一个字符串字面量</span></span><br><span class="line">                  &#123;<span class="attr">type</span>: <span class="string">&#x27;StringLiteral&#x27;</span>,<span class="attr">value</span>:<span class="string">&#x27;p&#x27;</span>&#125;,</span><br><span class="line">                  &#123;<span class="attr">type</span>: <span class="string">&#x27;StringLiteral&#x27;</span>,<span class="attr">value</span>:<span class="string">&#x27;Vue&#x27;</span>&#125;</span><br><span class="line">                ]</span><br><span class="line">              &#125;,</span><br><span class="line">              &#123;</span><br><span class="line">                <span class="attr">type</span>: <span class="string">&#x27;CallExpression&#x27;</span>,</span><br><span class="line">                <span class="attr">callee</span>: &#123;<span class="attr">type</span>:<span class="string">&#x27;identifier&#x27;</span>,<span class="attr">name</span>:<span class="string">&#x27;h&#x27;</span>&#125;,</span><br><span class="line">                <span class="attr">arguments</span>:[</span><br><span class="line">                  &#123;<span class="attr">type</span>: <span class="string">&#x27;StringLiteral&#x27;</span>,<span class="attr">value</span>:<span class="string">&#x27;p&#x27;</span>&#125;,</span><br><span class="line">                  &#123;<span class="attr">type</span>: <span class="string">&#x27;StringLiteral&#x27;</span>,<span class="attr">value</span>:<span class="string">&#x27;Template&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line">                ]</span><br><span class="line">              &#125;</span><br><span class="line">            ]</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>编写一些用来辅助创建js ast的函数</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createStringLiteral</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">type</span>:<span class="string">&#x27;StringLiteral&#x27;</span>,</span><br><span class="line">    value</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//创建Identifier节点（函数声明</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createIdentifier</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">type</span>:<span class="string">&#x27;Identifier&#x27;</span>,</span><br><span class="line">    name</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//创建ArrayExpression节点(数组表达式)</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createArrayExpression</span>(<span class="params">elements</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">type</span>:<span class="string">&#x27;ArrayExpression&#x27;</span>,</span><br><span class="line">    elements</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//创建CallExpression节点(函数调用)</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createCallExpression</span>(<span class="params">callee,<span class="built_in">arguments</span></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">type</span>:<span class="string">&#x27;CallExpression&#x27;</span>,</span><br><span class="line">    <span class="attr">callee</span>:createIdentifier(callee),</span><br><span class="line">    <span class="built_in">arguments</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>编写转换文本节点,标签结点和根结点的函数：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//编写转换文本节点函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">transformText</span>(<span class="params">node</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(node.type !== <span class="string">&#x27;Text&#x27;</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line">  node.jsNode = createStringLiteral(node.content)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//编写转换标签节点函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">transformElement</span>(<span class="params">node</span>) </span>&#123;</span><br><span class="line">  <span class="comment">//转换代码编写在退出阶段的回调函数中</span></span><br><span class="line">  <span class="comment">//可以保证该标签结点的子节点全部被处理完毕</span></span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(node.type !== <span class="string">&#x27;Element&#x27;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//创建h函调用语句，第一个是标签名</span></span><br><span class="line">    <span class="keyword">const</span> callExp = createCallExpression(<span class="string">&#x27;h&#x27;</span>,[</span><br><span class="line">      createStringLiteral(node.tag)</span><br><span class="line">    ])</span><br><span class="line">    <span class="comment">//处理h函数调用的参数</span></span><br><span class="line">    node.children.length === <span class="number">1</span></span><br><span class="line">    <span class="comment">//如果当前标签结点只有一个子节点，则直接使用子节点的jsnode作为参数</span></span><br><span class="line">    ? callExp.arguments.push(node.children[<span class="number">0</span>].jsNode)</span><br><span class="line">    :callExp.arguments.push(</span><br><span class="line">      <span class="comment">//数组的每个元素都是子节点的jsnode</span></span><br><span class="line">      createArrayExpression(node.children.map(<span class="function"><span class="params">c</span> =&gt;</span> c.jsNode))</span><br><span class="line">    )</span><br><span class="line">    <span class="comment">//将当前标签结点对应的JavaScript AST添加到jsNode属性下</span></span><br><span class="line">      node.jsNode = callExp;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//还需要把描述render的函数声明附加到js ast中</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">transformRoot</span>(<span class="params">node</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(node.type !== <span class="string">&#x27;Root&#x27;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//node是根结点，第一个子节点就是模板的根结点</span></span><br><span class="line">    <span class="keyword">const</span> vnodeJSAST = node.children[<span class="number">0</span>].jsNode</span><br><span class="line">    <span class="comment">//创建render函数的声明语句结点，将vnodeAST作为render函数体的返回语句</span></span><br><span class="line">    node.jsNode = &#123;</span><br><span class="line">      <span class="attr">type</span>: <span class="string">&#x27;FunctionDecl&#x27;</span>,</span><br><span class="line">      <span class="attr">id</span>: &#123;<span class="attr">type</span>:<span class="string">&#x27;Identifier&#x27;</span>,<span class="attr">name</span>:<span class="string">&#x27;render&#x27;</span>&#125;,</span><br><span class="line">      <span class="attr">params</span>: [],</span><br><span class="line">      <span class="attr">body</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">type</span>: <span class="string">&#x27;ReturnStatement&#x27;</span>,</span><br><span class="line">          <span class="attr">return</span>: vnodeJSAST</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>编译代码，代码生成：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//编译</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">compile</span>(<span class="params">template</span>) </span>&#123;</span><br><span class="line">  <span class="comment">//模板AST</span></span><br><span class="line">  <span class="keyword">const</span> ast = parse(template)</span><br><span class="line">  <span class="comment">//将模板ast转换为JavaScript AST</span></span><br><span class="line">  transform(ast)</span><br><span class="line">  <span class="keyword">const</span> code = generate(ast.jsNode)</span><br><span class="line">  <span class="keyword">return</span> code</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">generate</span>(<span class="params">node</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> context = &#123;</span><br><span class="line">    <span class="attr">code</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    <span class="function"><span class="title">push</span>(<span class="params">code</span>)</span> &#123;</span><br><span class="line">      context.node += code</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">//当前缩进的级别，初始值为0，即没有缩进</span></span><br><span class="line">    <span class="attr">currentIndent</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="comment">//该函数用来换行，即在代码字符串后面追加\n字符,换行时保留缩进</span></span><br><span class="line">    <span class="function"><span class="title">newLine</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      context.code+= <span class="string">&#x27;\n&#x27;</span>+<span class="string">` `</span>.repeat(context.currentIndent)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">//用来缩进,即让currentIndent自增后调用换行函数</span></span><br><span class="line">    <span class="function"><span class="title">indent</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      context.currentIndent++;</span><br><span class="line">      context.newLine()</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">//取消缩进</span></span><br><span class="line">    <span class="function"><span class="title">deindent</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      context.currentIndent--;</span><br><span class="line">      context.newLine()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  genNode(node,context)</span><br><span class="line">  <span class="keyword">return</span> context.code</span><br><span class="line">&#125; </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">genNode</span>(<span class="params">node,context</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span>(node.type) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;FunctionDecl&#x27;</span>:</span><br><span class="line">      genFunctionDecl(node,context)</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;ReturnStatement&#x27;</span>:</span><br><span class="line">      genReturnStatement(node,context)</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;CallExpression&#x27;</span>:</span><br><span class="line">      genCallExpression(node,context)</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;StringLiteral&#x27;</span>:</span><br><span class="line">      genStringLiteral(node,context)</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;ArrayExpression&#x27;</span>:</span><br><span class="line">      genArrayExpression(node,context)</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//为函数参数生成代码</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">genNodeList</span>(<span class="params">nodes,context</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123;push&#125; = context</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="number">0</span>;i&lt;nodes.length;i++)&#123;</span><br><span class="line">    genNode(nodes[i],context)</span><br><span class="line">    <span class="keyword">if</span>(i&lt;nodes.length-<span class="number">1</span>)&#123;</span><br><span class="line">      push(<span class="string">&#x27;,&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">genFunctionDecl</span>(<span class="params">node,context</span>) </span>&#123;</span><br><span class="line">  <span class="comment">//从context中取出工具函数</span></span><br><span class="line">  <span class="keyword">const</span> &#123;push,indent,deindent&#125; = context</span><br><span class="line">  <span class="comment">//node.id.name即函数名</span></span><br><span class="line">  push(<span class="string">`funtion(<span class="subst">$&#123;node.id.name&#125;</span>)`</span>)</span><br><span class="line">  push(<span class="string">`(`</span>)</span><br><span class="line">  <span class="comment">//为函数参数生成代码</span></span><br><span class="line">  genNodeList(node.params,context)</span><br><span class="line">  push(<span class="string">`)`</span>)</span><br><span class="line">  push(<span class="string">`&#123;`</span>)</span><br><span class="line">  indent()</span><br><span class="line">  <span class="comment">//为函数生成代码，递归调用genNode</span></span><br><span class="line">  node.body.forEach(<span class="function"><span class="params">n</span> =&gt;</span> genNode(n,context))</span><br><span class="line">  <span class="comment">//取消缩进</span></span><br><span class="line">  deindent()</span><br><span class="line">  push(<span class="string">`&#125;`</span>)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">genArrayExpression</span>(<span class="params">node,context</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123;push&#125; = context</span><br><span class="line">  push(<span class="string">&#x27;[&#x27;</span>)</span><br><span class="line">  <span class="comment">//调用genNodeList为数组元素生成代码</span></span><br><span class="line">  genNodeList(node.elements,context)</span><br><span class="line">  push(<span class="string">&#x27;]&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">genReturnStatement</span>(<span class="params">node,context</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123;push&#125; = context</span><br><span class="line">  push(<span class="string">&#x27;return&#x27;</span>)</span><br><span class="line">  <span class="comment">//genNode函数递归生成返回值代码</span></span><br><span class="line">  genNode(context.return,context)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">genStringLiteral</span>(<span class="params">node,context</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123;push&#125; = context</span><br><span class="line">  push(<span class="string">`<span class="subst">$&#123;node.value&#125;</span>`</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">genCallExpression</span>(<span class="params">node,context</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123;push&#125; = context</span><br><span class="line">  <span class="comment">//取得调用函数名称和参数列表</span></span><br><span class="line">  <span class="keyword">const</span> &#123;callee,<span class="built_in">arguments</span>&#125; = context</span><br><span class="line">  push(<span class="string">`<span class="subst">$&#123;callee.name&#125;</span>(`</span>)</span><br><span class="line">  <span class="comment">//调用genNodeList生成参数列表</span></span><br><span class="line">  genNodeList(<span class="built_in">arguments</span>,context)</span><br><span class="line">  push(<span class="string">&#x27;)&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>例子：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ast = parse(<span class="string">`&lt;div&gt;&lt;p&gt;Vue&lt;/p&gt;&lt;p&gt;Template&lt;/p&gt;&lt;/div&gt;`</span>)</span><br><span class="line">transform(ast)</span><br><span class="line"><span class="keyword">const</span> code = generate(ast.jsNode)</span><br></pre></td></tr></table></figure>
-
-<p>转换为：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> history(<span class="string">&#x27;div&#x27;</span>,[h(<span class="string">&#x27;p&#x27;</span>,<span class="string">&#x27;Vue&#x27;</span>),h(<span class="string">&#x27;p&#x27;</span>,<span class="string">&#x27;Template&#x27;</span>)])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/09/16/setup%E5%8E%9F%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/16/setup%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">setup原理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-09-16 22:13:49 / 修改时间：22:17:45" itemprop="dateCreated datePublished" datetime="2022-09-16T22:13:49+08:00">2022-09-16</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>setup只会在被挂载时执行一次，返回值由两种情况：</p>
-<p>1 返回一个函数，该函数将作为组件的render函数</p>
-<p>2 返回一个对象，该对象包含的数据将暴露给模板使用</p>
-<p>setup函数第一个参数为外部为组件传递的props数据对象，第二个参数为setupContext对象，其中保存着组件接口相关的数据和方法：slots,emit,attrs,expose</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mountComponent</span>(<span class="params">vnode,container,anchor</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> componentOptions = vnode.type</span><br><span class="line">    <span class="comment">//从组件选项中取出setup函数</span></span><br><span class="line">    <span class="keyword">let</span> &#123;render,data,setup&#125; = componentOptions</span><br><span class="line">    beforeCreate &amp;&amp; beforeCreate()</span><br><span class="line">    <span class="keyword">const</span> state = data ? reactive(data()) : <span class="literal">null</span></span><br><span class="line">    <span class="keyword">const</span> [props,attrs] = resolveProps(propsOption,vnode,props)</span><br><span class="line">    <span class="keyword">const</span> instance = &#123;</span><br><span class="line">        state,</span><br><span class="line">        <span class="attr">props</span>:shallowReactive(props),</span><br><span class="line">        <span class="attr">isMounted</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">subTree</span>: <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//setupContext包含slots,emit,attrs,expose</span></span><br><span class="line">    <span class="keyword">const</span> setupContext = &#123;attrs&#125;</span><br><span class="line">    <span class="comment">//setupContext作为第二个参数传入</span></span><br><span class="line">    <span class="keyword">const</span> setupResult = setup(shallowReadOnly(instance.props),setupContext)</span><br><span class="line">    <span class="comment">//如果setupResult为函数，则作为渲染函数</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> setupResult === <span class="string">&#x27;function&#x27;</span>)&#123;</span><br><span class="line">        <span class="comment">//冲突</span></span><br><span class="line">        <span class="keyword">if</span>(render)<span class="built_in">console</span>.error(<span class="string">&#x27;setup函数返回渲染函数，render选项被忽略&#x27;</span>)</span><br><span class="line">        render = setupResult</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//如果setup返回值不是函数，则作为数据状态赋值给setupState</span></span><br><span class="line">        setupState = setupContext</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//渲染函数上下文对象，本质上是组件实例的代理，使得渲染函数能够通过this访问props数据和组件自身状态</span></span><br><span class="line">    <span class="keyword">const</span> renderContext = <span class="keyword">new</span> <span class="built_in">Proxy</span>(instance,&#123;</span><br><span class="line">        <span class="function"><span class="title">get</span>(<span class="params">t,k,t</span>)</span>&#123;</span><br><span class="line">          <span class="keyword">const</span> &#123;state,props,slots&#125; = t</span><br><span class="line">          <span class="comment">//先尝试读取自身状态数据</span></span><br><span class="line">          <span class="keyword">if</span>(state &amp;&amp; k <span class="keyword">in</span> state) &#123;</span><br><span class="line">            <span class="keyword">return</span> state[k]</span><br><span class="line">          &#125;<span class="keyword">else</span> <span class="keyword">if</span>(k <span class="keyword">in</span> props)&#123;</span><br><span class="line">            <span class="keyword">return</span> props[k]<span class="comment">//如果组件自身没有该数据，尝试从props上读取</span></span><br><span class="line">          &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">console</span>.error(<span class="string">&#x27;不存在&#x27;</span>)</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="comment">//当k的值为$slots，直接返回组件实例上的slots</span></span><br><span class="line">          <span class="keyword">if</span>(k === <span class="string">&#x27;$slots&#x27;</span>)<span class="keyword">return</span> slots</span><br><span class="line">          <span class="comment">//...</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="function"><span class="title">set</span>(<span class="params">t,k,v,r</span>)</span>&#123;</span><br><span class="line">          <span class="keyword">const</span> [state,props] = t</span><br><span class="line">          <span class="keyword">if</span>(state &amp;&amp; k <span class="keyword">in</span> state)&#123;</span><br><span class="line">            state[k]=t</span><br><span class="line">          &#125;<span class="keyword">else</span> <span class="keyword">if</span>(k <span class="keyword">in</span> props)&#123;</span><br><span class="line">            props[k]=t</span><br><span class="line">          &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.error(<span class="string">&#x27;不存在&#x27;</span>)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//用于解析组件props和attrs数据</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">resolveProps</span>(<span class="params">options,propsData</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> props = &#123;&#125;</span><br><span class="line">    <span class="keyword">const</span> attrs = &#123;&#125;</span><br><span class="line">    <span class="comment">//遍历为组件传递的props数据</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">const</span> key <span class="keyword">in</span> propsData) &#123;</span><br><span class="line">        <span class="keyword">if</span>(key <span class="keyword">in</span> options)&#123;</span><br><span class="line">            <span class="comment">//如果为组件传递的props数据在组件自身的props选项中有定义，则将其视为合法的props</span></span><br><span class="line">            props[key] = propsData[key]</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            attrs[key] = propsData[key]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> [props,attrs]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/09/16/%E6%8F%92%E6%A7%BD%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/16/%E6%8F%92%E6%A7%BD%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/" class="post-title-link" itemprop="url">插槽的工作原理及实现</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-09-16 21:09:31 / 修改时间：21:46:01" itemprop="dateCreated datePublished" datetime="2022-09-16T21:09:31+08:00">2022-09-16</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>MyComponent组件模板：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">&lt;header&gt;&lt;slot name=&quot;header&quot;&gt;&lt;/slot&gt;&lt;/header&gt;</span><br><span class="line">&lt;div&gt;</span><br><span class="line">    &lt;slot name=&quot;body&quot;&gt;&lt;/slot&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;footer&gt;&lt;slot name=&quot;footer&quot;&gt;&lt;/slot&gt;&lt;/footer&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
-
-<p>当在父组件中使用<MyComponent>组件时，可以根据插槽名字插入自定义的内容</MyComponent></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;MyComponent&gt;</span><br><span class="line">    &lt;template #header&gt;</span><br><span class="line">		&lt;h1&gt;</span><br><span class="line">            我是标题</span><br><span class="line">        &lt;/h1&gt;</span><br><span class="line">    &lt;/template&gt;</span><br><span class="line">    &lt;template #body&gt;</span><br><span class="line">		&lt;section&gt;</span><br><span class="line">            我是内容</span><br><span class="line">        &lt;/section&gt;</span><br><span class="line">    &lt;/template&gt;</span><br><span class="line">    &lt;template #footer&gt;</span><br><span class="line">		&lt;p&gt;</span><br><span class="line">    		我是注脚</span><br><span class="line">        &lt;/p&gt;</span><br><span class="line">    &lt;/template&gt;</span><br><span class="line">&lt;/MyComponent&gt;</span><br></pre></td></tr></table></figure>
-
-<p>父组件模板会被编译成如下渲染函数：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span>&#123;</span><br><span class="line">    <span class="attr">type</span>: MyComponent,</span><br><span class="line">    <span class="comment">//组件的children会被编译成一个对象</span></span><br><span class="line">    <span class="attr">children</span>: &#123;</span><br><span class="line">      <span class="function"><span class="title">header</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="attr">type</span>:<span class="string">&#x27;h1&#x27;</span>,<span class="attr">children</span>:<span class="string">&#x27;我是标题&#x27;</span>&#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="function"><span class="title">body</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="attr">type</span>:<span class="string">&#x27;section&#x27;</span>,<span class="attr">children</span>:<span class="string">&#x27;我是内容&#x27;</span>&#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="function"><span class="title">foote</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="attr">type</span>:<span class="string">&#x27;p&#x27;</span>,<span class="attr">children</span>:<span class="string">&#x27;我是注脚&#x27;</span>&#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>组件模板中的插槽内容会被编译为插槽函数，而插槽函数的返回值就是具体的插槽内容</strong></p>
-<p>MyComponent的模板会被编译成如下渲染函数：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">type</span>: <span class="string">&quot;header&quot;</span>,</span><br><span class="line">      <span class="attr">children</span>: [<span class="built_in">this</span>.$slots.header()]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">type</span>: <span class="string">&#x27;div&#x27;</span>,</span><br><span class="line">      <span class="attr">children</span>: [<span class="built_in">this</span>.$slots.body()]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">type</span>: <span class="string">&#x27;footer&#x27;</span>,</span><br><span class="line">      <span class="attr">children</span>: [<span class="built_in">this</span>.$slots.footer()]</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>渲染插槽内容的过程，就是调用插槽函数并渲染由其返回的内容的过程，在运行时实现上，插槽依赖于setupContext中的slots对象，</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mountComponent</span>(<span class="params">vnode,container,anchor</span>) </span>&#123;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">  <span class="comment">//直接使用编译好的vnode.children对象作为slots对象</span></span><br><span class="line">  <span class="keyword">const</span> slots = vnode.children || &#123;&#125;</span><br><span class="line">  <span class="comment">//将slot对象添加到setupContext中</span></span><br><span class="line">  <span class="keyword">const</span> setupContext = &#123;attrs,emit,slots&#125;</span><br><span class="line">  <span class="keyword">const</span> instance = &#123;</span><br><span class="line">    state,</span><br><span class="line">    <span class="attr">props</span>: shallowReactive(props),</span><br><span class="line">    <span class="attr">isMounnted</span>:<span class="literal">false</span>,</span><br><span class="line">    <span class="attr">subTree</span>:<span class="literal">null</span>,</span><br><span class="line">    <span class="comment">//将插槽添加到组件实例</span></span><br><span class="line">    slots</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> renderContext = <span class="keyword">new</span> <span class="built_in">Proxy</span>(instance,&#123;</span><br><span class="line">    <span class="function"><span class="title">get</span>(<span class="params">t,k,t</span>)</span>&#123;</span><br><span class="line">      <span class="keyword">const</span> &#123;state,props,slots&#125; = t</span><br><span class="line">      <span class="comment">//当k的值为$slots，直接返回组件实例上的slots</span></span><br><span class="line">      <span class="keyword">if</span>(k === <span class="string">&#x27;$slots&#x27;</span>)<span class="keyword">return</span> slots</span><br><span class="line">      <span class="comment">//...</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="function"><span class="title">set</span>(<span class="params">t,k,v,r</span>)</span>&#123;</span><br><span class="line">      <span class="comment">//...</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1179,14 +1149,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">209</span>
+          <span class="site-state-item-count">212</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-count">24</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -1253,7 +1223,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共189.7k字</span>
+  <span class="post-count">博客全站共191.4k字</span>
 </div>
         
 
