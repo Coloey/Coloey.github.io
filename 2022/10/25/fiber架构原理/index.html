@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"coloey.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Fiber起源React15之前，Reconciler采用递归创建虚拟DOM，递归过程不能中断，如果组件树的层级很深，递归会占用线程很多时间，造成卡顿 React16将递归的无法中断的更新重构为异步的可中断更新，由于曾经用于递归的虚拟DOM数据结构已经无法满足需要，全新的Fiber诞生 Fiber含义1.作为架构，React15的Reconciler采用递归的方式执行，数据保存在递归调用栈中，所以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="fiber架构原理">
+<meta property="og:url" content="https://coloey.github.io/2022/10/25/fiber%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="小柒">
+<meta property="og:description" content="Fiber起源React15之前，Reconciler采用递归创建虚拟DOM，递归过程不能中断，如果组件树的层级很深，递归会占用线程很多时间，造成卡顿 React16将递归的无法中断的更新重构为异步的可中断更新，由于曾经用于递归的虚拟DOM数据结构已经无法满足需要，全新的Fiber诞生 Fiber含义1.作为架构，React15的Reconciler采用递归的方式执行，数据保存在递归调用栈中，所以">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-10-25T13:38:41.000Z">
+<meta property="article:modified_time" content="2022-10-25T14:21:28.487Z">
+<meta property="article:author" content="小柒">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://coloey.github.io/2022/10/25/fiber%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>fiber架构原理 | 小柒</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="小柒" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小柒</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">www.xiaoqi.cn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/25/fiber%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h1 class="post-title" itemprop="name headline">
+          fiber架构原理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-10-25 21:38:41 / 修改时间：22:21:28" itemprop="dateCreated datePublished" datetime="2022-10-25T21:38:41+08:00">2022-10-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">React深入学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Fiber起源"><a href="#Fiber起源" class="headerlink" title="Fiber起源"></a>Fiber起源</h1><p>React15之前，Reconciler采用递归创建虚拟DOM，递归过程不能中断，如果组件树的层级很深，递归会占用线程很多时间，造成卡顿</p>
+<p>React16将递归的无法中断的更新重构为异步的可中断更新，由于曾经用于递归的虚拟DOM数据结构已经无法满足需要，全新的Fiber诞生</p>
+<h1 id="Fiber含义"><a href="#Fiber含义" class="headerlink" title="Fiber含义"></a>Fiber含义</h1><p>1.作为架构，React15的Reconciler采用递归的方式执行，数据保存在递归调用栈中，所以被称为stack Reconciler,React 16 的Reconciler基于Fiber节点实现，<strong>被称为Fiber Reconciler</strong></p>
+<p>2.作为静态数据结构来说，每个Fiber节点对应于一个React element**,保存了该组件的类型**（函数组件/类组件/原生组件…），对应的DOM结点信息</p>
+<p>3.对于动态的工作单元来说，每个Fiber结点保存了<strong>本次更新中该组件改变的状态，要执行的工作（需要被删除/被插入页面/被更新）</strong></p>
+<h1 id="Fiber结构："><a href="#Fiber结构：" class="headerlink" title="Fiber结构："></a>Fiber结构：</h1><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">FiberNode</span> (<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="function">    tag: WorkTag,</span></span></span><br><span class="line"><span class="params"><span class="function">    pendingProps:mixed,</span></span></span><br><span class="line"><span class="params"><span class="function">    key: <span class="literal">null</span>|stirng,</span></span></span><br><span class="line"><span class="params"><span class="function">    mode: TypeofMode,</span></span></span><br><span class="line"><span class="params"><span class="function"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//作为静态数据结构的属性</span></span><br><span class="line">        <span class="built_in">this</span>.tag = tag;</span><br><span class="line">        <span class="built_in">this</span>.key=key;</span><br><span class="line">        <span class="built_in">this</span>.elementType=<span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.type=<span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.stateNode=<span class="literal">null</span>;</span><br><span class="line">        <span class="comment">//用于连接其他Fiber结点形成Fiber树</span></span><br><span class="line">        <span class="built_in">this</span>.return=<span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.child=<span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.sibling=<span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.index=<span class="number">0</span>;</span><br><span class="line">        <span class="built_in">this</span>.ref=<span class="literal">null</span>;</span><br><span class="line">        <span class="comment">//作为动态的工作单元的属性</span></span><br><span class="line">        <span class="built_in">this</span>.pendingProps=pendingProps;</span><br><span class="line">        <span class="built_in">this</span>.memoizedProps=<span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.updateQueue=<span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.memoizedState=<span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.dependencies=<span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.mode=mode;</span><br><span class="line">        <span class="built_in">this</span>.effectTag = NoEffect;</span><br><span class="line">        <span class="built_in">this</span>.nextEffect = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">this</span>.firstEffect = <span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.lastEffect = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 调度优先级相关</span></span><br><span class="line">        <span class="built_in">this</span>.lanes = NoLanes;</span><br><span class="line">        <span class="built_in">this</span>.childLanes = NoLanes;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 指向该fiber在另一次更新时对应的fiber</span></span><br><span class="line">        <span class="built_in">this</span>.alternate = <span class="literal">null</span>;</span><br><span class="line">        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="作为架构来说"><a href="#作为架构来说" class="headerlink" title="作为架构来说"></a>作为架构来说</h1><p>每个Fiber节点有个对应的React element,多个Fiber节点如何连接成树？</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//指向父级Fiber结点</span></span><br><span class="line"><span class="built_in">this</span>.return=<span class="literal">null</span>;</span><br><span class="line"><span class="comment">//指向子Fiber节点</span></span><br><span class="line"><span class="built_in">this</span>.child=<span class="literal">null</span>;</span><br><span class="line"><span class="comment">//指向右边第一个兄弟Fiber结点</span></span><br><span class="line"><span class="built_in">this</span>.sibling=<span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="作为静态的数据结构"><a href="#作为静态的数据结构" class="headerlink" title="作为静态的数据结构"></a>作为静态的数据结构</h1><p>保存了相关组件的信息</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Fiber对应组件的类型 Function/Class/Host...</span></span><br><span class="line"><span class="built_in">this</span>.tag = tag;</span><br><span class="line"><span class="comment">// key属性</span></span><br><span class="line"><span class="built_in">this</span>.key = key;</span><br><span class="line"><span class="comment">// 大部分情况同type，某些情况不同，比如FunctionComponent使用React.memo包裹</span></span><br><span class="line"><span class="built_in">this</span>.elementType = <span class="literal">null</span>;</span><br><span class="line"><span class="comment">// 对于 FunctionComponent，指函数本身，对于ClassComponent，指class，对于HostComponent，指DOM节点tagName</span></span><br><span class="line"><span class="built_in">this</span>.type = <span class="literal">null</span>;</span><br><span class="line"><span class="comment">// Fiber对应的真实DOM节点</span></span><br><span class="line"><span class="built_in">this</span>.stateNode = <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="作为动态的工作单元"><a href="#作为动态的工作单元" class="headerlink" title="作为动态的工作单元"></a>作为动态的工作单元</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 保存本次更新造成的状态改变相关信息</span></span><br><span class="line"><span class="built_in">this</span>.pendingProps = pendingProps;</span><br><span class="line"><span class="built_in">this</span>.memoizedProps = <span class="literal">null</span>;</span><br><span class="line"><span class="built_in">this</span>.updateQueue = <span class="literal">null</span>;</span><br><span class="line"><span class="built_in">this</span>.memoizedState = <span class="literal">null</span>;</span><br><span class="line"><span class="built_in">this</span>.dependencies = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">this</span>.mode = mode;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 保存本次更新会造成的DOM操作</span></span><br><span class="line"><span class="built_in">this</span>.effectTag = NoEffect;</span><br><span class="line"><span class="built_in">this</span>.nextEffect = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">this</span>.firstEffect = <span class="literal">null</span>;</span><br><span class="line"><span class="built_in">this</span>.lastEffect = <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>保存优先级调度的相关信息</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 调度优先级相关</span></span><br><span class="line"><span class="built_in">this</span>.lanes = NoLanes;</span><br><span class="line"><span class="built_in">this</span>.childLanes = NoLanes;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Fiber架构的工作原理："><a href="#Fiber架构的工作原理：" class="headerlink" title="Fiber架构的工作原理："></a>Fiber架构的工作原理：</h1><h2 id="双缓存："><a href="#双缓存：" class="headerlink" title="双缓存："></a>双缓存：</h2><p><strong>在内存中构建并直接替换的技术叫做双缓存</strong></p>
+<p>React使用双缓存来完成Fiber树的构建和替换——对应着DOM树的创建和更新</p>
+<h2 id="双缓存Fiber树"><a href="#双缓存Fiber树" class="headerlink" title="双缓存Fiber树"></a>双缓存Fiber树</h2><p>React中最多同时存在两棵Fiber树，当前屏幕显示内容对应的Fiber树称为current Fiber树，正在内存中构建的Fiber树称为workInProgress Fiber树，current Fiber树中的Fiber节点称为current fiber,workInProgress Fiber树中的Fiber节点被称为workInProgress fiber,它们通过alternate属性连接</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">currentFiber.alternate === workInProgressFiber;</span><br><span class="line">workInProgressFiber.alternate === currentFiber;</span><br></pre></td></tr></table></figure>
+
+<p>React应用的根节点通过<strong>使用current指针在不同的Fiber树的rootFiber间切换来完成current Fiber树之间的切换</strong></p>
+<p>即当workInProgress Fiber树构建完成交给Renderer渲染在页面后，应用根结点的current指针指向workInProgress Fiber树，此时workInProgress Fiber树就变为current Fiber树</p>
+<p>总结:</p>
+<p>Reconciler工作的阶段称为render阶段，因为该阶段会调用组件的render方法</p>
+<p>Renderer工作的阶段称为commit阶段，commit阶段会把renderer阶段提交的信息渲染到页面</p>
+<p>render与commit阶段统称为work,即React在工作中，相对应的，如果任务正在Scheduler内调度，不属于work.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>小柒
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://coloey.github.io/2022/10/25/fiber%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" title="fiber架构原理">https://coloey.github.io/2022/10/25/fiber架构原理/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/10/24/%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AAloader/" rel="prev" title="手写一个loader">
+      <i class="fa fa-chevron-left"></i> 手写一个loader
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Fiber%E8%B5%B7%E6%BA%90"><span class="nav-number">1.</span> <span class="nav-text">Fiber起源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fiber%E5%90%AB%E4%B9%89"><span class="nav-number">2.</span> <span class="nav-text">Fiber含义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fiber%E7%BB%93%E6%9E%84%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">Fiber结构：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%9C%E4%B8%BA%E6%9E%B6%E6%9E%84%E6%9D%A5%E8%AF%B4"><span class="nav-number">4.</span> <span class="nav-text">作为架构来说</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%9C%E4%B8%BA%E9%9D%99%E6%80%81%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">5.</span> <span class="nav-text">作为静态的数据结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%9C%E4%B8%BA%E5%8A%A8%E6%80%81%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8D%95%E5%85%83"><span class="nav-number">6.</span> <span class="nav-text">作为动态的工作单元</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fiber%E6%9E%B6%E6%9E%84%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%9A"><span class="nav-number">7.</span> <span class="nav-text">Fiber架构的工作原理：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8C%E7%BC%93%E5%AD%98%EF%BC%9A"><span class="nav-number">7.1.</span> <span class="nav-text">双缓存：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8C%E7%BC%93%E5%AD%98Fiber%E6%A0%91"><span class="nav-number">7.2.</span> <span class="nav-text">双缓存Fiber树</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小柒"
+      src="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+  <p class="site-author-name" itemprop="name">小柒</p>
+  <div class="site-description" itemprop="description">欢迎来到我的世界!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">214</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Coloey" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Coloey" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/487336863@qq.com" title="E-Mail → 487336863@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小柒</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_pv">
+    本站访问量:<span id="busuanzi_value_site_pv"></span>次
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_uv">
+    本站总访客量：<span id="busuanzi_value_site_uv"></span>人
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共193k字</span>
+</div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 动态背景 -->
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="../source/js/src/clicklove.js"></script>
+</body>
+</html>

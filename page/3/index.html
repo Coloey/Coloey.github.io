@@ -187,6 +187,164 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/27/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/27/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">职责链模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-27 23:41:31 / 修改时间：23:50:29" itemprop="dateCreated datePublished" datetime="2022-08-27T23:41:31+08:00">2022-08-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>职责链模式：使多个对象都有机会处理请求，从而避免请求的发送者和接收者之间得到耦合关系，将这些对象连成一条链，并沿着这条链传递该请求，直到有一个对象处理它为止</p>
+<h1 id="灵活可拆分的职责链结点"><a href="#灵活可拆分的职责链结点" class="headerlink" title="灵活可拆分的职责链结点"></a>灵活可拆分的职责链结点</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> order500 = <span class="function"><span class="keyword">function</span>(<span class="params">orderType,pay,stock</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">if</span>(orderType === <span class="number">1</span> &amp;&amp; pay===<span class="literal">true</span>)&#123;</span><br><span class="line">           <span class="built_in">console</span>.log(<span class="string">&#x27;500元定金，100元优惠&#x27;</span>)</span><br><span class="line">       &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">           <span class="keyword">return</span> <span class="string">&#x27;nextSuccessor&#x27;</span></span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">let</span> order200 = <span class="function"><span class="keyword">function</span>(<span class="params">orderType,pay,stock</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">if</span>(orderType === <span class="number">2</span> &amp;&amp; pay === <span class="literal">true</span>)&#123;</span><br><span class="line">           <span class="built_in">console</span>.log(<span class="string">&#x27;200元定金，50元优惠&#x27;</span>)</span><br><span class="line">       &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">           <span class="keyword">return</span> <span class="string">&#x27;nextSuccessor&#x27;</span></span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">let</span> orderNormal = <span class="function"><span class="keyword">function</span>(<span class="params">orderType,pay,stock</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">if</span>(stock&gt;<span class="number">0</span>)&#123;</span><br><span class="line">           <span class="built_in">console</span>.log(<span class="string">&#x27;普通购买，无优惠&#x27;</span>)</span><br><span class="line">       &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">           <span class="built_in">console</span>.log(<span class="string">&#x27;库存不足&#x27;</span>)</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">let</span> Chain = <span class="function"><span class="keyword">function</span>(<span class="params">fn</span>)</span>&#123;</span><br><span class="line">       <span class="built_in">this</span>.fn = fn;</span><br><span class="line">       <span class="built_in">this</span>.successor = <span class="literal">null</span></span><br><span class="line">   &#125;</span><br><span class="line">   Chain.prototype.setNextSuccessor = <span class="function"><span class="keyword">function</span>(<span class="params">successor</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="built_in">this</span>.successor = successor</span><br><span class="line">   &#125;</span><br><span class="line">   Chain.prototype.passResquest = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">       <span class="keyword">let</span> ret = <span class="built_in">this</span>.fn.apply(<span class="built_in">this</span>,<span class="built_in">arguments</span>)</span><br><span class="line">       <span class="comment">//console.log(ret) </span></span><br><span class="line">       <span class="keyword">if</span>(ret === <span class="string">&#x27;nextSuccessor&#x27;</span>)&#123;            </span><br><span class="line">           <span class="keyword">return</span> <span class="built_in">this</span>.successor &amp;&amp; <span class="built_in">this</span>.successor.passResquest.apply(<span class="built_in">this</span>.successor,<span class="built_in">arguments</span>)</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> ret</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">let</span> chainOrder500 = <span class="keyword">new</span> Chain(order500)<span class="comment">//500元定金，100元优惠</span></span><br><span class="line">   <span class="keyword">let</span> chainOrder200 = <span class="keyword">new</span> Chain(order200)</span><br><span class="line">   <span class="keyword">let</span> chainOrderNormal = <span class="keyword">new</span> Chain(orderNormal)</span><br><span class="line">   chainOrder500.setNextSuccessor(chainOrder200)</span><br><span class="line">   chainOrder200.setNextSuccessor(chainOrderNormal)</span><br><span class="line">   chainOrder500.passResquest(<span class="number">1</span>,<span class="literal">true</span>,<span class="number">500</span>)<span class="comment">//500元定金，100元优惠</span></span><br><span class="line">   chainOrder500.passResquest(<span class="number">2</span>,<span class="literal">true</span>,<span class="number">500</span>)<span class="comment">//走nextSuccessor,200元定金，50元优惠</span></span><br><span class="line">   chainOrder500.passResquest(<span class="number">3</span>,<span class="literal">true</span>,<span class="number">500</span>)<span class="comment">//继续nextSuccessor,普通购买，无优惠</span></span><br><span class="line">   chainOrder500.passResquest(<span class="number">1</span>,<span class="literal">false</span>,<span class="number">0</span>)<span class="comment">//一直nextSuccessor到库存不足</span></span><br></pre></td></tr></table></figure>
+
+<p>当要加入一个结点：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> order300 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line">chainOrder300 = <span class="keyword">new</span> Chain(order300)</span><br><span class="line">chainOrder500.setNextSuccessor(chainOrder300)</span><br><span class="line">chainOrder300.setNextSuccessor(chainOrder200)</span><br></pre></td></tr></table></figure>
+
+<h1 id="AOP模式实现职责链："><a href="#AOP模式实现职责链：" class="headerlink" title="AOP模式实现职责链："></a>AOP模式实现职责链：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> order500 = <span class="function"><span class="keyword">function</span>(<span class="params">orderType,pay,stock</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(orderType === <span class="number">1</span> &amp;&amp; pay===<span class="literal">true</span>)&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">&#x27;500元定金，100元优惠&#x27;</span>)</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;nextSuccessor&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> order200 = <span class="function"><span class="keyword">function</span>(<span class="params">orderType,pay,stock</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(orderType === <span class="number">2</span> &amp;&amp; pay === <span class="literal">true</span>)&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">&#x27;200元定金，50元优惠&#x27;</span>)</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;nextSuccessor&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> orderNormal = <span class="function"><span class="keyword">function</span>(<span class="params">orderType,pay,stock</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(stock&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">&#x27;普通购买，无优惠&#x27;</span>)</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">&#x27;库存不足&#x27;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="built_in">Function</span>.prototype.after = <span class="function"><span class="keyword">function</span>(<span class="params">fn</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">let</span> self = <span class="built_in">this</span></span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">let</span> ret = self.apply(<span class="built_in">this</span>,<span class="built_in">arguments</span>)</span><br><span class="line">            <span class="keyword">if</span>(ret === <span class="string">&#x27;nextSuccessor&#x27;</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> fn.apply(<span class="built_in">this</span>,<span class="built_in">arguments</span>)</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> ret;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> order = order500.after(order200).after(orderNormal)</span><br><span class="line">    order(<span class="number">1</span>,<span class="literal">true</span>,<span class="number">500</span>)</span><br><span class="line">    order(<span class="number">2</span>,<span class="literal">true</span>,<span class="number">500</span>)</span><br><span class="line">    order(<span class="number">1</span>,<span class="literal">false</span>,<span class="number">500</span>)</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/26/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/26/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">命令模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-26 15:12:38 / 修改时间：16:29:23" itemprop="dateCreated datePublished" datetime="2022-08-26T15:12:38+08:00">2022-08-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="命令模式的应用场景："><a href="#命令模式的应用场景：" class="headerlink" title="命令模式的应用场景："></a>命令模式的应用场景：</h1><p>有时候向某些对象发送请求，但是不知道请求接收者和发送者是谁，也不知请求操作是什么，此时用一种松耦合的方式来设计程序，使得发送者和接收者能够消除耦合关系</p>
+<h1 id="面向对象形式："><a href="#面向对象形式：" class="headerlink" title="面向对象形式："></a>面向对象形式：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&lt;body&gt;</span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;button1&quot;</span>&gt;</span>点击按钮1<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="keyword">let</span> btn1 = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;button1&#x27;</span>)</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="comment">//安装命令的函数</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="keyword">let</span> setCommand = <span class="function"><span class="keyword">function</span>(<span class="params">button,command</span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            button.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">                command.execute()</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="comment">//命令接收者</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="keyword">let</span> MenuBar = &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            <span class="attr">refresh</span> :<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">                <span class="built_in">console</span>.log(<span class="string">&quot;刷新菜单目录&quot;</span>)</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="comment">//command对象</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="keyword">let</span> RefreshMenuBarCommand = <span class="function"><span class="keyword">function</span>(<span class="params">receiver</span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            <span class="built_in">this</span>.receiver=receiver</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        RefreshMenuBarCommand.prototype.execute = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            <span class="built_in">this</span>.receiver.refresh()</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="comment">//命令接收者接传入到command对象，把command对象安装到button上</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="keyword">let</span> refreshMenuBarCommand = <span class="keyword">new</span> RefreshMenuBarCommand(MenuBar)</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        setCommand(button1,refreshMenuBarCommand)</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="闭包形式"><a href="#闭包形式" class="headerlink" title="闭包形式"></a>闭包形式</h1><p>可以使用<strong>闭包的命令模式</strong>，将命令接收者封闭在闭包产生的环境中，执行命令的操作更简单，仅仅是执行回调函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> btn1 = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;button1&#x27;</span>)</span><br><span class="line">      <span class="comment">//安装命令的函数</span></span><br><span class="line">      <span class="keyword">let</span> setCommand = <span class="function"><span class="keyword">function</span>(<span class="params">button,command</span>)</span>&#123;</span><br><span class="line">          button.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">              command.execute()</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//命令接收者</span></span><br><span class="line">      <span class="keyword">let</span> MenuBar = &#123;</span><br><span class="line">          <span class="attr">refresh</span> :<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">              <span class="built_in">console</span>.log(<span class="string">&quot;刷新菜单目录&quot;</span>)</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//command对象</span></span><br><span class="line">      <span class="keyword">let</span> RefreshMenuBarCommand = <span class="function"><span class="keyword">function</span>(<span class="params">receiver</span>)</span>&#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">              <span class="keyword">return</span> receiver.refresh()</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//命令接收者传入到command对象，把command对象安装到button上</span></span><br><span class="line">      <span class="keyword">let</span> refreshMenuBarCommand = <span class="keyword">new</span> RefreshMenuBarCommand(MenuBar)</span><br><span class="line">      setCommand(button1,refreshMenuBarCommand)</span><br></pre></td></tr></table></figure>
+
+<p>使用命令模式可以方便给对象增加撤销命令操作，撤销命令是执行命令的反向操作,文本编辑器的Ctrl+Z和围棋中的悔棋都是撤销命令</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;ball&quot;</span> <span class="attr">style</span>=<span class="string">&quot;position: absolute;background: #000;width:50px;height:50px&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">id</span>=<span class="string">&quot;pos&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;moveBtn&quot;</span>&gt;</span>开始移动<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;cancleBtn&quot;</span>&gt;</span>撤销命令<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> ball = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;ball&#x27;</span>)</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> pos = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;pos&#x27;</span>)</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> moveBtn = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;moveBtn&#x27;</span>)</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> cancleBtn = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;cancleBtn&#x27;</span>)</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> moveCommand;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> MoveCommand = <span class="function"><span class="keyword">function</span> (<span class="params">receiver,pos</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="built_in">this</span>.receiver = receiver;</span></span><br><span class="line"><span class="javascript">            <span class="built_in">this</span>.pos = pos;</span></span><br><span class="line"><span class="javascript">            <span class="built_in">this</span>.oldPos=<span class="literal">null</span></span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">        MoveCommand.prototype.excute = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="built_in">this</span>.receiver.start(<span class="string">&#x27;left&#x27;</span>,<span class="built_in">this</span>.pos,<span class="number">1000</span>,<span class="string">&#x27;strongEaseout&#x27;</span>)</span></span><br><span class="line"><span class="javascript">            oldPos = <span class="built_in">this</span>.receiver.dom.getBoundingClientRec()[<span class="built_in">this</span>.receiver.propertyName]</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">        <span class="comment">//执行反向操作</span></span></span><br><span class="line"><span class="javascript">        MoveCommand.prototype.undo = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="built_in">this</span>.receiver.start(<span class="string">&#x27;left&#x27;</span>,<span class="built_in">this</span>.oldPos,<span class="number">1000</span>,<span class="string">&#x27;strongEaseout&#x27;</span>)</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">        moveBtn.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="keyword">let</span> animate = <span class="keyword">new</span> Animate(ball)</span></span><br><span class="line"><span class="javascript">            moveCommand = <span class="keyword">new</span> MoveCommand(animate,pos.value)</span></span><br><span class="line"><span class="javascript">            moveCommand.excute()   </span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">        cancleBtn.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            moveCommand.undo()</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="宏命令"><a href="#宏命令" class="headerlink" title="宏命令"></a>宏命令</h1><p>是一组命令的集合，通过执行宏命令可以执行一批命令</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> quitCommand = &#123;</span><br><span class="line">    <span class="attr">execute</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;退出&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> loginCommand =&#123;</span><br><span class="line">    <span class="attr">execute</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;登录&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> MacroCommand = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">commandList</span>:[],</span><br><span class="line">        <span class="attr">add</span>: <span class="function"><span class="keyword">function</span>(<span class="params">command</span>)</span>&#123;</span><br><span class="line">            <span class="built_in">this</span>.commandList.push(command)</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">execute</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="number">0</span>;command;command = <span class="built_in">this</span>.commandList[i])&#123;</span><br><span class="line">                command.execute()</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> macroCommand = <span class="keyword">new</span> MacroCommand()</span><br><span class="line">macroCommand.add(quitCommand)</span><br><span class="line">macroCommand.add(loginCommand)</span><br><span class="line">macroCommand.execute()</span><br></pre></td></tr></table></figure>
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>一般，命令模式都会在command命令对象中保存一个接收者负责真正执行客户的请求，这种命令模式是傻瓜式命令，它只负责把客户的命令转发给接收者执行，让请求发起者和接收者之间尽可能解耦</p>
+<p>聪明式命令对象可以直接实现请求，不需要接收者的存在，形式上和策略模式很像，通过使用意图分辨它们，策略模式指向的问题域更小，所有策略目标一致，它们只是达到这个目标的不同手段，命令模式指向的问题域更广，command对象解决的目标更具发散性。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/24/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6%E4%B8%8E%E7%B1%BB%E7%BB%84%E4%BB%B6%E7%9A%84%E4%B8%8D%E5%90%8C/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -941,206 +1099,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/31/%E4%BB%A3%E7%90%86object/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/31/%E4%BB%A3%E7%90%86object/" class="post-title-link" itemprop="url">代理object</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-07-31 15:01:57" itemprop="dateCreated datePublished" datetime="2022-07-31T15:01:57+08:00">2022-07-31</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-04 11:43:09" itemprop="dateModified" datetime="2022-08-04T11:43:09+08:00">2022-08-04</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>对一个普通对象所有可能的读取操作：</p>
-<ul>
-<li>访问属性：obj.foo</li>
-<li>判断对象原型上是否存在给定属性key in obj</li>
-<li>使用for…in循环遍历对象:for(const key in obj){}</li>
-</ul>
-<p>1、对于属性的读取直接用<strong>get拦截函数</strong></p>
-<p>2、对于in 操作符，用<strong>has</strong>拦截函数代理</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj=&#123;<span class="attr">foo</span>:<span class="number">1</span>&#125;</span><br><span class="line"><span class="keyword">const</span> p= <span class="keyword">new</span> <span class="built_in">Proxy</span>(obj,&#123;</span><br><span class="line">    <span class="function"><span class="title">has</span>(<span class="params">target,key</span>)</span>&#123;</span><br><span class="line">        track(target,key)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Reflect</span>.has(target,key)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>3、对于for…in的拦截，<strong>使用Reflect.ownKeys()</strong></p>
-<p>用ownKeys来获取一个对象中的所有属于自己的键值时，这个操作明显不与任何键绑定，因此我们只能够构造唯一的key作为标识（用Symbol构造），即ITERATE_KEY</p>
-<blockquote>
-<p>export const ITERATE_KEY = Symbol(<strong>DEV</strong> ? ‘iterate’ : ‘’)</p>
-</blockquote>
-<p>修改属性不会对for循环产生影响，因为无论怎么修改一个值，对于for…in循环来说都只会循环一次，如果是添加属性或者删除属性，就会触发副作用函数重新执行</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">trigger</span>(<span class="params">target,key</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> depsMap=bucket.get(target)</span><br><span class="line">    <span class="keyword">if</span>(!depsMap)<span class="keyword">return</span></span><br><span class="line">    <span class="keyword">const</span> effects=depsMap.get(key)</span><br><span class="line">    <span class="keyword">const</span> effectsToRun=<span class="keyword">new</span> <span class="built_in">Set</span>(effects)</span><br><span class="line">    <span class="comment">//当操作类型是ADD或者DELETE,需要触发与ITERATE_KEY相关的副作用函数执行</span></span><br><span class="line">    <span class="keyword">if</span>(type===<span class="string">&#x27;ADD&#x27;</span>||type===<span class="string">&#x27;DELETE&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">const</span> iterateEffects=depsMap.get(ITERATE_KEY)</span><br><span class="line">        iterateEffects&amp;&amp;iterateEffects.forEach(<span class="function"><span class="params">effectfn</span>=&gt;</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(effectfn!==activeEffect)&#123;</span><br><span class="line">                effectsToRun.add(effectfn)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    effects&amp;&amp;effects.forEach(<span class="function"><span class="params">effectfn</span>=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(activeEffect!=effectfn)&#123;<span class="comment">//只有当trigger触发执行的副作用函数和当前正在执行的副作用函数不相同时才触发执行，否则会出现栈溢出</span></span><br><span class="line">            effectsToRun.add(effectfn)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)   </span><br><span class="line">    effectsToRun.forEach(<span class="function"><span class="params">effectfn</span>=&gt;</span>effectfn())</span><br><span class="line">    <span class="comment">//effect&amp;&amp;effect.forEach(fn=&gt;fn())//会产生无限执行</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如何屏蔽由原型引起的更新：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj=&#123;&#125;</span><br><span class="line"><span class="keyword">const</span> proto=&#123;<span class="attr">bar</span>:<span class="number">1</span>&#125;</span><br><span class="line"><span class="keyword">const</span> child=reactive(obj)</span><br><span class="line"><span class="keyword">const</span> parent=reactive(proto)</span><br><span class="line"><span class="comment">//使用parent作为child的原型</span></span><br><span class="line"><span class="built_in">Object</span>.setPrototypeOf(child,parent)</span><br><span class="line">effect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(child.bar)<span class="comment">//1</span></span><br><span class="line">&#125;)</span><br><span class="line">child.bar=<span class="number">2</span><span class="comment">//会导致副作用重新执行两次</span></span><br></pre></td></tr></table></figure>
-
-<p>根据规范10.1.9.2:</p>
-<p>如果ownDesc是undefined,那么：</p>
-<p>a.让parent的值为O.[[GetPrototypeOf]] ()</p>
-<p>b.如果parent不是null,则</p>
-<p>​    返回？parent.[[Set]] (P,V,Receiver)</p>
-<p>c.将ownDesc设置为{[[Value]]:undefined,[[Writable]]:true,[[Enumerable]]:true,[[Configurable]]:true}</p>
-<p>如果设置的属性不在对象上，那么就会取得原型，并调用其原型上的方法，也就是parent[[Set]]内部方法，由于parent是代理对象，所以相当于执行了它的set拦截函数，因此读取child.bar时，副作用函数被child.bar收集，还被parent.bar收集</p>
-<p><strong>需要屏蔽一次，而parent代理对象的set函数执行时，此时target是原始对象proto，receiver是代理对象child,不再是target的代理对象，由于最初设置child.bar，receiver一直都是child,target是变化的</strong></p>
-<p>只有当<strong>receiver是target的代理对象时才触发更新，</strong>就能屏蔽由原型引起的更新</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reactive</span>(<span class="params">obj</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Proxy</span>(obj,&#123;</span><br><span class="line">        <span class="function"><span class="title">get</span>(<span class="params">target,key,receiver</span>)</span>&#123;</span><br><span class="line">            <span class="comment">//通过&quot;raw”属性访问原始对象</span></span><br><span class="line">            <span class="keyword">if</span>(key===<span class="string">&#x27;raw&#x27;</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> target</span><br><span class="line">            &#125;</span><br><span class="line">            track(target,key)</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">Reflect</span>.get(target,key,receiver)</span><br><span class="line">    </span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="function"><span class="title">set</span>(<span class="params">target,key,newValue</span>)</span>&#123;</span><br><span class="line">            <span class="comment">//获取旧值</span></span><br><span class="line">            <span class="keyword">const</span> oldValue=target[key]</span><br><span class="line">            <span class="keyword">const</span> type=<span class="built_in">Object</span>.prototype.hasOwnProperty.call(target,key)?<span class="string">&#x27;SET&#x27;</span>:<span class="string">&#x27;ADD&#x27;</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment">//设置属性值</span></span><br><span class="line">            <span class="keyword">const</span> res=<span class="built_in">Reflect</span>.set(target,key,receiver,newValue)</span><br><span class="line">            <span class="comment">//说明receiver是target的代理对象</span></span><br><span class="line">            <span class="keyword">if</span>(target===receiver.raw)&#123;</span><br><span class="line">                <span class="comment">//比较新值和旧值，只有当它们不全等并且都不是NAN才触发响应</span></span><br><span class="line">                <span class="keyword">if</span>(oldValue!==newValue&amp;&amp;(oldValue===oldValue||newValue===newValue))&#123;</span><br><span class="line">                    trigger(target,key)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/31/%E7%90%86%E8%A7%A3vue3%E4%B8%ADProxy%E5%92%8CReflect/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/31/%E7%90%86%E8%A7%A3vue3%E4%B8%ADProxy%E5%92%8CReflect/" class="post-title-link" itemprop="url">理解vue3中Proxy和Reflect</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-07-31 10:42:33 / 修改时间：15:00:40" itemprop="dateCreated datePublished" datetime="2022-07-31T10:42:33+08:00">2022-07-31</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="理解Proxy："><a href="#理解Proxy：" class="headerlink" title="理解Proxy："></a>理解Proxy：</h1><p>1、使用Proxy可以代理一个对象，它能够实现对其他对象的代理，代理指的是对一个对象的<strong>基本语义的代理</strong></p>
-<p>基本语义：可以对一个对象进行读取，设置属性值的操作。</p>
-<p>2、根据ECMAScript规范，在JavaScript中有两种对象，一种是<strong>常规对象</strong>，一种是<strong>异质对象</strong>，这两种对象包含了JavaScript世界中所有对象。</p>
-<p>在JavaScript中，<strong>对象的实际语义是由对象的内部方法指定的</strong>，内部方法指的是对一个对象进行操作时在引擎内部调用的方法，这些方法对于js使用者来说是不可见的，比如[[Get]],[[Set]],[[GetPrototyeOf]],[[SetPrototypeOf]]等方法，</p>
-<p>3、区分普通对象和函数：函数会部署内部方法[[Call]]，而普通对象不会</p>
-<p>4、常规对象需满足：</p>
-<p>对于内部[[Get]],<a href="%E8%AF%A6%E8%A7%81Vue%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0p90">[Set]</a>,必须使用ECMA规范10.1.x节给出的定义实现</p>
-<p>对于内部方法[[Call]],必须使用ECMA规范10.2.1节给出的定义实现</p>
-<p>对于内部方法[[Construct]]，必须使用ECMA规范10.2.2节给出的定义实现</p>
-<p>而<strong>Proxy对象的内部方法[[Get]]没有使用ECMA规范10.1.8给出的定义实现，所以Proxy是一个异质对象</strong>，因此<strong>代理对象与普通对象的区别是[[Get]]的实现，代理对象会在没有指定对应拦截函数，例如没有指定get函数，当我们通过代理随性访问属性值时，代理对象内部方法[[Get]]会调用原始对象内部方法[[Get]]来获取属性值，这其实就是代理透明性质</strong></p>
-<h1 id="使用Reflect"><a href="#使用Reflect" class="headerlink" title="使用Reflect:"></a>使用Reflect:</h1><p><code>Reflect</code>对象的设计目的有这样几个。</p>
-<p>（1） 将<code>Object</code>对象的一些明显属于语言内部的方法（比如<code>Object.defineProperty</code>），放到<code>Reflect</code>对象上。现阶段，某些方法同时在<code>Object</code>和<code>Reflect</code>对象上部署，未来的新方法将只部署在<code>Reflect</code>对象上。也就是说，从<code>Reflect</code>对象上可以拿到语言内部的方法。</p>
-<p>（2） 修改某些<code>Object</code>方法的返回结果，让其变得更合理。比如，<code>Object.defineProperty(obj, name, desc)</code>在无法定义属性时，会抛出一个错误，而<code>Reflect.defineProperty(obj, name, desc)</code>则会返回<code>false</code>。</p>
-<p>(3） 让<code>Object</code>操作都变成函数行为。某些<code>Object</code>操作是命令式，比如<code>name in obj</code>和<code>delete obj[name]</code>，而<code>Reflect.has(obj, name)</code>和<code>Reflect.deleteProperty(obj, name)</code>让它们变成了函数行为。</p>
-<p>(4）<code>Reflect</code>对象的方法与<code>Proxy</code>对象的方法一一对应，只要是<code>Proxy</code>对象的方法，就能在<code>Reflect</code>对象上找到对应的方法。这就让<code>Proxy</code>对象可以方便地调用对应的<code>Reflect</code>方法，完成默认行为，作为修改行为的基础。也就是说，不管<code>Proxy</code>怎么修改默认行为，你总可以在<code>Reflect</code>上获取默认行为。</p>
-<h1 id="在响应式中使用Reflect的原因："><a href="#在响应式中使用Reflect的原因：" class="headerlink" title="在响应式中使用Reflect的原因："></a>在响应式中使用Reflect的原因：</h1><p>假如没有使用Reflect</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj=&#123;</span><br><span class="line">    <span class="attr">foo</span>:<span class="number">1</span>,</span><br><span class="line">    <span class="keyword">get</span> <span class="title">bar</span>()&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="built_in">this</span>.foo</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> p= <span class="keyword">new</span> <span class="built_in">Proxy</span>(obj,&#123;</span><br><span class="line">    <span class="function"><span class="title">get</span>(<span class="params">target,key</span>)</span>&#123;</span><br><span class="line">        track(target,key)</span><br><span class="line">        <span class="keyword">return</span> target[key]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="function"><span class="title">set</span>(<span class="params">targte,key,newVal,receiver</span>)</span>&#123;</span><br><span class="line">        target[key]=newVal;</span><br><span class="line">        trigger(target,key)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>当在effect函数中通过代理对象p访问bar属性</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">effect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(p.bar)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>当effect注册的副作用函数执行时，会读取p.bar属性，它发现p.bar是一个访问器属性，因此执行getter函数，由于在getter函数中通过this.foo读取了foo的属性值，因此我们认为副作用函数与属性foo之间会建立联系，当我们修改p.foo的值时却没有使得副作用函数重新执行</p>
-<p>原因在于this.foo中的this指向的是target,在代理对象中get函数返回的target[key]相当于obj.bar，<strong>在副作用函数中通过原始对象访问它的某个属性不会触发响应</strong>，使用Reflect;</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> p= <span class="keyword">new</span> <span class="built_in">Proxy</span>(obj,&#123;</span><br><span class="line">    <span class="function"><span class="title">get</span>(<span class="params">target,key</span>)</span>&#123;</span><br><span class="line">        track(target,key)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Reflect</span>.get(target,key)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="function"><span class="title">set</span>(<span class="params">targte,key,newVal,receiver</span>)</span>&#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">Reflect</span>.set(target,key,newVal,receiver)</span><br><span class="line">        trigger(target,key)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>receiver代表谁在读取属性，这里就是代理对象p,<strong>访问器属性bar的getter函数内this指向代理对象p</strong>,<strong>这会在副作用函数与响应式数据之间建立响应联系，创建代理对象时指定的拦截函数，实际上是用来自定义代理对象本身的内部方法和行为的，不是用来指定被代理对象的内部方法和行为</strong></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1212,14 +1170,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">212</span>
+          <span class="site-state-item-count">214</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -1286,7 +1244,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共191.4k字</span>
+  <span class="post-count">博客全站共193k字</span>
 </div>
         
 

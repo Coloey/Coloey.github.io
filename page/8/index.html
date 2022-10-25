@@ -187,6 +187,169 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/12/%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/12/%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">外观模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-12 22:26:08" itemprop="dateCreated datePublished" datetime="2022-05-12T22:26:08+08:00">2022-05-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-13 00:23:00" itemprop="dateModified" datetime="2022-05-13T00:23:00+08:00">2022-05-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>外观模式：为一组复杂的子系统接口提供一个更高级的统一接口，通过这个接口使得对子系统接口的访问更容易，在javaScript中用于对底层结构兼容性做统一封装来简化用户使用</p>
+<h1 id="兼容性优化："><a href="#兼容性优化：" class="headerlink" title="兼容性优化："></a>兼容性优化：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addEvent</span>(<span class="params">dom,type,fn</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//支持DOM2的事件处理程序addEventListener方法的浏览器</span></span><br><span class="line">    <span class="keyword">if</span>(dom.addEventListener)&#123;</span><br><span class="line">        dom.addEventListener(type,fn,<span class="literal">false</span>);</span><br><span class="line">        <span class="comment">//对于addEventListener方法但支持attachEvent方法的浏览器</span></span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(dom.attachEvent)&#123;</span><br><span class="line">        dom.attachEvent(<span class="string">&#x27;on&#x27;</span>+type,fn)</span><br><span class="line">        <span class="comment">//对于不支持addEventListener方法也不支持attachEvent方法，但支持&#x27;on+事件名&#x27;的浏览器</span></span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        dom[<span class="string">&#x27;on&#x27;</span>+type]=fn</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//获取事件对象</span></span><br><span class="line"><span class="keyword">var</span> getEvent=<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> event||<span class="built_in">window</span>.event</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//获取元素</span></span><br><span class="line"><span class="keyword">var</span> getTarget=<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> event=getEvent(event)</span><br><span class="line">    <span class="comment">//标准浏览器下event.target，IE下event.srcElement</span></span><br><span class="line">    <span class="keyword">return</span> event.target||event.srcElement</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//阻止默认行为</span></span><br><span class="line"><span class="keyword">var</span> preventDefault=<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> event=getEvent(event)</span><br><span class="line">    <span class="comment">//标准浏览器</span></span><br><span class="line">    <span class="keyword">if</span>(event.preventDefault)&#123;</span><br><span class="line">        event.preventDefault()</span><br><span class="line">        <span class="comment">//IE浏览器</span></span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        event.returnValue=<span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">addEvent(myInput,<span class="string">&#x27;click&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">    preventDefault(e)</span><br><span class="line">    <span class="comment">//获取事件源目标对象</span></span><br><span class="line">    <span class="keyword">if</span>(getTarget(e)!==<span class="built_in">document</span>.getElementById(<span class="string">&#x27;myInput&#x27;</span>))&#123;</span><br><span class="line">        hideInputSug()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="对接口方法的外层包装"><a href="#对接口方法的外层包装" class="headerlink" title="对接口方法的外层包装"></a>对接口方法的外层包装</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> A=&#123;</span><br><span class="line">    <span class="comment">//通过id获取元素</span></span><br><span class="line">    <span class="attr">g</span>:<span class="function"><span class="keyword">function</span>(<span class="params">id</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">document</span>.getElementById(id)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">//设置元素css属性</span></span><br><span class="line">    <span class="attr">css</span>:<span class="function"><span class="keyword">function</span>(<span class="params">id,key,value</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">document</span>.getElementById(id).style[key]=value</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">//设置元素的属性</span></span><br><span class="line">    <span class="attr">attr</span>:<span class="function"><span class="keyword">function</span>(<span class="params">id,key,value</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">document</span>.getElementById(id)[key]=value</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">html</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">document</span>.getElementById(id).innerHTML=html</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">//为元素绑定事件</span></span><br><span class="line">    <span class="attr">on</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">document</span>.getElementById(id)[<span class="string">&#x27;on&#x27;</span>+type]=fn</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">A.css(<span class="string">&#x27;box&#x27;</span>,<span class="string">&#x27;background&#x27;</span>,<span class="string">&#x27;red&#x27;</span>)<span class="comment">//设置css样式</span></span><br><span class="line">A.attr(<span class="string">&#x27;box&#x27;</span>,<span class="string">&#x27;className&#x27;</span>,<span class="string">&#x27;box&#x27;</span>)<span class="comment">//设置class</span></span><br><span class="line">A.html(<span class="string">&#x27;box&#x27;</span>,<span class="string">&#x27;这是新添加的内容&#x27;</span>)<span class="comment">//设置内容</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/12/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/12/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">单例模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-12 21:29:46" itemprop="dateCreated datePublished" datetime="2022-05-12T21:29:46+08:00">2022-05-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-23 09:37:51" itemprop="dateModified" datetime="2022-08-23T09:37:51+08:00">2022-08-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="创建代码库"><a href="#创建代码库" class="headerlink" title="创建代码库"></a>创建代码库</h2><p>单例模式是一个只允许实例化一次的对象类，有时这么做是为了节省系统资源，javaScript中单例模式经常会作为命名空间对象来实现，通过单例对象可以将各个模块的代码井井有条的梳理在一起，<strong>减少使用全局变量</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> A=&#123;</span><br><span class="line">    <span class="attr">Util</span>:&#123;</span><br><span class="line">        <span class="attr">util_method1</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;,</span><br><span class="line">        <span class="attr">util_method2</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">Tool</span>:&#123;</span><br><span class="line">        <span class="attr">tool_method1</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;,</span><br><span class="line">        <span class="attr">tool_method2</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">Ajax</span>:&#123;</span><br><span class="line">        <span class="attr">get</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;,</span><br><span class="line">        <span class="attr">post</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">others</span>:&#123;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">A.Util.util_method1()</span><br><span class="line">A.Tool.tool_method1()</span><br><span class="line">A.Ajax.get()</span><br></pre></td></tr></table></figure>
+
+<h2 id="单例模式管理静态变量"><a href="#单例模式管理静态变量" class="headerlink" title="单例模式管理静态变量"></a>单例模式管理静态变量</h2><p>静态变量：<strong>只能访问不能修改并且创建后就能使用</strong>，为了实现创建后就能使用这一需求，我们需要让创建的函数执行一次，我们创建的对象内保存着静态变量通过取值器访问，最后将这个对象作为一个单例放在全局空间里作为<strong>静态变量单例对象</strong>供他人使用，<strong>闭包封装私有变量</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Conf=(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> conf=&#123;</span><br><span class="line">        <span class="attr">MAX_NUM</span>:<span class="number">100</span>,</span><br><span class="line">        <span class="attr">MIN_NUM</span>:<span class="number">1</span>,</span><br><span class="line">        <span class="attr">COUNT</span>:<span class="number">1000</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//返回取值器对象</span></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">get</span>: <span class="function"><span class="keyword">function</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> conf[name]?conf[name]:<span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)()</span><br><span class="line"><span class="keyword">var</span> count=Conf.get(<span class="string">&#x27;COUNT&#x27;</span>)</span><br><span class="line"><span class="built_in">console</span>.log(count)<span class="comment">//1000</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="惰性单例"><a href="#惰性单例" class="headerlink" title="惰性单例"></a>惰性单例</h2><p>在需要的时候才创建对象实例</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//惰性单例</span></span><br><span class="line"><span class="keyword">let</span> getSingle=<span class="function"><span class="keyword">function</span>(<span class="params">fn</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> res;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> res || (res = fn.apply(<span class="built_in">this</span>,<span class="built_in">arguments</span>))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> createLoginLayer = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> div = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;div&#x27;</span>)</span><br><span class="line">    div.innerHTML = <span class="string">&quot;我是登录浮窗&quot;</span></span><br><span class="line">    div.style.display=<span class="string">&#x27;none&#x27;</span></span><br><span class="line">    <span class="built_in">document</span>.body.appendChild(div)</span><br><span class="line">    <span class="keyword">return</span> div</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> createSingleLoginLayer = getSingle(createLoginLayer)</span><br><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">&#x27;loginBtn&#x27;</span>).onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> loginLayer = createSingleLoginLayer()</span><br><span class="line">    loginLayer.style.display=<span class="string">&#x27;block&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>res在闭包中，因此永远不会被销毁，在将来的请求中如果res被赋值就直接返回这个值</strong></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/12/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1007,268 +1170,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/07/%E8%A6%86%E7%9B%96%E6%9B%B4%E6%96%B0%E4%B8%8E%E5%A2%9E%E9%87%8F%E6%9B%B4%E6%96%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/07/%E8%A6%86%E7%9B%96%E6%9B%B4%E6%96%B0%E4%B8%8E%E5%A2%9E%E9%87%8F%E6%9B%B4%E6%96%B0/" class="post-title-link" itemprop="url">覆盖更新与增量更新</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-05-07 22:21:34" itemprop="dateCreated datePublished" datetime="2022-05-07T22:21:34+08:00">2022-05-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-08 10:20:39" itemprop="dateModified" datetime="2022-05-08T10:20:39+08:00">2022-05-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="覆盖更新"><a href="#覆盖更新" class="headerlink" title="覆盖更新"></a>覆盖更新</h1><p>实现方案是在引用资源的URL后添加请求参数，比如添加时间戳参数，</p>
-<p>浏览器会将参数不同的URL视为全新的URL，所以浏览器向服务器请求并下载最新资源，我们只更新修改了的资源，为了避免手动改参数，将hash指纹（通过mds算法得到）作为URL的v参数</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&#x27;stylesheet&#x27;</span> <span class="attr">href</span>=<span class="string">&quot;main.home.css?v=858d5483&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;main.home.js?v=bbcadaf73&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>缺点：</p>
-<ul>
-<li>必须保证html文件与改动的静态文件同步更新，否则会出现资源不同步的情况。如果是无服务端渲染的项目，html文件被视为金泰之源，并且与其他今天资源(js/css/图片等)部署到同一台服务器，在这种情况下，我们可以保证资源的同步更新，不会受到覆盖更新的影响。但是对于依赖服务端渲染的项目，大多数的部署方式是将网站的入口HTML和静态资源分开部署，比如，HTML与服务器代码一同部署到域名为ww.app.com对应的服务器，把JS/CSS等静态资源部署到static.app.com对应的服务器，两种资源分开部署必然有先后顺序，这就意味着两种资源的上线存在时间差，不论先部署哪种资源无法保证所有用户访问页面的正确性，即使时间差小，对于淘宝这种访问量庞大的网站来说也会影响用户群，这就是为什么很多团队总是选择在半夜或者凌晨这种访问量较小的时间段发布新版本的原因之一</li>
-<li>不利于版本回滚。由于覆盖更新每次迭代之后的资源都会覆盖服务器上原有的旧版本文件，这对于版本回滚操作很不友好，运维人员吗要么借助于服务器本身的缓存机制要么拿到旧版本文件再次覆盖</li>
-</ul>
-<h1 id="增量更新"><a href="#增量更新" class="headerlink" title="增量更新"></a>增量更新</h1><p>将原本作为参数值的hash指纹作为资源文件名的一部分并且删除用于更新的url参数</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&#x27;stylesheet&#x27;</span> <span class="attr">href</span>=<span class="string">&quot;main.home.858d5483.css&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;main.home.bbcadaf73.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>在静态资源使用增量更新前提下可以将静态资源先于动态HTML部署，此时静态资源没有引用入口，不会对线上环境产生影响；动态HTML部署后即可在第一时间访问已存的最新静态资源。解决覆盖更新部署同步问题</p>
-<p>增量更新修改了资源文件名，不会覆盖已存的旧版本文件，运维人员进行回滚操作只需回滚HTML即可，优化了版本控制，支持多版本共存</p>
-<h1 id="按需加载与多模块架构场景的增量更新"><a href="#按需加载与多模块架构场景的增量更新" class="headerlink" title="按需加载与多模块架构场景的增量更新"></a>按需加载与多模块架构场景的增量更新</h1><p>假设一个页面有主模块main.app.js,同步模块module.sync.js，构建后与主模块合并为主文件的main.app.[hash].js，同步加载，异步模块module.async.js,构建后为异步文件app.async.[hash].js</p>
-<p>缺陷：当更新异步文件的hash指纹，主文件的hash没有同步修改，不能获取到最新资源</p>
-<p>解决：</p>
-<p>webpack中的chunkhash：</p>
-<p>hash与chunkhash:</p>
-<p>hash:the hash of compilation,webpack的compilation对象代表某个版本资源对应的编译进程，当使用webpack的development中间件，每次检测到项目文件有改动就会创建一个compilation,进而能够针对改动生产全新的编译文件。compilation对象不是针对单个文件，是针对项目中所有参与构建的文件，只要任何一个文件改动，compilation对象就改变，作为compilation的hash值就相应改变，因此不论同步文件还是异步文件构建输出后均有相同hash，显然不合理</p>
-<p>chunk在webpack中含义可以理解为散列模块经合并后的“块”，比如同步模块module.sync.js和主模块main.app.js合并为一个“块”，异步模块module.async.js是另一个块，chunkhash就是一个个块依据自身代码内容计算所得的hash值。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">output:&#123;</span><br><span class="line">	<span class="attr">filename</span>:<span class="string">&#x27;[name].[chunkhahs:8].js&#x27;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th>主文件</th>
-<th>异步文件</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>原始状态</td>
-<td>main.app.8d136fcd.js</td>
-<td>app.async.67fa68a0.js</td>
-</tr>
-<tr>
-<td>修改主模块main.app.js</td>
-<td>hash改变</td>
-<td>hash不变</td>
-</tr>
-<tr>
-<td>修改同步模块modue.sync.js</td>
-<td>hash改变</td>
-<td>hash不变</td>
-</tr>
-<tr>
-<td>修改异步模块module.async.js</td>
-<td>hash改变</td>
-<td>hash改变</td>
-</tr>
-</tbody></table>
-<p>contenthash</p>
-<p>webpack默认将CSS代码合并到js文件，要把CSS文件抽离处理独立维护，既有利于浏览器的渲染优化，又能够更好利用客户端缓存</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">test</span>:<span class="regexp">/\.css$/</span>,</span><br><span class="line">    use:ExtractTextPlugin.extract(&#123;</span><br><span class="line">        <span class="attr">filename</span>:<span class="string">&#x27;./dest/[name].[contenthash:8].css&#x27;</span></span><br><span class="line">        <span class="attr">use</span>:[&#123;</span><br><span class="line">        	<span class="attr">loader</span>:<span class="string">&#x27;css-loader&#x27;</span>,</span><br><span class="line">        	<span class="attr">options</span>::&#123;</span><br><span class="line">        		<span class="attr">importLoaders</span>:<span class="number">2</span></span><br><span class="line">    		&#125;</span><br><span class="line">        </span><br><span class="line">    	&#125;],</span><br><span class="line">        <span class="attr">publishPath</span>:<span class="string">&#x27;/&#x27;</span></span><br><span class="line">    &#125;)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>contenthash就是解耦js与css文件hash指纹的关键，contenthash是由ExtractTextPlugin插件提供，代表被导出内容计算后的hash值，如果不用contenthash,main.app.css不会参与chunk的chunkhash计算，但也不会作为一个独立的Chunk进行单独计算，编译后的css文件取值与主文件相同</p>
-<p>使用contenthash:</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>主文件hash</th>
-<th>异步文件hash</th>
-<th>CSS文件hash</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>修改主模块</td>
-<td>变</td>
-<td>不变</td>
-<td>不变</td>
-</tr>
-<tr>
-<td>修改同步模块</td>
-<td>变</td>
-<td>不变</td>
-<td>不变</td>
-</tr>
-<tr>
-<td>修改异步模块</td>
-<td>不变</td>
-<td>变</td>
-<td>不变</td>
-</tr>
-<tr>
-<td>修改CSS</td>
-<td>不变</td>
-<td>不变</td>
-<td>变</td>
-</tr>
-</tbody></table>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/07/css%E9%A2%84%E7%BC%96%E8%AF%91%E5%99%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/07/css%E9%A2%84%E7%BC%96%E8%AF%91%E5%99%A8/" class="post-title-link" itemprop="url">css预编译器</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-05-07 17:42:43 / 修改时间：18:11:32" itemprop="dateCreated datePublished" datetime="2022-05-07T17:42:43+08:00">2022-05-07</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>CSS的弱编程能力，CSS通过”delector-properties”的模式为HTML文档增加样式，但CSS不支持嵌套，运算，变量，复用等。</p>
-<h2 id="CSS预编译器原理："><a href="#CSS预编译器原理：" class="headerlink" title="CSS预编译器原理："></a>CSS预编译器原理：</h2><p>提供便捷的语法和特性供开发者编写源代码，随后经过专门的编译工具将源代码转化为CSS语法，最早的CSS预编译器是2007年起源于Ruby on Rails社区的SASS，目前不叫流行的如LESS,Stylus在一定程度上收到SASS影响</p>
-<h2 id="CSS预编译器提升了CSS开发效率："><a href="#CSS预编译器提升了CSS开发效率：" class="headerlink" title="CSS预编译器提升了CSS开发效率："></a>CSS预编译器提升了CSS开发效率：</h2><p>1 增强编程能力</p>
-<p>2 增强源码可复用性，让CSS开发符合DRY(Don’t repeat yourself)的原则</p>
-<p>3 增强源码可维护性</p>
-<p>4 更便于解决浏览器兼容性</p>
-<p>实现</p>
-<ul>
-<li>嵌套</li>
-<li>变量</li>
-<li>mixin/继承</li>
-<li>运算</li>
-<li>模块化</li>
-</ul>
-<p>嵌套是所有预编译器都支持的语法特性，mixin/继承是为了解决hack和代码复用，变量和运算增强了源码的可编程能力；模块化的支持不仅更利于代码复用，同时提高了源码的可维护性</p>
-<h2 id="PostCSS"><a href="#PostCSS" class="headerlink" title="PostCSS"></a>PostCSS</h2><p>PostCSS鼓励开发者使用规范的CSS原生语法编写源代码，然后配置浏览器需要兼容的浏览器版本，最后经过编译将源码转化为目标浏览器可用的CSS代码。PostCSS提供了丰富的插件用于实现不同场景的编译需求，最常用的比如autoprefix,Sprited等</p>
-<p>PostCSS不是另一种CSS预编译器，与SASS LESS等预编译器不冲突，目前普遍方案将CSS预编译与PostCSS综合：</p>
-<p>使用CSS预编译器弥补CSS源码的弱编程能力。比如变量，运算，继承等</p>
-<p>使用PostCSS处理针对浏览器的需求，比如autoprefix,自动CSS Sprites</p>
-<p>webpack结合预编译与PostCSS实现CSS构建</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">test</span>:<span class="regexp">/\.less$/</span></span><br><span class="line">    use:[&#123;</span><br><span class="line">        	<span class="attr">loader</span>:<span class="string">&#x27;style-loader&#x27;</span>,</span><br><span class="line">        	<span class="attr">options</span>:&#123;&#125;<span class="comment">//style-loader options</span></span><br><span class="line">    	 &#125;,</span><br><span class="line">         &#123;</span><br><span class="line">             <span class="attr">loader</span>:<span class="string">&#x27;css-loader&#x27;</span>,</span><br><span class="line">             <span class="attr">options</span>:&#123;</span><br><span class="line">                 <span class="attr">importLoaders</span>:<span class="number">2</span><span class="comment">//css-loader options</span></span><br><span class="line">             &#125;</span><br><span class="line">             </span><br><span class="line">         &#125;,</span><br><span class="line">         &#123;</span><br><span class="line">             <span class="attr">loader</span>:<span class="string">&#x27;postcss-loader&#x27;</span>,</span><br><span class="line">             <span class="attr">options</span>:&#123;&#125;<span class="comment">//postcss-loader</span></span><br><span class="line">         &#125;</span><br><span class="line">         &#123;</span><br><span class="line">             <span class="attr">loader</span>:<span class="string">&#x27;less-loader&#x27;</span>,</span><br><span class="line">             <span class="attr">options</span>:&#123;&#125;<span class="comment">//less-loader options</span></span><br><span class="line">             </span><br><span class="line">         &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>css-loader中的importLoaders选项的作用是：用于配置css-loader作用于@import的资源之前需要经过的其他loader的个数，@import用于CSS源码中引用其他模块的关键字，如果你的项目中确定不会涉及到模块化，可以忽略此配置项</p>
-<p>如果需要将编译后的css文件独立导出，则需将style-loader替换为extract-text-webpack-plugin</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">test</span>:<span class="regexp">/\.less$/</span></span><br><span class="line">    use:ExtractTextPlugin.extract(&#123;</span><br><span class="line">        <span class="attr">use</span>:[&#123;</span><br><span class="line">        	<span class="attr">loader</span>:<span class="string">&#x27;style-loader&#x27;</span>,</span><br><span class="line">        	<span class="attr">options</span>:&#123;&#125;<span class="comment">//style-loader options</span></span><br><span class="line">    	 &#125;,</span><br><span class="line">         &#123;</span><br><span class="line">             <span class="attr">loader</span>:<span class="string">&#x27;css-loader&#x27;</span>,</span><br><span class="line">             <span class="attr">options</span>:&#123;</span><br><span class="line">                 <span class="attr">importLoaders</span>:<span class="number">2</span><span class="comment">//css-loader options</span></span><br><span class="line">             &#125;</span><br><span class="line">             </span><br><span class="line">         &#125;,</span><br><span class="line">         &#123;</span><br><span class="line">             <span class="attr">loader</span>:<span class="string">&#x27;postcss-loader&#x27;</span>,</span><br><span class="line">             <span class="attr">options</span>:&#123;&#125;<span class="comment">//postcss-loader</span></span><br><span class="line">         &#125;</span><br><span class="line">         &#123;</span><br><span class="line">             <span class="attr">loader</span>:<span class="string">&#x27;less-loader&#x27;</span>,</span><br><span class="line">             <span class="attr">options</span>:&#123;&#125;<span class="comment">//less-loader options</span></span><br><span class="line">             </span><br><span class="line">         &#125;],</span><br><span class="line">        <span class="attr">publicPath</span>:<span class="string">&#x27;/&#x27;</span></span><br><span class="line">	&#125;</span><br><span class="line">        </span><br><span class="line">&#125;)</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
-
-<h2 id="区分css-loader和style-loader"><a href="#区分css-loader和style-loader" class="headerlink" title="区分css-loader和style-loader"></a>区分css-loader和style-loader</h2><p>css-loader:用于解析css源文件并获得其引用资源，比如@import引用的模块，url()引用的图片等，然后根据webpack配置编译这些资源</p>
-<p>style-loader:负责将CSS代码通过style标签插入HTML文档中，所以如果独立导出CSS文件就不再需要style-loader，css-loader必须在style-loader之前执行</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1340,14 +1241,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">212</span>
+          <span class="site-state-item-count">214</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -1414,7 +1315,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共191.4k字</span>
+  <span class="post-count">博客全站共193k字</span>
 </div>
         
 
