@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"coloey.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="异步编程的问题：1.代码逻辑不连续 1234567891011121314151617181920&#x2F;&#x2F; 执行状态function onResolve(response)&amp;#123;console.log(response) &amp;#125;function onReject(error)&amp;#123;console.log(error) &amp;#125; let xhr &#x3D; new XMLHttpReque">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Promise告别回调函数">
+<meta property="og:url" content="https://coloey.github.io/2022/10/28/Promise%E5%91%8A%E5%88%AB%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/index.html">
+<meta property="og:site_name" content="小柒">
+<meta property="og:description" content="异步编程的问题：1.代码逻辑不连续 1234567891011121314151617181920&#x2F;&#x2F; 执行状态function onResolve(response)&amp;#123;console.log(response) &amp;#125;function onReject(error)&amp;#123;console.log(error) &amp;#125; let xhr &#x3D; new XMLHttpReque">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-10-28T08:02:15.000Z">
+<meta property="article:modified_time" content="2022-10-28T09:56:59.064Z">
+<meta property="article:author" content="小柒">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://coloey.github.io/2022/10/28/Promise%E5%91%8A%E5%88%AB%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Promise告别回调函数 | 小柒</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="小柒" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小柒</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">www.xiaoqi.cn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/28/Promise%E5%91%8A%E5%88%AB%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h1 class="post-title" itemprop="name headline">
+          Promise告别回调函数
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-10-28 16:02:15 / 修改时间：17:56:59" itemprop="dateCreated datePublished" datetime="2022-10-28T16:02:15+08:00">2022-10-28</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="异步编程的问题："><a href="#异步编程的问题：" class="headerlink" title="异步编程的问题："></a>异步编程的问题：</h1><p>1.代码逻辑不连续</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 执行状态</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">onResolve</span>(<span class="params">response</span>)</span>&#123;<span class="built_in">console</span>.log(response) &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">onReject</span>(<span class="params">error</span>)</span>&#123;<span class="built_in">console</span>.log(error) &#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> xhr = <span class="keyword">new</span> XMLHttpRequest()</span><br><span class="line">xhr.ontimeout = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123; onReject(e)&#125;</span><br><span class="line">xhr.onerror = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123; onReject(e) &#125;</span><br><span class="line">xhr.onreadystatechange = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; onResolve(xhr.response) &#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 设置请求类型，请求 URL，是否同步信息</span></span><br><span class="line"><span class="keyword">let</span> URL = <span class="string">&#x27;https://time.geekbang.com&#x27;</span></span><br><span class="line">xhr.open(<span class="string">&#x27;Get&#x27;</span>, URL, <span class="literal">true</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 设置参数</span></span><br><span class="line">xhr.timeout = <span class="number">3000</span> <span class="comment">// 设置 xhr 请求的超时时间</span></span><br><span class="line">xhr.responseType = <span class="string">&quot;text&quot;</span> <span class="comment">// 设置响应返回的数据格式</span></span><br><span class="line">xhr.setRequestHeader(<span class="string">&quot;X_TEST&quot;</span>,<span class="string">&quot;time.geekbang&quot;</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 发出请求</span></span><br><span class="line">xhr.send();</span><br></pre></td></tr></table></figure>
+
+<p>上述代码包含五个回调，导致代码逻辑不连贯，不线性，这就是异步回调影响我们的编程方式。</p>
+<p>2.回调地狱</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">XFetch(makeRequest(<span class="string">&#x27;https://time.geekbang.org/?category&#x27;</span>),</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">resolve</span>(<span class="params">response</span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(response)</span><br><span class="line">      XFetch(makeRequest(<span class="string">&#x27;https://time.geekbang.org/column&#x27;</span>),</span><br><span class="line">          <span class="function"><span class="keyword">function</span> <span class="title">resolve</span>(<span class="params">response</span>) </span>&#123;</span><br><span class="line">              <span class="built_in">console</span>.log(response)</span><br><span class="line">              XFetch(makeRequest(<span class="string">&#x27;https://time.geekbang.org&#x27;</span>)</span><br><span class="line">                  <span class="function"><span class="keyword">function</span> <span class="title">resolve</span>(<span class="params">response</span>) </span>&#123;</span><br><span class="line">                      <span class="built_in">console</span>.log(response)</span><br><span class="line">                  &#125;, <span class="function"><span class="keyword">function</span> <span class="title">reject</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">                      <span class="built_in">console</span>.log(e)</span><br><span class="line">                  &#125;)</span><br><span class="line">          &#125;, <span class="function"><span class="keyword">function</span> <span class="title">reject</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">              <span class="built_in">console</span>.log(e)</span><br><span class="line">          &#125;)</span><br><span class="line">  &#125;, <span class="function"><span class="keyword">function</span> <span class="title">reject</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(e)</span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>嵌套调用，下面的任务依赖上个任务的请求结果，<strong>并在上个任务的回调函数内部执行新的业务逻辑，这样嵌套层次多了以后，代码可读性变差</strong></p>
+</li>
+<li><p><strong>任务不确定性，</strong>执行每个任务有两种可能的结果（成功或者失败），所以体现在代码中就需要对每个任务的执行结果做两次判断，这种对每个任务都要进行一次额外的错误处理方式，明显增加了代码的混乱程度。</p>
+</li>
+</ol>
+<p>解决两个问题：</p>
+<ol>
+<li>消灭嵌套调用</li>
+<li>合并多个任务的错误处理</li>
+</ol>
+<h1 id="Promise如何消灭嵌套调用和多次错误处理"><a href="#Promise如何消灭嵌套调用和多次错误处理" class="headerlink" title="Promise如何消灭嵌套调用和多次错误处理"></a>Promise如何消灭嵌套调用和多次错误处理</h1><p>产生嵌套函数的<strong>主要原因就是在发起任务请求时会带上回调函数，这样当任务处理结束后，下个任务就只能在回调函数中处理</strong></p>
+<p>1.<strong>Promise实现回调函数延时绑定</strong>。在代码上体现就是先创建Promise对象x1,通过Promise的构造函数executor来执行业务逻辑，创建好Promise对象x1后，再使用x1.then设置回调函数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建 Promise 对象 x1，并在 executor 函数中执行业务逻辑</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">executor</span>(<span class="params">resolve, reject</span>)</span>&#123;</span><br><span class="line">    resolve(<span class="number">100</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> x1 = <span class="keyword">new</span> <span class="built_in">Promise</span>(executor)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment">//x1 延迟绑定回调函数 onResolve</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">onResolve</span>(<span class="params">value</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(value)</span><br><span class="line">&#125;</span><br><span class="line">x1.then(onResolve)</span><br></pre></td></tr></table></figure>
+
+<p>2.将回调函数onResolve的返回值穿透到最外层，<strong>因为我们会根据onResolve函数的传入值来决定创建什么类型的Promise任务，创建好的Promise对象需要返回到最外层，这样就可以摆脱嵌套循环。</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建 Promise 对象 x1，并在 executor 函数中执行业务逻辑</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">executor</span>(<span class="params">resolve, reject</span>)</span>&#123;</span><br><span class="line">    resolve(<span class="number">100</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> x1 = <span class="keyword">new</span> <span class="built_in">Promise</span>(executor)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment">//x1 延迟绑定回调函数 onResolve</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">onResolve</span>(<span class="params">value</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(value)</span><br><span class="line">    <span class="keyword">let</span> x2 = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve,reject</span>) =&gt;</span>&#123;</span><br><span class="line">        resolve(value+<span class="number">1</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">return</span> x2;<span class="comment">//内部返回值穿透到最外层</span></span><br><span class="line">&#125;</span><br><span class="line">x1.then(onResolve)</span><br></pre></td></tr></table></figure>
+
+<p>处理异常：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">executor</span>(<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> rand = <span class="built_in">Math</span>.random();</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(rand)</span><br><span class="line">    <span class="keyword">if</span> (rand &gt; <span class="number">0.5</span>)</span><br><span class="line">        resolve()</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        reject()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> p0 = <span class="keyword">new</span> <span class="built_in">Promise</span>(executor);</span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> p1 = p0.then(<span class="function">(<span class="params">value</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;succeed-1&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(executor)</span><br><span class="line">&#125;)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> p3 = p1.then(<span class="function">(<span class="params">value</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;succeed-2&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(executor)</span><br><span class="line">&#125;)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> p4 = p3.then(<span class="function">(<span class="params">value</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;succeed-3&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(executor)</span><br><span class="line">&#125;)</span><br><span class="line"> </span><br><span class="line">p4.catch(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;error&quot;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这段代码四个Promise对象，无论哪个对象抛出异常，都可以通过最后一个对象p4.catch捕获异常，通过这种方式可以将所有Promise对象的错误合并到一个函数来处理，这样就解决了每个任务需要单独处理异常的问题。Promise对象的错误具有“冒泡”性质，会一直向后传递，直到被onReject函数处理或catch语句捕获为止。具备这样的“冒泡”特性后，就不需要在每个Promise对象中单独捕获异常。</p>
+<p>Promise与微任务</p>
+<p>由于Promise采用回调函数延迟绑定技术，所以在执行resolve函数时，回调函数还没有绑定，那么只能推迟回调函数的执行</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Promise</span>(<span class="params">executor</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> onResolve_=<span class="literal">null</span></span><br><span class="line">    <span class="keyword">var</span> onReject_=<span class="literal">null</span></span><br><span class="line">    <span class="comment">//模拟实现resolve和then</span></span><br><span class="line">    <span class="built_in">this</span>.then=<span class="function"><span class="keyword">function</span>(<span class="params">onResolve,onReject</span>)</span>&#123;</span><br><span class="line">        onResolve_ = onResolve</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">resolve</span>(<span class="params">value</span>)</span>&#123;</span><br><span class="line">        onResolve_(value)</span><br><span class="line">    &#125;</span><br><span class="line">    executor(resolve,<span class="literal">null</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行这段代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">executor</span>(<span class="params">resolve,reject</span>)</span>&#123;</span><br><span class="line">    resolve(<span class="number">100</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> demo = <span class="keyword">new</span> <span class="built_in">Promise</span>(executor)</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">onResolve</span>(<span class="params">value</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(value)</span><br><span class="line">&#125;</span><br><span class="line">demo.then(onResolve)</span><br></pre></td></tr></table></figure>
+
+<p><strong>代码报错是由于Promise的延迟绑定导致的</strong>，在调用onResolve_时，Promise.then还没执行，所以会报onResolve_ is not a function错误</p>
+<p>因此，改造Promise的resolve方法，让resolve延迟调用onResolve_</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Promise</span>(<span class="params">executor</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> onResolve_=<span class="literal">null</span></span><br><span class="line">    <span class="keyword">var</span> onReject_=<span class="literal">null</span></span><br><span class="line">    <span class="comment">//模拟实现resolve和then</span></span><br><span class="line">    <span class="built_in">this</span>.then=<span class="function"><span class="keyword">function</span>(<span class="params">onResolve,onReject</span>)</span>&#123;</span><br><span class="line">        onResolve_ = onResolve</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">resolve</span>(<span class="params">value</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">           onResolve_(value)</span><br><span class="line">        &#125;,<span class="number">0</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    executor(resolve,<span class="literal">null</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用定时器推迟onResolve执行，用定时器效率低，<strong>因此用微任务</strong></p>
+<p>参考链接：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.poetries.top/browser-working-principle/guide/part4/lesson19.html#promise-%E6%B6%88%E7%81%AD%E5%B5%8C%E5%A5%97%E8%B0%83%E7%94%A8%E5%92%8C%E5%A4%9A%E6%AC%A1%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86">https://blog.poetries.top/browser-working-principle/guide/part4/lesson19.html#promise-%E6%B6%88%E7%81%AD%E5%B5%8C%E5%A5%97%E8%B0%83%E7%94%A8%E5%92%8C%E5%A4%9A%E6%AC%A1%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>小柒
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://coloey.github.io/2022/10/28/Promise%E5%91%8A%E5%88%AB%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/" title="Promise告别回调函数">https://coloey.github.io/2022/10/28/Promise告别回调函数/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/10/28/nextTick%E5%8E%9F%E7%90%86/" rel="prev" title="nextTick原理">
+      <i class="fa fa-chevron-left"></i> nextTick原理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/10/28/async-await%E5%8E%9F%E7%90%86/" rel="next" title="async-await原理">
+      async-await原理 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">异步编程的问题：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Promise%E5%A6%82%E4%BD%95%E6%B6%88%E7%81%AD%E5%B5%8C%E5%A5%97%E8%B0%83%E7%94%A8%E5%92%8C%E5%A4%9A%E6%AC%A1%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">Promise如何消灭嵌套调用和多次错误处理</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小柒"
+      src="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+  <p class="site-author-name" itemprop="name">小柒</p>
+  <div class="site-description" itemprop="description">欢迎来到我的世界!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">218</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Coloey" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Coloey" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/487336863@qq.com" title="E-Mail → 487336863@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小柒</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_pv">
+    本站访问量:<span id="busuanzi_value_site_pv"></span>次
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_uv">
+    本站总访客量：<span id="busuanzi_value_site_uv"></span>人
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共199.3k字</span>
+</div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 动态背景 -->
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="../source/js/src/clicklove.js"></script>
+</body>
+</html>

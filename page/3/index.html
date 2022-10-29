@@ -187,6 +187,550 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/09/11/%E6%90%AD%E5%BB%BAreact%E7%BB%84%E4%BB%B6%E5%BA%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/09/11/%E6%90%AD%E5%BB%BAreact%E7%BB%84%E4%BB%B6%E5%BA%93/" class="post-title-link" itemprop="url">搭建react组件库</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-09-11 16:37:20 / 修改时间：20:32:35" itemprop="dateCreated datePublished" datetime="2022-09-11T16:37:20+08:00">2022-09-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">项目总结</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h1><p>搭建属于自己的组件库，方便在项目中导入组件，避免重复造轮子。</p>
+<h1 id="搭建组件库的主要步骤："><a href="#搭建组件库的主要步骤：" class="headerlink" title="搭建组件库的主要步骤："></a>搭建组件库的主要步骤：</h1><ul>
+<li>项目初始化：使用eslint/commit lint/typeScript进行代码规范</li>
+<li>文档编写：使用dumi1进行开发调试以及文档编写</li>
+<li>打包阶段：输出umd/cjs/esm产物并支持按需加载</li>
+<li>组件测试：使用jest库，@test-library/react相关生态进行组件测试</li>
+<li>发布npm:编写脚本完成发布</li>
+<li>部署文档站点：使用github pages以及github actions完成文档站点自动部署</li>
+</ul>
+<h1 id="技术栈："><a href="#技术栈：" class="headerlink" title="技术栈："></a>技术栈：</h1><p>组件编写：react,typescript</p>
+<p>代码规范：eslint,prettier</p>
+<p>打包编译：gulp,babel</p>
+<p>文档编写：dumi</p>
+<p>样式处理：less</p>
+<h1 id="整个项目结构："><a href="#整个项目结构：" class="headerlink" title="整个项目结构："></a>整个项目结构：</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">.github</span><br><span class="line">	-- workflows</span><br><span class="line">     	-- !gh-pages.yml//master触发push操作时则会自动站点部署</span><br><span class="line">doc-site//部署文档</span><br><span class="line">	-- demos</span><br><span class="line">	-- alert</span><br><span class="line">	-- alert__index.md.chunk.css</span><br><span class="line">	-- ...</span><br><span class="line">esm</span><br><span class="line">	--alert</span><br><span class="line">		-- __tests__</span><br><span class="line">			-- index.test.js</span><br><span class="line">		-- style</span><br><span class="line">            -- css.js</span><br><span class="line">            -- index.css</span><br><span class="line">            -- index.d.ts</span><br><span class="line">            -- index.js</span><br><span class="line">            -- index.less</span><br><span class="line">        -- index.d.ts</span><br><span class="line">        -- index.js</span><br><span class="line">lib</span><br><span class="line">	--alert</span><br><span class="line">		-- __tests__</span><br><span class="line">			-- index.test.js</span><br><span class="line">		-- style</span><br><span class="line">            -- css.js</span><br><span class="line">            -- index.css</span><br><span class="line">            -- index.d.ts</span><br><span class="line">            -- index.js</span><br><span class="line">            -- index.less</span><br><span class="line">        -- index.d.ts</span><br><span class="line">        -- index.js</span><br><span class="line">--node_modules</span><br><span class="line">--src//组件源码</span><br><span class="line">	-- .umi</span><br><span class="line">	--.umi-production</span><br><span class="line">	--alert</span><br><span class="line">		-- __tests__</span><br><span class="line">			-- index.test.tsx</span><br><span class="line">		--demo</span><br><span class="line">			--basic.tsx</span><br><span class="line">		-- style</span><br><span class="line">            -- index.css</span><br><span class="line">            -- index.ts</span><br><span class="line">            -- index.less</span><br><span class="line">        -- index.md</span><br><span class="line">        -- index.tsx</span><br><span class="line">	--alert.js</span><br><span class="line">--.babelrc.js//用于编译代码</span><br><span class="line">--browerserslistrc//设置兼容浏览器</span><br><span class="line">--commitlintrc.js//规范commit message</span><br><span class="line">--.stylelintrc.js//规范样式代码</span><br><span class="line">--.umirc.ts</span><br><span class="line">--eslintrc.js//规范代码</span><br><span class="line">--gatsby-config.js</span><br><span class="line">--gulpfile.js//代码打包</span><br><span class="line">--jest.config.js//配置测试</span><br><span class="line">--prettierrc.js//规范代码格式</span><br><span class="line">--package.json</span><br><span class="line">--package.lock.json</span><br><span class="line">--tsconfig.build.json</span><br><span class="line">--tsconfig.json</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="初始化项目："><a href="#初始化项目：" class="headerlink" title="初始化项目："></a>初始化项目：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir my-ui</span><br><span class="line">cd my-ui</span><br><span class="line">npm init --y</span><br><span class="line">mkdir src &amp;&amp; cd src &amp;&amp; touch index.ts<span class="comment">//新建源码文件以及入口文件</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="代码规范："><a href="#代码规范：" class="headerlink" title="代码规范："></a>代码规范：</h2><p>直接使用@umijs.fabric的配置</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i --dev @umi/fabric prettier</span><br></pre></td></tr></table></figure>
+
+<p>.eslintrc.js:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="attr">extends</span>: [<span class="built_in">require</span>.resolve(<span class="string">&#x27;@umijs/fabric/dist/eslint&#x27;</span>)],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>.prettierrc.js:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fabric = <span class="built_in">require</span>(<span class="string">&#x27;@umijs/fabric&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  ...fabric.prettier,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>.stylelintrc.js:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="attr">extends</span>: [<span class="built_in">require</span>.resolve(<span class="string">&#x27;@umijs/fabric/dist/stylelint&#x27;</span>)],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><strong>关于eslint和prettier的配置：</strong></p>
+<p>使用ESlint+Prettier规范React+TypeScript项目：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/62401626">https://zhuanlan.zhihu.com/p/62401626</a></p>
+<p>代码规范检测需要用husky:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i husky lint-staged --dev</span><br></pre></td></tr></table></figure>
+
+<p>commit message检测：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i @commitlint/cli @commitlint/config-conventional commitizen cz-conventional-changelog --dev</span><br></pre></td></tr></table></figure>
+
+<p>新增.commitlintrc.js写入一下内容：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123; <span class="attr">extends</span>: [<span class="string">&#x27;@commitlint/config-conventional&#x27;</span>] &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>package.json:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//...</span></span><br><span class="line"><span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">  <span class="string">&quot;commit&quot;</span>: <span class="string">&quot;git-cz&quot;</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//...</span></span><br><span class="line"><span class="string">&quot;lint-staged&quot;</span>: &#123;</span><br><span class="line">  <span class="string">&quot;src/**/*.ts?(x)&quot;</span>: [</span><br><span class="line">    <span class="string">&quot;prettier --write&quot;</span>,</span><br><span class="line">    <span class="string">&quot;eslint --fix&quot;</span>,</span><br><span class="line">    <span class="string">&quot;git add&quot;</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="string">&quot;src/**/*.less&quot;</span>: [</span><br><span class="line">    <span class="string">&quot;stylelint --syntax less --fix&quot;</span>,</span><br><span class="line">    <span class="string">&quot;git add&quot;</span></span><br><span class="line">  ]</span><br><span class="line">&#125;,</span><br><span class="line"><span class="string">&quot;husky&quot;</span>: &#123;</span><br><span class="line">  <span class="string">&quot;hooks&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;commit-msg&quot;</span>: <span class="string">&quot;commitlint -E HUSKY_GIT_PARAMS&quot;</span>,</span><br><span class="line">    <span class="string">&quot;pre-commit&quot;</span>: <span class="string">&quot;lint-staged&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">&quot;config&quot;</span>: &#123;</span><br><span class="line">  <span class="string">&quot;commitizen&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;path&quot;</span>: <span class="string">&quot;cz-conventional-changelog&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>后面使用npm run commit代替git commit生成规范的commit message,也可以手写，但是要符合规范</p>
+<p>配置typeScript:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i typescript --dev</span><br></pre></td></tr></table></figure>
+
+<p>新建tsconfig.json:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;compilerOptions&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;baseUrl&quot;</span>: <span class="string">&quot;./&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;target&quot;</span>: <span class="string">&quot;esnext&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;module&quot;</span>: <span class="string">&quot;commonjs&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;jsx&quot;</span>: <span class="string">&quot;react&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;declaration&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">&quot;declarationDir&quot;</span>: <span class="string">&quot;lib&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;strict&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">&quot;moduleResolution&quot;</span>: <span class="string">&quot;node&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;allowSyntheticDefaultImports&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">&quot;esModuleInterop&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">&quot;resolveJsonModule&quot;</span>: <span class="literal">true</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">&quot;include&quot;</span>: [<span class="string">&quot;src&quot;</span>, <span class="string">&quot;typings.d.ts&quot;</span>],</span><br><span class="line">  <span class="attr">&quot;exclude&quot;</span>: [<span class="string">&quot;node_modules&quot;</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编写组件代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">alert</span><br><span class="line">    ├── index.tsx           # 源文件</span><br><span class="line">    └── style</span><br><span class="line">        ├── index.less      # 样式文件</span><br><span class="line">        └── index.ts        # 样式文件里为什么存在一个index.ts - 按需加载样式 管理样式依赖 后面章节会提到</span><br></pre></td></tr></table></figure>
+
+<p>下载react相关依赖：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm i react react-dom @types/react @types/react-dom --dev # 开发时依赖，宿主环境一定存在</span><br><span class="line"></span><br><span class="line">npm i prop-types            # 运行时依赖，宿主环境可能不存在 安装本组件库时一起安装</span><br></pre></td></tr></table></figure>
+
+<h1 id="组件文档："><a href="#组件文档：" class="headerlink" title="组件文档："></a>组件文档：</h1><p>用dumi作为组件文档站点工具，并兼具开发调试功能</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i dumi serve --dev</span><br></pre></td></tr></table></figure>
+
+<p>增加npm scripts到package.json</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">  <span class="string">&quot;dev&quot;</span>: <span class="string">&quot;dumi dev&quot;</span>, <span class="comment">// 启动开发环境 在文档站点中调试组件</span></span><br><span class="line">  <span class="string">&quot;build:site&quot;</span>: <span class="string">&quot;rimraf doc-site &amp;&amp; dumi build&quot;</span>, <span class="comment">// 构建文档站点 后续会部署到 github pages</span></span><br><span class="line">  <span class="string">&quot;preview:site&quot;</span>: <span class="string">&quot;npm run build:site &amp;&amp; serve doc-site&quot;</span> <span class="comment">// 本地预览构建后的文档站点</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<p>配置.umirc.ts配置文件：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; defineConfig &#125; <span class="keyword">from</span> <span class="string">&#x27;dumi&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> defineConfig(&#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&#x27;My UI&#x27;</span>, <span class="comment">// 站点名称</span></span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&#x27;site&#x27;</span>,</span><br><span class="line">  <span class="attr">outputPath</span>: <span class="string">&#x27;doc-site&#x27;</span>, <span class="comment">// 输出文件夹</span></span><br><span class="line">  <span class="attr">exportStatic</span>: &#123;&#125;, <span class="comment">// 后续会部署到 github pages 直接全部生成静态页面 不走前端路由</span></span><br><span class="line">  <span class="attr">dynamicImport</span>: &#123;&#125;, <span class="comment">// 拆包 站点过大时可以优化首屏加载速度</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>首页配置：</p>
+<p>docs/index.md:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: My UI</span><br><span class="line">hero:</span><br><span class="line">  title: My UI</span><br><span class="line">  desc: 文档站点基于 dumi 生成</span><br><span class="line">  actions:</span><br><span class="line">    - text: 快速上手</span><br><span class="line">      link: /getting-started</span><br><span class="line">features:</span><br><span class="line">  - icon: https://gw.alipayobjects.com/zos/bmw-prod/881dc458-f20b-407b-947a-95104b5ec82b/k79dm8ih_w144_h144.png</span><br><span class="line">    title: 特性 1</span><br><span class="line">    desc: Balabala</span><br><span class="line">  - icon: https://gw.alipayobjects.com/zos/bmw-prod/d60657df-0822-4631-9d7c-e7a869c2f21c/k79dmz3q_w126_h126.png</span><br><span class="line">    title: 特性 2</span><br><span class="line">    desc: Balabala</span><br><span class="line">  - icon: https://gw.alipayobjects.com/zos/bmw-prod/d1ee0c6f-5aed-4a45-a507-339a4bfe076c/k7bjsocq_w144_h144.png</span><br><span class="line">    title: 特性 3</span><br><span class="line">    desc: Balabala</span><br><span class="line">footer: Open-source MIT Licensed | Copyright © 2020&lt;br /&gt;Powered by [dumi](https://d.umijs.org)</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+<p>可以参考dumi文档进行配置</p>
+<p>index.md:</p>
+<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">-- <span class="strong">__tests__</span></span><br><span class="line"><span class="code">		-- index.test.js</span></span><br><span class="line"><span class="code">	-- style</span></span><br><span class="line"><span class="code">           -- css.js</span></span><br><span class="line"><span class="code">           -- index.css</span></span><br><span class="line"><span class="code">           -- index.d.ts</span></span><br><span class="line"><span class="code">           -- index.js</span></span><br><span class="line"><span class="code">           -- index.less</span></span><br><span class="line"><span class="code">       -- index.d.ts</span></span><br><span class="line"><span class="code">       -- index.js</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="部署文档站点："><a href="#部署文档站点：" class="headerlink" title="部署文档站点："></a>部署文档站点：</h1><p>将文档部署到github pages</p>
+<p>下载cross–env区分环境变量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i cross-env --dev</span><br></pre></td></tr></table></figure>
+
+<p>package.json:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">  <span class="string">&quot;preview:site&quot;</span>: <span class="string">&quot;cross-env SITE_BUILD_ENV=PREVIEW npm run build:site &amp;&amp; serve doc-site&quot;</span>,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<p>.umirc.ts</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; defineConfig &#125; <span class="keyword">from</span> <span class="string">&#x27;dumi&#x27;</span>;</span><br><span class="line"><span class="keyword">let</span> base = <span class="string">&#x27;/my-react-components&#x27;</span>;</span><br><span class="line"><span class="keyword">let</span> publicPath = <span class="string">&#x27;/my-react-components/&#x27;</span>;</span><br><span class="line"><span class="keyword">if</span>(process.env.SITE_BUID_ENV === <span class="string">&#x27;PREVIEW&#x27;</span>)&#123;</span><br><span class="line">  base = <span class="literal">undefined</span>;</span><br><span class="line">  publicPath = <span class="literal">undefined</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> defineConfig(&#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&#x27;My UI&#x27;</span>, <span class="comment">// 站点名称</span></span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&#x27;site&#x27;</span>,</span><br><span class="line">  <span class="attr">outputPath</span>: <span class="string">&#x27;doc-site&#x27;</span>, <span class="comment">// 输出文件夹</span></span><br><span class="line">  <span class="attr">exportStatic</span>: &#123;&#125;, <span class="comment">// 后续会部署到 github pages 直接全部生成静态页面 不走前端路由</span></span><br><span class="line">  <span class="attr">dynamicImport</span>: &#123;&#125;, <span class="comment">// 拆包 站点过大时可以优化首屏加载速度</span></span><br><span class="line">  base,</span><br><span class="line">  publicPath,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>下载gh-pages完成一键部署：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i gh-pages --dev</span><br></pre></td></tr></table></figure>
+
+<p>package.json:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;scripts&quot;</span>:&#123;</span><br><span class="line">    <span class="string">&quot;deploy:site&quot;</span>:<span class="string">&quot;npm run build:site &amp;&amp; gh-pages -d doc-site&quot;</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行npm run deploy:site后就能在${username}.github.io/${repo}看到自己的组件库站点</p>
+<h2 id="使用Github-Actions自动触发部署："><a href="#使用Github-Actions自动触发部署：" class="headerlink" title="使用Github Actions自动触发部署："></a>使用Github Actions自动触发部署：</h2><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">github</span> <span class="string">pages</span></span><br><span class="line"></span><br><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">push:</span></span><br><span class="line">    <span class="attr">branches:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">master</span> <span class="comment"># default branch</span></span><br><span class="line"></span><br><span class="line"><span class="attr">jobs:</span></span><br><span class="line">  <span class="attr">deploy:</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">window10</span></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/checkout@v2</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">run:</span> <span class="string">npm</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">run:</span> <span class="string">npm</span> <span class="string">run</span> <span class="string">build:site</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Deploy</span></span><br><span class="line">        <span class="attr">uses:</span> <span class="string">peaceiris/actions-gh-pages@v3</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">github_token:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.GITHUB_TOKEN</span> <span class="string">&#125;&#125;</span></span><br><span class="line">          <span class="attr">publish_dir:</span> <span class="string">./doc-site</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="编译打包："><a href="#编译打包：" class="headerlink" title="编译打包："></a>编译打包：</h1><h2 id="1-导出类型声明文件："><a href="#1-导出类型声明文件：" class="headerlink" title="1.导出类型声明文件："></a>1.导出类型声明文件：</h2><p>先下载cpr,这样运行下面的npm run build:typs时会将lib的声明文件拷贝一份，并将文件夹重命名为esm,后面存放ES module形式的组件，这样做的原因是保证用户手动按需引入组件的时候可以获取自动提示</p>
+<p>使用typescript编写的组件库，应该利用类型系统的好处，我们可以生成类型声明文件,并在package.json中定义入口：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;typings&quot;</span>: <span class="string">&quot;lib/index.d.ts&quot;</span>, <span class="comment">// 定义类型入口文件</span></span><br><span class="line">  <span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;build:types&quot;</span>: <span class="string">&quot;tsc -p tsconfig.build.json &amp;&amp; cpr lib esm&quot;</span> <span class="comment">// 执行tsc命令生成类型声明文件</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>配置tsconfig.build.json:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;extends&quot;</span>: <span class="string">&quot;./tsconfig.json&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;compilerOptions&quot;</span>: &#123; <span class="attr">&quot;emitDeclarationOnly&quot;</span>: <span class="literal">true</span> &#125;, <span class="comment">// 只生成声明文件</span></span><br><span class="line">  <span class="attr">&quot;exclude&quot;</span>: [<span class="string">&quot;**/__tests__/**&quot;</span>, <span class="string">&quot;**/demo/**&quot;</span>, <span class="string">&quot;node_modules&quot;</span>, <span class="string">&quot;lib&quot;</span>, <span class="string">&quot;esm&quot;</span>] <span class="comment">// 排除示例、测试以及打包好的文件夹</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行npm run build:types后根目录生成了lib文件夹（<code>tsconfig.json</code>中定义的<code>declarationDir</code>字段）以及<code>esm</code>文件夹（拷贝而来），目录结构与<code>src</code>文件夹保持一致，这样使用者引入npm包时，便能得到自动提示，也能复用相关组件的类型定义</p>
+<p>接下来将ts(x)等文件处理成js文件，需要配置.babelrc.js因为我们需要输出commonjs module和es module,再者，考虑到样式处理及其按需加载，用gulp</p>
+<p>配置目标环境：</p>
+<p>为了避免转译浏览器原生支持多的语法，新建.browserslistrc文件，根据适配需求，写入支持浏览器范围，作用于@babel/preset-env</p>
+<p>.browserslistrc</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;0.2%</span><br><span class="line">not dead</span><br><span class="line">not op_mini all</span><br></pre></td></tr></table></figure>
+
+<p>babel配置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i @babel/core @babel/preset-env @babel/preset-react @babel/preset-typescript @babel/plugin-proposal-<span class="class"><span class="keyword">class</span>-<span class="title">properties</span>  @<span class="title">babel</span>/<span class="title">plugin</span>-<span class="title">transform</span>-<span class="title">runtime</span>  @<span class="title">babel</span>/<span class="title">runtime</span>-<span class="title">corejs3</span> --<span class="title">dev</span></span></span><br></pre></td></tr></table></figure>
+
+<p>.babelrc.js:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="attr">presets</span>: [<span class="string">&#x27;@babel/env&#x27;</span>, <span class="string">&#x27;@babel/typescript&#x27;</span>, <span class="string">&#x27;@babel/react&#x27;</span>],</span><br><span class="line">  <span class="attr">plugins</span>: [<span class="string">&#x27;@babel/plugin-transform-runtime&#x27;</span>, <span class="string">&#x27;@babel/proposal-class-properties&#x27;</span>],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-导出ES-module和Common-js产物供使用者使用"><a href="#2-导出ES-module和Common-js产物供使用者使用" class="headerlink" title="2.导出ES module和Common js产物供使用者使用"></a>2.导出ES module和Common js产物供使用者使用</h2><p>先安装gulp相关依赖对代码进行合并优化和压缩</p>
+<p>gulp官网：<a target="_blank" rel="noopener" href="https://www.gulpjs.com.cn/docs/getting-started/creating-tasks/">https://www.gulpjs.com.cn/docs/getting-started/creating-tasks/</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install gulp gulp-babel --dev</span><br></pre></td></tr></table></figure>
+
+<p>新建gulpfile.js:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> gulp = <span class="built_in">require</span>(<span class="string">&quot;gulp&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> babel = <span class="built_in">require</span>(<span class="string">&quot;gulp-babel&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> less = <span class="built_in">require</span>(<span class="string">&quot;gulp-less&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> autoprefixer = <span class="built_in">require</span>(<span class="string">&quot;gulp-autoprefixer&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> cssnano = <span class="built_in">require</span>(<span class="string">&quot;gulp-cssnano&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> through2 = <span class="built_in">require</span>(<span class="string">&quot;through2&quot;</span>);</span><br><span class="line"><span class="comment">// 编译脚本文件</span></span><br><span class="line"><span class="comment">// @param &#123;string&#125; babelEnv babel环境变量</span></span><br><span class="line"><span class="comment">// @param &#123;string&#125; destDir 目标目录</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> paths = &#123;</span><br><span class="line">  <span class="attr">dest</span>: &#123;</span><br><span class="line">    <span class="attr">lib</span>: <span class="string">&quot;lib&quot;</span>, <span class="comment">//commonjs文件存放的目录名，关注</span></span><br><span class="line">    <span class="attr">esm</span>: <span class="string">&quot;esm&quot;</span>, <span class="comment">//ES module文件存放的目录名，暂时不关心</span></span><br><span class="line">    <span class="attr">dist</span>: <span class="string">&quot;dist&quot;</span>, <span class="comment">//umd文件存放的目录名,暂时不关心</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">styles</span>: <span class="string">&quot;src/**/*.less&quot;</span>, <span class="comment">//样式文件路径</span></span><br><span class="line">  <span class="attr">scripts</span>: [<span class="string">&quot;src/**/*.&#123;ts,tsx&#125;&quot;</span>, <span class="string">&quot;!src/**/demo/*.&#123;ts,tsx&#125;&quot;</span>,<span class="string">&quot;!src/**/__tests__/*.&#123;ts,tsx&#125;&quot;</span>], <span class="comment">//脚本路径,glob详细https://www.gulpjs.com.cn/docs/getting-started/explaining-globs/</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//当前组件样式import &#x27;./index.less&#x27;=&gt;import &#x27;./index.css&#x27;</span></span><br><span class="line"><span class="comment">//依赖的其他组件样式 import &quot;../test-comp/style&quot;=&gt;import &quot;../test-comp/style/css.js&quot;</span></span><br><span class="line"><span class="comment">//依赖的其他组件样式 import &#x27;../test-comp/style/index.js&#x27;=&gt;import &#x27;../test-comp/style/css.js&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cssInction</span>(<span class="params">content</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> content</span><br><span class="line">    .replace(<span class="regexp">/\/style\/?&#x27;/g</span>, <span class="string">&quot;/style/css&#x27;&quot;</span>)</span><br><span class="line">    .replace(<span class="regexp">/\/style\/?&quot;/g</span>, <span class="string">&#x27;/style/css&quot;&#x27;</span>)</span><br><span class="line">    .replace(<span class="regexp">/\.less/g</span>, <span class="string">&quot;.css&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">compileScripts</span>(<span class="params">babelEnv, destDir</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; scripts &#125; = paths;</span><br><span class="line">  process.env.BABEL_ENV = babelEnv;</span><br><span class="line">  <span class="keyword">return</span> gulp</span><br><span class="line">    .src(scripts)</span><br><span class="line">    .pipe(babel()) <span class="comment">//使用gulp-babel处理</span></span><br><span class="line">    .pipe(</span><br><span class="line">      through2.obj(<span class="function"><span class="keyword">function</span> <span class="title">z</span>(<span class="params">chunk, encoding, next</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.push(chunk.clone());</span><br><span class="line">        <span class="comment">//找到style/index.js</span></span><br><span class="line">        <span class="keyword">if</span> (chunk.path.match(<span class="regexp">/(\/|\\)style(\/|\\)index\.js/</span>)) &#123;</span><br><span class="line">          <span class="keyword">const</span> content = chunk.contents.toString(encoding);</span><br><span class="line">          chunk.contents = Buffer.from(cssInction(content)); <span class="comment">//文件内容处理</span></span><br><span class="line">          chunk.path = chunk.path.replace(<span class="regexp">/index\.js/</span>, <span class="string">&quot;css.js&quot;</span>); <span class="comment">//文件重命名</span></span><br><span class="line">          <span class="built_in">this</span>.push(chunk); <span class="comment">//新增该文件</span></span><br><span class="line">          next();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          next();</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    )</span><br><span class="line">    .pipe(gulp.dest(destDir)); <span class="comment">//输出</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">compileCJS</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; dest &#125; = paths;</span><br><span class="line">  <span class="keyword">return</span> compileScripts(<span class="string">&quot;cjs&quot;</span>, dest.lib);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//编译esm</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">compileESM</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; dest &#125; = paths;</span><br><span class="line">  <span class="keyword">return</span> compileScripts(<span class="string">&quot;esm&quot;</span>, dest.esm);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//拷贝less文件</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">copyLess</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> gulp</span><br><span class="line">    .src(paths.styles)</span><br><span class="line">    .pipe(gulp.dest(paths.dest.lib))</span><br><span class="line">    .pipe(gulp.dest(paths.dest.esm));</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//生成css文件</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">less2css</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> gulp</span><br><span class="line">    .src(paths.styles)</span><br><span class="line">    .pipe(less()) <span class="comment">//处理less文件</span></span><br><span class="line">    .pipe(autoprefixer()) <span class="comment">//根据browserslistrc增加前缀</span></span><br><span class="line">    .pipe(cssnano(&#123; <span class="attr">zindex</span>: <span class="literal">false</span>, <span class="attr">reduceIdents</span>: <span class="literal">false</span> &#125;)) <span class="comment">//压缩</span></span><br><span class="line">    .pipe(gulp.dest(paths.dest.lib))</span><br><span class="line">    .pipe(gulp.dest(paths.dest.esm));</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//串行执行编译脚本任务,避免环境变量影响</span></span><br><span class="line"><span class="keyword">const</span> buildScripts = gulp.series(compileCJS, compileESM);</span><br><span class="line"><span class="comment">//整体并行任务，后续加入样式处理 可以并行处理</span></span><br><span class="line"><span class="keyword">const</span> build = gulp.parallel(buildScripts, copyLess, less2css);</span><br><span class="line"><span class="built_in">exports</span>.build = build;</span><br><span class="line"><span class="built_in">exports</span>.default = build;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>使用环境变量区分esm和cjs:</p>
+<p>.babelrc.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="attr">presets</span>: [<span class="string">&#x27;@babel/env&#x27;</span>, <span class="string">&#x27;@babel/typescript&#x27;</span>, <span class="string">&#x27;@babel/react&#x27;</span>],</span><br><span class="line">  <span class="attr">plugins</span>: [<span class="string">&#x27;@babel/plugin-transform-runtime&#x27;</span>, <span class="string">&#x27;@babel/proposal-class-properties&#x27;</span>],</span><br><span class="line">  <span class="attr">env</span>: &#123;</span><br><span class="line">    <span class="attr">esm</span>: &#123;</span><br><span class="line">      <span class="attr">presets</span>: [</span><br><span class="line">        [</span><br><span class="line">          <span class="string">&#x27;@babel/env&#x27;</span>,</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">modules</span>: <span class="literal">false</span>,</span><br><span class="line">          &#125;,</span><br><span class="line">        ],</span><br><span class="line">      ],</span><br><span class="line">      <span class="attr">plugins</span>: [</span><br><span class="line">        [</span><br><span class="line">          <span class="string">&#x27;@babel/plugin-transform-runtime&#x27;</span>,</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">useESModules</span>: <span class="literal">true</span>,</span><br><span class="line">          &#125;,</span><br><span class="line">        ],</span><br><span class="line">      ],</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>配置package.json:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">- <span class="string">&quot;main&quot;</span>: <span class="string">&quot;index.js&quot;</span>,</span><br><span class="line">+ <span class="string">&quot;main&quot;</span>: <span class="string">&quot;lib/index.js&quot;</span>,</span><br><span class="line">+ <span class="string">&quot;module&quot;</span>: <span class="string">&quot;esm/index.js&quot;</span></span><br><span class="line">  <span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">    ...</span><br><span class="line">+   <span class="string">&quot;clean&quot;</span>: <span class="string">&quot;rimraf lib esm dist&quot;</span>,</span><br><span class="line">+   <span class="string">&quot;build&quot;</span>: <span class="string">&quot;npm run clean &amp;&amp; npm run build:types &amp;&amp; gulp&quot;</span>,</span><br><span class="line">    ...</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>npm run build用来输出esm和lib两种方式的文件再使用gulp进行压缩优化</p>
+<h2 id="处理样式文件："><a href="#处理样式文件：" class="headerlink" title="处理样式文件："></a>处理样式文件：</h2><p>这里有个问题就是如果使用者没有使用less预处理器，使用的是sass或者css原生方案，那现有方案就搞不定，有以下4中预选方案：</p>
+<p>1 告知业务方增加less-loader，会导致业务方使用成本增加</p>
+<p>2 打包出一份完整的css文件，全量引入，无法按需引入</p>
+<p>3 css in js</p>
+<p>4 提供一份style/css.js文件，引入组件css样式依赖，而不是less依赖，组件库底层抹平差异</p>
+<p>讲下第4点，这也是antd使用的方案，在搭建组件库过程中需要在alert/style/index.js中引入less文件，是为了管理样式依赖，因为组件没有引入样式文件，需要使用者手动引入，假如：使用者引入<Button>,<Button>依赖了<Icon>,则需要手动引入调用组件的样式(<Button>)及其依赖的组件样式(<Icon>),遇到复杂的组件更麻烦，所以组件开发者提供了一份这样的js文件，使用者手动引入这个js文件，就能引入对应组件及其依赖组件的样式。</Icon></Button></Icon></Button></Button></p>
+<p>为什么不直接 import ‘./index.less’，这样业务方可能不使用less,就需要配置less-loader,因此单独提供一份style/css.js文件，引入的是组件css样式文件依赖。</p>
+<p>先将less文件生成对应的css文件，在gulpfile.js中增加less2css任务：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 生成css文件</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">less2css</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> gulp</span><br><span class="line">    .src(paths.styles)</span><br><span class="line">    .pipe(less()) <span class="comment">// 处理less文件</span></span><br><span class="line">    .pipe(autoprefixer()) <span class="comment">// 根据browserslistrc增加前缀</span></span><br><span class="line">    .pipe(cssnano(&#123; <span class="attr">zindex</span>: <span class="literal">false</span>, <span class="attr">reduceIdents</span>: <span class="literal">false</span> &#125;)) <span class="comment">// 压缩</span></span><br><span class="line">    .pipe(gulp.dest(paths.dest.lib))</span><br><span class="line">    .pipe(gulp.dest(paths.dest.esm));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> build = gulp.parallel(buildScripts, copyLess, less2css);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>执行npm run build,组件style目录下已经存在css文件，接下来我们需要一个alert/style/css.js来帮用户引入css文件：可以在gulpfile.js文件中处理scripts任务中截住style/index.js,生成style/css.js,并通过正则将引入的less文件后缀改为css</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i through2 --dev</span><br></pre></td></tr></table></figure>
+
+<p>gulpfile.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cssInjection</span>(<span class="params">content</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> content</span><br><span class="line">    .replace(<span class="regexp">/\/style\/?&#x27;/g</span>, <span class="string">&quot;/style/css&#x27;&quot;</span>)</span><br><span class="line">    .replace(<span class="regexp">/\/style\/?&quot;/g</span>, <span class="string">&#x27;/style/css&quot;&#x27;</span>)</span><br><span class="line">    .replace(<span class="regexp">/\.less/g</span>, <span class="string">&#x27;.css&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 编译脚本文件</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> </span>babelEnv babel环境变量</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> </span>destDir 目标目录</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">compileScripts</span>(<span class="params">babelEnv, destDir</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; scripts &#125; = paths;</span><br><span class="line">  process.env.BABEL_ENV = babelEnv;</span><br><span class="line">  <span class="keyword">return</span> gulp</span><br><span class="line">    .src(scripts)</span><br><span class="line">    .pipe(babel()) <span class="comment">// 使用gulp-babel处理</span></span><br><span class="line">    .pipe(</span><br><span class="line">      through2.obj(<span class="function"><span class="keyword">function</span> <span class="title">z</span>(<span class="params">file, encoding, next</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.push(file.clone());</span><br><span class="line">        <span class="comment">// 找到目标</span></span><br><span class="line">        <span class="keyword">if</span> (file.path.match(<span class="regexp">/(\/|\\)style(\/|\\)index\.js/</span>)) &#123;</span><br><span class="line">          <span class="keyword">const</span> content = file.contents.toString(encoding);</span><br><span class="line">          file.contents = Buffer.from(cssInjection(content)); <span class="comment">// 文件内容处理</span></span><br><span class="line">          file.path = file.path.replace(<span class="regexp">/index\.js/</span>, <span class="string">&#x27;css.js&#x27;</span>); <span class="comment">// 文件重命名</span></span><br><span class="line">          <span class="built_in">this</span>.push(file); <span class="comment">// 新增该文件</span></span><br><span class="line">          next();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          next();</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;),</span><br><span class="line">    )</span><br><span class="line">    .pipe(gulp.dest(destDir));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>再次打包运行npm run build,组件style目录下生成css,js文件，引入的index.css是由less转换来的css文件</p>
+<h2 id="按需加载："><a href="#按需加载：" class="headerlink" title="按需加载："></a>按需加载：</h2><p>在package,json中增加sideEffects属性，配合ES module达到tree shaking,将样式依赖文件标注为side effects，避免被误删除</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//...</span></span><br><span class="line"><span class="string">&quot;sideEffects&quot;</span>: [</span><br><span class="line">    <span class="string">&quot;dist/*&quot;</span>,</span><br><span class="line">    <span class="string">&quot;esm/**/style/*&quot;</span>,</span><br><span class="line">    <span class="string">&quot;lib/**/style/*&quot;</span>,</span><br><span class="line">    <span class="string">&quot;*.less&quot;</span></span><br><span class="line">]</span><br><span class="line"><span class="comment">//...</span></span><br></pre></td></tr></table></figure>
+
+<p>使用以下方式引入，可以做到js部分按需加载：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Alert &#125; <span class="keyword">from</span> <span class="string">&#x27;happy-ui&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;happy-ui/esm/alert/style&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/09/11/gulp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/09/11/gulp/" class="post-title-link" itemprop="url">gulp</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-09-11 14:48:34 / 修改时间：14:58:09" itemprop="dateCreated datePublished" datetime="2022-09-11T14:48:34+08:00">2022-09-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/09/07/Vue%E6%8C%82%E8%BD%BD%E5%AD%90%E8%8A%82%E7%82%B9%E5%92%8C%E5%85%83%E7%B4%A0%E5%B1%9E%E6%80%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/09/07/Vue%E6%8C%82%E8%BD%BD%E5%AD%90%E8%8A%82%E7%82%B9%E5%92%8C%E5%85%83%E7%B4%A0%E5%B1%9E%E6%80%A7/" class="post-title-link" itemprop="url">Vue挂载子节点和元素属性</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-09-07 16:54:46 / 修改时间：17:44:43" itemprop="dateCreated datePublished" datetime="2022-09-07T16:54:46+08:00">2022-09-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>渲染器的核心功能就是挂载与更新</p>
+<p>首先，有一个虚拟dom的代码如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> vnode = &#123;</span><br><span class="line">    <span class="attr">type</span>:<span class="string">&#x27;div&#x27;</span>,</span><br><span class="line">    <span class="comment">//使用props描述一个元素得特性</span></span><br><span class="line">    <span class="attr">props</span>:&#123;</span><br><span class="line">        <span class="attr">id</span>:<span class="string">&#x27;foo&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">children</span>:[</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">type</span>:<span class="string">&#x27;p&#x27;</span>,</span><br><span class="line">            <span class="attr">children</span>:<span class="string">&#x27;hello&#x27;</span></span><br><span class="line">        &#125;        </span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>检查vnode.props字段可以使用el[key]=vnode.props[key]或者el.setAttribute(key,vnode.props[key]),先来了解下HTML Attributes和DOM Properties的不同</p>
+<h2 id="HTML-Attributes和DOM-Properties"><a href="#HTML-Attributes和DOM-Properties" class="headerlink" title="HTML Attributes和DOM Properties"></a>HTML Attributes和DOM Properties</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;foo&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个DOM对象有很多属性，HTML Attributes在DOM对象上有与之同名的DOM Properties，例如id=”my-input”对应el.id,但DOM Properties并不与HTML Attributes的名字总是一样，例如</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;foo&quot;</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>class=’foo’对应的DOM Properties是el.className,不是所有的HTML Adttributes都有和它对应的DOM Properties,例如aria-*类的HTML Attributes就没有和它对应的DOM Properties</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">value</span>=<span class="string">&#x27;foo&#x27;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>当用户修改了文本框的值，那么el.value的值时当前文本的值，而el.getAttribute(‘value’)仍然是之前的值</p>
+<p>总之：<strong>HTML Attributes的作用是设置与之对应的DOM Properties的初始值</strong></p>
+<h2 id="正确设置元素的属性"><a href="#正确设置元素的属性" class="headerlink" title="正确设置元素的属性"></a>正确设置元素的属性</h2><p>例子：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">:disabled</span>=<span class="string">&#x27;false&#x27;</span>&gt;</span></span><br><span class="line">    Button</span><br><span class="line"><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个HTML模板会被编译成vnode:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> button = &#123;</span><br><span class="line">    <span class="attr">type</span>: <span class="string">&#x27;button&#x27;</span>,</span><br><span class="line">    <span class="attr">props</span>: &#123;</span><br><span class="line">        <span class="attr">disabled</span>:<span class="literal">false</span></span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的props.disabled的值时空字符串，如果在渲染器中调用setAttribute函数设置属性，相当于：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">el.setAttribute(<span class="string">&#x27;disabled&#x27;</span>,<span class="literal">false</span>)</span><br></pre></td></tr></table></figure>
+
+<p>用户本意是不禁用，但是用setAttribute按钮仍然被禁用了，这是因为使用setAttribute函数设置的值总是会被字符串化，等价于</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">el.setAttribute(<span class="string">&#x27;disabled&#x27;</span>,<span class="string">&#x27;false&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>el.disabled的值时布尔值，我们不关心值是什么，只要disabled属性存在，按钮就被禁用，不使用setAttribute,用el.disabled=false</p>
+<p>但是如果是下面的模板：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">disabled</span>&gt;</span></span><br><span class="line">    Button</span><br><span class="line"><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>对应的vnode:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> button = &#123;</span><br><span class="line">    <span class="attr">type</span>:<span class="string">&#x27;button&#x27;</span>,</span><br><span class="line">    <span class="attr">props</span>: &#123;</span><br><span class="line">        <span class="attr">disabled</span>: <span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用DOM Properties设置元素属性时，el.disabled=’’,类型转换会设置为el.disabled=false,用户本意是禁用按钮，则只能优先设置setAttribute,如果是空字符串则手动矫正</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mountElement</span>(<span class="params">vnode,container</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> el = createElement(vnode.type)</span><br><span class="line">    <span class="comment">//省略children处理</span></span><br><span class="line">    <span class="keyword">if</span>(vnode.props)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">const</span> key <span class="keyword">in</span> vnode.props)&#123;</span><br><span class="line">            <span class="keyword">if</span>(key <span class="keyword">in</span> vnode.props)&#123;</span><br><span class="line">                 <span class="comment">//用in操作判断key是否存在对应的DOM Properties</span></span><br><span class="line">                <span class="keyword">if</span>(key <span class="keyword">in</span> el)&#123;</span><br><span class="line">                    <span class="comment">//获取该DOM Properties的类型</span></span><br><span class="line">                    <span class="keyword">const</span> type = el[key]</span><br><span class="line">                    <span class="keyword">const</span> value = vnode.props[key]</span><br><span class="line">                    <span class="keyword">if</span>(type === <span class="string">&#x27;boolean&#x27;</span> &amp;&amp; value ===<span class="string">&#x27;&#x27;</span>)&#123;</span><br><span class="line">                        e[key]=<span class="literal">true</span></span><br><span class="line">                    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                        e[key]=value</span><br><span class="line">                    &#125;                </span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    el.setAttribute(key,vnode.props[key])</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    insert(el,container)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/30/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E9%80%82%E9%85%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/30/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E9%80%82%E9%85%8D/" class="post-title-link" itemprop="url">移动端适配</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-30 09:27:34 / 修改时间：10:51:55" itemprop="dateCreated datePublished" datetime="2022-08-30T09:27:34+08:00">2022-08-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h1><p>屏幕尺寸：以屏幕对角线的长度计算，单位是英寸</p>
+<p>像素 pixel:显示屏画面上表示出来的最小单位</p>
+<p>屏幕分辨率：一个屏幕具体由多少个像素点组成，单位是px</p>
+<p>物理像素：在同一个设备上，他的物理像素是固定的，也就是厂家在生产显示设备时就决定的实际点的个数，对于不同设备物理像素点的大小是不一样的</p>
+<p>逻辑像素（设备独立像素）：（与设备无关的逻辑像素，代表可以通过程序控制使用的虚拟像素）</p>
+<p>设备像素比dpr:计算公式为：<code>DPR = 物理像素/逻辑像素</code></p>
+<p>当设备像素比为1:1时，使用1（1×1）个设备像素显示1个CSS像素；</p>
+<p>当设备像素比为2:1时，使用4（2×2）个设备像素显示1个CSS像素；</p>
+<p>当设备像素比为3:1时，使用9（3×3）个设备像素显示1个CSS像素。</p>
+<p>视口viewport:</p>
+<p>viewport指的是视口，它是浏览器或者app中webview显示页面的区域，一般，PC端的视口指的是浏览器窗口区域，而移动端有三个视口：</p>
+<p>layout viewport:布局视口</p>
+<p>visual viewport:视觉视口</p>
+<p>ideal viewport:理想视口</p>
+<p>布局视口(layout viewport):</p>
+<p>由浏览器提出的一种虚拟的布局视口，用来解决页面在收上显示的问题，这种视口可以通过<meta>标签设置viewport来改变，移动设备上的浏览器会把自己默认的viewport设为980px或者1024px，也可能是其它值，这个是由设备自己决定的），但带来的后果就是浏览器会出现横向滚动条，因为浏览器可视区域的宽度是比这个默认的viewport的宽度要小的。</p>
+<p>我们可以通过<code>document.documentElement.clientWidth</code>来获取布局视口大小</p>
+<p>视觉视口（visual viewport）</p>
+<p>它指的是浏览器的可视区域，也就是我们在移动端设备上能够看到的区域。默认与当前浏览器窗口大小相等，当用户对浏览器进行缩放时，不会改变布局视口的大小，但会改变视觉窗口的大小。</p>
+<p>meta viewport</p>
+<p>对于移动端页面，可以采用<code>&lt;meta&gt;</code>标签来配置视口大小和缩放等。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot;</span> /&gt;</span></span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>width</strong>：该属性被用来控制视窗的宽度，可以将width设置为320这样确切的像素数，也可以设为device-width这样的关键字，表示设备的实际宽度，一般为了自适应布局，普遍的做法是将width设置为<code>device-width</code>。</li>
+<li><strong>height</strong>：该属性被用来控制视窗的高度，可以将height设置为640这样确切的像素数，也可以设为<code>device-height</code>这样的关键字，表示设备的实际高度，一般不会设置视窗的高度，这样内容超出的话采用滚动方式浏览。</li>
+<li><strong>initial-scale</strong>：该属性用于指定页面的初始缩放比例，可以配置<code>0.0～10</code>的数字，<strong>initial-scale=1表示不进行缩放，视窗刚好等于理想视窗</strong>，当大于1时表示将视窗进行放大，小于1时表示缩小。这里只表示初始视窗缩放值，用户也可以自己进行缩放，例如双指拖动手势缩放或者双击手势放大。<strong>安卓设备上的initial-scale默认值：</strong> 无默认值，一定要设置，这个属性才会起作用。在iphone和ipad上，无论你给viewport设的宽的是多少，如果<strong>没有指定默认的缩放值</strong>，则iphone和ipad会<strong>自动计算这个缩放值</strong>，以达到当前页面不会出现横向滚动条(或者说viewport的宽度就是屏幕的宽度)的目的。</li>
+<li><strong>maximum-scale</strong>：该属性表示用户能够手动放大的最大比例，可以配置<code>0.0～10</code>的数字。</li>
+<li><strong>minimum-scale</strong>：该属性类似maximum-scale，用来指定页面缩小的最小比例。通常情况下，不会定义该属性的值，页面太小将难以浏览。</li>
+<li><strong>user-scalable</strong>：该属性表示是否允许用户手动进行缩放，可配置<code>no或者yes</code>。当配置成no时，用户将不能通过手势操作的方式对页面进行缩放。</li>
+</ul>
+<p>这里需要注意的是<code>viewport</code>只对移动端浏览器有效，对PC端浏览器是无效的。</p>
+<h1 id="rem适配："><a href="#rem适配：" class="headerlink" title="rem适配："></a>rem适配：</h1><p>是CSS3新增的一个相对单位，是指相对于根元素的字体大小的单位。</p>
+<ul>
+<li>将屏幕宽度分为10份，设置html的font-size为window.innerWidth/10px</li>
+<li>1rem=window.innerWidth/10px</li>
+<li>根据UI的px计算相应rem:比如盒子宽320px，（320px/window.innerWidth)*10=5.333rem</li>
+<li>将rem转为不同的px尺寸在不同手机上呈现：5.333rem*window.innerWidth/10px</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//给html标签添加font-size</span></span><br><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&#x27;DOMContentLoaded&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">document</span>.getElementsByTagName(<span class="string">&#x27;html&#x27;</span>)[<span class="number">0</span>].style.fontSize = <span class="built_in">window</span>.innerWidth / <span class="number">10</span> + <span class="string">&#x27;px&#x27;</span>;</span><br><span class="line">&#125;, <span class="literal">false</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>使用Sass定义一个ps2rem函数</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@funtion</span> px2rem(<span class="variable">$px</span>)&#123;</span><br><span class="line">    <span class="variable">$rem</span>: <span class="number">75px</span>;<span class="comment">//750/10</span></span><br><span class="line">    <span class="keyword">@return</span> (<span class="variable">$px</span>/<span class="variable">$rem</span>)+rem</span><br><span class="line">&#125;</span><br><span class="line">.box1 &#123;</span><br><span class="line">    <span class="attribute">width</span>: px2rem(<span class="number">320px</span>);<span class="comment">//(320/750)*10=4.266rem</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="vw-vh适配："><a href="#vw-vh适配：" class="headerlink" title="vw,vh适配："></a>vw,vh适配：</h1><p><code>vw（Viewport Width）</code>、<code>vh(Viewport Height)</code>是基于视图窗口的单位，是css3中提出来的，基于视图窗口的单位。</p>
+<p><code>vh、vw</code>方案即将视觉视口宽度 <code>window.innerWidth</code>和视觉视口高度 <code>window.innerHeight</code> 等分为 100 份。</p>
+<p>上面的<code>flexible</code>方案就是模仿这种方案，因为早些时候<code>vw</code>还没有得到很好的兼容。</p>
+<ul>
+<li><code>vw(Viewport&#39;s width)</code>：<code>1vw</code>等于视觉视口的<code>1%</code></li>
+<li><code>vh(Viewport&#39;s height)</code> :<code>1vh</code> 为视觉视口高度的<code>1%</code></li>
+<li><code>vmin</code> : <code>vw</code> 和 <code>vh</code> 中的较小值</li>
+<li><code>vmax</code> : 选取 <code>vw</code> 和 <code>vh</code> 中的较大值</li>
+</ul>
+<p>如果按视觉视口为<code>375px</code>，那么<code>1vw = 3.75px</code>，这时<code>UI</code>给定一个元素的宽为<code>75px</code>（设备独立像素），我们只需要将它设置为<code>75 / 3.75 = 20vw</code></p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@device-width:</span> <span class="number">375</span></span><br><span class="line"><span class="variable">@vw</span>: (<span class="number">100vw</span>/device-<span class="attribute">width</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div class=&quot;songyao&quot;&gt;</span><br><span class="line">        &lt;h1&gt;&#123;&#123; username &#125;&#125;&lt;/h1&gt;</span><br><span class="line">    &lt;p&gt;</span><br><span class="line">      了解脚手架及脚手架指令请移步个人博客&lt;br&gt;</span><br><span class="line">      check out the</span><br><span class="line">      &lt;a href=&quot;http://47.100.126.169/zmengBlog&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;逐梦博客&lt;/a&gt;.</span><br><span class="line">    &lt;/p&gt;</span><br><span class="line">    &lt;p&gt;微信公众号：&lt;span class=&quot;wx_name&quot;&gt;前端南玖&lt;/span&gt;&lt;/p&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">    name: &#x27;songyao&#x27;,</span><br><span class="line">    data() &#123;</span><br><span class="line">        return &#123;</span><br><span class="line">            username: &#x27;songyao-cli(vue 模板)&#x27;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style lang=&quot;less&quot;&gt;</span><br><span class="line">.songyao&#123;</span><br><span class="line">    h1&#123;</span><br><span class="line">       </span><br><span class="line">        font-size: 24*@vw;</span><br><span class="line">    &#125;</span><br><span class="line">    p&#123;</span><br><span class="line">       </span><br><span class="line">        font-size: 16*@vw;</span><br><span class="line">    &#125;</span><br><span class="line">   .wx_name&#123;</span><br><span class="line">    color:brown;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<h1 id="viewport和px"><a href="#viewport和px" class="headerlink" title="viewport和px"></a>viewport和px</h1><p>这种方案可以让我们在开发时不用关注设备屏幕尺寸的差异，直接按照设计稿上的标注进行开发，也无需单位的换算，直接用px。HTML 的 head 标签里加入 <code>&lt;meta name=&quot;viewport&quot; content=&quot;width=&#123;设计稿宽度&#125;, initial-scale=&#123;屏幕逻辑像素宽度/设计稿宽度&#125;&quot; &gt;</code> 。</p>
+<p>假如UI给我们提供的设计稿宽度时375px，我们则需要将页面的viewport的width设为375，然后再根据设备的逻辑像素将页面进行整体放缩。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">initViewport</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> width = <span class="number">375</span>;  <span class="comment">// 设计稿宽度</span></span><br><span class="line">    <span class="keyword">const</span> scale = <span class="built_in">window</span>.innerWidth / width</span><br><span class="line">    <span class="comment">// console.log(&#x27;scale&#x27;, scale)</span></span><br><span class="line">    <span class="keyword">let</span> meta = <span class="built_in">document</span>.querySelector(<span class="string">&#x27;meta[name=viewport]&#x27;</span>)</span><br><span class="line">    <span class="keyword">let</span> content = <span class="string">`width=<span class="subst">$&#123;width&#125;</span>, init-scale=<span class="subst">$&#123;scale&#125;</span>, user-scalable=no`</span></span><br><span class="line">    <span class="keyword">if</span>(!meta) &#123;</span><br><span class="line">        meta = <span class="built_in">document</span>.createElement(<span class="string">&#x27;meta&#x27;</span>)</span><br><span class="line">        meta.setAttribute(<span class="string">&#x27;name&#x27;</span>, <span class="string">&#x27;viewport&#x27;</span>)</span><br><span class="line">        <span class="built_in">document</span>.head.appendChild(meta)</span><br><span class="line">    &#125;</span><br><span class="line">    meta.setAttribute(<span class="string">&#x27;content&#x27;</span>, content)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h1><p>rem:</p>
+<ul>
+<li>适配原理复杂</li>
+<li>需要使用js</li>
+<li>设计稿标注px换算到css的rem计算简单</li>
+<li>方案灵活，即能实现整体缩放，又能实现局部不缩放</li>
+</ul>
+<p>vw:</p>
+<ul>
+<li>适配原理简单</li>
+<li>不需要使用js</li>
+<li>设计稿标注的px换算为css的vw计算复杂</li>
+</ul>
+<p>viewport+px:</p>
+<ul>
+<li>适配原理简单</li>
+<li>需要使用js</li>
+<li>直接使用设计稿标注无需换算</li>
+<li>方案死板，只能实现页面级别肢体缩放</li>
+</ul>
+<p>参考：<a target="_blank" rel="noopener" href="https://juejin.cn/post/7085931616136069156#heading-19">https://juejin.cn/post/7085931616136069156#heading-19</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903590968950797#heading-7">https://juejin.cn/post/6844903590968950797#heading-7</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/27/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -691,414 +1235,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/20/vue%E5%92%8Creact%E7%9A%84%E5%8C%BA%E5%88%AB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/08/20/vue%E5%92%8Creact%E7%9A%84%E5%8C%BA%E5%88%AB/" class="post-title-link" itemprop="url">vue和react的区别</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-08-20 18:07:13 / 修改时间：18:24:31" itemprop="dateCreated datePublished" datetime="2022-08-20T18:07:13+08:00">2022-08-20</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Vue和React的相同点很多："><a href="#Vue和React的相同点很多：" class="headerlink" title="Vue和React的相同点很多："></a>Vue和React的相同点很多：</h1><p>都使用Virtual DOM</p>
-<p>都使用组件化的思想</p>
-<p>都是响应式，使用MVVM模式</p>
-<p>都有自己的构建工具，Vue的vue-cli,React的create-react-app</p>
-<h1 id="区别："><a href="#区别：" class="headerlink" title="区别："></a>区别：</h1><h2 id="数据流向不同"><a href="#数据流向不同" class="headerlink" title="数据流向不同"></a>数据流向不同</h2><p>react从诞生开始就推崇单向数据流，而Vue是双向数据流</p>
-<p>Vue基于template模板+Option API/Compnent API,React本质核心只有一个Virtual DOM+Diff算法，Api非常少</p>
-<h2 id="响应式原理不同："><a href="#响应式原理不同：" class="headerlink" title="响应式原理不同："></a>响应式原理不同：</h2><p>Vue依赖收集，自动优化，数据可变</p>
-<p>Vue递归监听data的所有属性，直接修改</p>
-<p>当数据改变时，自动找到引用组件重新渲染</p>
-<p>React:</p>
-<p>React基于状态机，手动优化，数据不可变，需要setState驱动新的State替换旧的State</p>
-<p>当数据改变时，以组件为根目录，默认全部重新渲染</p>
-<h2 id="diff算法不同："><a href="#diff算法不同：" class="headerlink" title="diff算法不同："></a>diff算法不同：</h2><p>两者思维相似，都是基于两个假设：</p>
-<p>不同的组件产生不同的DOM结构，当type不同时，对应DOM操作就是直接销毁老的DOM，创建新的DOM</p>
-<p>同一层次的一组子节点，可以通过唯一的key区分</p>
-<p>源码实现上有区分：</p>
-<p>Vue Diff使用双向指针，边对比边更新DOM</p>
-<p>React主要使用diff队列保存需要更新的DOM，得到patch树，再统一操作批量更新DOM</p>
-<h2 id="事件机制不同"><a href="#事件机制不同" class="headerlink" title="事件机制不同"></a>事件机制不同</h2><p>Vue</p>
-<ul>
-<li><code>Vue原生事件使用标准Web事件</code></li>
-<li>Vue组件自定义事件机制，是父子组件通信基础</li>
-<li>Vue合理利用了snabbdom库的模块插件</li>
-</ul>
-<p>React</p>
-<ul>
-<li><code>React原生事件被包装</code>，所有事件都冒泡到顶层document监听，然后在这里合成事件下发。基于这套，可以跨端使用事件机制，而不是和Web DOM强绑定。</li>
-<li>React组件上无事件，父子组件通信使用props</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/15/%E5%9F%BA%E4%BA%8E%E8%81%8A%E5%A4%A9%E5%AE%A4%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%80%BB%E7%BB%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/08/15/%E5%9F%BA%E4%BA%8E%E8%81%8A%E5%A4%A9%E5%AE%A4%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">基于聊天室项目的总结</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-08-15 20:39:18" itemprop="dateCreated datePublished" datetime="2022-08-15T20:39:18+08:00">2022-08-15</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-23 00:01:18" itemprop="dateModified" datetime="2022-08-23T00:01:18+08:00">2022-08-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">项目总结</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>用node中的express搭建服务器,写接口，登录方式采用jwt登录验证，用mysql存储各个人员信息,用soket.io实现聊天功能，webpack打包项目，以及动态展示功能,支持修改密码，注册用户，一对一实时聊天，发表情包,图片等功能，各个页面之间的跳转用vue-router实现，跳转使用路由懒加载，只会在第一次进入页面时才会获取这个函数，然后使用缓存数据。搭配使用Weui样式库。</p>
-<h1 id="jwt登录认证的实现："><a href="#jwt登录认证的实现：" class="headerlink" title="jwt登录认证的实现："></a>jwt登录认证的实现：</h1><p>jwt组成部分：</p>
-<p>头部.有效荷载.签名</p>
-<p>Header.PayLoad.Signature</p>
-<p>头部：包含了JWT类型和使用的Hash算法</p>
-<p>负载：包含了一些声明，通常是一个User信息</p>
-<p>签名：是对前两部分的签名，防止数据篡改</p>
-<p>原理：</p>
-<p>当用户使用凭据成功登录后，将返回一个json web token,由于token是凭据，不应该将token保留超过所需要的时间，也不应该将敏感数据存储在浏览器存储中，token在Authotization标头中放，跨域资源共享不会成为问题，因为它不使用cookie,使用jwt认证，程序可以使用access token去访问受保护的资源，比如在express中的使用，可以</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//以/api/开头的不用权限，配置成功了express-jwt这个中间件，就可以把解析出来的用户信息挂载到req.user上</span></span><br><span class="line">app.use(expressJWT(&#123;</span><br><span class="line">    <span class="attr">secret</span>:secretkey,</span><br><span class="line">    <span class="attr">algorithms</span>: [<span class="string">&#x27;HS256&#x27;</span>],</span><br><span class="line">    &#125;).unless(&#123;<span class="attr">path</span>:[<span class="regexp">/^\/api\//</span>]&#125;))</span><br></pre></td></tr></table></figure>
-
-<h2 id="JWT优点："><a href="#JWT优点：" class="headerlink" title="JWT优点："></a>JWT优点：</h2><p>不需要在服务端保存会话信息，所以易于应用的扩展，即信息不保存在服务端，不会存在Session扩展不方便的情况</p>
-<p>JWT中的负载可以存储常用信息，用于信息交换，有效地使用JWT，可以降低服务端查询数据库的次数</p>
-<h2 id="JWT缺点："><a href="#JWT缺点：" class="headerlink" title="JWT缺点："></a>JWT缺点：</h2><p>到期问题：由于服务器不保存Session状态，因此无法在使用过程中废除某个Token,或者更改token的权限，也就是说，一旦JWT一旦签发，在到期之前就会始终有效，除非服务器部署额外的逻辑</p>
-<h1 id="性能优化："><a href="#性能优化：" class="headerlink" title="性能优化："></a>性能优化：</h1><h2 id="路由懒加载"><a href="#路由懒加载" class="headerlink" title="路由懒加载"></a>路由懒加载</h2><h3 id="1-什么叫路由懒加载？"><a href="#1-什么叫路由懒加载？" class="headerlink" title="1 什么叫路由懒加载？"></a>1 什么叫路由懒加载？</h3><p>也叫延迟加载，即在需要的时候进行加载</p>
-<h3 id="2-为什么需要路由懒加载？"><a href="#2-为什么需要路由懒加载？" class="headerlink" title="2 为什么需要路由懒加载？"></a>2 为什么需要路由懒加载？</h3><ul>
-<li>首先，路由通常会定义很多不同的页面</li>
-<li>这个页面在项目build打包后，一般情况下，会放在一个单独的js文件中</li>
-<li>但是，如果很多页面都放在同一个js文件中，必然会造成这个页面非常大</li>
-<li>如果我们一次性地从服务器中请求这个页面，可能会花费一定的时间，用户体验不好</li>
-<li>为了避免这种情况，<strong>我们把不同路由对应的组件分割成不同的代码块，然后当路由被访问的时候才加载对应组件，这就是路由懒加载</strong></li>
-</ul>
-<h3 id="实现方式："><a href="#实现方式：" class="headerlink" title="实现方式："></a>实现方式：</h3><h4 id="Vue异步组件"><a href="#Vue异步组件" class="headerlink" title="Vue异步组件"></a>Vue异步组件</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">path</span>:<span class="string">&#x27;/problem&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>:<span class="string">&#x27;problem&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>:<span class="function"><span class="params">resolve</span>=&gt;</span><span class="built_in">require</span>([<span class="string">&#x27;../pages/problemList&#x27;</span>],resolve)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="ES6中的import-—推荐使用"><a href="#ES6中的import-—推荐使用" class="headerlink" title="ES6中的import()—推荐使用"></a>ES6中的import()—推荐使用</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">routes:[&#123;</span><br><span class="line">       <span class="attr">path</span>:<span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">       <span class="attr">name</span>:<span class="string">&quot;通讯录&quot;</span>,</span><br><span class="line">       <span class="attr">component</span>:<span class="function">()=&gt;</span><span class="built_in">Promise</span>.resolve(<span class="keyword">import</span>(<span class="string">&quot;../components/contact/contact.vue&quot;</span>))</span><br><span class="line">   &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
-<h4 id="webpack的require-ensure"><a href="#webpack的require-ensure" class="headerlink" title="webpack的require.ensure()"></a>webpack的require.ensure()</h4><p>多个路由指定相同的chunkName,会合并打包成一个js文件，require.ensure可实现按需加载资源，包括js,css，它会给里面的require文件单独打包，不会和主文件打包在一起。</p>
-<p>第一个参数是数组，表明第二个参数里需要加载的模块，这些会提前加载，</p>
-<p>第二个是回调函数，在这个回调函数里面requrie的文件会被单独打包成一个chunk,不会和主文件打包在一起，这样就生成两个chunk,第一次加载时只加载主文件</p>
-<p>第三个参数是错误回调</p>
-<p>第四个参数是单独打包的chunk的文件名</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> Router <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> HelloWorld=<span class="function"><span class="params">resolve</span>=&gt;</span>&#123;</span><br><span class="line">		<span class="built_in">require</span>.ensure([<span class="string">&#x27;@/components/HelloWorld&#x27;</span>],<span class="function">()=&gt;</span>&#123;</span><br><span class="line">			resolve(<span class="built_in">require</span>(<span class="string">&#x27;@/components/HelloWorld&#x27;</span>))</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;</span><br><span class="line">Vue.use(<span class="string">&#x27;Router&#x27;</span>)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> Router(&#123;</span><br><span class="line">	<span class="attr">routes</span>:[&#123;</span><br><span class="line">	&#123;<span class="attr">path</span>:<span class="string">&#x27;./&#x27;</span>,</span><br><span class="line">	<span class="attr">name</span>:<span class="string">&#x27;HelloWorld&#x27;</span>,</span><br><span class="line">	<span class="attr">component</span>:HelloWorld</span><br><span class="line">	&#125;</span><br><span class="line">	&#125;]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<h3 id="element-plus按需加载：配置vue-config-js"><a href="#element-plus按需加载：配置vue-config-js" class="headerlink" title="element-plus按需加载：配置vue.config.js"></a>element-plus按需加载：配置vue.config.js</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">configureWebpack:&#123;</span><br><span class="line">      <span class="attr">plugins</span>:[</span><br><span class="line">        <span class="built_in">require</span>(<span class="string">&#x27;unplugin-element-plus/webpack&#x27;</span>)(&#123;</span><br><span class="line"></span><br><span class="line">        &#125;),</span><br><span class="line">   	]</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="UglifyPlugin-Webpack-Plugin-插件用来缩小js文件"><a href="#UglifyPlugin-Webpack-Plugin-插件用来缩小js文件" class="headerlink" title="UglifyPlugin Webpack Plugin 插件用来缩小js文件"></a>UglifyPlugin Webpack Plugin 插件用来缩小js文件</h3><p>vue.config.js:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">configureWebpack:&#123;</span><br><span class="line">    <span class="attr">plugins</span>:[</span><br><span class="line">      <span class="built_in">require</span>(<span class="string">&#x27;unplugin-element-plus/webpack&#x27;</span>)(&#123;</span><br><span class="line"></span><br><span class="line">      &#125;),</span><br><span class="line">        <span class="comment">//代码压缩</span></span><br><span class="line">      <span class="keyword">new</span> UglifyJsPlugin(&#123;</span><br><span class="line">        <span class="attr">uglifyOptions</span>:&#123;</span><br><span class="line">          <span class="attr">compress</span>:&#123;</span><br><span class="line">            <span class="attr">drop_debugger</span>:<span class="literal">true</span>,</span><br><span class="line">            <span class="attr">drop_console</span>:<span class="literal">true</span>,</span><br><span class="line">            <span class="attr">pure_funcs</span>:[<span class="string">&#x27;console.log&#x27;</span>]</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">sourceMap</span>:<span class="literal">false</span>,</span><br><span class="line">        <span class="attr">parallel</span>:<span class="literal">true</span></span><br><span class="line">      &#125;)</span><br><span class="line">    ],</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
-
-<h1 id="封装axios"><a href="#封装axios" class="headerlink" title="封装axios:"></a>封装axios:</h1><p>特征：</p>
-<ul>
-<li>从浏览器创建XMLHttpRequests</li>
-<li>从node.js创建http请求</li>
-<li>支持Promise API</li>
-<li>拦截请求和响应</li>
-<li>转换请求和响应数据</li>
-<li>取消请求</li>
-<li>自动转换JSON数据</li>
-<li>客户端支持防御XSRF</li>
-</ul>
-<p>具体：<a href="https://coloey.github.io/2022/04/11/Vue%E4%B8%AD%E5%B0%81%E8%A3%85axios%E8%AF%B7%E6%B1%82/">https://coloey.github.io/2022/04/11/Vue%E4%B8%AD%E5%B0%81%E8%A3%85axios%E8%AF%B7%E6%B1%82/</a></p>
-<h1 id="跨域处理方法："><a href="#跨域处理方法：" class="headerlink" title="跨域处理方法："></a>跨域处理方法：</h1><h2 id="服务端配置cors"><a href="#服务端配置cors" class="headerlink" title="服务端配置cors:"></a>服务端配置cors:</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> cors=<span class="built_in">require</span>(<span class="string">&#x27;cors&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> io=<span class="built_in">require</span>(<span class="string">&#x27;socket.io&#x27;</span>)(server,&#123;</span><br><span class="line">    <span class="comment">//服务端配置cors</span></span><br><span class="line">    <span class="attr">cors</span>: &#123;</span><br><span class="line">        <span class="attr">origin</span>: <span class="string">&quot;https://coloey.github.io&quot;</span></span><br><span class="line">      &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="本地配置proxy代理转发路由表："><a href="#本地配置proxy代理转发路由表：" class="headerlink" title="本地配置proxy代理转发路由表："></a>本地配置proxy代理转发路由表：</h2><p>原理：在本地运行的npm run serve 等命令实际上是用node运行了一个服务器，因此，proxyTable实际上是将请求转发给自己的服务器，再由服务器转发给后台服务器，做了一层代理，vue的proxyTable用了proxy-middleware中间件，不会出现跨域问题</p>
-<p>如果接口里面有个公共的名字，比如security,可以拿出来做来做跨域配置：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    <span class="attr">devServer</span>: &#123;</span><br><span class="line">        <span class="attr">open</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">host</span>: <span class="string">&#x27;localhost&#x27;</span>,</span><br><span class="line">        <span class="attr">port</span>: <span class="number">8000</span>,</span><br><span class="line">        <span class="attr">https</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="comment">//以上的ip和端口是我们本机的;下面为需要跨域的</span></span><br><span class="line">        <span class="attr">proxy</span>: &#123; <span class="comment">//配置跨域</span></span><br><span class="line">            <span class="string">&#x27;/security&#x27;</span>: &#123;</span><br><span class="line">                <span class="attr">target</span>: <span class="string">&#x27;http://127.0.0.1:8000/&#x27;</span>, <span class="comment">//要代理到的api地址</span></span><br><span class="line">                <span class="attr">ws</span>: <span class="literal">true</span>,</span><br><span class="line">                <span class="attr">changOrigin</span>: <span class="literal">true</span>, <span class="comment">//允许跨域</span></span><br><span class="line">                <span class="attr">pathRewrite</span>: &#123;</span><br><span class="line">                    <span class="string">&#x27;^/security/&#x27;</span>: <span class="string">&#x27;/security&#x27;</span> </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果接口中没有公共部分，另外设置一个代理名称，用api设置代理转发，接口请求就需要带上api.HTTP请求代理中多了ws:false属性，如果不加这个属性，浏览器控制台会一直报连接不上socket的错误</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> proxyObj = &#123;&#125;;</span><br><span class="line">proxyObj[<span class="string">&#x27;/ws&#x27;</span>] = &#123;</span><br><span class="line">    <span class="attr">ws</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">target</span>: <span class="string">&quot;ws://localhost:8081&quot;</span>,<span class="comment">//目标服务器</span></span><br><span class="line">&#125;;</span><br><span class="line">proxyObj[<span class="string">&#x27;/api&#x27;</span>] = &#123;</span><br><span class="line">    <span class="attr">ws</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">target</span>: <span class="string">&quot;http://localhost:8081&quot;</span>,</span><br><span class="line">    <span class="attr">changeOrigin</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">pathRewrite</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;^/api&#x27;</span>: <span class="string">&#x27;/api&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    <span class="attr">devServer</span>: &#123;</span><br><span class="line">        <span class="attr">host</span>: <span class="string">&#x27;localhost&#x27;</span>,</span><br><span class="line">        <span class="attr">port</span>: <span class="number">8080</span>,</span><br><span class="line">        <span class="attr">proxy</span>: proxyObj</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>这个设置只有在本地的时候是起作用的，当项目编译打包时，配置不会打包进去。</strong></p>
-<p><strong>生产环境让后台配置cors或者nginx将前端代码拷贝到后端，在nginx.conf中配置，以Vue为例，如果是SPA应用，项目打包后是一个index.html还有几个js,css等文件，这些静态文件上传到服务器，在nginx.conf中配置静态资源访问：</strong></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location ~ .*\.(js|css|ico|png|jpg|eot|svg|ttf|woff|html|txt|pdf|) &#123;</span><br><span class="line">   root /usr/local/nginx/html/;#所有静态文件直接读取硬盘</span><br><span class="line">   expires 30d; #缓存<span class="number">30</span>天</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
-
-<p>即后缀为js,css,ico等文件统统不进行请求转发，直接从本地的/usr/local/nginx/html目录下读取并返回到前端（我们需要将静态资源文件上传到/usr/local/nginx/html/目录下）</p>
-<h1 id="聊天功能实现："><a href="#聊天功能实现：" class="headerlink" title="聊天功能实现："></a>聊天功能实现：</h1><p>socket.io的主要靠emit()和on()实现实时聊天，关键在于设计对话的数据结构，对话用一个对象保存，里面包含发送者姓名，接收者姓名，信息，将对话展示在对话页面中主要靠fromUser,toUser识别，<strong>根据路由参数显示对话列表，每个用户登录将用户名作为参数通过emit触发服务端addUser，服务端用一个onLineUsers对象存储socket对象，键为用户名，值为用户socket对象，每个socket对象是唯一的，服务端on监听sendMessage事件，客户端emit触发sendMessage事件,当服务端的sendMessage事件被客户端触发后回调函数执行，触发客户端展示消息的函数</strong>，表情包发送是通过写一个emoji表情包子组件，通过和对话列表父组件进行通信，点击表情包Icon,展示一个表情包列表，点击里面任意一个表情，子组件触发emit(chooseEmoji,emoji),传递emoji信息给父组件的chooseEmoji函数，父组件就能在输入框中显示被选中的emoji</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/12/antd%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A1%A8%E5%8D%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/08/12/antd%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A1%A8%E5%8D%95/" class="post-title-link" itemprop="url">antd初始化表单</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-08-12 21:41:44" itemprop="dateCreated datePublished" datetime="2022-08-12T21:41:44+08:00">2022-08-12</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/04/%E4%BB%A3%E7%90%86%E6%95%B0%E7%BB%84/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/08/04/%E4%BB%A3%E7%90%86%E6%95%B0%E7%BB%84/" class="post-title-link" itemprop="url">代理数组</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-08-04 11:38:19 / 修改时间：14:59:22" itemprop="dateCreated datePublished" datetime="2022-08-04T11:38:19+08:00">2022-08-04</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="对数组元素或者属性的读取操作："><a href="#对数组元素或者属性的读取操作：" class="headerlink" title="对数组元素或者属性的读取操作："></a>对数组元素或者属性的读取操作：</h1><p>通过索引访问数组元素值:arr[0]</p>
-<p>访问数组的长度:arr.length</p>
-<p>把数组作为对象，使用for…in循环遍历</p>
-<p>使用for…of迭代遍历数组</p>
-<p>数组的原型方法，如concat/join/every/some/find/findIndex/includes等，以及不改变原数组的原型方法</p>
-<h2 id="1-数组索引与length"><a href="#1-数组索引与length" class="headerlink" title="1 数组索引与length"></a><strong>1 数组索引与length</strong></h2><p>通过索引设置数组元素的值时，会执行内部方法[[Set]],内部方法[[Set]]依赖于[[DefineOwnProperty]],当设置的索引值大于数组当前长度，更新数组length属性，触发与length属性相关联的副作用函数重新执行，修改set拦截函数</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">set</span>(<span class="params">target,key,newValue</span>)</span>&#123;</span><br><span class="line">            <span class="comment">//如果是只读的打印警告信息</span></span><br><span class="line">            <span class="keyword">if</span>(isReadOnly)&#123;</span><br><span class="line">                <span class="built_in">console</span>.warn(<span class="string">`属性<span class="subst">$&#123;key&#125;</span>是只读的`</span>)</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//获取旧值</span></span><br><span class="line">            <span class="keyword">const</span> oldValue=target[key]</span><br><span class="line">            <span class="comment">//如果代理目标对象是数组，则检测被设置的索引值是否小于数组长度</span></span><br><span class="line">            <span class="comment">//如果是，则为SET操作，否则为ADD操作</span></span><br><span class="line">            <span class="keyword">const</span> type=<span class="built_in">Array</span>.isArray(target)</span><br><span class="line">                        ?<span class="built_in">Number</span>(key)&lt;length?<span class="string">&#x27;SET&#x27;</span>:<span class="string">&#x27;ADD&#x27;</span></span><br><span class="line">                        :<span class="built_in">Object</span>.prototype.hasOwnProperty.call(target,key)?<span class="string">&#x27;SET&#x27;</span>:<span class="string">&#x27;ADD&#x27;</span></span><br><span class="line">           </span><br><span class="line">            <span class="comment">//设置属性值</span></span><br><span class="line">            <span class="keyword">const</span> res=<span class="built_in">Reflect</span>.set(target,key,receiver,newValue)</span><br><span class="line">            <span class="comment">//说明receiver是target的代理对象</span></span><br><span class="line">            <span class="keyword">if</span>(target===receiver.raw)&#123;</span><br><span class="line">                <span class="comment">//比较新值和旧值，只有当它们不全等并且都不是NAN才触发响应</span></span><br><span class="line">                <span class="keyword">if</span>(oldValue!==newValue&amp;&amp;(oldValue===oldValue||newValue===newValue))&#123;</span><br><span class="line">                   <span class="comment">//假如设置数组length属性为0，会影响数组元素，因此要触发新的响应</span></span><br><span class="line">                    trigger(target,key,type,newValue)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">trigger</span>(<span class="params">target,key</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> depsMap=bucket.get(target)</span><br><span class="line">    <span class="keyword">if</span>(!depsMap)<span class="keyword">return</span></span><br><span class="line">    <span class="keyword">const</span> effects=depsMap.get(key)</span><br><span class="line">    <span class="keyword">const</span> effectsToRun=<span class="keyword">new</span> <span class="built_in">Set</span>(effects)</span><br><span class="line">    <span class="comment">//当操作类型是ADD或者DELETE,需要触发与length相关的副作用函数执行</span></span><br><span class="line">    <span class="keyword">if</span>(type===<span class="string">&#x27;ADD&#x27;</span>||type===<span class="string">&#x27;DELETE&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">const</span> iterateEffects=depsMap.get(<span class="string">&#x27;length&#x27;</span>)</span><br><span class="line">        lengthEffects&amp;&amp;lengthEffects.forEach(<span class="function"><span class="params">effectfn</span>=&gt;</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(effectfn!==activeEffect)&#123;</span><br><span class="line">                effectsToRun.add(effectfn)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    effects&amp;&amp;effects.forEach(<span class="function"><span class="params">effectfn</span>=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(activeEffect!=effectfn)&#123;<span class="comment">//只有当trigger触发执行的副作用函数和当前正在执行的副作用函数不相同时才触发执行，否则会出现栈溢出</span></span><br><span class="line">            effectsToRun.add(effectfn)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)   </span><br><span class="line">    effectsToRun.forEach(<span class="function"><span class="params">effectfn</span>=&gt;</span>effectfn())</span><br><span class="line">    <span class="comment">//effect&amp;&amp;effect.forEach(fn=&gt;fn())//会产生无限执行</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-数组查找方法"><a href="#2-数组查找方法" class="headerlink" title="2 数组查找方法"></a>2 数组查找方法</h2><p>arr.includes(arr[0])中arr是代理对象，includes函数执行时this指向的是代理对象，即arr,includes方法会通过索引读取数组元素值，如果值时可以被代理的，那么得到的值就是新的代理对象，</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reactive</span>(<span class="params">obj</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//每次调用reactive时都会创建新的代理对象</span></span><br><span class="line">    <span class="keyword">return</span> createReactive(obj)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>解决方法：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//当参数Obj是相同的不用创建新的代理对象</span></span><br><span class="line"><span class="comment">//存储原始对象到代理对象的映射</span></span><br><span class="line"><span class="keyword">const</span> reactiveMap=<span class="keyword">new</span> <span class="built_in">Map</span>()</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reactive</span>(<span class="params">obj</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//优先通过原始对象obj查找之前创建的代理对象，如果找到了，直接返回已有的代理对象</span></span><br><span class="line">    <span class="keyword">const</span> existionProxy=reactiveMap.get(obj)</span><br><span class="line">    <span class="keyword">if</span>(existionProxy)<span class="keyword">return</span> existionProxy</span><br><span class="line">    <span class="comment">//否则创建新的代理对象</span></span><br><span class="line">    proxy=createReactive(obj)</span><br><span class="line">    reactiveMap.set(obj,proxy)</span><br><span class="line">    <span class="keyword">return</span> proxy</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>然而，下面这段代码</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;&#125;;</span><br><span class="line"><span class="keyword">const</span> arr = reactive([obj])</span><br><span class="line"><span class="built_in">console</span>.log(arr.includes[obj])<span class="comment">//false</span></span><br></pre></td></tr></table></figure>
-
-<p>includes内部的this指向的是代理对象arr,并且在获取数组元素时得到的也是代理对象，所以用原始对象obj去查找找不到，返回false,因此我们需要重写includes方法</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arrInstrumentations=&#123;&#125;</span><br><span class="line"><span class="comment">//重写方法</span></span><br><span class="line">[<span class="string">&#x27;includes&#x27;</span>,<span class="string">&#x27;indexOf&#x27;</span>,<span class="string">&#x27;lastIndexOf&#x27;</span>].forEach(<span class="function"><span class="params">method</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> originMethod=<span class="built_in">Array</span>.prototype[method]</span><br><span class="line">    arrInstrumentations[method]=<span class="function"><span class="keyword">function</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">        <span class="comment">//先在代理对象中查找，结果存储在res实现了arr.includes(obj)的默认方法</span></span><br><span class="line">        <span class="comment">//找不到就去原始数组上查找</span></span><br><span class="line">        <span class="keyword">const</span> res=originMethod.apply(<span class="built_in">this</span>,args)</span><br><span class="line">        <span class="comment">//找不到则在原始对象中查找</span></span><br><span class="line">        <span class="keyword">if</span>(res===<span class="literal">false</span>)&#123;</span><br><span class="line">            res=originMethod.apply(<span class="built_in">this</span>.raw,args)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">get</span>(<span class="params">target,key,receiver</span>)</span>&#123;</span><br><span class="line">            <span class="comment">//通过&quot;raw”属性访问原始对象</span></span><br><span class="line">            <span class="keyword">if</span>(key===<span class="string">&#x27;raw&#x27;</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> target</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//如果操作对象存在于arrInstrumentations上，返回定义在arrInstrumentation上的值</span></span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">Array</span>.isArray(target)&amp;&amp;arrInstrumentations.hasOwnProperty(key))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">Reflect</span>.get(arrInstrumentations,key,receiver)</span><br><span class="line">            &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
-
-<h2 id="3-push-pop-shift-unshift等方法"><a href="#3-push-pop-shift-unshift等方法" class="headerlink" title="3 push/pop/shift/unshift等方法"></a>3 push/pop/shift/unshift等方法</h2><p>当调用数组的push方法时，即会读取数组length属性值也会设置数组length属性值，会导致两个独立的副作用函数相互影响，就像</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr=reactive([])</span><br><span class="line">effect=(<span class="function">()=&gt;</span>&#123;arr.push(<span class="number">1</span>)&#125;)</span><br><span class="line">effect=(<span class="function">()=&gt;</span>&#123;arr.push(<span class="number">1</span>)&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>会得到栈溢出的错误</p>
-<p>分析：</p>
-<ul>
-<li>第一个副作用函数执行，在该函数内，调用arr.push方法向数组中添加一个元素，调用数组push方法时会间接读取数组的length属性，所以第一个副作用函数执行完毕会与length属性建立响应联系</li>
-<li>第二个副作用函数执行，同样，与length属性建立响应联系，同时调用arr.push会设置length属性，于是响应式系统尝试把与length有关的副作用函数全部取出执行，就包括第一个副作用函数，此时，第二个副作用函数还未执行完毕就去调用第一个副作用函数</li>
-<li>第一个副作用函数再次执行，也会间接设置数组的length属性，于是响应系统又尝试把所以与length属性相关联娿副作用取出执行，其中包括第二个副作用函数</li>
-<li>循环往复导致栈溢出</li>
-</ul>
-<p>因此，我们可以通过屏蔽对length属性的读取，避免在它与副作用函数之间建立联系</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//一个标记变量，代表是否追踪</span></span><br><span class="line"><span class="keyword">let</span> shouldTrack = <span class="literal">true</span></span><br><span class="line">[<span class="string">&#x27;push&#x27;</span>].forEach(<span class="function"><span class="params">method</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//取得原始push方法</span></span><br><span class="line">    <span class="keyword">const</span> originMethod = <span class="built_in">Array</span>.prototype[method]</span><br><span class="line">    <span class="comment">//重写</span></span><br><span class="line">    arrInstrumentations[method] = <span class="function"><span class="keyword">function</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">        <span class="comment">//在调用方法前禁止追踪</span></span><br><span class="line">        shouldTrack=<span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">let</span> res = originMethod.apply(<span class="built_in">this</span>,args)</span><br><span class="line">        <span class="comment">//调用原始方法后，恢复原来行为，即允许追踪</span></span><br><span class="line">        shouldTrack=<span class="literal">true</span></span><br><span class="line">        <span class="keyword">return</span> res</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>在执行默认行为之前先将shouldTrack置false,禁止追踪，当push方法默认行为执行完毕后，将shouldTrack还原为true,</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">track</span>(<span class="params">target,key</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//禁止追踪时直接返回</span></span><br><span class="line">    <span class="keyword">if</span>(!activeEffect || !shouldTrack)<span class="keyword">return</span> </span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>当push方法间接读取length属性，由于此时是禁止追踪状态，所以length属性与副作用函数之间不会建立响应联系，也就不会产生栈溢出</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1170,14 +1306,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">214</span>
+          <span class="site-state-item-count">218</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-count">26</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -1244,7 +1380,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共193k字</span>
+  <span class="post-count">博客全站共199.3k字</span>
 </div>
         
 

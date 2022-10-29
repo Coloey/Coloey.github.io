@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"coloey.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Generator和协程生成器函数的具体使用方式： 在生成器函数内部执行一段代码，如果遇到 yield 关键字，那么 JavaScript 引擎将返回关键字后面的内容给外部，并暂停该函数的执行。外部函数可以通过 next 方法恢复函数的执行 Generator返回的是一个协程，协程是一种比线程更轻量级的存在，你可以把协程看出是跑在线程上的任务，一个线程上可以存在多个协程，但是在线程上同时只能执行一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="async-await原理">
+<meta property="og:url" content="https://coloey.github.io/2022/10/28/async-await%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="小柒">
+<meta property="og:description" content="Generator和协程生成器函数的具体使用方式： 在生成器函数内部执行一段代码，如果遇到 yield 关键字，那么 JavaScript 引擎将返回关键字后面的内容给外部，并暂停该函数的执行。外部函数可以通过 next 方法恢复函数的执行 Generator返回的是一个协程，协程是一种比线程更轻量级的存在，你可以把协程看出是跑在线程上的任务，一个线程上可以存在多个协程，但是在线程上同时只能执行一">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://coloey.github.io/2022/10/28/async-await%E5%8E%9F%E7%90%86/1-16669575177321.png">
+<meta property="article:published_time" content="2022-10-28T10:00:41.000Z">
+<meta property="article:modified_time" content="2022-10-28T12:21:13.090Z">
+<meta property="article:author" content="小柒">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://coloey.github.io/2022/10/28/async-await%E5%8E%9F%E7%90%86/1-16669575177321.png">
+
+<link rel="canonical" href="https://coloey.github.io/2022/10/28/async-await%E5%8E%9F%E7%90%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>async-await原理 | 小柒</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="小柒" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小柒</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">www.xiaoqi.cn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/28/async-await%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h1 class="post-title" itemprop="name headline">
+          async-await原理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-10-28 18:00:41 / 修改时间：20:21:13" itemprop="dateCreated datePublished" datetime="2022-10-28T18:00:41+08:00">2022-10-28</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Generator和协程"><a href="#Generator和协程" class="headerlink" title="Generator和协程"></a>Generator和协程</h1><p>生成器函数的具体使用方式：</p>
+<p><strong>在生成器函数内部执行一段代码，如果遇到 yield 关键字，那么 JavaScript 引擎将返回关键字后面的内容给外部，并暂停该函数的执行。</strong><br><strong>外部函数可以通过 next 方法恢复函数的执行</strong></p>
+<p><strong>Generator返回的是一个协程</strong>，协程是一种比线程更轻量级的存在，你可以把协程看出是跑在线程上的任务，<strong>一个线程上可以存在多个协程，但是在线程上同时只能执行一个协程，</strong>比如当前执行的是A协程，要启动B协程，那么协程就需要把主线程的控制权交给B协程。如果从A协程启动B协程，把A协程称为B协程的父协程</p>
+<p>一个进程拥有多个线程，一个线程也可以拥有多个协程，<strong>协程不是由操作系统内核管理，而完全是由程序控制（也就是用户态执行）</strong>，好处就是性能得到了提升，不会像线程切换那样消耗资源</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">genDemo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot; 开始执行第一段 &quot;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="string">&#x27;generator 2&#x27;</span></span><br><span class="line"> </span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot; 开始执行第二段 &quot;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="string">&#x27;generator 2&#x27;</span></span><br><span class="line"> </span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot; 开始执行第三段 &quot;</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="string">&#x27;generator 2&#x27;</span></span><br><span class="line"> </span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot; 执行结束 &quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;generator 2&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;main 0&#x27;</span>)</span><br><span class="line"><span class="keyword">let</span> gen = genDemo()</span><br><span class="line"><span class="built_in">console</span>.log(gen.next().value)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;main 1&#x27;</span>)</span><br><span class="line"><span class="built_in">console</span>.log(gen.next().value)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;main 2&#x27;</span>)</span><br><span class="line"><span class="built_in">console</span>.log(gen.next().value)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;main 3&#x27;</span>)</span><br><span class="line"><span class="built_in">console</span>.log(gen.next().value)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;main 4&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/10/28/async-await%E5%8E%9F%E7%90%86/1-16669575177321.png"></p>
+<h1 id="协程四点规则："><a href="#协程四点规则：" class="headerlink" title="协程四点规则："></a>协程四点规则：</h1><ul>
+<li>调用生成器函数genDemo创建一个写成gen,创建后，gen协程并没有立即执行</li>
+<li>要让gen协程执行，需要通过调用gen.next</li>
+<li>当协程正在执行时，可以通过yield关键字来暂停gen协程的执行，并返回主信息给父协程</li>
+<li>如果协程在执行期间，遇到return关键字，那么js引擎会结束当前协程，并将return后面的内容返回给父协程</li>
+</ul>
+<p>父协程有自己的调用栈，gen 协程时也有自己的调用栈，当 gen 协程通过 yield 把控制权交给父协程时，V8 是如何切换到父协程的调用栈？当父协程通过 gen.next 恢复 gen 协程时，又是如何切换 gen 协程的调用栈？</p>
+<p>要搞清楚上面的问题，你需要关注以下两点内容。</p>
+<p>第一点：gen 协程和父协程是在主线程上<strong>交互执行</strong>的，并不是并发执行的，它们之前的切换是通过 <strong>yield 和 gen.next</strong> 来配合完成的。</p>
+<p>第二点：<strong>当在 gen 协程中调用了 yield 方法时，JavaScript 引擎会保存 gen 协程当前的调用栈信息，并恢复父协程的调用栈信息。同样，当在父协程中执行 gen.next 时，JavaScript 引擎会保存父协程的调用栈信息，并恢复 gen 协程的调用栈信息。</strong></p>
+<h1 id="使用Promise和generator"><a href="#使用Promise和generator" class="headerlink" title="使用Promise和generator:"></a>使用Promise和generator:</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//foo 函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> response1 = <span class="keyword">yield</span> fetch(<span class="string">&#x27;https://www.geekbang.org&#x27;</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;response1&#x27;</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(response1)</span><br><span class="line">    <span class="keyword">let</span> response2 = <span class="keyword">yield</span> fetch(<span class="string">&#x27;https://www.geekbang.org/test&#x27;</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;response2&#x27;</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(response2)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 执行 foo 函数的代码</span></span><br><span class="line"><span class="keyword">let</span> gen = foo()</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getGenPromise</span>(<span class="params">gen</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> gen.next().value</span><br><span class="line">&#125;</span><br><span class="line">getGenPromise(gen).then(<span class="function">(<span class="params">response</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;response1&#x27;</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(response)</span><br><span class="line">    <span class="keyword">return</span> getGenPromise(gen)</span><br><span class="line">&#125;).then(<span class="function">(<span class="params">response</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;response2&#x27;</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(response)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>在foo函数里实现了用同步方式实现异步操作，foo函数外部代码：</p>
+<ul>
+<li>let gen=foo()创建gen协程</li>
+<li>父协程中通过执行gen.next把主线程控制权交给gen协程</li>
+<li>gen协程获取到主线程控制权，就调用fetch函数创建一个Promise对象reponse1,然后通过yield暂停gen协程的执行，将response1返回给父协程</li>
+<li>父协程恢复执行后，调用reponse1.then方法等待结果</li>
+<li>等通过fetch发起的请求完成后，会调用then中回调函数，then中的回调函数拿到结果后，通过调用gen.next放弃主线程控制权</li>
+</ul>
+<p>把执行生成器的代码封装成一个函数，并把这个执行生成器代码的函数称为执行器</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> response1 = <span class="keyword">yield</span> fetch(<span class="string">&#x27;https://www.geekbang.org&#x27;</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;response1&#x27;</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(response1)</span><br><span class="line">    <span class="keyword">let</span> response2 = <span class="keyword">yield</span> fetch(<span class="string">&#x27;https://www.geekbang.org/test&#x27;</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;response2&#x27;</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(response2)</span><br><span class="line">&#125;</span><br><span class="line">co(foo());</span><br></pre></td></tr></table></figure>
+
+<h1 id="async-await"><a href="#async-await" class="headerlink" title="async/await"></a>async/await</h1><p>async是一个通过<strong>异步执行</strong>并<strong>隐式返回Promise</strong>作为结果的函数</p>
+<p>调用async的foo函数返回一个Promise对象，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">let</span> a = <span class="keyword">await</span> <span class="number">100</span></span><br><span class="line">    <span class="built_in">console</span>.log(a)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">2</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="number">0</span>)</span><br><span class="line">foo()</span><br><span class="line"><span class="built_in">console</span>.log(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>foo函数被async标记，当进入该函数时，js引擎会保存当前调用栈信息，当执行到await(100),会默认创建一个Promise对象。</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> promise_ = <span class="keyword">new</span> <span class="built_in">Promise</span>((resolve,reject)&#123;</span><br><span class="line">  resolve(<span class="number">100</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>在这个promise__对象创建过程中，executor函数调用resolve函数，js引擎会将该任务<strong>提交给微任务，然后js引擎会暂停当前协程执行，将主线程的控制权交给父协程执行，同时将promise__对象返回给父协程</strong>，主线程的控制权已经交给父协程，这时候父协程要做的事就是调用promise_.then监控 promise状态的改变。继续执行父协程的流程，执行console.log(3),父协程执行结束后，在结束之前，会进入微任务检查点，执行微任务队列，微任务队列有resolve（100），触发promise_.then的回调函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">promise_.then(<span class="function">(<span class="params">value</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//回调函数被激活后，将主线程控制权交给foo协程，并将value值传给协程</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>小柒
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://coloey.github.io/2022/10/28/async-await%E5%8E%9F%E7%90%86/" title="async-await原理">https://coloey.github.io/2022/10/28/async-await原理/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/10/28/Promise%E5%91%8A%E5%88%AB%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/" rel="prev" title="Promise告别回调函数">
+      <i class="fa fa-chevron-left"></i> Promise告别回调函数
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/10/29/Js%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE%E4%BB%A5%E5%8F%8Athis/" rel="next" title="Js执行上下文和作用域链以及this">
+      Js执行上下文和作用域链以及this <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Generator%E5%92%8C%E5%8D%8F%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">Generator和协程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%8F%E7%A8%8B%E5%9B%9B%E7%82%B9%E8%A7%84%E5%88%99%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">协程四点规则：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Promise%E5%92%8Cgenerator"><span class="nav-number">3.</span> <span class="nav-text">使用Promise和generator:</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#async-await"><span class="nav-number">4.</span> <span class="nav-text">async&#x2F;await</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小柒"
+      src="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+  <p class="site-author-name" itemprop="name">小柒</p>
+  <div class="site-description" itemprop="description">欢迎来到我的世界!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">218</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Coloey" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Coloey" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/487336863@qq.com" title="E-Mail → 487336863@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小柒</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_pv">
+    本站访问量:<span id="busuanzi_value_site_pv"></span>次
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_uv">
+    本站总访客量：<span id="busuanzi_value_site_uv"></span>人
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共199.3k字</span>
+</div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 动态背景 -->
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="../source/js/src/clicklove.js"></script>
+</body>
+</html>
