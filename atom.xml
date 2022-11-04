@@ -6,7 +6,7 @@
   <link href="https://coloey.github.io/atom.xml" rel="self"/>
   
   <link href="https://coloey.github.io/"/>
-  <updated>2022-11-02T12:12:09.200Z</updated>
+  <updated>2022-11-04T03:11:58.080Z</updated>
   <id>https://coloey.github.io/</id>
   
   <author>
@@ -15,6 +15,19 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>g</title>
+    <link href="https://coloey.github.io/2022/11/04/g/"/>
+    <id>https://coloey.github.io/2022/11/04/g/</id>
+    <published>2022-11-04T03:11:58.000Z</published>
+    <updated>2022-11-04T03:11:58.080Z</updated>
+    
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>手写instanceof</title>
@@ -440,30 +453,6 @@
       
     <summary type="html">&lt;p&gt;TypeScript只能严格的单继承，因此你不能：&lt;/p&gt;
 &lt;figure class=&quot;highlight ts&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=</summary>
-      
-    
-    
-    
-    <category term="TypeScript" scheme="https://coloey.github.io/categories/TypeScript/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Freshness</title>
-    <link href="https://coloey.github.io/2022/10/05/Freshness/"/>
-    <id>https://coloey.github.io/2022/10/05/Freshness/</id>
-    <published>2022-10-05T12:53:13.000Z</published>
-    <updated>2022-10-22T08:12:22.880Z</updated>
-    
-    <content type="html"><![CDATA[<p>Freshness会进行更严格的对象字面量检查，用来确保对象字面量在结构上类型兼容</p><p>结构类型兼容规则：如果两个类型的结构一样，就说它们是互相兼容的，且可以相互赋值的（即如果类型x要兼容类型y,那么类型y至少具有与类型x相同的属性)</p><h1 id="Freshness-特性"><a href="#Freshness-特性" class="headerlink" title="Freshness 特性"></a>Freshness 特性</h1><p>如上所述，只要满足结构类型兼容规则的两个类型便可相互兼容。那是否有例外存在呢？让我们看下面的例子：</p><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Named &#123;</span><br><span class="line">    <span class="attr">name</span>:<span class="built_in">string</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> Person &#123;</span><br><span class="line">    <span class="attr">id</span>: <span class="built_in">number</span>;</span><br><span class="line">    name: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> p: Named;</span><br><span class="line">p = &#123;</span><br><span class="line">    <span class="attr">id</span>:<span class="number">1</span>,<span class="comment">// 不能将类型“&#123; id: number; name: string; &#125;”分配给类型“Named”。 对象文字可以只指定已知属性，并且“id”不在类型“Named”中。ts(2322)</span></span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;Tom&#x27;</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>虽然为变量p赋予的字面值完全符合结构类型兼容规则，但它却抛出异常，这主要是由TypeScript中的Freshness特性导致，该特性会对对象字面量进行更为严格的类型检测：只有目标变量的类型与该对象字面量的类型完全一致，对象字面量才可能赋值给目标变量，否则抛出类型错误，我们可以通过类型断言消除异常：</p><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> p: Named;</span><br><span class="line">p = &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;Tom&#x27;</span>,</span><br><span class="line">&#125; <span class="keyword">as</span> Person;</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;Freshness会进行更严格的对象字面量检查，用来确保对象字面量在结构上类型兼容&lt;/p&gt;
-&lt;p&gt;结构类型兼容规则：如果两个类型的结构一样，就说它们是互相兼容的，且可以相互赋值的（即如果类型x要兼容类型y,那么类型y至少具有与类型x相同的属性)&lt;/p&gt;
-&lt;h1 id=&quot;Fr</summary>
       
     
     

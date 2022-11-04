@@ -187,6 +187,91 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/23/%E6%95%B0%E6%8D%AE%E4%BB%A3%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/23/%E6%95%B0%E6%8D%AE%E4%BB%A3%E7%90%86/" class="post-title-link" itemprop="url">数据代理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-23 17:50:13" itemprop="dateCreated datePublished" datetime="2022-01-23T17:50:13+08:00">2022-01-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-24 18:26:42" itemprop="dateModified" datetime="2022-01-24T18:26:42+08:00">2022-01-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ol>
+<li><p>Vue中的数据代理：通过vm对象来代理data对象中属性的操作（读或写</p>
+</li>
+<li><p>Vue中数据代理的好处：更加方便操作data中的数据</p>
+</li>
+<li><p>基本原理</p>
+<p>​    通过Object.defineProperty()把data对象中的所有属性添加到vm上中，为每一个添加到vm上的属性都指定一个getter()setter()函数，在getter()setter()函数；里面去操作data中对应的数据</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"> const vm=Vue.createApp(&#123;</span><br><span class="line">            data()&#123;</span><br><span class="line">                return&#123;</span><br><span class="line">                    name:&#x27;Ann&#x27;,</span><br><span class="line">                    address:&#x27;06404&#x27;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">vm</span><br><span class="line">&#123;</span><br><span class="line">...</span><br><span class="line">_data&#123;</span><br><span class="line">	 name:(...),</span><br><span class="line">     address:(...),   </span><br><span class="line">	&#125;</span><br><span class="line">name:(...)</span><br><span class="line">address:(...)//Object.defineProperty()</span><br><span class="line">Object.defineProperty(vm,&#x27;name&#x27;,&#123;</span><br><span class="line">	value:_data.name.get()</span><br><span class="line">	enumerable:</span><br><span class="line">	writable:</span><br><span class="line">	configurable://默认为false,控制属性是否可以被删除</span><br><span class="line"></span><br><span class="line">	get()&#123;</span><br><span class="line">		return _data.name.get()</span><br><span class="line">	&#125;</span><br><span class="line">	set(value)&#123;</span><br><span class="line">		_data.name.set(value)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br><span class="line">Object.defineProperty(vm,&#x27;address&#x27;,&#123;</span><br><span class="line">	value:_data.address.get()</span><br><span class="line">	enumerable:</span><br><span class="line">	writable:</span><br><span class="line">	configurable://默认为false,控制属性是否可以被删除</span><br><span class="line">	get()&#123;</span><br><span class="line">		return _data.address.get()</span><br><span class="line">	&#125;</span><br><span class="line">	set(value)&#123;</span><br><span class="line">		_data.address.set(value);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/23/MVVM/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1072,97 +1157,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/01/04/%E5%AD%97%E7%AC%A6%E8%A1%A8%E7%A4%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/04/%E5%AD%97%E7%AC%A6%E8%A1%A8%E7%A4%BA/" class="post-title-link" itemprop="url">字符表示</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-01-04 11:58:13 / 修改时间：12:14:36" itemprop="dateCreated datePublished" datetime="2022-01-04T11:58:13+08:00">2022-01-04</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="JavaScript字符表示"><a href="#JavaScript字符表示" class="headerlink" title="JavaScript字符表示"></a>JavaScript字符表示</h1><p>JavaScript 字符串由 16 位码元（code unit）组成。对多数字符来说，每 16 位码元对应一个字符。换<br>句话说，字符串的 length 属性表示字符串包含多少 16 位码元</p>
-<p>JavaScript 字符串使用了两种 Unicode 编码混合的策略：UCS-2 和 UTF-16。对于可以采用 16 位编码<br>的字符（U+0000~U+FFFF），这两种编码实际上是一样的。</p>
-<h2 id="查看指定码元"><a href="#查看指定码元" class="headerlink" title="查看指定码元"></a>查看指定码元</h2><h3 id="charCodeAt"><a href="#charCodeAt" class="headerlink" title="charCodeAt()"></a>charCodeAt()</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> message = <span class="string">&quot;abcde&quot;</span>;</span><br><span class="line"><span class="comment">// Unicode &quot;Latin small letter C&quot;的编码是 U+0063</span></span><br><span class="line"><span class="built_in">console</span>.log(message.charCodeAt(<span class="number">2</span>)); <span class="comment">// 99</span></span><br><span class="line"><span class="comment">// 十进制 99 等于十六进制 63</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="number">99</span> === <span class="number">0x63</span>); <span class="comment">// true</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>这个对应关系在扩展到 Unicode 增补字符平面时就不成立了。即 16 位只能唯一表示,65 536 个字符。这对于大多数语言字符集是足够了，在 Unicode 中称为基本多语言平面（BMP）。为了表示更多的字符，Unicode 采用了一个策略，即每个字符使用另外 16 位去选择一个增补平面。这种每个字符使用两个 16 位码元的策略称为代理对。</p>
-<h3 id="codePointAt"><a href="#codePointAt" class="headerlink" title="codePointAt()"></a>codePointAt()</h3><p>为正确解析既包含单码元字符又包含代理对字符的字符串，可以使用 codePointAt()来代替charCodeAt()。跟使用 charCodeAt()时类似，codePointAt()接收 16 位码元的索引并返回该索引位置上的码点（code point）。码点是 Unicode 中一个字符的完整标识。比如，”c”的码点是 0x0063，而”☺”的码点是 0x1F60A。码点可能是 16 位，也可能是 32 位，而 codePointAt()方法可以从指定码元位置识别完整的码点。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> message = <span class="string">&quot;ab☺de&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(message.codePointAt(<span class="number">1</span>)); <span class="comment">// 98</span></span><br><span class="line"><span class="built_in">console</span>.log(message.codePointAt(<span class="number">2</span>)); <span class="comment">// 128522</span></span><br><span class="line"><span class="built_in">console</span>.log(message.codePointAt(<span class="number">3</span>)); <span class="comment">// 56842</span></span><br><span class="line"><span class="built_in">console</span>.log(message.codePointAt(<span class="number">4</span>)); <span class="comment">// 100</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="给定UTF-16码原创建字符"><a href="#给定UTF-16码原创建字符" class="headerlink" title="给定UTF-16码原创建字符"></a>给定UTF-16码原创建字符</h2><h3 id="fromCharCode"><a href="#fromCharCode" class="headerlink" title="fromCharCode()"></a>fromCharCode()</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Unicode &quot;Latin small letter A&quot;的编码是 U+0061</span></span><br><span class="line"><span class="comment">// Unicode &quot;Latin small letter B&quot;的编码是 U+0062</span></span><br><span class="line"><span class="comment">// Unicode &quot;Latin small letter C&quot;的编码是 U+0063</span></span><br><span class="line"><span class="comment">// Unicode &quot;Latin small letter D&quot;的编码是 U+0064</span></span><br><span class="line"><span class="comment">// Unicode &quot;Latin small letter E&quot;的编码是 U+0065</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">String</span>.fromCharCode(<span class="number">0x61</span>, <span class="number">0x62</span>, <span class="number">0x63</span>, <span class="number">0x64</span>, <span class="number">0x65</span>)); <span class="comment">// &quot;abcde&quot;</span></span><br><span class="line"><span class="comment">// 0x0061 === 97</span></span><br><span class="line"><span class="comment">// 0x0062 === 98</span></span><br><span class="line"><span class="comment">// 0x0063 === 99</span></span><br><span class="line"><span class="comment">// 0x0064 === 100</span></span><br><span class="line"><span class="comment">// 0x0065 === 101</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">String</span>.fromCharCode(<span class="number">97</span>, <span class="number">98</span>, <span class="number">99</span>, <span class="number">100</span>, <span class="number">101</span>)); <span class="comment">// &quot;abcde&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="fromCodePoint"><a href="#fromCodePoint" class="headerlink" title="fromCodePoint()"></a>fromCodePoint()</h3><p>fromCodePoint()：这个方法接收任意数量的码点，返回对应字符拼接起来的字符串</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="built_in">String</span>.fromCharCode(<span class="number">97</span>, <span class="number">98</span>, <span class="number">55357</span>, <span class="number">56842</span>, <span class="number">100</span>, <span class="number">101</span>)); <span class="comment">// ab☺de</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">String</span>.fromCodePoint(<span class="number">97</span>, <span class="number">98</span>, <span class="number">128522</span>, <span class="number">100</span>, <span class="number">101</span>)); <span class="comment">// ab☺de</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="normalize-规范化"><a href="#normalize-规范化" class="headerlink" title="normalize()规范化"></a>normalize()规范化</h2><p>Unicode提供了 4种规范化形式，可以将类似上面的字符规范化为一致的格式，无论底层字符的代码是什么。这 4种规范化形式是：NFD（Normalization Form D）、NFC（Normalization Form C）、<br>NFKD（Normalization Form KD）和 NFKC（Normalization Form KC）。可以使用 normalize()方法对字符串应用上述规范化形式，使用时需要传入表示哪种形式的字串：”NFD”、”NFC”、”NFKD”或”NFKC”。</p>
-<p>通过比较字符串与其调用 normalize()的返回值，就可以知道该字符串是否已经规范化了</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a1 = <span class="built_in">String</span>.fromCharCode(<span class="number">0x00C5</span>),</span><br><span class="line">a2 = <span class="built_in">String</span>.fromCharCode(<span class="number">0x212B</span>),</span><br><span class="line">a3 = <span class="built_in">String</span>.fromCharCode(<span class="number">0x0041</span>, <span class="number">0x030A</span>);</span><br><span class="line"><span class="comment">// U+00C5 是对 0+212B 进行 NFC/NFKC 规范化之后的结果</span></span><br><span class="line"><span class="built_in">console</span>.log(a1 === a1.normalize(<span class="string">&quot;NFD&quot;</span>)); <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(a1 === a1.normalize(<span class="string">&quot;NFC&quot;</span>)); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(a1 === a1.normalize(<span class="string">&quot;NFKD&quot;</span>)); <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(a1 === a1.normalize(<span class="string">&quot;NFKC&quot;</span>)); <span class="comment">// true</span></span><br><span class="line"><span class="comment">// U+212B 是未规范化的</span></span><br><span class="line"><span class="built_in">console</span>.log(a2 === a2.normalize(<span class="string">&quot;NFD&quot;</span>)); <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(a2 === a2.normalize(<span class="string">&quot;NFC&quot;</span>)); <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(a2 === a2.normalize(<span class="string">&quot;NFKD&quot;</span>)); <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(a2 === a2.normalize(<span class="string">&quot;NFKC&quot;</span>)); <span class="comment">// false</span></span><br><span class="line"><span class="comment">// U+0041/U+030A 是对 0+212B 进行 NFD/NFKD 规范化之后的结果</span></span><br><span class="line"><span class="built_in">console</span>.log(a3 === a3.normalize(<span class="string">&quot;NFD&quot;</span>)); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(a3 === a3.normalize(<span class="string">&quot;NFC&quot;</span>)); <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(a3 === a3.normalize(<span class="string">&quot;NFKD&quot;</span>)); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(a3 === a3.normalize(<span class="string">&quot;NFKC&quot;</span>)); <span class="comment">// false</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>未规范化：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a1 = <span class="built_in">String</span>.fromCharCode(<span class="number">0x00C5</span>),</span><br><span class="line">a2 = <span class="built_in">String</span>.fromCharCode(<span class="number">0x212B</span>),</span><br><span class="line">a3 = <span class="built_in">String</span>.fromCharCode(<span class="number">0x0041</span>, <span class="number">0x030A</span>);</span><br><span class="line"><span class="built_in">console</span>.log(a1, a2, a3); <span class="comment">// Å, Å, Å</span></span><br><span class="line"><span class="built_in">console</span>.log(a1 === a2); <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(a1 === a3); <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(a2 === a3); <span class="comment">// false</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>选择同一种规范化形式可以让比较操作符返回正确的结果：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a1 = <span class="built_in">String</span>.fromCharCode(<span class="number">0x00C5</span>),</span><br><span class="line">a2 = <span class="built_in">String</span>.fromCharCode(<span class="number">0x212B</span>),</span><br><span class="line">a3 = <span class="built_in">String</span>.fromCharCode(<span class="number">0x0041</span>, <span class="number">0x030A</span>);</span><br><span class="line"><span class="built_in">console</span>.log(a1.normalize(<span class="string">&quot;NFD&quot;</span>) === a2.normalize(<span class="string">&quot;NFD&quot;</span>)); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(a2.normalize(<span class="string">&quot;NFKC&quot;</span>) === a3.normalize(<span class="string">&quot;NFKC&quot;</span>)); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(a1.normalize(<span class="string">&quot;NFC&quot;</span>) === a3.normalize(<span class="string">&quot;NFC&quot;</span>)); <span class="comment">// true</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1234,7 +1228,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">223</span>
+          <span class="site-state-item-count">224</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

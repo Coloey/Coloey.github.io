@@ -187,6 +187,87 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/05/Freshness/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/05/Freshness/" class="post-title-link" itemprop="url">Freshness</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-05 20:53:13" itemprop="dateCreated datePublished" datetime="2022-10-05T20:53:13+08:00">2022-10-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-10-22 16:12:22" itemprop="dateModified" datetime="2022-10-22T16:12:22+08:00">2022-10-22</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Freshness会进行更严格的对象字面量检查，用来确保对象字面量在结构上类型兼容</p>
+<p>结构类型兼容规则：如果两个类型的结构一样，就说它们是互相兼容的，且可以相互赋值的（即如果类型x要兼容类型y,那么类型y至少具有与类型x相同的属性)</p>
+<h1 id="Freshness-特性"><a href="#Freshness-特性" class="headerlink" title="Freshness 特性"></a>Freshness 特性</h1><p>如上所述，只要满足结构类型兼容规则的两个类型便可相互兼容。那是否有例外存在呢？让我们看下面的例子：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Named &#123;</span><br><span class="line">    <span class="attr">name</span>:<span class="built_in">string</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> Person &#123;</span><br><span class="line">    <span class="attr">id</span>: <span class="built_in">number</span>;</span><br><span class="line">    name: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> p: Named;</span><br><span class="line">p = &#123;</span><br><span class="line">    <span class="attr">id</span>:<span class="number">1</span>,<span class="comment">// 不能将类型“&#123; id: number; name: string; &#125;”分配给类型“Named”。 对象文字可以只指定已知属性，并且“id”不在类型“Named”中。ts(2322)</span></span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;Tom&#x27;</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>虽然为变量p赋予的字面值完全符合结构类型兼容规则，但它却抛出异常，这主要是由TypeScript中的Freshness特性导致，该特性会对对象字面量进行更为严格的类型检测：只有目标变量的类型与该对象字面量的类型完全一致，对象字面量才可能赋值给目标变量，否则抛出类型错误，我们可以通过类型断言消除异常：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> p: Named;</span><br><span class="line">p = &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;Tom&#x27;</span>,</span><br><span class="line">&#125; <span class="keyword">as</span> Person;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/09/18/Vue.js%E6%A8%A1%E6%9D%BF%E7%BC%96%E8%AF%91%E5%99%A8%E5%8E%9F%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1186,82 +1267,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/27/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/08/27/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">职责链模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-08-27 23:41:31 / 修改时间：23:50:29" itemprop="dateCreated datePublished" datetime="2022-08-27T23:41:31+08:00">2022-08-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>职责链模式：使多个对象都有机会处理请求，从而避免请求的发送者和接收者之间得到耦合关系，将这些对象连成一条链，并沿着这条链传递该请求，直到有一个对象处理它为止</p>
-<h1 id="灵活可拆分的职责链结点"><a href="#灵活可拆分的职责链结点" class="headerlink" title="灵活可拆分的职责链结点"></a>灵活可拆分的职责链结点</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> order500 = <span class="function"><span class="keyword">function</span>(<span class="params">orderType,pay,stock</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">if</span>(orderType === <span class="number">1</span> &amp;&amp; pay===<span class="literal">true</span>)&#123;</span><br><span class="line">           <span class="built_in">console</span>.log(<span class="string">&#x27;500元定金，100元优惠&#x27;</span>)</span><br><span class="line">       &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">           <span class="keyword">return</span> <span class="string">&#x27;nextSuccessor&#x27;</span></span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">let</span> order200 = <span class="function"><span class="keyword">function</span>(<span class="params">orderType,pay,stock</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">if</span>(orderType === <span class="number">2</span> &amp;&amp; pay === <span class="literal">true</span>)&#123;</span><br><span class="line">           <span class="built_in">console</span>.log(<span class="string">&#x27;200元定金，50元优惠&#x27;</span>)</span><br><span class="line">       &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">           <span class="keyword">return</span> <span class="string">&#x27;nextSuccessor&#x27;</span></span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">let</span> orderNormal = <span class="function"><span class="keyword">function</span>(<span class="params">orderType,pay,stock</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">if</span>(stock&gt;<span class="number">0</span>)&#123;</span><br><span class="line">           <span class="built_in">console</span>.log(<span class="string">&#x27;普通购买，无优惠&#x27;</span>)</span><br><span class="line">       &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">           <span class="built_in">console</span>.log(<span class="string">&#x27;库存不足&#x27;</span>)</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">let</span> Chain = <span class="function"><span class="keyword">function</span>(<span class="params">fn</span>)</span>&#123;</span><br><span class="line">       <span class="built_in">this</span>.fn = fn;</span><br><span class="line">       <span class="built_in">this</span>.successor = <span class="literal">null</span></span><br><span class="line">   &#125;</span><br><span class="line">   Chain.prototype.setNextSuccessor = <span class="function"><span class="keyword">function</span>(<span class="params">successor</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="built_in">this</span>.successor = successor</span><br><span class="line">   &#125;</span><br><span class="line">   Chain.prototype.passResquest = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">       <span class="keyword">let</span> ret = <span class="built_in">this</span>.fn.apply(<span class="built_in">this</span>,<span class="built_in">arguments</span>)</span><br><span class="line">       <span class="comment">//console.log(ret) </span></span><br><span class="line">       <span class="keyword">if</span>(ret === <span class="string">&#x27;nextSuccessor&#x27;</span>)&#123;            </span><br><span class="line">           <span class="keyword">return</span> <span class="built_in">this</span>.successor &amp;&amp; <span class="built_in">this</span>.successor.passResquest.apply(<span class="built_in">this</span>.successor,<span class="built_in">arguments</span>)</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> ret</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">let</span> chainOrder500 = <span class="keyword">new</span> Chain(order500)<span class="comment">//500元定金，100元优惠</span></span><br><span class="line">   <span class="keyword">let</span> chainOrder200 = <span class="keyword">new</span> Chain(order200)</span><br><span class="line">   <span class="keyword">let</span> chainOrderNormal = <span class="keyword">new</span> Chain(orderNormal)</span><br><span class="line">   chainOrder500.setNextSuccessor(chainOrder200)</span><br><span class="line">   chainOrder200.setNextSuccessor(chainOrderNormal)</span><br><span class="line">   chainOrder500.passResquest(<span class="number">1</span>,<span class="literal">true</span>,<span class="number">500</span>)<span class="comment">//500元定金，100元优惠</span></span><br><span class="line">   chainOrder500.passResquest(<span class="number">2</span>,<span class="literal">true</span>,<span class="number">500</span>)<span class="comment">//走nextSuccessor,200元定金，50元优惠</span></span><br><span class="line">   chainOrder500.passResquest(<span class="number">3</span>,<span class="literal">true</span>,<span class="number">500</span>)<span class="comment">//继续nextSuccessor,普通购买，无优惠</span></span><br><span class="line">   chainOrder500.passResquest(<span class="number">1</span>,<span class="literal">false</span>,<span class="number">0</span>)<span class="comment">//一直nextSuccessor到库存不足</span></span><br></pre></td></tr></table></figure>
-
-<p>当要加入一个结点：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> order300 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line">chainOrder300 = <span class="keyword">new</span> Chain(order300)</span><br><span class="line">chainOrder500.setNextSuccessor(chainOrder300)</span><br><span class="line">chainOrder300.setNextSuccessor(chainOrder200)</span><br></pre></td></tr></table></figure>
-
-<h1 id="AOP模式实现职责链："><a href="#AOP模式实现职责链：" class="headerlink" title="AOP模式实现职责链："></a>AOP模式实现职责链：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> order500 = <span class="function"><span class="keyword">function</span>(<span class="params">orderType,pay,stock</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(orderType === <span class="number">1</span> &amp;&amp; pay===<span class="literal">true</span>)&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">&#x27;500元定金，100元优惠&#x27;</span>)</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;nextSuccessor&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> order200 = <span class="function"><span class="keyword">function</span>(<span class="params">orderType,pay,stock</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(orderType === <span class="number">2</span> &amp;&amp; pay === <span class="literal">true</span>)&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">&#x27;200元定金，50元优惠&#x27;</span>)</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;nextSuccessor&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> orderNormal = <span class="function"><span class="keyword">function</span>(<span class="params">orderType,pay,stock</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(stock&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">&#x27;普通购买，无优惠&#x27;</span>)</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">&#x27;库存不足&#x27;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="built_in">Function</span>.prototype.after = <span class="function"><span class="keyword">function</span>(<span class="params">fn</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">let</span> self = <span class="built_in">this</span></span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">let</span> ret = self.apply(<span class="built_in">this</span>,<span class="built_in">arguments</span>)</span><br><span class="line">            <span class="keyword">if</span>(ret === <span class="string">&#x27;nextSuccessor&#x27;</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> fn.apply(<span class="built_in">this</span>,<span class="built_in">arguments</span>)</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> ret;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> order = order500.after(order200).after(orderNormal)</span><br><span class="line">    order(<span class="number">1</span>,<span class="literal">true</span>,<span class="number">500</span>)</span><br><span class="line">    order(<span class="number">2</span>,<span class="literal">true</span>,<span class="number">500</span>)</span><br><span class="line">    order(<span class="number">1</span>,<span class="literal">false</span>,<span class="number">500</span>)</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1333,7 +1338,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">223</span>
+          <span class="site-state-item-count">224</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
