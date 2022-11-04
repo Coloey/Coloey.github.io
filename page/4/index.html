@@ -187,6 +187,438 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/26/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/26/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">命令模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-26 15:12:38 / 修改时间：16:29:23" itemprop="dateCreated datePublished" datetime="2022-08-26T15:12:38+08:00">2022-08-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="命令模式的应用场景："><a href="#命令模式的应用场景：" class="headerlink" title="命令模式的应用场景："></a>命令模式的应用场景：</h1><p>有时候向某些对象发送请求，但是不知道请求接收者和发送者是谁，也不知请求操作是什么，此时用一种松耦合的方式来设计程序，使得发送者和接收者能够消除耦合关系</p>
+<h1 id="面向对象形式："><a href="#面向对象形式：" class="headerlink" title="面向对象形式："></a>面向对象形式：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&lt;body&gt;</span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;button1&quot;</span>&gt;</span>点击按钮1<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="keyword">let</span> btn1 = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;button1&#x27;</span>)</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="comment">//安装命令的函数</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="keyword">let</span> setCommand = <span class="function"><span class="keyword">function</span>(<span class="params">button,command</span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            button.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">                command.execute()</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="comment">//命令接收者</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="keyword">let</span> MenuBar = &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            <span class="attr">refresh</span> :<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">                <span class="built_in">console</span>.log(<span class="string">&quot;刷新菜单目录&quot;</span>)</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="comment">//command对象</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="keyword">let</span> RefreshMenuBarCommand = <span class="function"><span class="keyword">function</span>(<span class="params">receiver</span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            <span class="built_in">this</span>.receiver=receiver</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        RefreshMenuBarCommand.prototype.execute = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">            <span class="built_in">this</span>.receiver.refresh()</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="comment">//命令接收者接传入到command对象，把command对象安装到button上</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">        <span class="keyword">let</span> refreshMenuBarCommand = <span class="keyword">new</span> RefreshMenuBarCommand(MenuBar)</span></span></span><br><span class="line"><span class="javascript"><span class="xml">        setCommand(button1,refreshMenuBarCommand)</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="闭包形式"><a href="#闭包形式" class="headerlink" title="闭包形式"></a>闭包形式</h1><p>可以使用<strong>闭包的命令模式</strong>，将命令接收者封闭在闭包产生的环境中，执行命令的操作更简单，仅仅是执行回调函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> btn1 = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;button1&#x27;</span>)</span><br><span class="line">      <span class="comment">//安装命令的函数</span></span><br><span class="line">      <span class="keyword">let</span> setCommand = <span class="function"><span class="keyword">function</span>(<span class="params">button,command</span>)</span>&#123;</span><br><span class="line">          button.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">              command.execute()</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//命令接收者</span></span><br><span class="line">      <span class="keyword">let</span> MenuBar = &#123;</span><br><span class="line">          <span class="attr">refresh</span> :<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">              <span class="built_in">console</span>.log(<span class="string">&quot;刷新菜单目录&quot;</span>)</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//command对象</span></span><br><span class="line">      <span class="keyword">let</span> RefreshMenuBarCommand = <span class="function"><span class="keyword">function</span>(<span class="params">receiver</span>)</span>&#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">              <span class="keyword">return</span> receiver.refresh()</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//命令接收者传入到command对象，把command对象安装到button上</span></span><br><span class="line">      <span class="keyword">let</span> refreshMenuBarCommand = <span class="keyword">new</span> RefreshMenuBarCommand(MenuBar)</span><br><span class="line">      setCommand(button1,refreshMenuBarCommand)</span><br></pre></td></tr></table></figure>
+
+<p>使用命令模式可以方便给对象增加撤销命令操作，撤销命令是执行命令的反向操作,文本编辑器的Ctrl+Z和围棋中的悔棋都是撤销命令</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;ball&quot;</span> <span class="attr">style</span>=<span class="string">&quot;position: absolute;background: #000;width:50px;height:50px&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">id</span>=<span class="string">&quot;pos&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;moveBtn&quot;</span>&gt;</span>开始移动<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;cancleBtn&quot;</span>&gt;</span>撤销命令<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> ball = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;ball&#x27;</span>)</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> pos = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;pos&#x27;</span>)</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> moveBtn = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;moveBtn&#x27;</span>)</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> cancleBtn = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;cancleBtn&#x27;</span>)</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> moveCommand;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> MoveCommand = <span class="function"><span class="keyword">function</span> (<span class="params">receiver,pos</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="built_in">this</span>.receiver = receiver;</span></span><br><span class="line"><span class="javascript">            <span class="built_in">this</span>.pos = pos;</span></span><br><span class="line"><span class="javascript">            <span class="built_in">this</span>.oldPos=<span class="literal">null</span></span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">        MoveCommand.prototype.excute = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="built_in">this</span>.receiver.start(<span class="string">&#x27;left&#x27;</span>,<span class="built_in">this</span>.pos,<span class="number">1000</span>,<span class="string">&#x27;strongEaseout&#x27;</span>)</span></span><br><span class="line"><span class="javascript">            oldPos = <span class="built_in">this</span>.receiver.dom.getBoundingClientRec()[<span class="built_in">this</span>.receiver.propertyName]</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">        <span class="comment">//执行反向操作</span></span></span><br><span class="line"><span class="javascript">        MoveCommand.prototype.undo = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="built_in">this</span>.receiver.start(<span class="string">&#x27;left&#x27;</span>,<span class="built_in">this</span>.oldPos,<span class="number">1000</span>,<span class="string">&#x27;strongEaseout&#x27;</span>)</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">        moveBtn.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="keyword">let</span> animate = <span class="keyword">new</span> Animate(ball)</span></span><br><span class="line"><span class="javascript">            moveCommand = <span class="keyword">new</span> MoveCommand(animate,pos.value)</span></span><br><span class="line"><span class="javascript">            moveCommand.excute()   </span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">        cancleBtn.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            moveCommand.undo()</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="宏命令"><a href="#宏命令" class="headerlink" title="宏命令"></a>宏命令</h1><p>是一组命令的集合，通过执行宏命令可以执行一批命令</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> quitCommand = &#123;</span><br><span class="line">    <span class="attr">execute</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;退出&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> loginCommand =&#123;</span><br><span class="line">    <span class="attr">execute</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;登录&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> MacroCommand = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">commandList</span>:[],</span><br><span class="line">        <span class="attr">add</span>: <span class="function"><span class="keyword">function</span>(<span class="params">command</span>)</span>&#123;</span><br><span class="line">            <span class="built_in">this</span>.commandList.push(command)</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">execute</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="number">0</span>;command;command = <span class="built_in">this</span>.commandList[i])&#123;</span><br><span class="line">                command.execute()</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> macroCommand = <span class="keyword">new</span> MacroCommand()</span><br><span class="line">macroCommand.add(quitCommand)</span><br><span class="line">macroCommand.add(loginCommand)</span><br><span class="line">macroCommand.execute()</span><br></pre></td></tr></table></figure>
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>一般，命令模式都会在command命令对象中保存一个接收者负责真正执行客户的请求，这种命令模式是傻瓜式命令，它只负责把客户的命令转发给接收者执行，让请求发起者和接收者之间尽可能解耦</p>
+<p>聪明式命令对象可以直接实现请求，不需要接收者的存在，形式上和策略模式很像，通过使用意图分辨它们，策略模式指向的问题域更小，所有策略目标一致，它们只是达到这个目标的不同手段，命令模式指向的问题域更广，command对象解决的目标更具发散性。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/24/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6%E4%B8%8E%E7%B1%BB%E7%BB%84%E4%BB%B6%E7%9A%84%E4%B8%8D%E5%90%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/24/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6%E4%B8%8E%E7%B1%BB%E7%BB%84%E4%BB%B6%E7%9A%84%E4%B8%8D%E5%90%8C/" class="post-title-link" itemprop="url">函数式组件与类组件的不同</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-24 23:37:14 / 修改时间：23:51:20" itemprop="dateCreated datePublished" datetime="2022-08-24T23:37:14+08:00">2022-08-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="eg"><a href="#eg" class="headerlink" title="eg:"></a>eg:</h1><h2 id="类组件："><a href="#类组件：" class="headerlink" title="类组件："></a>类组件：</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProfilePage</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  showMessage = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    alert(<span class="string">&#x27;Followed &#x27;</span> + <span class="built_in">this</span>.props.user);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  handleClick = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="built_in">this</span>.showMessage, <span class="number">3000</span>);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;this.handleClick&#125;</span>&gt;</span>Follow<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="函数式组件："><a href="#函数式组件：" class="headerlink" title="函数式组件："></a>函数式组件：</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ProfilePage</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> showMessage = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    alert(<span class="string">&#x27;Followed &#x27;</span> + props.user);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> handleClick = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(showMessage, <span class="number">3000</span>);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleClick&#125;</span>&gt;</span>Follow<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>在React中props是不可变的，所以它们永远不会改变，然而,类组件中，this是且永远是可变的</strong></p>
+<p>类组件中this存在的意义：React本身随着时间推移而改变，以便你可以在渲染方法以及生命周期方法中得到最新的实例.</p>
+<p><strong>如果希望类组件中能在一次特定渲染中捕获那一次渲染所用的props或者state，可以使用闭包</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProfilePage</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="comment">// Capture the props!</span></span><br><span class="line">    <span class="keyword">const</span> props = <span class="built_in">this</span>.props;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Note: we are *inside render*.</span></span><br><span class="line">    <span class="comment">// These aren&#x27;t class methods.</span></span><br><span class="line">    <span class="keyword">const</span> showMessage = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      alert(<span class="string">&#x27;Followed &#x27;</span> + props.user);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> handleClick = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">setTimeout</span>(showMessage, <span class="number">3000</span>);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleClick&#125;</span>&gt;</span>Follow<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="函数式组件想捕获最新的props和state"><a href="#函数式组件想捕获最新的props和state" class="headerlink" title="函数式组件想捕获最新的props和state?"></a>函数式组件想捕获最新的props和state?</h1><p>用useRef</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">MessageThread</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [message, setMessage] = useState(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 保持追踪最新的值。</span></span><br><span class="line">  <span class="keyword">const</span> latestMessage = useRef(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">  useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    latestMessage.current = message;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> showMessage = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    alert(<span class="string">&#x27;You said: &#x27;</span> + latestMessage.current);</span><br><span class="line">  &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>总结于：</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/24/%E8%AF%A6%E8%A7%A3useEffect/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/24/%E8%AF%A6%E8%A7%A3useEffect/" class="post-title-link" itemprop="url">详解useEffect</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-24 15:06:04 / 修改时间：23:36:42" itemprop="dateCreated datePublished" datetime="2022-08-24T15:06:04+08:00">2022-08-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="每次渲染都有它自己的Effects"><a href="#每次渲染都有它自己的Effects" class="headerlink" title="每次渲染都有它自己的Effects"></a>每次渲染都有它自己的Effects</h2><p><code>count</code>是某个特定渲染中的常量。事件处理函数“看到”的是属于它那次特定渲染中的<code>count</code>状态值。对于effects也同样如此：</p>
+<p><strong>并不是<code>count</code>的值在“不变”的effect中发生了改变，而是effect 函数本身在每一次渲染中都不相同,概念上它是组件输出的一部分，可以看到属于某次特定渲染的props和state</strong></p>
+<h2 id="Effects的清除"><a href="#Effects的清除" class="headerlink" title="Effects的清除"></a>Effects的清除</h2><p>effects有时候需要有一个清理步骤，目的是消除副作用，<strong>React只会在浏览器绘制后运行effects</strong>，这使得你的应用更流畅，因为大多数effects不会阻塞屏幕的更新，<strong>effects的清除同样被延迟，上一次的effect会在重新渲染后被清除</strong></p>
+<ul>
+<li><strong>React 渲染<code>&#123;id: 20&#125;</code>的UI。</strong></li>
+<li>浏览器绘制。我们在屏幕上看到<code>&#123;id: 20&#125;</code>的UI。</li>
+<li><strong>React 清除<code>&#123;id: 10&#125;</code>的effect。</strong></li>
+<li>React 运行<code>&#123;id: 20&#125;</code>的effect。</li>
+</ul>
+<p><strong>effect的清除不会读取最新的props，它只能读取到定义它的那次渲染中华的prop值</strong></p>
+<h2 id="告诉React去比对你的Effects"><a href="#告诉React去比对你的Effects" class="headerlink" title="告诉React去比对你的Effects"></a>告诉React去比对你的Effects</h2><p>这是为什么你如果想要避免effects不必要的重复调用，你可以提供给<code>useEffect</code>一个依赖数组参数(deps)：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">document</span>.title = <span class="string">&#x27;Hello, &#x27;</span> + name;</span><br><span class="line">&#125;, [name]); <span class="comment">// Our deps</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>这好比你告诉React：“Hey，我知道你看不到这个函数里的东西，但我可以保证只使用了渲染中的<code>name</code>，别无其他。”</strong></p>
+<p>移除依赖</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> id = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      setCount(count + <span class="number">1</span>);</span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="built_in">clearInterval</span>(id);</span><br><span class="line">  &#125;, [count]);</span><br></pre></td></tr></table></figure>
+
+<p>定时器会在每一次<code>count</code>改变后清除和重新设定</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> id = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      setCount(<span class="function"><span class="params">c</span> =&gt;</span> c + <span class="number">1</span>);</span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="built_in">clearInterval</span>(id);</span><br><span class="line">  &#125;, []);</span><br></pre></td></tr></table></figure>
+
+<p><strong>React已经知道当前的count,我们需要告知React的仅仅是去递增状态，不管它现在具体是什么值</strong></p>
+<p>解耦来自Actions的更新</p>
+<p>当你写setSomething(something=&gt;…)这种代码时可以考虑使用reducer,reducer可以让你把组件内发生了什么和状态如何响应并更新分开描述</p>
+<p>我们用一个dispatch依赖去替换effect的step依赖</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, dispatch] = useReducer(reducer, initialState);</span><br><span class="line"><span class="keyword">const</span> &#123; count, step &#125; = state;</span><br><span class="line"></span><br><span class="line">useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> id = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    dispatch(&#123; <span class="attr">type</span>: <span class="string">&#x27;tick&#x27;</span> &#125;); <span class="comment">// Instead of setCount(c =&gt; c + step);</span></span><br><span class="line">  &#125;, <span class="number">1000</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="built_in">clearInterval</span>(id);</span><br><span class="line">&#125;, [dispatch]);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> initialState = &#123;</span><br><span class="line">  <span class="attr">count</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="attr">step</span>: <span class="number">1</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reducer</span>(<span class="params">state, action</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; count, step &#125; = state;</span><br><span class="line">  <span class="keyword">if</span> (action.type === <span class="string">&#x27;tick&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="attr">count</span>: count + step, step &#125;;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (action.type === <span class="string">&#x27;step&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; count, <span class="attr">step</span>: action.step &#125;;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>React保证dispatch在每次渲染中都是一样的，所以可以在依赖中去掉它，不会引起effect不必要的重复执行，当dispatch时，React只记住了action,它会在下一次渲染中再次调用reducer</p>
+<h2 id="无限重复请求问题："><a href="#无限重复请求问题：" class="headerlink" title="无限重复请求问题："></a>无限重复请求问题：</h2><p>1 没有依赖数组，那么每次渲染都会触发这个副作用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    fetchData()</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>2 设置了依赖数组，但是依赖数组里的变量一直在变</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [data,setData] = useState()</span><br><span class="line"></span><br><span class="line">useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> fetchData = <span class="keyword">async</span>() =&gt; &#123;</span><br><span class="line">        <span class="keyword">const</span> res = <span class="keyword">await</span> fetchNewData()</span><br><span class="line">        setData(res.data)</span><br><span class="line">    &#125;</span><br><span class="line">    fetchData()</span><br><span class="line">&#125;,[data])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="定义函数请求"><a href="#定义函数请求" class="headerlink" title="定义函数请求"></a>定义函数请求</h2><ul>
+<li><p>某些函数只在effect中使用，那就在effect中定义</p>
+</li>
+<li><p>某些函数在多个地方使用，就独立定义，最好用useCallBack包裹，并且在依赖数组里把依赖项写全</p>
+<p>eg:</p>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SearchResults</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [query, setQuery] = useState(<span class="string">&#x27;react&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ✅ Preserves identity until query changes</span></span><br><span class="line">  <span class="keyword">const</span> getFetchUrl = useCallback(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;https://hn.algolia.com/api/v1/search?query=&#x27;</span> + query;</span><br><span class="line">  &#125;, [query]);  <span class="comment">// ✅ Callback deps are OK</span></span><br><span class="line"></span><br><span class="line">  useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> url = getFetchUrl();</span><br><span class="line">    <span class="comment">// ... Fetch data and do something ...</span></span><br><span class="line">  &#125;, [getFetchUrl]); <span class="comment">// ✅ Effect deps are OK</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果query不变，getFetchUrl也会保持不变，effect也不会重新运行，反之，query改变了，getFetchUrl也会随之改变</p>
+<p>参考：</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/24/%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/24/%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">发布订阅模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-24 11:58:59 / 修改时间：12:09:26" itemprop="dateCreated datePublished" datetime="2022-08-24T11:58:59+08:00">2022-08-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="发布订阅模式的实现："><a href="#发布订阅模式的实现：" class="headerlink" title="发布订阅模式的实现："></a>发布订阅模式的实现：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EventEmitter</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.events=&#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">on</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!<span class="built_in">this</span>.events[type])&#123;</span><br><span class="line">            <span class="built_in">this</span>.events[type]=[]</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.events[type].push(handler)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">addListener</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.on(type,handler)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">prependListener</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!<span class="built_in">this</span>.events[type])&#123;</span><br><span class="line">            <span class="built_in">this</span>.events[type]=[]</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.events[type].unshift(handler)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">removeListener</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!<span class="built_in">this</span>.events[type])&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.events[type]=<span class="built_in">this</span>.events[type].filter(<span class="function"><span class="params">item</span>=&gt;</span>item !== handler)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">off</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.removeListener(type,handler)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">emit</span>(<span class="params">type,...args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!events[type]||events[type].length==<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.events[type].forEach(<span class="function"><span class="params">item</span>=&gt;</span>&#123;</span><br><span class="line">            <span class="built_in">Reflect</span>.apply(item,<span class="built_in">this</span>,args);</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">once</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">temp</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">            handler(args)</span><br><span class="line">            <span class="built_in">this</span>.off(type,handler)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.on(type,temp)<span class="comment">//为事件注册单次监听器</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h1><ul>
+<li>时间解耦</li>
+<li>对象之间解耦</li>
+<li>应用上：可以用在异步编程</li>
+<li>架构上：MVC和MVVM都有发布订阅模式的参与，JavaScript本身是一门基于事件驱动的语言</li>
+</ul>
+<h1 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h1><p>创建订阅者本身需要消耗一定的时间和内存，而且当你订阅一个消息后，如果该消息最后都未发生，那么这个订阅者会始终存储在内存中。另外，发布订阅模式虽然会弱化对向之间的联系，但是过度使用，，对象和对象之间的必要联系会被深埋在背后，导致程序难以维护和理解</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/23/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/23/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">代理模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-23 11:25:07 / 修改时间：13:18:02" itemprop="dateCreated datePublished" datetime="2022-08-23T11:25:07+08:00">2022-08-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="虚拟代理"><a href="#虚拟代理" class="headerlink" title="虚拟代理"></a>虚拟代理</h1><p>虚拟代理会把一些开销很大的对象，延迟到真正需要它的时候再执行</p>
+<h1 id="虚拟代理实现图片预加载"><a href="#虚拟代理实现图片预加载" class="headerlink" title="虚拟代理实现图片预加载"></a>虚拟代理实现图片预加载</h1><p>代理负责预加载图片，预加载操作完成后将请求重新交给本体MyImage，降低耦合度</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> myImage=(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> ImageNode = <span class="built_in">document</span>.createElement(<span class="string">&#x27;img&#x27;</span>)</span><br><span class="line">    <span class="built_in">document</span>.body.appendChild(ImageNode)</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">src</span>)</span>&#123;</span><br><span class="line">        ImageNode.src = src</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)()</span><br><span class="line"><span class="keyword">let</span> proxyImage = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> img = <span class="keyword">new</span> Image</span><br><span class="line">    img.onload=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        myImage(<span class="built_in">this</span>.src)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        myImage(<span class="string">&#x27;file://C:/Users/sevenaeng/Desktop/loading.jpg&#x27;</span>)</span><br><span class="line">        img.src=src</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)()</span><br><span class="line">proxyImage(<span class="string">&#x27;http://imgcache.qq.com/music/a.jpg&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="虚拟代理合并https请求"><a href="#虚拟代理合并https请求" class="headerlink" title="虚拟代理合并https请求"></a>虚拟代理合并https请求</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//虚拟代理合并http请求</span></span><br><span class="line"><span class="keyword">let</span> synchronusFile = <span class="function"><span class="keyword">function</span>(<span class="params">id</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;开始同步文件,id为:&#x27;</span>+id)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> proxySynchronousFile=(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> cache = [],timer;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        cache.push(id)</span><br><span class="line">        <span class="keyword">if</span>(timer)&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        timer=<span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            synchronusFile(cache.join(<span class="string">&#x27;,&#x27;</span>))<span class="comment">//两秒内向本体发送需要同步的ID集合</span></span><br><span class="line">            <span class="built_in">clearTimeout</span>(timer)</span><br><span class="line">            timer=<span class="literal">null</span></span><br><span class="line">            cache.length=<span class="number">0</span><span class="comment">//清空ID集合</span></span><br><span class="line">        &#125;,<span class="number">2000</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)()</span><br><span class="line"><span class="keyword">let</span> checkbox = <span class="built_in">document</span>.getElementsByTagName(<span class="string">&#x27;input&#x27;</span>)</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="number">0</span>;c;c=checkbox[i++])&#123;</span><br><span class="line">    c.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">this</span>.checked === <span class="literal">true</span>)&#123;</span><br><span class="line">            proxySynchronousFile(<span class="built_in">this</span>.id)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="缓存代理："><a href="#缓存代理：" class="headerlink" title="缓存代理："></a>缓存代理：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//缓存代理计算乘积</span></span><br><span class="line"><span class="keyword">let</span> mult =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> a = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="number">0</span>;i&lt;<span class="built_in">arguments</span>.length;i++)&#123;</span><br><span class="line">        a= a*<span class="built_in">arguments</span>[i]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> a</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//缓存代理工厂</span></span><br><span class="line"><span class="keyword">let</span> createProxyFactory=<span class="function"><span class="keyword">function</span>(<span class="params">fn</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> cache=&#123;&#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">let</span> args = <span class="built_in">Array</span>.prototype.join.call(<span class="built_in">arguments</span>,<span class="string">&#x27;,&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span>(args <span class="keyword">in</span> cache)&#123;</span><br><span class="line">            <span class="keyword">return</span> cache[args]</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> cache[args]=fn.apply(<span class="built_in">this</span>,<span class="built_in">arguments</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> proxyMult = createProxyFactory(mult)</span><br></pre></td></tr></table></figure>
+
+<p>代理的意义：</p>
+<p><strong>实现单一职责原则</strong>，指的是一个类，应该仅有一个引起它变化的原因，如果一个对象承担了多个职责，这个对象将会变得巨大，引起它变化的原因也会很多，这些耦合在一起会导致脆弱和低内聚的设计</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/20/vue%E5%92%8Creact%E7%9A%84%E5%8C%BA%E5%88%AB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -697,519 +1129,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/31/%E7%90%86%E8%A7%A3vue3%E4%B8%ADProxy%E5%92%8CReflect/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/31/%E7%90%86%E8%A7%A3vue3%E4%B8%ADProxy%E5%92%8CReflect/" class="post-title-link" itemprop="url">理解vue3中Proxy和Reflect</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-07-31 10:42:33 / 修改时间：15:00:40" itemprop="dateCreated datePublished" datetime="2022-07-31T10:42:33+08:00">2022-07-31</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="理解Proxy："><a href="#理解Proxy：" class="headerlink" title="理解Proxy："></a>理解Proxy：</h1><p>1、使用Proxy可以代理一个对象，它能够实现对其他对象的代理，代理指的是对一个对象的<strong>基本语义的代理</strong></p>
-<p>基本语义：可以对一个对象进行读取，设置属性值的操作。</p>
-<p>2、根据ECMAScript规范，在JavaScript中有两种对象，一种是<strong>常规对象</strong>，一种是<strong>异质对象</strong>，这两种对象包含了JavaScript世界中所有对象。</p>
-<p>在JavaScript中，<strong>对象的实际语义是由对象的内部方法指定的</strong>，内部方法指的是对一个对象进行操作时在引擎内部调用的方法，这些方法对于js使用者来说是不可见的，比如[[Get]],[[Set]],[[GetPrototyeOf]],[[SetPrototypeOf]]等方法，</p>
-<p>3、区分普通对象和函数：函数会部署内部方法[[Call]]，而普通对象不会</p>
-<p>4、常规对象需满足：</p>
-<p>对于内部[[Get]],<a href="%E8%AF%A6%E8%A7%81Vue%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0p90">[Set]</a>,必须使用ECMA规范10.1.x节给出的定义实现</p>
-<p>对于内部方法[[Call]],必须使用ECMA规范10.2.1节给出的定义实现</p>
-<p>对于内部方法[[Construct]]，必须使用ECMA规范10.2.2节给出的定义实现</p>
-<p>而<strong>Proxy对象的内部方法[[Get]]没有使用ECMA规范10.1.8给出的定义实现，所以Proxy是一个异质对象</strong>，因此<strong>代理对象与普通对象的区别是[[Get]]的实现，代理对象会在没有指定对应拦截函数，例如没有指定get函数，当我们通过代理随性访问属性值时，代理对象内部方法[[Get]]会调用原始对象内部方法[[Get]]来获取属性值，这其实就是代理透明性质</strong></p>
-<h1 id="使用Reflect"><a href="#使用Reflect" class="headerlink" title="使用Reflect:"></a>使用Reflect:</h1><p><code>Reflect</code>对象的设计目的有这样几个。</p>
-<p>（1） 将<code>Object</code>对象的一些明显属于语言内部的方法（比如<code>Object.defineProperty</code>），放到<code>Reflect</code>对象上。现阶段，某些方法同时在<code>Object</code>和<code>Reflect</code>对象上部署，未来的新方法将只部署在<code>Reflect</code>对象上。也就是说，从<code>Reflect</code>对象上可以拿到语言内部的方法。</p>
-<p>（2） 修改某些<code>Object</code>方法的返回结果，让其变得更合理。比如，<code>Object.defineProperty(obj, name, desc)</code>在无法定义属性时，会抛出一个错误，而<code>Reflect.defineProperty(obj, name, desc)</code>则会返回<code>false</code>。</p>
-<p>(3） 让<code>Object</code>操作都变成函数行为。某些<code>Object</code>操作是命令式，比如<code>name in obj</code>和<code>delete obj[name]</code>，而<code>Reflect.has(obj, name)</code>和<code>Reflect.deleteProperty(obj, name)</code>让它们变成了函数行为。</p>
-<p>(4）<code>Reflect</code>对象的方法与<code>Proxy</code>对象的方法一一对应，只要是<code>Proxy</code>对象的方法，就能在<code>Reflect</code>对象上找到对应的方法。这就让<code>Proxy</code>对象可以方便地调用对应的<code>Reflect</code>方法，完成默认行为，作为修改行为的基础。也就是说，不管<code>Proxy</code>怎么修改默认行为，你总可以在<code>Reflect</code>上获取默认行为。</p>
-<h1 id="在响应式中使用Reflect的原因："><a href="#在响应式中使用Reflect的原因：" class="headerlink" title="在响应式中使用Reflect的原因："></a>在响应式中使用Reflect的原因：</h1><p>假如没有使用Reflect</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj=&#123;</span><br><span class="line">    <span class="attr">foo</span>:<span class="number">1</span>,</span><br><span class="line">    <span class="keyword">get</span> <span class="title">bar</span>()&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="built_in">this</span>.foo</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> p= <span class="keyword">new</span> <span class="built_in">Proxy</span>(obj,&#123;</span><br><span class="line">    <span class="function"><span class="title">get</span>(<span class="params">target,key</span>)</span>&#123;</span><br><span class="line">        track(target,key)</span><br><span class="line">        <span class="keyword">return</span> target[key]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="function"><span class="title">set</span>(<span class="params">targte,key,newVal,receiver</span>)</span>&#123;</span><br><span class="line">        target[key]=newVal;</span><br><span class="line">        trigger(target,key)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>当在effect函数中通过代理对象p访问bar属性</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">effect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(p.bar)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>当effect注册的副作用函数执行时，会读取p.bar属性，它发现p.bar是一个访问器属性，因此执行getter函数，由于在getter函数中通过this.foo读取了foo的属性值，因此我们认为副作用函数与属性foo之间会建立联系，当我们修改p.foo的值时却没有使得副作用函数重新执行</p>
-<p>原因在于this.foo中的this指向的是target,在代理对象中get函数返回的target[key]相当于obj.bar，<strong>在副作用函数中通过原始对象访问它的某个属性不会触发响应</strong>，使用Reflect;</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> p= <span class="keyword">new</span> <span class="built_in">Proxy</span>(obj,&#123;</span><br><span class="line">    <span class="function"><span class="title">get</span>(<span class="params">target,key</span>)</span>&#123;</span><br><span class="line">        track(target,key)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Reflect</span>.get(target,key)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="function"><span class="title">set</span>(<span class="params">targte,key,newVal,receiver</span>)</span>&#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">Reflect</span>.set(target,key,newVal,receiver)</span><br><span class="line">        trigger(target,key)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>receiver代表谁在读取属性，这里就是代理对象p,<strong>访问器属性bar的getter函数内this指向代理对象p</strong>,<strong>这会在副作用函数与响应式数据之间建立响应联系，创建代理对象时指定的拦截函数，实际上是用来自定义代理对象本身的内部方法和行为的，不是用来指定被代理对象的内部方法和行为</strong></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/29/%E9%9D%9EProp%E7%9A%84attribute/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/29/%E9%9D%9EProp%E7%9A%84attribute/" class="post-title-link" itemprop="url">非Prop的attribute</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-07-29 11:11:27" itemprop="dateCreated datePublished" datetime="2022-07-29T11:11:27+08:00">2022-07-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-25 10:05:59" itemprop="dateModified" datetime="2022-08-25T10:05:59+08:00">2022-08-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>一个非prop的attribute是指传向一个组件，但是该组件并没有相应props或emits定义的attribute,常见的包括class,style,id attribute，可以通过$attrs property访问那些attribute</p>
-<h1 id="Attribute继承"><a href="#Attribute继承" class="headerlink" title="Attribute继承"></a>Attribute继承</h1><p>当组件返回单个根结点，非prop的attribute将自动添加到根结点的attribute中，</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">app.component(<span class="string">&#x27;date-picker&#x27;</span>,&#123;</span><br><span class="line">    <span class="attr">template</span>:<span class="string">`</span></span><br><span class="line"><span class="string">    &lt;div class=&quot;data-picker&quot;&gt;</span></span><br><span class="line"><span class="string">    	&lt;input type=&quot;datetime-local&quot;&gt;</span></span><br><span class="line"><span class="string">    &lt;/div&gt;</span></span><br><span class="line"><span class="string">    `</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//具有非prop的attribute的date-picker组件</span><br><span class="line"><span class="tag">&lt;<span class="name">date-picker</span> <span class="attr">data-status</span>=<span class="string">&quot;activated&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">date-picker</span>&gt;</span></span><br><span class="line">//渲染后的date-picker组件</span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;data-picker&quot;</span> <span class="attr">data-status</span>=<span class="string">&quot;activated&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;datetime-local&quot;</span>/&gt;</span>    </span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>同理，事件监听器也会从父组件传递到子组件</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">date-picker</span> @<span class="attr">change</span>=<span class="string">&quot;submitChange&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">date-picker</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">app.component(<span class="string">&#x27;date-picker&#x27;</span>, &#123;</span><br><span class="line">  <span class="attr">template</span>: <span class="string">`</span></span><br><span class="line"><span class="string">    &lt;select&gt;</span></span><br><span class="line"><span class="string">      &lt;option value=&quot;1&quot;&gt;Yesterday&lt;/option&gt;</span></span><br><span class="line"><span class="string">      &lt;option value=&quot;2&quot;&gt;Today&lt;/option&gt;</span></span><br><span class="line"><span class="string">      &lt;option value=&quot;3&quot;&gt;Tomorrow&lt;/option&gt;</span></span><br><span class="line"><span class="string">    &lt;/select&gt;</span></span><br><span class="line"><span class="string">  `</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>change事件在原生<select>的change事件上触发，我们不需要显示地从date-picker发出事件</select></p>
-<h1 id="禁用Attribute继承"><a href="#禁用Attribute继承" class="headerlink" title="禁用Attribute继承"></a>禁用Attribute继承</h1><p>如果不希望组件的根元素继承attribute,可以在组件的选项设置inheritAttrs:false</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">app.component(<span class="string">&#x27;date-picker&#x27;</span>,&#123;</span><br><span class="line">    <span class="attr">inheritAttrs</span>:<span class="literal">false</span>,</span><br><span class="line">    <span class="attr">template</span>:<span class="string">`</span></span><br><span class="line"><span class="string">    &lt;div class=&quot;date-picker&quot;&gt;</span></span><br><span class="line"><span class="string">      &lt;input type=&quot;datetime-local&quot; v-bind=&quot;$attrs&quot; /&gt;</span></span><br><span class="line"><span class="string">    &lt;/div&gt;</span></span><br><span class="line"><span class="string">    `</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>data-status attribute将用于Input元素</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- date-picker 组件使用非 prop 的 attribute --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">date-picker</span> <span class="attr">data-status</span>=<span class="string">&quot;activated&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">date-picker</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 渲染后的 date-picker 组件 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;date-picker&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;datetime-local&quot;</span> <span class="attr">data-status</span>=<span class="string">&quot;activated&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="多个根结点的Attribute继承"><a href="#多个根结点的Attribute继承" class="headerlink" title="多个根结点的Attribute继承"></a>多个根结点的Attribute继承</h1><p>具有多个根结点的组件不具有自动attribute贯穿的行为，如果没有显示绑定$attrs，将发出运行时警告</p>
-<p>参考vue官网：<a target="_blank" rel="noopener" href="https://v3.cn.vuejs.org/guide/component-attrs.html">https://v3.cn.vuejs.org/guide/component-attrs.html</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/28/%E8%99%9A%E6%8B%9FDOM/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/28/%E8%99%9A%E6%8B%9FDOM/" class="post-title-link" itemprop="url">虚拟DOM</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-07-28 22:07:37" itemprop="dateCreated datePublished" datetime="2022-07-28T22:07:37+08:00">2022-07-28</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-25 10:07:25" itemprop="dateModified" datetime="2022-08-25T10:07:25+08:00">2022-08-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="命令式框架与声明式框架："><a href="#命令式框架与声明式框架：" class="headerlink" title="命令式框架与声明式框架："></a>命令式框架与声明式框架：</h1><p>命令式框架：关注过程(Jquery)</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">&#x27;#app&#x27;</span>)</span><br><span class="line"> .text(<span class="string">&#x27;hello world&#x27;</span>)</span><br><span class="line"> .on(<span class="string">&#x27;click&#x27;</span>,<span class="function">()=&gt;</span>alert(<span class="string">&#x27;ok&#x27;</span>))</span><br></pre></td></tr></table></figure>
-
-<p>声明式框架：关注结果(Vue.js)</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div @click=<span class="string">&#x27;()=&gt;alert(&#x27;</span>ok<span class="string">&#x27;)&#x27;</span>&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-
-<p><strong>结论</strong>：声明式代码的性能不优于命令式代码的性能</p>
-<p><strong>声明式代码的更新性能消耗=找出差异的性能消耗+直接修改的性能消耗</strong></p>
-<h1 id="Vue3中虚拟DOM的性能："><a href="#Vue3中虚拟DOM的性能：" class="headerlink" title="Vue3中虚拟DOM的性能："></a>Vue3中虚拟DOM的性能：</h1><p>创建JavaScript对象的计算量+创建真实DOM的计算量</p>
-<h2 id="比较："><a href="#比较：" class="headerlink" title="比较："></a>比较：</h2><p>纯JavaScript:Js运算+DOM运算（性能因素）</p>
-<p>虚拟DOM：创建Js对象（Vnode)+Diff+必要的DOM更新（与数据量变化有关）</p>
-<p>innerHTML:渲染HTML字符串+销毁所有旧DOM，新建所有新DOM（与模板大小有关）</p>
-<h2 id="结论："><a href="#结论：" class="headerlink" title="结论："></a>结论：</h2><p><strong>性能</strong>：</p>
-<p>innerHTML&lt;虚拟DOM&lt;原始JavaScript</p>
-<p><strong>心智负担</strong>：</p>
-<p>虚拟DOM&lt;innerHTML&lt;原生JavaScript</p>
-<p><strong>可维护性</strong>：</p>
-<p>虚拟DOM&gt;innerHTML和原生JS</p>
-<h1 id="框架的设计可以有三种选择："><a href="#框架的设计可以有三种选择：" class="headerlink" title="框架的设计可以有三种选择："></a>框架的设计可以有三种选择：</h1><ul>
-<li>纯运行时</li>
-<li>运行时+编译时（Vue3)</li>
-<li>纯编译时</li>
-</ul>
-<h2 id="1-纯运行时"><a href="#1-纯运行时" class="headerlink" title="1.纯运行时"></a>1.纯运行时</h2><p>一个树型结构的数据对象</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj=&#123;</span><br><span class="line">    <span class="attr">tag</span>:<span class="string">&#x27;div&#x27;</span>,</span><br><span class="line">    <span class="attr">children</span>:[</span><br><span class="line">        &#123;<span class="attr">tag</span>:<span class="string">&#x27;span&#x27;</span>,<span class="attr">children</span>:<span class="string">&#x27;hello world&#x27;</span>&#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>tag:标签名，children:子节点</p>
-<p>render:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Render</span>(<span class="params">obj,root</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> el = <span class="built_in">document</span>.createElement(obj.tag)</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> children ===<span class="string">&#x27;string&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">const</span> text=<span class="built_in">document</span>.createTextNode(obj,children)</span><br><span class="line">        el.appendChild(text)</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(obj.children)&#123;</span><br><span class="line">        obj.children.forEach(<span class="function">(<span class="params">child</span>)=&gt;</span>Render(child,el))</span><br><span class="line">    &#125;</span><br><span class="line">    root.appendChild(el) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Render(obj,<span class="built_in">document</span>.body)</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-运行时-编译时"><a href="#2-运行时-编译时" class="headerlink" title="2.运行时+编译时"></a>2.运行时+编译时</h2><p>编写一个Compiler函数，把HTML标签编译成树型结构的对象</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> html=<span class="string">`&lt;div&gt;</span></span><br><span class="line"><span class="string">			&lt;span&gt;Hello world&lt;/span&gt;</span></span><br><span class="line"><span class="string">			&lt;/div&gt;`</span></span><br><span class="line"><span class="keyword">const</span> obj=Compiler(html)</span><br><span class="line">Render(obj,<span class="built_in">document</span>.body)</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-纯编译式：-Svelte"><a href="#3-纯编译式：-Svelte" class="headerlink" title="3.纯编译式：(Svelte)"></a>3.纯编译式：(Svelte)</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;<span class="xml"><span class="tag">&lt;<span class="name">span</span>&gt;</span>hello world<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span>&lt;/div&gt;</span><br><span class="line"> <span class="comment">//就是</span></span><br><span class="line"><span class="keyword">const</span> div=<span class="built_in">document</span>.createElement(<span class="string">&#x27;div&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> span=<span class="built_in">document</span>.createElement(<span class="string">&#x27;span&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> text=<span class="built_in">document</span>.createElement(<span class="string">&#x27;hello wrold&#x27;</span>)</span><br><span class="line">span.appendChild(text)</span><br><span class="line">div.appendChild(span)</span><br><span class="line"><span class="built_in">document</span>.body.appendChild(div)</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/27/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/27/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" class="post-title-link" itemprop="url">生命周期</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-07-27 18:00:55 / 修改时间：22:55:32" itemprop="dateCreated datePublished" datetime="2022-07-27T18:00:55+08:00">2022-07-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img src="/2022/07/27/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/smzq.jpg" alt="image-20220727225427188"></p>
-<p>生命周期执行顺序：</p>
-<p>创建时：</p>
-<ul>
-<li><p>constructor()</p>
-</li>
-<li><p>static getDerivedStateFromProps()</p>
-</li>
-<li><p>render()</p>
-<p>是class组件中唯一必须实现的方法，用于渲染dom,render()方法必须返回reactDOM</p>
-<p>不要在render里面setState,否则会触发死循环导致内存崩溃</p>
-</li>
-<li><p>componentDidMount()</p>
-<p><strong>在组件挂载后立即调用，componentDidMount()是发送网络请求，启用事件监听方法的好时机，并且可以在此钩子函数里直接调用setState()</strong></p>
-</li>
-</ul>
-<p>更新时：</p>
-<ul>
-<li><p>static getDerivedStateFromProps()</p>
-</li>
-<li><p>shouldComponentUpdate()</p>
-<p>在组件更新之前调用，可以控制组件是否进行更新，返回true组件更新，返回false则不更新</p>
-<p>shouldComponentUpdate(nextProps,nextState),第一个是即将更新的props值，第二个是即将更新后的state值，可以根据更新前后的props或state来比较加一些限制条件，决定是否更新，进行性能优化，不要 <code>shouldComponentUpdate</code> 中调用 setState()，否则会导致无限循环调用更新、渲染，直至浏览器内存崩溃</p>
-</li>
-<li><p>render()</p>
-</li>
-<li><p>getSnapshotBeforeUpdate()</p>
-</li>
-<li><p>componentDidUpdate()</p>
-<p>会在更新后被立即调用，首次渲染不会执行。包含三个参数，第一个是上一次props值，第二个是上一次state值，如果组件实现了getSnapshotBeforeUpdate()生命周期，第三个snapshot参数传递</p>
-</li>
-</ul>
-<p>卸载时：</p>
-<ul>
-<li>componentWillUnmount()</li>
-</ul>
-<p>在组件即将被卸载或销毁时进行调用，是取消网络请求，移除监听事件，清理DOM元素，清理定时器等操作的好时机</p>
-<p>新生命周期钩子：</p>
-<p>1.</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> getDerivedStateFromProps(props,state)</span><br></pre></td></tr></table></figure>
-
-<p><code>getDerivedStateFromProps</code> 会在调用 render 方法之前调用，并且在初始挂载及后续更新时都会被调用。它应返回一个对象来更新 state，如果返回 <code>null</code> 则不更新任何内容。</p>
-<p>此方法适用于<a target="_blank" rel="noopener" href="https://zh-hans.reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#when-to-use-derived-state">罕见的用例</a>，即 state 的值在任何时候都取决于 props。</p>
-<p>2.</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">getSnapshotBeforeUpdate(prevProps,prevState)</span><br></pre></td></tr></table></figure>
-
-<p>getSnapshotBeforeUpdate()在最近一次渲染输出（提交到DOM结点）之前调用，它使得组件能在发生更改之前从DOM中捕获一些信息，此生命周期方法的任何值返回值将作为参数传递给componentDidUpdate()</p>
-<p>例子：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ScrollingList</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params">props</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">super</span>(props);</span><br><span class="line">        <span class="built_in">this</span>.listRef=React.createRef();</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">getSnapshotBeforeUpdate</span>(<span class="params">prevProps,prevState</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(prevProps.list.length&lt;<span class="built_in">this</span>.props.list.length)&#123;</span><br><span class="line">            <span class="keyword">const</span> list = <span class="built_in">this</span>.listRef.current;</span><br><span class="line">            <span class="keyword">return</span> list.scrollHeight-list.scrollTop</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">componentDidUpdate</span>(<span class="params">prevProps,prevState,snapshot</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(snapshot!=<span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="keyword">const</span> list=<span class="built_in">this</span>.listRef.current;</span><br><span class="line">            list.scrollTop=list.scrollHeight-snapshot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">render</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span>(</span><br><span class="line">            <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">ref</span>=<span class="string">&#123;this.listRef&#125;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/27/Context/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/27/Context/" class="post-title-link" itemprop="url">Context</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-07-27 11:02:34 / 修改时间：15:54:21" itemprop="dateCreated datePublished" datetime="2022-07-27T11:02:34+08:00">2022-07-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="理解："><a href="#理解：" class="headerlink" title="理解："></a>理解：</h1><p>一种组件间通信方式，用于祖组件和后代组件之间的通信</p>
-<p>1.使用Context</p>
-<p>2.创建Context容器对象</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> xxxContext = React.createContext(defaultValue)</span><br></pre></td></tr></table></figure>
-
-<p>3.渲染子组件，外面包裹xxxContext.Provider,通过value属性给后代组件传递数据</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;xxxContext.Provider value=&#123;数据&#125;&gt;</span><br><span class="line">&lt;/xxxContext.Provider&gt;</span><br></pre></td></tr></table></figure>
-
-<p>4.后代组件读取数据<br>第一种适用于类组件：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> contextType = xxxContext;<span class="comment">//声明接收context</span></span><br><span class="line"><span class="built_in">this</span>.context<span class="comment">//context是一个对象，读取context中value的值</span></span><br></pre></td></tr></table></figure>
-
-<p>第二种函数组件和类组件都可以：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;xxxContext.Consumer&gt;</span><br><span class="line">    &#123;</span><br><span class="line">    	<span class="function"><span class="params">value</span>=&gt;</span>(<span class="comment">//value是context中的value数据</span></span><br><span class="line">    		要显示的内容</span><br><span class="line">    	)</span><br><span class="line">    </span><br><span class="line">	&#125;</span><br><span class="line">&lt;/xxxContext.Consumer&gt;</span><br></pre></td></tr></table></figure>
-
-<p>例子：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ThemeContext = React.createContext(&#123;</span><br><span class="line">    <span class="attr">value</span>:<span class="string">&quot;blue&quot;</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params">props</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">super</span>(props)</span><br><span class="line">        <span class="built_in">this</span>.state=&#123;<span class="attr">value</span>:<span class="string">&quot;red&quot;</span>&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">render</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span>(</span><br><span class="line">            <span class="xml"><span class="tag">&lt;<span class="name">ThemeContext.Provider</span> <span class="attr">value</span>=<span class="string">&#123;this.state&#125;</span>&gt;</span></span></span><br><span class="line"><span class="xml">            	<span class="tag">&lt;<span class="name">B</span>/&gt;</span></span></span><br><span class="line"><span class="xml">            <span class="tag">&lt;/<span class="name">ThemeContext.Provider</span>&gt;</span></span></span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">B</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">        <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">        	<span class="tag">&lt;<span class="name">C</span>/&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">C</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        <span class="xml"><span class="tag">&lt;<span class="name">ThemeContext.Consumer</span>&gt;</span></span></span><br><span class="line"><span class="xml">        &#123;(&#123;value&#125;)=&gt;(</span></span><br><span class="line"><span class="xml">        	<span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;value&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="xml">    	)&#125;</span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">ThemeContext.Consumer</span>&gt;</span></span></span><br><span class="line">        </span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>context一般用于封装react插件</p>
-<h1 id="使用useContext"><a href="#使用useContext" class="headerlink" title="使用useContext"></a>使用useContext</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> value = useContext(MyContext)</span><br></pre></td></tr></table></figure>
-
-<p>接收一个<strong>context对象</strong>（React.createContext的返回值）并返回该context的当前值，当前的context值由上层㢟中距离当前组件最近的&lt;MyContext.Provider&gt;的value prop角色</p>
-<p>当组件上层最近的&lt;MyContext.Provider&gt;更新时，该Hook会触发重渲染，使用最新传递给MyContext provider的context value值。</p>
-<p><strong>useContext(MyContext)相当于static contextType=MyContext或者&lt;MyContext.Consumer&gt;</strong></p>
-<p><code>useContext(MyContext)</code> 只是让你能够<em>读取</em> context 的值以及订阅 context 的变化。你仍然需要在上层组件树中使用 <code>&lt;MyContext.Provider&gt;</code> 来为下层组件<em>提供</em> context。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1277,7 +1200,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">218</span>
+          <span class="site-state-item-count">223</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1351,7 +1274,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共199.3k字</span>
+  <span class="post-count">博客全站共201.2k字</span>
 </div>
         
 

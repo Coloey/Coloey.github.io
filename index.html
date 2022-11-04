@@ -187,6 +187,403 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/11/02/%E6%89%8B%E5%86%99instanceof/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/11/02/%E6%89%8B%E5%86%99instanceof/" class="post-title-link" itemprop="url">手写instanceof</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-11-02 20:11:11 / 修改时间：20:12:09" itemprop="dateCreated datePublished" datetime="2022-11-02T20:11:11+08:00">2022-11-02</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myInstanceof</span>(<span class="params">left,right</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> prototype = right.prototype</span><br><span class="line">    left = left.__proto__</span><br><span class="line">    <span class="keyword">while</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(!left)<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">        <span class="keyword">if</span>(left == prototype)<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">        left = left.__proto__</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/11/01/hook%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/11/01/hook%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">hook原理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-11-01 15:55:12 / 修改时间：16:55:27" itemprop="dateCreated datePublished" datetime="2022-11-01T15:55:12+08:00">2022-11-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>hook就是解决函数组件没有state,生命周期，逻辑不能复用的一种解决方案</p>
+<p>dispatcher</p>
+<p>在真实hook中，组件mount时的hook和update时的hook来源于不同对象，这类对象在源码中称为dispatcher</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mount时的Dispatcher</span></span><br><span class="line"><span class="keyword">const</span> HooksDispatcherOnMount: Dispatcher = &#123;</span><br><span class="line">  <span class="attr">useCallback</span>: mountCallback,</span><br><span class="line">  <span class="attr">useContext</span>: readContext,</span><br><span class="line">  <span class="attr">useEffect</span>: mountEffect,</span><br><span class="line">  <span class="attr">useImperativeHandle</span>: mountImperativeHandle,</span><br><span class="line">  <span class="attr">useLayoutEffect</span>: mountLayoutEffect,</span><br><span class="line">  <span class="attr">useMemo</span>: mountMemo,</span><br><span class="line">  <span class="attr">useReducer</span>: mountReducer,</span><br><span class="line">  <span class="attr">useRef</span>: mountRef,</span><br><span class="line">  <span class="attr">useState</span>: mountState,</span><br><span class="line">  <span class="comment">// ...省略</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// update时的Dispatcher</span></span><br><span class="line"><span class="keyword">const</span> HooksDispatcherOnUpdate: Dispatcher = &#123;</span><br><span class="line">  <span class="attr">useCallback</span>: updateCallback,</span><br><span class="line">  <span class="attr">useContext</span>: readContext,</span><br><span class="line">  <span class="attr">useEffect</span>: updateEffect,</span><br><span class="line">  <span class="attr">useImperativeHandle</span>: updateImperativeHandle,</span><br><span class="line">  <span class="attr">useLayoutEffect</span>: updateLayoutEffect,</span><br><span class="line">  <span class="attr">useMemo</span>: updateMemo,</span><br><span class="line">  <span class="attr">useReducer</span>: updateReducer,</span><br><span class="line">  <span class="attr">useRef</span>: updateRef,</span><br><span class="line">  <span class="attr">useState</span>: updateState,</span><br><span class="line">  <span class="comment">// ...省略</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>可见，mount时调用的hook和update时调用的hook是两个不同的函数，在FunctionComponent render前，会根据FunctionComponent对应fiber的一下条件区分mount和update</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">current === <span class="literal">null</span> || current.memoizedState === <span class="literal">null</span></span><br></pre></td></tr></table></figure>
+
+<p>并把不同情况对应的dispatcher赋值给全局变量ReactCurrentDispatcher的current属性</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ReactCurrentDispatcher.current =</span><br><span class="line">    current === <span class="literal">null</span> || current.memoizedState === <span class="literal">null</span> ? HookDispatcherOnMount : HooksDispatcherOnUpdate</span><br></pre></td></tr></table></figure>
+
+<p>在FuntionComponent render时，会从ReactCurrentDispatcher.current（即当前dispatcher，则FunctionComponent render时调用的hook是不同函数）</p>
+<p>Hook数据结构：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> hook: Hook = &#123;</span><br><span class="line">    <span class="attr">memoizedState</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">baseState</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">baseQueue</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">queue</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">next</span>: <span class="literal">null</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>memoizedState:</p>
+<p>hook与FunctionComponent fiber都存在memoizedState属性：</p>
+<p>fiber.memoizedState:FunctionComponent对应fiber保存的Hooks链表</p>
+<p>hook.memoizedState:Hooks链表中保存的单一hook对应的数据</p>
+<p>不同类型hook的memoizedState保存不同类型数据：</p>
+<p>useState:对于const [state,updateState] = useState(initialState),memoizedState保存state的值</p>
+<p>useReducer:对于const[state,dispatch]=useReducer(reducer,[]),memoizedState保存state的值</p>
+<p>useEffect:memoizedState保存包含useEffect回调函数，依赖项等的链表数据结构effect,effect会保存在fiber.updateQueue</p>
+<p>useRef:对于useRef(1),memoizedState保存{current:1}</p>
+<p>useMemo:对于useMemo(callback,[depA]),memoizedState保存[callback,depA],与useMemo的区别是，useCallback保存的是callback函数本身，而useMemo保存的是callback函数的执行结果</p>
+<p>有些hook没有memoizedState:</p>
+<p>如useContext</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/11/01/computed%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/11/01/computed%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">computed原理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-11-01 09:13:00 / 修改时间：11:50:37" itemprop="dateCreated datePublished" datetime="2022-11-01T09:13:00+08:00">2022-11-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>effect是用来注册副作用函数，同时它允许指定一些选项参数options,例如指定scheduler调度器控制副作用函数的执行时机和方式，先实现一个懒执行的副作用函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">effect</span>(<span class="params">fn,options = &#123;&#125;</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> effectFn = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        cleanup(effectFn)</span><br><span class="line">        activeEffect = effectFn</span><br><span class="line">        effectStack.push(effectFn)</span><br><span class="line">        fn()</span><br><span class="line">        effectStack.pop()</span><br><span class="line">        activeEffect = effectStack[effectStack.length-<span class="number">1</span>]</span><br><span class="line">    &#125;</span><br><span class="line">    effectFn.options = options</span><br><span class="line">    effectFn.deps = []</span><br><span class="line">    <span class="comment">//只有非lazy才执行</span></span><br><span class="line">    <span class="keyword">if</span>(!options.lazy) &#123;</span><br><span class="line">        effectFn()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//将副作用函数作为返回值返回</span></span><br><span class="line">    <span class="keyword">return</span> effectFn<span class="comment">//新增</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现了让副作用函数不立即执行的功能，将副作用函数effectFn作为effect函数的返回值，这就意味着当调用effect函数时，通过其返回值能够拿到对应的副作用函数，这样我们能够手动执行副作用函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> effectFn = effect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(obj.foo)</span><br><span class="line">&#125;,&#123;<span class="attr">lazy</span>:<span class="literal">true</span>&#125;)</span><br><span class="line"><span class="comment">//手动执行副作用函数</span></span><br><span class="line">effectFn()</span><br></pre></td></tr></table></figure>
+
+<p>如果把传递给effect的函数看做一个getter，那么这个getter函数可以返回任何值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> effectFn = effect(</span><br><span class="line"><span class="comment">//getter返回obj.foo和obj.bar</span></span><br><span class="line">    <span class="function">() =&gt;</span> obj.foo + obj.bar,</span><br><span class="line">    &#123; <span class="attr">lazy</span>: <span class="literal">true</span>&#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>为了手动执行副作用函数时就能拿到其返回值，改动effect函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">effect</span>(<span class="params">fn,options = &#123;&#125;</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> effectFn = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        cleanup(effectFn)</span><br><span class="line">        activeEffect = effectFn</span><br><span class="line">        effectStack.push(effectFn)</span><br><span class="line">        <span class="comment">//将fn执行结果存储到res</span></span><br><span class="line">        <span class="keyword">const</span> res = fn()</span><br><span class="line">        effectStack.pop()</span><br><span class="line">        activeEffect = effectStack[effectStack.length-<span class="number">1</span>]</span><br><span class="line">        <span class="comment">//将res作为effectFn返回值</span></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    effectFn.options = options</span><br><span class="line">    effectFn.deps = []</span><br><span class="line">    <span class="keyword">if</span>(!options.lazy)&#123;</span><br><span class="line">        effectFn()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> effectFn</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>传递给effect函数的参数fn才是真正的副作用函数，而effectFn是我们包装后的副作用函数，为了通过effectFn得到真正的副作用函数fn的执行结果，我们需要将其保存到res变量，然后将其作为effectFn函数的返回值</p>
+<p>接下来就可以定义cmputed函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">computed</span>(<span class="params">getter</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//把getter作为副作用函数，创建一个lazy的effect</span></span><br><span class="line">    <span class="keyword">const</span> effectFn = effect(getter,&#123;</span><br><span class="line">        <span class="attr">lazy</span>: <span class="literal">true</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">const</span> obj = &#123;</span><br><span class="line">        <span class="comment">//当读取value时才执行effectFn</span></span><br><span class="line">        <span class="keyword">get</span> <span class="title">value</span>() &#123;</span><br><span class="line">            <span class="keyword">return</span> effectFn()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> obj</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>computed函数接收一个getter函数作为参数，我们把getter函数作为副作用函数，用它创建一个lazy的effect,computed函数的执行会返回一个对象，该对象的value属性是一个访问器属性，只有当读取value值时，才执行effectFn并将结果作为返回值返回</p>
+<p>使用computed函数创建一个计算属性：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> data =&#123; <span class="attr">foo</span>: <span class="number">1</span>, <span class="attr">bar</span>: <span class="number">2</span>&#125;</span><br><span class="line"><span class="keyword">const</span> obj = <span class="keyword">new</span> <span class="built_in">Proxy</span>(data, &#123;...&#125;)</span><br><span class="line"><span class="keyword">const</span> sumRes = computed(<span class="function">() =&gt;</span> obj.foo + obj.bar)</span><br><span class="line"><span class="built_in">console</span>.log(sumRes.value)<span class="comment">//3</span></span><br></pre></td></tr></table></figure>
+
+<p>当多次访问sumRes.value的值，会导致effectFn进行多次计算，即使obj.foo和obj,bar的值本身没有变化，利用闭包实现对值进行缓存的功能</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">computed</span>(<span class="params">getter</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//value用来缓存上一次计算的值</span></span><br><span class="line">    <span class="keyword">let</span> value</span><br><span class="line">    <span class="comment">//dirty标志，用来标识是否需要重新计算值，为true意味着“脏”没需要计算</span></span><br><span class="line">    <span class="keyword">let</span> dirty = <span class="literal">true</span></span><br><span class="line">    <span class="keyword">const</span> effectFn = effect(getter,&#123;</span><br><span class="line">        <span class="attr">lazy</span>:<span class="literal">true</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">const</span> obj = &#123;</span><br><span class="line">        <span class="keyword">get</span> <span class="title">value</span>()&#123;</span><br><span class="line">            <span class="comment">//只有脏时才计算值，并将得到的值缓存到value</span></span><br><span class="line">            <span class="keyword">if</span>(dirty)&#123;</span><br><span class="line">                value = effectFn()</span><br><span class="line">                <span class="comment">//将dirty设置为false,下一次访问直接使用缓存到value中的值</span></span><br><span class="line">                dirty = <span class="literal">false</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> value</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> obj</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是此时改变obj.foo或者obj.bar,再访问sumRes.value会发现访问到的值没有发生变化</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> data = &#123;<span class="attr">foo</span>: <span class="number">1</span>,<span class="attr">bar</span>: <span class="number">2</span>&#125;</span><br><span class="line"><span class="keyword">const</span> obj = <span class="keyword">new</span> <span class="built_in">Proxy</span>(data,&#123;...&#125;)</span><br><span class="line"><span class="keyword">const</span> sumRes = computed(<span class="function">() =&gt;</span> obj.foo+obj.bar)</span><br><span class="line"><span class="built_in">console</span>.log(sumRes.value)<span class="comment">//3</span></span><br><span class="line"><span class="built_in">console</span>.log(sumRes.value)<span class="comment">//3</span></span><br><span class="line">obj.foo++;</span><br><span class="line"><span class="comment">//再次访问得到的仍然是3</span></span><br><span class="line"><span class="built_in">console</span>.log(sumRes.value)<span class="comment">//3</span></span><br></pre></td></tr></table></figure>
+
+<p>这是因为，第一次访问sumRes.value的值后，变量dirty被设置为false,代表不需要计算，即使我们修改obj.foo的值，但只要dirty的值为false,就不会重新计算，所有导致我们得到错误的值，因此当obj.foo或者obj.bar的值发生改变时，只要dirty的值重置为true就可以，这时就用到scheduler选项</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">computed</span>(<span class="params">getter</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> value</span><br><span class="line">    <span class="keyword">let</span> dirty = <span class="literal">true</span></span><br><span class="line">    cont effectFn = effect(getter, &#123;</span><br><span class="line">        <span class="attr">lazy</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="function"><span class="title">scheduler</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">            <span class="keyword">if</span>(!dirty) &#123;</span><br><span class="line">                dirty = <span class="literal">true</span></span><br><span class="line">                <span class="comment">//当计算属性依赖的响应式数据变化时，手动调用trigger函数触发响应</span></span><br><span class="line">                trigger(obj,<span class="string">&#x27;value&#x27;</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">const</span> obj = &#123;</span><br><span class="line">        <span class="keyword">get</span> <span class="title">value</span>() &#123;</span><br><span class="line">            <span class="keyword">if</span>(dirty)&#123;</span><br><span class="line">                value = effectFn()</span><br><span class="line">                dirty = <span class="literal">false</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//当读取value手动调用track函数进行追踪</span></span><br><span class="line">            track(obj,<span class="string">&#x27;value&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span> value</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> obj</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当读取一个计算属性value，需要手动调用track函数，把计算属性返回的对象obj作为target,同时作为第一个参数传递给track函数，当计算属性所依赖的响应式数据变化时会立即调度函数，在调度函数内手动调用trigger函数触发响应即可。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/30/%E6%95%B0%E7%BB%84%E6%8B%8D%E5%B9%B3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/30/%E6%95%B0%E7%BB%84%E6%8B%8D%E5%B9%B3/" class="post-title-link" itemprop="url">数组拍平</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-10-30 20:04:41 / 修改时间：20:05:54" itemprop="dateCreated datePublished" datetime="2022-10-30T20:04:41+08:00">2022-10-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/%E6%89%8B%E6%92%95%E4%BB%A3%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">手撕代码</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> flatten = <span class="function"><span class="keyword">function</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> res = [];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>;i&lt;arr.length;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">Array</span>.isArray(arr[i]))&#123;</span><br><span class="line">            res = res.concat(flatten(arr[i]))</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            res.push(arr[i])</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/30/React%E5%90%88%E6%88%90%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/30/React%E5%90%88%E6%88%90%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6/" class="post-title-link" itemprop="url">React合成事件机制</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-10-30 16:14:12 / 修改时间：16:16:52" itemprop="dateCreated datePublished" datetime="2022-10-30T16:14:12+08:00">2022-10-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>转自<a target="_blank" rel="noopener" href="https://juejin.cn/post/6955636911214067720#comment">https://juejin.cn/post/6955636911214067720#comment</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/29/Js%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE%E4%BB%A5%E5%8F%8Athis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -556,17 +953,23 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-10-28 12:21:20 / 修改时间：15:35:21" itemprop="dateCreated datePublished" datetime="2022-10-28T12:21:20+08:00">2022-10-28</time>
+              <time title="创建时间：2022-10-28 12:21:20" itemprop="dateCreated datePublished" datetime="2022-10-28T12:21:20+08:00">2022-10-28</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-11-01 09:20:55" itemprop="dateModified" datetime="2022-11-01T09:20:55+08:00">2022-11-01</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue源码</span></a>
+                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
                 </span>
             </span>
 
@@ -698,435 +1101,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/24/%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AAloader/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/24/%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AAloader/" class="post-title-link" itemprop="url">手写一个loader</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-10-24 09:48:09 / 修改时间：10:33:44" itemprop="dateCreated datePublished" datetime="2022-10-24T09:48:09+08:00">2022-10-24</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/webpack/" itemprop="url" rel="index"><span itemprop="name">webpack</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>loader是导出为一个函数的node模块，该函数在loader转换资源时调用，给定函数将调用loader API,并通过this上下文访问</p>
-<h1 id="最简单的loader源码："><a href="#最简单的loader源码：" class="headerlink" title="最简单的loader源码："></a>最简单的loader源码：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">source</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//source为compiler传递给Loader的一个文件的原内容</span></span><br><span class="line">    <span class="comment">//该函数需要返回处理后的内容</span></span><br><span class="line">    <span class="keyword">return</span> source</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="获得Loader的options"><a href="#获得Loader的options" class="headerlink" title="获得Loader的options:"></a>获得Loader的options:</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> loaderUtils = <span class="built_in">require</span>(<span class="string">&quot;loader-utils&quot;</span>)</span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">source</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//获取到用户给当前loader传入的options</span></span><br><span class="line">    <span class="keyword">const</span> options = loaderUtils.getOptions(<span class="built_in">this</span>)</span><br><span class="line">    <span class="keyword">return</span> source</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="返回其他结果"><a href="#返回其他结果" class="headerlink" title="返回其他结果"></a>返回其他结果</h1><p>有些场景下还需要返回除了内容外的东西，比如source Map,以方便调试源码</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">source</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//通过this.callback告诉webpack返回的结果</span></span><br><span class="line">    <span class="built_in">this</span>.callback(<span class="literal">null</span>,source,sourceMaps)</span><br><span class="line">    <span class="comment">//当使用this.callback返回内容时，该loader必须返回undefined</span></span><br><span class="line">    <span class="comment">//以让webpack知道该loader返回的结果在thi.callback中，而不是在return中</span></span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>this.callback是webpack给loader注入的api,以方便loader和webpack之间的通信，this.callback详细用法：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">this</span>.callback(</span><br><span class="line">    <span class="comment">// 当无法转换原内容时，给 Webpack 返回一个 Error</span></span><br><span class="line">    err: <span class="built_in">Error</span> | <span class="literal">null</span>,</span><br><span class="line">    <span class="comment">// 原内容转换后的内容</span></span><br><span class="line">    <span class="attr">content</span>: string | Buffer,</span><br><span class="line">    <span class="comment">// 用于把转换后的内容得出原内容的 Source Map，方便调试</span></span><br><span class="line">    sourceMap?: SourceMap,</span><br><span class="line">    <span class="comment">// 如果本次转换为原内容生成了 AST 语法树，可以把这个 AST 返回，</span></span><br><span class="line">    <span class="comment">// 以方便之后需要 AST 的 Loader 复用该 AST，以避免重复生成 AST，提升性能</span></span><br><span class="line">    abstractSyntaxTree?: AST</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<h1 id="同步和异步"><a href="#同步和异步" class="headerlink" title="同步和异步"></a>同步和异步</h1><p>loader有同步和异步，同步loader的转换流程都是同步的，转换完成后再返回结果，但在有些场景下转换是异步的，例如一些网络请求</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">source</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 告诉 Webpack 本次转换是异步的，Loader 会在 callback 中回调结果</span></span><br><span class="line">    <span class="keyword">var</span> callback = <span class="built_in">this</span>.async();</span><br><span class="line">    someAsyncOperation(source, <span class="function"><span class="keyword">function</span>(<span class="params">err, result, sourceMaps, ast</span>) </span>&#123;</span><br><span class="line">        <span class="comment">// 通过 callback 返回异步执行后的结果</span></span><br><span class="line">        callback(err, result, sourceMaps, ast);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="本地测试自定义loader"><a href="#本地测试自定义loader" class="headerlink" title="本地测试自定义loader:"></a>本地测试自定义loader:</h1><p>1.在rule对象使用path.resolve指定一个本地文件</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    <span class="attr">module</span>:&#123;</span><br><span class="line">        <span class="attr">rules</span>:[</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">test</span>:<span class="regexp">/\.js$/</span>,</span><br><span class="line">                use:[</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="attr">loader</span>: path.resolve(<span class="string">&#x27;path/to/loader.js&#x27;</span>),</span><br><span class="line">                        <span class="attr">options</span>:&#123;</span><br><span class="line">                            </span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                ]</span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>匹配多个loader可以使用resolveLoader.modules配置，webpack将会从这些目录中搜索这些loaders，例如你的项目中有一个/loaders本地目录：</p>
-<p>webpack.config.js:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    <span class="attr">resolveLoader</span>:&#123;</span><br><span class="line">        <span class="attr">modules</span>: [<span class="string">&#x27;node_modules&#x27;</span>,path.resolve(__dirname,<span class="string">&#x27;loaders&#x27;</span>)]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/22/%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E6%8F%92%E4%BB%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/22/%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E6%8F%92%E4%BB%B6/" class="post-title-link" itemprop="url">编写一个插件</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-10-22 16:11:26 / 修改时间：18:10:24" itemprop="dateCreated datePublished" datetime="2022-10-22T16:11:26+08:00">2022-10-22</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/webpack/" itemprop="url" rel="index"><span itemprop="name">webpack</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="webpack插件由以下组成："><a href="#webpack插件由以下组成：" class="headerlink" title="webpack插件由以下组成："></a>webpack插件由以下组成：</h1><p>一个javaScript命名函数或者JavaScript类</p>
-<p>由插件函数的prototype上定义的一个apply方法</p>
-<p>指定一个绑定到webpack自身的事件钩子</p>
-<p>处理webpack内部实例的特定数据</p>
-<p>功能完成后调用webpack提供的回调</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一个 JavaScript 类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyExampleWebpackPlugin</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 在插件函数的 prototype 上定义一个 `apply` 方法，以 compiler 为参数。</span></span><br><span class="line">  <span class="function"><span class="title">apply</span>(<span class="params">compiler</span>)</span> &#123;</span><br><span class="line">    <span class="comment">// 指定一个挂载到 webpack 自身的事件钩子。</span></span><br><span class="line">    compiler.hooks.emit.tapAsync(</span><br><span class="line">      <span class="string">&#x27;MyExampleWebpackPlugin&#x27;</span>,</span><br><span class="line">      <span class="function">(<span class="params">compilation, callback</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;这是一个示例插件！&#x27;</span>);</span><br><span class="line">        <span class="built_in">console</span>.log(</span><br><span class="line">          <span class="string">&#x27;这里表示了资源的单次构建的 `compilation` 对象：&#x27;</span>,</span><br><span class="line">          compilation</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 用 webpack 提供的插件 API 处理构建过程</span></span><br><span class="line">        compilation.addModule(<span class="comment">/* ... */</span>);</span><br><span class="line"></span><br><span class="line">        callback();</span><br><span class="line">      &#125;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>webpack通过plugin机制让其更加灵活，以适应各种应用场景，在webpack运行的生命周期中会广播出许多事件，plugin可以监听这些事件，在合适的时机通过webpack提供的api改变输出结果</p>
-<h1 id="Compiler和Compilation"><a href="#Compiler和Compilation" class="headerlink" title="Compiler和Compilation"></a>Compiler和Compilation</h1><p>插件开发中最重要的两个资源就是compiler和compilation对象，理解它们的角色是扩展webpack引擎重要的第一步</p>
-<p>compiler对象代表了完整的webpack环境配置，这个对象在<strong>启动webpack时被一次性实例化</strong>，可以简单理解为webpack实例，并配置好所有可操作的设置，包括options,loader和plugin。当在webpack环境中启用一个插件时，插件将受到compiler对象的引用，可以使用它来访问webpack的主环境</p>
-<p>compilation对象代表一次资源版本构建，当运行webpack开发环境中间件时，每当检测一个文件变化，就会创建一个新的compilation，从而生成一组新的编译资源，一个compilation对象表现了当前的模块资源、编译生成资源、变化的文件、以及被跟踪依赖大的状态信息。compilation对象也提供了很多关键时机的回调，以供插件做自定义处理时选择使用，通过compilation也能读取到compiler对象</p>
-<p><strong>compiler和compilation区别在于：compiler代表了整个webpack从启动到关闭的生命周期，而compilation只是代表了一次新的编译</strong></p>
-<h1 id="基本插件架构"><a href="#基本插件架构" class="headerlink" title="基本插件架构"></a>基本插件架构</h1><p>插件是由具有apply方法的prototype对象所实例化出来的，这个apply方法在安装插件时，会被webpack compiler调用一次，apply方法可以接受一个webpack compiler对象的引用，从而可以在回调函数中访问到compiler对象。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HelloWorldPlugin</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">apply</span>(<span class="params">compiler</span>)</span> &#123;</span><br><span class="line">    compiler.hooks.done.tap(</span><br><span class="line">      <span class="string">&#x27;Hello World Plugin&#x27;</span>,</span><br><span class="line">      <span class="function">(<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="function">        stats <span class="comment">/* 绑定 done 钩子后，stats 会作为参数传入。 */</span></span></span></span><br><span class="line"><span class="params"><span class="function">      </span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;Hello World!&#x27;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = HelloWorldPlugin;</span><br></pre></td></tr></table></figure>
-
-<p>安装插件：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line"><span class="keyword">var</span> HelloWorldPlugin = <span class="built_in">require</span>(<span class="string">&#x27;hello-world&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="comment">// ... 这里是其他配置 ...</span></span><br><span class="line">  <span class="attr">plugins</span>: [<span class="keyword">new</span> HelloWorldPlugin(&#123; <span class="attr">options</span>: <span class="literal">true</span> &#125;)],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/20/%E5%AE%9E%E4%B9%A0%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/20/%E5%AE%9E%E4%B9%A0%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">实习遇到的问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-10-20 18:01:08" itemprop="dateCreated datePublished" datetime="2022-10-20T18:01:08+08:00">2022-10-20</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/19/HTML-CSS%E5%92%8CJs%E5%A6%82%E4%BD%95%E5%8F%98%E6%88%90%E9%A1%B5%E9%9D%A2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/19/HTML-CSS%E5%92%8CJs%E5%A6%82%E4%BD%95%E5%8F%98%E6%88%90%E9%A1%B5%E9%9D%A2/" class="post-title-link" itemprop="url">HTML,CSS和Js如何变成页面</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-10-19 19:55:01 / 修改时间：21:14:53" itemprop="dateCreated datePublished" datetime="2022-10-19T19:55:01+08:00">2022-10-19</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">浏览器</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="构建DOM树"><a href="#构建DOM树" class="headerlink" title="构建DOM树"></a>构建DOM树</h2><p>将HTML转换为浏览器能够理解的DOM树结构</p>
-<h2 id="样式计算"><a href="#样式计算" class="headerlink" title="样式计算"></a>样式计算</h2><p>生成DOM树后，根据CSS样式表，计算出DOM树中所有节点的样式</p>
-<h2 id="布局阶段"><a href="#布局阶段" class="headerlink" title="布局阶段"></a>布局阶段</h2><p>1.构建布局树：</p>
-<ul>
-<li>遍历DOM树中所有可见结点，并把这些结点加到布局中</li>
-<li>不可见的结点会被布局树忽略，如head标签下大雾全部内容，以及display:none的元素</li>
-</ul>
-<p>2.布局计算</p>
-<p>计算布局树中节点的坐标位置</p>
-<h2 id="分层"><a href="#分层" class="headerlink" title="分层"></a>分层</h2><p>1拥有层叠上下文属性的元素会被提升为单独的一层</p>
-<p>2需要剪裁的地方也会被创建为图层</p>
-<p>例如：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">      <span class="selector-tag">div</span> &#123;</span></span><br><span class="line"><span class="css">            <span class="attribute">width</span>: <span class="number">200</span>;</span></span><br><span class="line"><span class="css">            <span class="attribute">height</span>: <span class="number">200</span>;</span></span><br><span class="line"><span class="css">            <span class="attribute">overflow</span>:auto;</span></span><br><span class="line"><span class="css">            <span class="attribute">background</span>: gray;</span></span><br><span class="line"><span class="css">        &#125; </span></span><br><span class="line"><span class="css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> &gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>所以元素有了层叠上下文的属性或者需要被剪裁，那么就会被提升成为单独一层，你可以参看下图：<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>从上图我们可以看到，document层上有A和B层，而B层之上又有两个图层。这些图层组织在一起也是一颗树状结构。<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>图层树是基于布局树来创建的，为了找出哪些元素需要在哪些层中，渲染引擎会遍历布局树来创建层树（Update LayerTree）。<span class="tag">&lt;/<span class="name">p</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>当div里面文字内容过多，文字显示区域超出200*200面积，产生了剪裁，渲染引擎会把裁剪文字内容的一部分用于显示在div区域，出现裁剪情况时，渲染引擎会为文字不烦单独创建一个层，如果出现滚动条，滚动条也会被提升为单独的层</p>
-<h2 id="图层绘制"><a href="#图层绘制" class="headerlink" title="图层绘制"></a>图层绘制</h2><p>图层树构建完成后，渲染引擎会对图层树中每个图层进行绘制</p>
-<p>渲染引擎会把图层的绘制拆分成很多小的绘制指令，然后把这些指令按照顺序组成一个待绘制列表</p>
-<h2 id="栅格化操作"><a href="#栅格化操作" class="headerlink" title="栅格化操作"></a>栅格化操作</h2><p>绘制列表是用来记录绘制顺序和绘制指令的列表，实际上绘制操作是由渲染引擎中的合成线程完成的，当图层的绘制列表准备好后，主线程会把绘制列表提交给合成线程，合成线程会把图层划分为图块，这些图块的大小通常为256x256或512*x512,合成线程按照视口附近的图块优先生成位图，实际生成的位图由栅格化来执行，栅格化就是将图块转为位图，渲染进程维护了一个栅格化的线程池，所有的图块栅格化都是在线程池内执行。使用GPU生成位图的过程叫做快速栅格化。</p>
-<h2 id="合成和显示"><a href="#合成和显示" class="headerlink" title="合成和显示"></a>合成和显示</h2><p>图块栅格化完成后，合成线程就会生成一个绘制图块命令”DrawQuad”，将该命令提交给浏览器进程，浏览器进程有一个viz组件，用来接收合成线程发过来的DrawQuad命令，根据该命令，将页面内容绘制到内存中，最后将内存显示在屏幕上</p>
-<p><img src="/2022/10/19/HTML-CSS%E5%92%8CJs%E5%A6%82%E4%BD%95%E5%8F%98%E6%88%90%E9%A1%B5%E9%9D%A2/1-16661850075471.png"></p>
-<h2 id="渲染流程总结："><a href="#渲染流程总结：" class="headerlink" title="渲染流程总结："></a>渲染流程总结：</h2><ul>
-<li>渲染进程将HTML内容转换为浏览器能读懂的DOM树结构</li>
-<li>渲染引擎将CSS样式表转化为浏览器能理解的styleSheets,计算出DOM结点样式</li>
-<li>创建布局树，并计算元素的布局信息</li>
-<li>对布局树进行分层，并生成分层树</li>
-<li>为每个图层生成绘制列表，并将其提交到合成线程</li>
-<li>合成线程将图层分层图块，并在光栅化线程池中将图块转为位图</li>
-<li>合成线程发送绘制图块命令DrawQuad给浏览器进程</li>
-<li>浏览器进程根据DrawQuad消息生成页面，并显示到显示器上</li>
-</ul>
-<p>参考链接：</p>
-<p><a target="_blank" rel="noopener" href="https://blog.poetries.top/browser-working-principle/guide/part1/lesson06.html#_1-%E6%9B%B4%E6%96%B0%E4%BA%86%E5%85%83%E7%B4%A0%E7%9A%84%E5%87%A0%E4%BD%95%E5%B1%9E%E6%80%A7%EF%BC%88%E9%87%8D%E6%8E%92%EF%BC%89">https://blog.poetries.top/browser-working-principle/guide/part1/lesson06.html#_1-%E6%9B%B4%E6%96%B0%E4%BA%86%E5%85%83%E7%B4%A0%E7%9A%84%E5%87%A0%E4%BD%95%E5%B1%9E%E6%80%A7%EF%BC%88%E9%87%8D%E6%8E%92%EF%BC%89</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/15/%E5%A3%B0%E6%98%8E%E7%A9%BA%E9%97%B4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/15/%E5%A3%B0%E6%98%8E%E7%A9%BA%E9%97%B4/" class="post-title-link" itemprop="url">声明空间</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-10-15 21:41:52 / 修改时间：22:04:51" itemprop="dateCreated datePublished" datetime="2022-10-15T21:41:52+08:00">2022-10-15</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在TypeScript中存在两种声明空间：类型声明空间和变量声明空间</p>
-<h1 id="类型声明空间"><a href="#类型声明空间" class="headerlink" title="类型声明空间"></a>类型声明空间</h1><p>类型声明空间包含用来当做类型注解的内容，例如下面的类型声明：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span></span>&#123;&#125;</span><br><span class="line"><span class="keyword">interface</span> Bar&#123;&#125;</span><br><span class="line"><span class="keyword">type</span> Bas = &#123;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>你可以将Foo,Bar,Bas作为类型注解使用：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> foo: Foo;</span><br><span class="line"><span class="keyword">let</span> bar: Bar;</span><br><span class="line"><span class="keyword">let</span> bas: Bas;</span><br></pre></td></tr></table></figure>
-
-<p>尽管你定义了interface Bar,却不能把它作为一个变量使用，因为它没有定义在变量声明空间中。</p>
-<h1 id="变量声明空间"><a href="#变量声明空间" class="headerlink" title="变量声明空间"></a>变量声明空间</h1><p>变量声明空间包含可用作变量的内容，在上文中Class Foo提供了一个类型Foo到类型声明空间，此外它同样提供了一个变量Foo到变量声明空间</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span> </span>&#123;&#125;</span><br><span class="line"><span class="keyword">const</span> someVar = Foo;</span><br><span class="line"><span class="keyword">const</span> someOtherVar = <span class="number">123</span></span><br></pre></td></tr></table></figure>
-
-<p>一些用var声明的变量，也只能在变量声明空间中使用，不能用作类型注解</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> foo = <span class="number">123</span>;</span><br><span class="line"><span class="keyword">let</span> bar: foo;<span class="comment">//ERROR:&quot;cannot find name &#x27;foo&#x27;&quot;</span></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1194,7 +1172,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">218</span>
+          <span class="site-state-item-count">223</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1268,7 +1246,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共199.3k字</span>
+  <span class="post-count">博客全站共201.2k字</span>
 </div>
         
 

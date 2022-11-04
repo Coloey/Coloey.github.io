@@ -187,6 +187,622 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/" class="post-title-link" itemprop="url">浏览器事件循环机制和Node中的事件循环机制</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-02 11:58:28" itemprop="dateCreated datePublished" datetime="2022-05-02T11:58:28+08:00">2022-05-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-03 00:00:45" itemprop="dateModified" datetime="2022-05-03T00:00:45+08:00">2022-05-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="浏览器的事件循环机制："><a href="#浏览器的事件循环机制：" class="headerlink" title="浏览器的事件循环机制："></a>浏览器的事件循环机制：</h1><h2 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h2><p><code>JavaScript</code> 在设计之初便是单线程，即指程序运行时，只有一个线程存在，同一时间只能做一件事</p>
+<p>为什么要这么设计，跟<code>JavaScript</code>的应用场景有关</p>
+<p><code>JavaScript</code> 初期作为一门浏览器脚本语言，通常用于操作 <code>DOM</code> ，如果是多线程，一个线程进行了删除 <code>DOM</code> ，另一个添加 <code>DOM</code>，此时浏览器该如何处理？</p>
+<p>为了解决单线程运行阻塞问题，<code>JavaScript</code>用到了计算机系统的一种运行机制，这种机制就叫做事件循环（Event Loop）</p>
+<h3 id="事件循环（Event-Loop）"><a href="#事件循环（Event-Loop）" class="headerlink" title="事件循环（Event Loop）"></a>事件循环（Event Loop）</h3><p>在<code>JavaScript</code>中，所有的任务都可以分为</p>
+<ul>
+<li>同步任务：立即执行的任务，同步任务一般会直接进入到主线程中执行</li>
+<li>异步任务：异步执行的任务，比如<code>ajax</code>网络请求，<code>setTimeout </code>定时函数等</li>
+</ul>
+<p><img src="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/node1.png"></p>
+<p>从上面我们可以看到，同步任务进入主线程，即主执行栈，异步任务进入任务队列，主线程内的任务执行完毕为空，会去任务队列读取对应的任务，推入主线程执行。上述过程的不断重复就是事件循环</p>
+<h2 id="宏任务与微任务"><a href="#宏任务与微任务" class="headerlink" title="宏任务与微任务"></a>宏任务与微任务</h2><p>如果将任务划分为同步任务和异步任务并不是那么的准确，举个例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">console.log(1)</span><br><span class="line"></span><br><span class="line">setTimeout(()=&gt;&#123;</span><br><span class="line">    console.log(2)</span><br><span class="line">&#125;, 0)</span><br><span class="line"></span><br><span class="line">new Promise((resolve, reject)=&gt;&#123;</span><br><span class="line">    console.log(&#x27;new Promise&#x27;)</span><br><span class="line">    resolve()</span><br><span class="line">&#125;).then(()=&gt;&#123;</span><br><span class="line">    console.log(&#x27;then&#x27;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">console.log(3)</span><br></pre></td></tr></table></figure>
+
+<p>如果按照上面流程图来分析代码，我们会得到下面的执行步骤：</p>
+<ul>
+<li><code>console.log(1) </code>，同步任务，主线程中执行</li>
+<li><code>setTimeout()</code> ，异步任务，放到 <code>Event Table</code>，0 毫秒后<code>console.log(2) </code>回调推入 <code>Event Queue</code> 中</li>
+<li><code>new Promise</code> ，同步任务，主线程直接执行</li>
+<li><code>.then</code> ，异步任务，放到 <code>Event Table</code></li>
+<li><code>console.log(3)</code>，同步任务，主线程执行</li>
+</ul>
+<p>所以按照分析，它的结果应该是 <code>1</code> =&gt; <code>&#39;new Promise&#39;</code> =&gt; <code>3</code> =&gt; <code>2</code> =&gt; <code>&#39;then&#39;</code></p>
+<p>但是实际结果是：<code>1</code>=&gt;<code>&#39;new Promise&#39;</code>=&gt; <code>3</code> =&gt; <code>&#39;then&#39;</code> =&gt; <code>2</code></p>
+<p>出现分歧的原因在于异步任务执行顺序，事件队列其实是一个“先进先出”的数据结构，排在前面的事件会优先被主线程读取</p>
+<p>例子中 <code>setTimeout</code>回调事件是先进入队列中的，按理说应该先于 <code>.then</code> 中的执行，但是结果却偏偏相反</p>
+<p>原因在于异步任务还可以细分为微任务与宏任务</p>
+<h3 id="微任务"><a href="#微任务" class="headerlink" title="微任务"></a>微任务</h3><p>一个需要异步执行的函数，执行时机是在主函数执行结束之后、当前宏任务结束之前</p>
+<p>常见的微任务有：</p>
+<ul>
+<li>Promise.then</li>
+<li>MutaionObserver</li>
+<li>Object.observe（已废弃；Proxy 对象替代）</li>
+<li>process.nextTick（Node.js）</li>
+</ul>
+<h3 id="宏任务"><a href="#宏任务" class="headerlink" title="宏任务"></a>宏任务</h3><p>宏任务的时间粒度比较大，执行的时间间隔是不能精确控制的，对一些高实时性的需求就不太符合</p>
+<p>常见的宏任务有：</p>
+<ul>
+<li>script (可以理解为外层同步代码)</li>
+<li>setTimeout/setInterval</li>
+<li>UI rendering/UI事件</li>
+<li>postMessage、MessageChannel</li>
+<li>setImmediate、I/O（Node.js）</li>
+</ul>
+<p>按照这个流程，它的执行机制是：</p>
+<ul>
+<li>执行一个宏任务，如果遇到微任务就将它放到微任务的事件队列中</li>
+<li>当前宏任务执行完成后，会查看微任务的事件队列，<strong>然后将里面的所有微任务依次执行完</strong></li>
+</ul>
+<p>回到上面的题目</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">console.log(1)</span><br><span class="line">setTimeout(()=&gt;&#123;</span><br><span class="line">    console.log(2)</span><br><span class="line">&#125;, 0)</span><br><span class="line">new Promise((resolve, reject)=&gt;&#123;</span><br><span class="line">    console.log(&#x27;new Promise&#x27;)</span><br><span class="line">    resolve()</span><br><span class="line">&#125;).then(()=&gt;&#123;</span><br><span class="line">    console.log(&#x27;then&#x27;)</span><br><span class="line">&#125;)</span><br><span class="line">console.log(3)</span><br></pre></td></tr></table></figure>
+
+<p>流程如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 遇到 console.log(1) ，直接打印 1</span><br><span class="line">// 遇到定时器，属于新的宏任务，留着后面执行</span><br><span class="line">// 遇到 new Promise，这个是直接执行的，打印 &#x27;new Promise&#x27;</span><br><span class="line">// .then 属于微任务，放入微任务队列，后面再执行</span><br><span class="line">// 遇到 console.log(3) 直接打印 3</span><br><span class="line">// 好了本轮宏任务执行完毕，现在去微任务列表查看是否有微任务，发现 .then 的回调，执行它，打印 &#x27;then&#x27;</span><br><span class="line">// 当一次宏任务执行完，再去执行新的宏任务，这里就剩一个定时器的宏任务了，执行它，打印 2</span><br></pre></td></tr></table></figure>
+
+<h2 id="async与await"><a href="#async与await" class="headerlink" title="async与await"></a>async与await</h2><p><code>async</code> 是异步的意思，<code>await </code>则可以理解为等待</p>
+<p>放到一起可以理解<code>async</code>就是用来声明一个异步方法，而 <code>await </code>是用来等待异步方法执行</p>
+<h3 id="async"><a href="#async" class="headerlink" title="async"></a>async</h3><p><code>async</code>函数返回一个<code>promise</code>对象，下面两种方法是等效的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">function f() &#123;</span><br><span class="line">    return Promise.resolve(&#x27;TEST&#x27;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// asyncF is equivalent to f!</span><br><span class="line">async function asyncF() &#123;</span><br><span class="line">    return &#x27;TEST&#x27;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="await"><a href="#await" class="headerlink" title="await"></a>await</h3><p>正常情况下，<code>await</code>命令后面是一个 <code>Promise </code>对象，返回该对象的结果。如果不是 <code>Promise </code>对象，就直接返回对应的值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">async function f()&#123;</span><br><span class="line">    // 等同于</span><br><span class="line">    // return 123</span><br><span class="line">    return await 123</span><br><span class="line">&#125;</span><br><span class="line">f().then(v =&gt; console.log(v)) // 123</span><br></pre></td></tr></table></figure>
+
+<p>不管<code>await</code>后面跟着的是什么，<code>await</code>都会阻塞后面的代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">async function fn1 ()&#123;</span><br><span class="line">    console.log(1)</span><br><span class="line">    await fn2()</span><br><span class="line">    console.log(2) // 阻塞</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">async function fn2 ()&#123;</span><br><span class="line">    console.log(&#x27;fn2&#x27;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn1()</span><br><span class="line">console.log(3)</span><br></pre></td></tr></table></figure>
+
+<p>上面的例子中，<code>await</code> 会阻塞下面的代码（即加入微任务队列），先执行 <code>async </code>外面的同步代码，同步代码执行完，再回到 <code>async</code> 函数中，再执行之前阻塞的代码</p>
+<p>所以上述输出结果为：<code>1</code>，<code>fn2</code>，<code>3</code>，<code>2</code></p>
+<h1 id="Node中的事件循环机制"><a href="#Node中的事件循环机制" class="headerlink" title="Node中的事件循环机制"></a>Node中的事件循环机制</h1><p>事件循环分为6个阶段：</p>
+<p><img src="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/node2.png"></p>
+<p>timers:执行timer的回调，即setTimeout,setInterval里面的回调函数</p>
+<p>I/O事件回调阶段：执行延迟到下一个循环迭代的I/O阶段，即上一轮循环中未被执行的一些I/O回调</p>
+<p>idle,prepare(闲置阶段):仅内部使用</p>
+<p>poll(轮询阶段)：检查新的I/O事件，执行与I/O相关的回调，（几乎所有情况下，除了关闭的回调函数，那些由计时器和setImmediate（）调度的之外），其余情况node将在适当的时候在此阻塞</p>
+<p>check(检查阶段)：setImmediate()回调函数在这里执行</p>
+<p>close callback（关闭事件回调阶段）：一些关闭的回调函数，如socket.on(‘close’,…)</p>
+<p>除了上述6个阶段，还存在process.nextTick,其不属于事件循环的任何一个阶段，<strong>它属于该阶段与下阶段之间的过渡，即本阶段执行结束，进入下一个阶段前要执行的回调，类似插队</strong></p>
+<p><img src="/2022/05/02/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E5%92%8CNode%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/node3.png"></p>
+<p>在Node中，同样存在宏任务和微任务，与浏览器的事件循环相似</p>
+<p>微任务：</p>
+<ul>
+<li>next tick queue:process.nextTick</li>
+<li>other queue:Promise的then回调，queueMicrotask</li>
+</ul>
+<p>宏任务：</p>
+<ul>
+<li>timer queue:setTimeout,setInterval</li>
+<li>poll queue:IO事件</li>
+<li>check queue:setImmediate</li>
+<li>close queue:close事件</li>
+</ul>
+<p>执行顺序：</p>
+<ul>
+<li>next tick microtask queue</li>
+<li>other microtask queue</li>
+<li>timer queue</li>
+<li>poll queue</li>
+<li>check queue</li>
+<li>close queue</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">async1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;async1 start&#x27;</span>)</span><br><span class="line">    <span class="keyword">await</span> async2()</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;async1 end&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">async2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;async2&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;script start&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;setTimeout0&#x27;</span>)</span><br><span class="line">&#125;, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;setTimeout2&#x27;</span>)</span><br><span class="line">&#125;, <span class="number">300</span>)</span><br><span class="line"></span><br><span class="line">setImmediate(<span class="function">() =&gt;</span> <span class="built_in">console</span>.log(<span class="string">&#x27;setImmediate&#x27;</span>));</span><br><span class="line"></span><br><span class="line">process.nextTick(<span class="function">() =&gt;</span> <span class="built_in">console</span>.log(<span class="string">&#x27;nextTick1&#x27;</span>));</span><br><span class="line"></span><br><span class="line">async1();</span><br><span class="line"></span><br><span class="line">process.nextTick(<span class="function">() =&gt;</span> <span class="built_in">console</span>.log(<span class="string">&#x27;nextTick2&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;promise1&#x27;</span>)</span><br><span class="line">    resolve();</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;promise2&#x27;</span>)</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;promise3&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;script end&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>分析过程：</p>
+<ul>
+<li>先找到同步任务，输出script start</li>
+<li>遇到第一个 setTimeout，将里面的回调函数放到 timer 队列中</li>
+<li>遇到第二个 setTimeout，300ms后将里面的回调函数放到 timer 队列中</li>
+<li>遇到第一个setImmediate，将里面的回调函数放到 check 队列中</li>
+<li>遇到第一个 nextTick，将其里面的回调函数放到本轮同步任务执行完毕后执行</li>
+<li>执行 async1函数，输出 async1 start</li>
+<li>执行 async2 函数，输出 async2，async2 后面的输出 async1 end进入微任务，等待下一轮的事件循环</li>
+<li>遇到第二个，将其里面的回调函数放到本轮同步任务执行完毕后执行</li>
+<li>遇到 new Promise，执行里面的立即执行函数，输出 promise1、promise2</li>
+<li>then里面的回调函数进入微任务队列</li>
+<li>遇到同步任务，输出 script end</li>
+<li>执行下一轮回到函数，先依次输出 nextTick 的函数，分别是 nextTick1、nextTick2</li>
+<li>然后执行微任务队列，依次输出 async1 end、promise3</li>
+<li>执行timer 队列，依次输出 setTimeout0</li>
+<li>接着执行 check 队列，依次输出 setImmediate</li>
+<li>300ms后，timer 队列存在任务，执行输出 setTimeout2</li>
+</ul>
+<p>执行结果如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">script start</span><br><span class="line">async1 start</span><br><span class="line">async2</span><br><span class="line">promise1</span><br><span class="line">promise2</span><br><span class="line">script end</span><br><span class="line">nextTick1</span><br><span class="line">nextTick2</span><br><span class="line">async1 end</span><br><span class="line">promise3</span><br><span class="line">setTimeout0</span><br><span class="line">setImmediate</span><br><span class="line">setTimeout2</span><br></pre></td></tr></table></figure>
+
+<p>最后有一道是关于<code>setTimeout</code>与<code>setImmediate</code>的输出顺序</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;setTimeout&quot;</span>);</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">setImmediate(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;setImmediate&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>输出情况：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">情况一：</span><br><span class="line"><span class="built_in">setTimeout</span></span><br><span class="line">setImmediate</span><br><span class="line"></span><br><span class="line">情况二：</span><br><span class="line">setImmediate</span><br><span class="line"><span class="built_in">setTimeout</span></span><br></pre></td></tr></table></figure>
+
+<p>分析下流程：</p>
+<ul>
+<li>外层同步代码一次性全部执行完，遇到异步API就塞到对应的阶段</li>
+<li>遇到<code>setTimeout</code>，虽然设置的是0毫秒触发，但实际上会被强制改成1ms，时间到了然后塞入<code>times</code>阶段</li>
+<li>遇到<code>setImmediate</code>塞入<code>check</code>阶段</li>
+<li>同步代码执行完毕，进入Event Loop</li>
+<li>先进入<code>times</code>阶段，检查当前时间过去了1毫秒没有，如果过了1毫秒，满足<code>setTimeout</code>条件，执行回调，如果没过1毫秒，跳过</li>
+<li>跳过空的阶段，进入check阶段，执行<code>setImmediate</code>回调</li>
+</ul>
+<p>这里的关键在于这1ms，如果同步代码执行时间较长，进入<code>Event Loop</code>的时候1毫秒已经过了，<code>setTimeout</code>先执行，如果1毫秒还没到，就先执行了<code>setImmediate</code></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/02/%E7%AE%AD%E5%A4%B4%E5%87%BD%E6%95%B0%E5%92%8C%E6%99%AE%E9%80%9A%E5%87%BD%E6%95%B0%E5%8C%BA%E5%88%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/02/%E7%AE%AD%E5%A4%B4%E5%87%BD%E6%95%B0%E5%92%8C%E6%99%AE%E9%80%9A%E5%87%BD%E6%95%B0%E5%8C%BA%E5%88%AB/" class="post-title-link" itemprop="url">箭头函数和普通函数区别</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-02 11:21:43 / 修改时间：11:37:43" itemprop="dateCreated datePublished" datetime="2022-05-02T11:21:43+08:00">2022-05-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="箭头函数和普通函数区别"><a href="#箭头函数和普通函数区别" class="headerlink" title="箭头函数和普通函数区别"></a>箭头函数和普通函数区别</h1><ol>
+<li><p>语法更加简洁清晰</p>
+</li>
+<li><p>箭头函数不会创建自己的this</p>
+</li>
+</ol>
+<p>所以它不会有自己的this,它只会从<strong>自己的作用域链的上一层继承this</strong>，作用域链包括全局作用域，块作用域和函数作用域</p>
+<ol start="3">
+<li>箭头函数继承而来的this指向永远不变</li>
+</ol>
+<p>对象obj的方法b时用箭头函数定义的，这个函数中的this永远指向它<strong>定义时所处的全局环境中的this</strong>,即使这个函数是作为对象obj的方法调用，它依然指向window对象</p>
+<ol start="4">
+<li>call()/apply()/bind()无法改变箭头函数中this得指向</li>
+</ol>
+<p>call()/apply()/bind()方法可以用来动态修改this的指向，但由于箭头函数的this定义时就已经确定且永远不会改变，所以使用这些犯法永远也改变不了箭头函数this的指向，但是代码也不会报错</p>
+<ol start="5">
+<li>箭头函数不能用作构造函数调用</li>
+</ol>
+<p>构造函数的new原理：</p>
+<p>箭头函数是ES6中的提出来的，<strong>它没有prototype，也没有自己的this指向，更不可以使用arguments参数</strong>，所以不能New一个箭头函数。</p>
+<p>new操作符的实现步骤如下：</p>
+<p>1、创建一个空的简单JavaScript对象（即{}）；</p>
+<p>2、为步骤1新创建的对象添加属性__proto__，将该属性链接至构造函数的原型对象 ；</p>
+<p>3、将步骤1新创建的对象作为this的上下文 ；</p>
+<p>4、如果该函数没有返回对象，则返回this。</p>
+<p>所以，上面的第二、三步，箭头函数都是没有办法执行的。</p>
+<ol start="6">
+<li>箭头函数不能用作Generator函数，不能使用yield关键字</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/01/tree-shaking/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/01/tree-shaking/" class="post-title-link" itemprop="url">tree shaking</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-01 22:15:55" itemprop="dateCreated datePublished" datetime="2022-05-01T22:15:55+08:00">2022-05-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-02 23:28:56" itemprop="dateModified" datetime="2022-05-02T23:28:56+08:00">2022-05-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/webpack/" itemprop="url" rel="index"><span itemprop="name">webpack</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="tree-shaking如何工作的呢？"><a href="#tree-shaking如何工作的呢？" class="headerlink" title="tree shaking如何工作的呢？"></a>tree shaking如何工作的呢？</h1><p>虽然 tree shaking 的概念在 1990 就提出了，但直到 ES6 的 <code>ES6-style</code> 模块出现后才真正被利用起来。</p>
+<p>在ES6以前，我们可以使用CommonJS引入模块：require()，这种引入是动态的，也意味着我们可以基于条件来导入需要的代码</p>
+<p>但是CommonJS规范无法确定在实际运行前需要或者不需要某些模块，所以CommonJS不适合tree-shaking机制。在 ES6 中，引入了完全静态的导入语法：import。</p>
+<p>因为tree shaking只能在静态modules下工作。ECMAScript 6 模块加载是静态的,因此整个依赖树可以被静态地推导出解析语法树。所以在 ES6 中使用 tree shaking 是非常容易的。</p>
+<h1 id="tree-shaking的原理是什么"><a href="#tree-shaking的原理是什么" class="headerlink" title="tree shaking的原理是什么?"></a>tree shaking的原理是什么?</h1><ul>
+<li>ES6 Module引入进行静态分析，故而编译的时候正确判断到底加载了哪些模块</li>
+<li>静态分析程序流，判断哪些模块和变量未被使用或者引用，进而删除对应代码</li>
+</ul>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="将文件标记为无副作用-side-effect-free"><a href="#将文件标记为无副作用-side-effect-free" class="headerlink" title="将文件标记为无副作用(side-effect-free)"></a>将文件标记为无副作用(side-effect-free)</h2><p>在一个纯粹的 ESM 模块世界中，识别出哪些文件有副作用很简单。然而，我们的项目无法达到这种纯度，所以，此时有必要向 webpack 的 compiler 提供提示哪些代码是“纯粹部分”。</p>
+<p>这种方式是通过 package.json 的 <code>&quot;sideEffects&quot;</code> 属性来实现的。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;your-project&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;sideEffects&quot;</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如同上面提到的，如果所有代码都不包含副作用，我们就可以简单地将该属性标记为 <code>false</code>，来告知 webpack，它可以安全地删除未用到的 export 导出。</p>
+<blockquote>
+<p>「副作用」的定义是，在导入时会执行特殊行为的代码，而不是仅仅暴露一个 export 或多个 export。举例说明，例如 polyfill，它影响全局作用域，并且通常不提供 export。</p>
+</blockquote>
+<h2 id="压缩输出"><a href="#压缩输出" class="headerlink" title="压缩输出"></a>压缩输出</h2><p>通过如上方式，我们已经可以通过 <code>import</code> 和 <code>export</code> 语法，找出那些需要删除的“未使用代码(dead code)”，然而，我们不只是要找出，还需要在 bundle 中删除它们。为此，我们将使用 <code>-p</code>(production) 这个 webpack 编译标记，来启用 uglifyjs 压缩插件。</p>
+<blockquote>
+<p>注意，<code>--optimize-minimize</code> 标记也会在 webpack 内部调用 <code>UglifyJsPlugin</code>。</p>
+</blockquote>
+<p>从 webpack 4 开始，也可以通过 <code>&quot;mode&quot;</code> 配置选项轻松切换到压缩输出，只需设置为 <code>&quot;production&quot;</code>。</p>
+<p><strong>webpack.config.js</strong></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const path = require(&#x27;path&#x27;);</span><br><span class="line"></span><br><span class="line">module.exports = &#123;</span><br><span class="line">  entry: &#x27;./src/index.js&#x27;,</span><br><span class="line">  output: &#123;</span><br><span class="line">    filename: &#x27;bundle.js&#x27;,</span><br><span class="line">    path: path.resolve(__dirname, &#x27;dist&#x27;)</span><br><span class="line"><span class="deletion">- &#125;</span></span><br><span class="line"><span class="addition">+ &#125;,</span></span><br><span class="line"><span class="addition">+ mode: &quot;production&quot;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意，也可以在命令行接口中使用 <code>--optimize-minimize</code> 标记，来使用 <code>UglifyJSPlugin</code>。为了学会使用 <em>tree shaking</em>，你必须……</p>
+</blockquote>
+<ul>
+<li>使用 ES2015 模块语法（即 <code>import</code> 和 <code>export</code>）。</li>
+<li>在项目 <code>package.json</code> 文件中，添加一个 “sideEffects” 入口。</li>
+<li>引入一个能够删除未引用代码(dead code)的压缩工具(minifier)（例如 <code>UglifyJSPlugin</code>）。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/01/HMR/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/01/HMR/" class="post-title-link" itemprop="url">HMR</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-01 17:42:46" itemprop="dateCreated datePublished" datetime="2022-05-01T17:42:46+08:00">2022-05-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-07 21:04:50" itemprop="dateModified" datetime="2022-05-07T21:04:50+08:00">2022-05-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/webpack/" itemprop="url" rel="index"><span itemprop="name">webpack</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h1><p>HMR 全称是Hot Module Replacement,理解为模块热替换，指在应用程序运行过程中，替换，添加，删除模块，而无需重新刷新整个应用。</p>
+<p>例如，我们在应用运行过程中修改了某个模块，通过自动刷新会导致整个应用的整体刷新，那页面中的状态信息都会丢失，如果使用HME，就可以实现只将修改的模块实时替换至应用中，不必完全舒心整个应用。</p>
+<p>在webpack中配置热模块：</p>
+<p>webpack.config.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> webpack=<span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>)</span><br><span class="line"><span class="built_in">module</span>.exports=&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="attr">devServer</span>:&#123;</span><br><span class="line">        <span class="attr">hot</span>:<span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过上述这种配置，如果我们修改并保存CSS文件，确实能够以不刷新地形式更新到页面中，但是，当我们修改并保存js文件之后，页面依旧舒刷新了，这里并没有触发热模块，所以，HMR并不像Webpack的其他特性一样可以开箱即用，需要取指定那些模块发生更新时进行HMR</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="built_in">module</span>.hot)&#123;</span><br><span class="line">    <span class="built_in">module</span>.hot.accept(<span class="string">&#x27;./util.js&#x27;</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;utils.js更新了&#x27;</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p><img src="/2022/05/01/HMR/hmr1.png"></p>
+<ul>
+<li>Webpack Compile:将JS源代码编译成bundle.js</li>
+<li>HMR Server:用来将热更新的文件输出给HMR Runtime</li>
+<li>Bundle Server:静态资源文件服务器，提供文件访问路径</li>
+<li>HMR Runtime:socket服务器，会被注入到浏览器，更新文件的变化</li>
+<li>bundle.js:构建输出的文件</li>
+<li>在HMR Runtime和HMR Server之间建立websocket，即图上4号线，用于实时更新文件变化</li>
+</ul>
+<p>分成两个阶段：</p>
+<p>启动阶段为1-2-A-B</p>
+<p>在编写未经过webpack打包的源码后，Webpack Compile将源码和HMR Runtime一起编译成bundle文件，传输Bundle Server静态资源服务器</p>
+<p>更新阶段为1-2-3-4</p>
+<p>当某一个文件或者模块发生变化时，webpack监听到文件变化对文件重新编译打包，编译生成唯一的hash值，这个hash值用来作为下一次热更新的标识，根据变化的内容生成两个补丁文件:manifest(包含了hash和chunkId,用来说明变化的内容)和chunk.js模块，由于socket服务器在HMR Runtime和HMR Server之间建立websocket链接，单文件发生改动的时候，服务端会向浏览器推送一条消息，消息包含文件改动后生成的hash值，如下图的h属性，做为下一次热更新的标识</p>
+<p><img src="/2022/05/01/HMR/hmr2.png"></p>
+<p>在浏览器接收到这条消息之前，浏览器已经在上一次socket消息中记住了此时的hash标识，这时候我们会<strong>创建一个ajax去服务端请求获取到变化内容的manifest文件</strong></p>
+<p>manifest文件包含重新build生成的hash值，以及变化的模块，对应上图的c属性,<strong>浏览器根据manifest文件获取模块变化的内容，从而触发render流程，实现局部模块更新</strong></p>
+<p><img src="/2022/05/01/HMR/hmr3.png"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>关于webpack热模块更新总结：</p>
+<ul>
+<li>通过webpack-dev-server创建两个服务器，提供静态资源的服务(express)和Socket服务</li>
+<li>express server负责直接提供静态资源的服务（打包后的资源直接被浏览器请求和解析）</li>
+<li>socket server是一个websocket的长连接，双方可以通信</li>
+<li>当socket server监听到对应的模块发生变化时，会生成两个文件.json(manifest文件)和.js文件(update chunk)</li>
+<li>通过长连接，socket server可以直接将这两个文件主动发送给客户端（浏览器）</li>
+<li>浏览器拿到两个新的文件后，通过HMR runtime机制，加载这两个文件，并且针对修改的模块进行更新</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/30/%E6%89%8B%E5%86%99object-freeze/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/30/%E6%89%8B%E5%86%99object-freeze/" class="post-title-link" itemprop="url">手写object.freeze</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-30 22:04:32" itemprop="dateCreated datePublished" datetime="2022-04-30T22:04:32+08:00">2022-04-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-29 15:45:44" itemprop="dateModified" datetime="2022-05-29T15:45:44+08:00">2022-05-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>object.freeze()=不可扩展（preventExtensions)+不可配置(configurable:false)+不可写(writable:fasle)</p>
+<p>object.seal()=不可扩展+不可配置</p>
+<p>preventExtensions=不可添加属性+不可改__proto__</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> _objectFreeze = <span class="function"><span class="params">object</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="comment">// 补全代码</span></span><br><span class="line">                <span class="comment">//Object.defineProperty(object,)</span></span><br><span class="line">                <span class="keyword">const</span> props=<span class="built_in">Object</span>.getOwnPropertyNames(object);</span><br><span class="line">                props.forEach(<span class="function"><span class="params">prop</span>=&gt;</span>&#123;</span><br><span class="line">                    <span class="keyword">const</span> des=<span class="built_in">Object</span>.getOwnPropertyDescriptor(object,prop);</span><br><span class="line">                    <span class="keyword">if</span>(des.get||des.set)&#123;</span><br><span class="line">                        <span class="built_in">Object</span>.defineProperty(object,prop,&#123;</span><br><span class="line">                            <span class="attr">configurable</span>:<span class="literal">false</span>,<span class="comment">//小写</span></span><br><span class="line">                            <span class="attr">writable</span>:<span class="literal">false</span>,</span><br><span class="line">                            <span class="attr">get</span>:des.get,</span><br><span class="line">                            <span class="attr">set</span>:des.set</span><br><span class="line">                        </span><br><span class="line">                        &#125;)</span><br><span class="line">                    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                        <span class="built_in">Object</span>.defineProperty(object,prop,&#123;</span><br><span class="line">                           <span class="attr">configurable</span>:<span class="literal">false</span>,</span><br><span class="line">                           <span class="attr">writable</span>:<span class="literal">false</span>,</span><br><span class="line">                        </span><br><span class="line">                        &#125;)</span><br><span class="line">                        </span><br><span class="line">                    &#125;</span><br><span class="line">                            </span><br><span class="line">                &#125;)</span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">Object</span>.preventExtensions(object);</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+
+<p>数据属性的值不可更改，<strong>访问器属性（有getter和setter）也同样（但由于是函数调用，</strong>给人的错觉是还是可以修改这个属性）。如果一个属性的值是个对象，则这个对象中的属性是可以修改的，除非它也是个冻结对象。数组作为一种对象，被冻结，其元素不能被修改。没有数组元素可以被添加或移除。</p>
+<p>这个方法<strong>返回传递的对象</strong>，而不是创建一个被冻结的副本。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/30/%E5%B8%B8%E8%A7%81%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -722,557 +1338,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/25/%E5%9B%BE%E7%89%87%E6%87%92%E5%8A%A0%E8%BD%BD/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/25/%E5%9B%BE%E7%89%87%E6%87%92%E5%8A%A0%E8%BD%BD/" class="post-title-link" itemprop="url">图片懒加载</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-25 17:07:16" itemprop="dateCreated datePublished" datetime="2022-04-25T17:07:16+08:00">2022-04-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-27 23:41:55" itemprop="dateModified" datetime="2022-04-27T23:41:55+08:00">2022-04-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>实现图片懒加载</p>
-<p>懒加载是一种网页性能优化方式，提升用户体验，比如懒加载图片，进入页面时，我们只请求可视区域的图片资源</p>
-<p>总结：</p>
-<p>全部加载会影响用户体验</p>
-<p>浪费用户的流量，有些用户不想全部看完，全部加载会耗费大量流量</p>
-<p>实现方式：</p>
-<p>html实现</p>
-<p>最简单的实现方式给img标签加上 loading=”lazy”</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=<span class="string">&quot;./example.jpg&quot;</span> loading=<span class="string">&quot;lazy&quot;</span>&gt;</span><br></pre></td></tr></table></figure>
-
-<p>js实现原理</p>
-<ul>
-<li>通过js监听页面的滚动</li>
-<li>使用js实现的原理主要是判断当前图片是否到了可视区域：</li>
-<li>拿到所有图片的dom</li>
-<li>遍历每个图片判断当前图片是否到达了可视区域范围</li>
-<li>如果到了就设置图片的src属性</li>
-<li>绑定window的scroll事件，对其进行事件监听</li>
-</ul>
-<p>在页面初始化时，img图片的src放在data-src属性上，当匀速处于可视区范围，就把data-src赋值给src属性，完成图片加载</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Lazyload<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">      <span class="selector-tag">img</span> &#123;</span></span><br><span class="line"><span class="css">        <span class="attribute">display</span>: block;</span></span><br><span class="line"><span class="css">        <span class="attribute">margin-bottom</span>: <span class="number">50px</span>;</span></span><br><span class="line"><span class="css">        <span class="attribute">height</span>: <span class="number">200px</span>;</span></span><br><span class="line"><span class="css">        <span class="attribute">width</span>: <span class="number">400px</span>;</span></span><br><span class="line"><span class="css">      &#125;</span></span><br><span class="line"><span class="css">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/1.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/2.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/3.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/4.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/5.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/6.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/7.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/8.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/9.jpg&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./img/default.png&quot;</span> <span class="attr">data-src</span>=<span class="string">&quot;./img/10.jpg&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>先获取所有图片的dom,通过document.body.clientHeight获取可视区高度，<strong>在使用element.getBoundingClientRect()直接得到元素相对浏览器的top值</strong>，遍历每个图片判断图片是否到达了可视区域</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">lazyLoad</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> viewHeight=<span class="built_in">document</span>.body.clientHeight;<span class="comment">//获取可视区高度</span></span><br><span class="line">    <span class="keyword">let</span> imgs=<span class="built_in">document</span>.querySelectorAll(<span class="string">&quot;img[data-src]&quot;</span>)</span><br><span class="line">    imgs.forEach(<span class="function"><span class="params">item</span>=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(item.data-src==<span class="string">&#x27;&#x27;</span>)<span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">let</span> rect=item.getBoundingClientRect();</span><br><span class="line">        <span class="keyword">if</span>(rect.top&lt;viewHeight&amp;&amp;rect.bottom&gt;=<span class="number">0</span>)&#123;</span><br><span class="line">            item.src=item.data-src</span><br><span class="line">            item.removeAttribute(<span class="string">&#x27;data-src&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这样存在性能问题，因为scroll事件会在很短事件内触发多次，严重影响页面性能，为了提高网页性能，我们需要一个节流函数来控制函数的多次触发，在一段时间内只执行一次回调</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttle</span>(<span class="params">fn,delay</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timer=<span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">fn,...args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">const</span> context=<span class="built_in">this</span>;</span><br><span class="line">        <span class="keyword">if</span>(!temer)&#123;</span><br><span class="line">            timer=<span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">                fn.apply(context,args);</span><br><span class="line">                timer=<span class="literal">null</span>;</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>scroll</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">&quot;scroll&quot;</span>,throttle(lazyload,<span class="number">200</span>))</span><br></pre></td></tr></table></figure>
-
-<h2 id="拓展：-IntersectionObserver"><a href="#拓展：-IntersectionObserver" class="headerlink" title="拓展： IntersectionObserver"></a>拓展： IntersectionObserver</h2><p>通过上面例子的实现，我们要实现懒加载都需要去监听 scroll 事件，尽管我们可以通过函数节流的方式来阻止高频率的执行函数，但是我们还是需要去计算 scrollTop，offsetHeight 等属性，有没有简单的不需要计算这些属性的方式呢，答案就是 <code>IntersectionObserver</code>。</p>
-<p><code>IntersectionObserver</code> 是一个比较新的 API，可以自动”观察”元素是否可见，Chrome 51+ 已经支持。由于可见（visible）的本质是，目标元素与视口产生一个交叉区，所以这个 API 叫做”交叉观察器”。我们来看一下它的用法</p>
-<p>[]: <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver">https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver</a></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> imgs=<span class="built_in">document</span>.querySelectorAll(<span class="string">&quot;img[data-src]&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> config=&#123;</span><br><span class="line">    <span class="attr">rootMargin</span>:<span class="string">&#x27;0px&#x27;</span>,</span><br><span class="line">    <span class="attr">threshold</span>:<span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> observer=<span class="keyword">new</span> IntersectionObserver(<span class="function">(<span class="params">entries,self</span>)=&gt;</span>&#123;</span><br><span class="line">    entries.forEach(<span class="function">(<span class="params">entry</span>)=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(entry.isIntersecting)&#123;</span><br><span class="line">            <span class="keyword">let</span> img=entry.target;</span><br><span class="line">            <span class="keyword">let</span> realsrc=img.dataset.src;</span><br><span class="line">            <span class="keyword">if</span>(src)&#123;</span><br><span class="line">                img.src=realsrc;</span><br><span class="line">                img.removeAttribute(<span class="string">&#x27;data-src&#x27;</span>)</span><br><span class="line">            &#125;</span><br><span class="line">            self.unobserve(entry.target);<span class="comment">//解除观察</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;,config)</span><br><span class="line">imgs.forEach(<span class="function">(<span class="params">image</span>)=&gt;</span>&#123;</span><br><span class="line">    observer.observe(image)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/25/object-create-%E5%92%8Cnew%E5%8C%BA%E5%88%AB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/25/object-create-%E5%92%8Cnew%E5%8C%BA%E5%88%AB/" class="post-title-link" itemprop="url">object.create()和new区别</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-25 10:44:18" itemprop="dateCreated datePublished" datetime="2022-04-25T10:44:18+08:00">2022-04-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-01 09:54:53" itemprop="dateModified" datetime="2022-05-01T09:54:53+08:00">2022-05-01</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Object-create"><a href="#Object-create" class="headerlink" title="Object.create()"></a>Object.create()</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.creat=<span class="function"><span class="keyword">function</span>(<span class="params">o</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> F=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">	F.prototype=o;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> F();</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>内部定义一个新对象，并且让F.prototype对象赋值为引进的对象/函数o,并return一个新的对象</p>
-<h1 id="new"><a href="#new" class="headerlink" title="new"></a>new</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>(<span class="params">o,...args</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> o1=&#123;&#125;;</span><br><span class="line">    o1.__proto__=o.prototype;</span><br><span class="line">    <span class="keyword">var</span> res=o.call(o1,args);</span><br><span class="line">    <span class="keyword">return</span> res <span class="keyword">typeof</span> <span class="built_in">Object</span>?res:o1;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="区别："><a href="#区别：" class="headerlink" title="区别："></a>区别：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Base=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.a=<span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> o1=<span class="keyword">new</span> Base();</span><br><span class="line"><span class="keyword">var</span> o2=<span class="built_in">Object</span>.create(Base);</span><br><span class="line"><span class="built_in">console</span>.log(o1.a);<span class="comment">//2</span></span><br><span class="line"><span class="built_in">console</span>.log(o2.a);<span class="comment">//undefined</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>Object.create失去了原来对象属性的访问</strong>：F创建后函数调用结束后被销毁，o2直接指向Base构造函数，<strong>o2没有指向它的prototype，</strong>因此o2.consructor不能通过prototype对找到构造函数，所以是undefined,但是如果Base是一个对象，则o2.a值为2，因为o2的[[Prototype]]指向了对象Base</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Base = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.a = <span class="number">2</span></span><br><span class="line">&#125;</span><br><span class="line">Base.prototype.a = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">var</span> o1 = <span class="keyword">new</span> Base();</span><br><span class="line"><span class="keyword">var</span> o2 = <span class="built_in">Object</span>.create(Base);</span><br><span class="line"><span class="built_in">console</span>.log(o1.a); <span class="comment">// 2</span></span><br><span class="line"><span class="built_in">console</span>.log(o2.a); <span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
-
-<p>这里Base.prototype.a会去找它的[[Prototype]]上看是否有a，没有就重新设置了一个a，值为3，**而实际上o1.constructor通过默认的[[Prototype]]委托指向Base.prototype,进而委托到constructor指向的构造函数。所以这里的o1.a=2;o2.a仍旧是undefined，因为o2直接指向的是Base,没有指向它的prototype</p>
-<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>小结</p>
-<table>
-<thead>
-<tr>
-<th>比较</th>
-<th>new</th>
-<th>Object.create</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>构造函数</td>
-<td>保留原构造函数属性</td>
-<td>丢失原构造函数属性</td>
-</tr>
-<tr>
-<td>原型链</td>
-<td>原构造函数prototype属性</td>
-<td>原构造函数/（对象）本身</td>
-</tr>
-<tr>
-<td>作用对象</td>
-<td>function</td>
-<td>function和object</td>
-</tr>
-</tbody></table>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/24/new-%E5%8E%9F%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/24/new-%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">new 原理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-24 23:50:57 / 修改时间：23:56:45" itemprop="dateCreated datePublished" datetime="2022-04-24T23:50:57+08:00">2022-04-24</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="一、是什么"><a href="#一、是什么" class="headerlink" title="一、是什么"></a>一、是什么</h2><p>在<code>JavaScript</code>中，<code>new</code>操作符用于创建一个给定构造函数的实例对象</p>
-<p>例子</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1function Person(name, age)&#123;</span><br><span class="line">2    this.name = name;</span><br><span class="line">3    this.age = age;</span><br><span class="line">4&#125;</span><br><span class="line">5Person.prototype.sayName = function () &#123;</span><br><span class="line">6    console.log(this.name)</span><br><span class="line">7&#125;</span><br><span class="line">8const person1 = new Person(&#x27;Tom&#x27;, 20)</span><br><span class="line">9console.log(person1)  // Person &#123;name: &quot;Tom&quot;, age: 20&#125;</span><br><span class="line">10t.sayName() // &#x27;Tom&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>从上面可以看到：</p>
-<ul>
-<li><code>new</code> 通过构造函数 <code>Person</code> 创建出来的实例可以访问到构造函数中的属性</li>
-<li><code>new</code> 通过构造函数 <code>Person</code> 创建出来的实例可以访问到构造函数原型链中的属性（即实例与构造函数通过原型链连接了起来）</li>
-</ul>
-<p>现在在构建函数中显式加上返回值，并且这个返回值是一个原始类型</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1function Test(name) &#123;</span><br><span class="line">2  this.name = name</span><br><span class="line">3  return 1</span><br><span class="line">4&#125;</span><br><span class="line">5const t = new Test(&#x27;xxx&#x27;)</span><br><span class="line">6console.log(t.name) // &#x27;xxx&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>可以发现，构造函数中返回一个原始值，然而这个返回值并没有作用</p>
-<p>下面在构造函数中返回一个对象</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1function Test(name) &#123;</span><br><span class="line">2  this.name = name</span><br><span class="line">3  console.log(this) // Test &#123; name: &#x27;xxx&#x27; &#125;</span><br><span class="line">4  return &#123; age: 26 &#125;</span><br><span class="line">5&#125;</span><br><span class="line">6const t = new Test(&#x27;xxx&#x27;)</span><br><span class="line">7console.log(t) // &#123; age: 26 &#125;</span><br><span class="line">8console.log(t.name) // &#x27;undefined&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>从上面可以发现，构造函数如果返回值为一个对象，那么这个返回值会被正常使用</p>
-<h2 id="二、流程"><a href="#二、流程" class="headerlink" title="二、流程"></a>二、流程</h2><p>从上面介绍中，我们可以看到<code>new</code>关键字主要做了以下的工作：</p>
-<ul>
-<li>创建一个新的对象<code>obj</code></li>
-<li>将对象与构建函数通过原型链连接起来</li>
-<li>将构建函数中的<code>this</code>绑定到新建的对象<code>obj</code>上</li>
-<li>根据构建函数返回类型作判断，如果是原始值则被忽略，如果是返回对象，需要正常处理</li>
-</ul>
-<p>举个例子：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1function Person(name, age)&#123;</span><br><span class="line">2    this.name = name;</span><br><span class="line">3    this.age = age;</span><br><span class="line">4&#125;</span><br><span class="line">5const person1 = new Person(&#x27;Tom&#x27;, 20)</span><br><span class="line">6console.log(person1)  // Person &#123;name: &quot;Tom&quot;, age: 20&#125;</span><br><span class="line">7t.sayName() // &#x27;Tom&#x27;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="手写new-操作符"><a href="#手写new-操作符" class="headerlink" title="手写new 操作符"></a>手写new 操作符</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">my</span> <span class="title">new</span>(<span class="params">Func,..args</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> obj=&#123;&#125;;</span><br><span class="line">    obj.__proto__=Func.prototype;</span><br><span class="line">    <span class="keyword">let</span> result=Func.apply(obj,args);</span><br><span class="line">    <span class="keyword">return</span> result instanceOf <span class="built_in">Object</span>?result:obj</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/24/%E5%AE%9E%E7%8E%B0node%E4%B8%AD%E7%9A%84EventEmitter/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/24/%E5%AE%9E%E7%8E%B0node%E4%B8%AD%E7%9A%84EventEmitter/" class="post-title-link" itemprop="url">实现node中的EventEmitter</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-24 22:08:59" itemprop="dateCreated datePublished" datetime="2022-04-24T22:08:59+08:00">2022-04-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-29 15:46:55" itemprop="dateModified" datetime="2022-05-29T15:46:55+08:00">2022-05-29</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Node/" itemprop="url" rel="index"><span itemprop="name">Node</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="一、是什么"><a href="#一、是什么" class="headerlink" title="一、是什么"></a>一、是什么</h2><p>我们了解到，<code>Node </code>采用了事件驱动机制，而<code>EventEmitter </code>就是<code>Node</code>实现事件驱动的基础</p>
-<p>在<code>EventEmitter</code>的基础上，<code>Node </code>几乎所有的模块都继承了这个类，这些模块拥有了自己的事件，可以绑定／触发监听器，实现了异步操作</p>
-<p><code>Node.js</code> 里面的许多对象都会分发事件，比如 fs.readStream 对象会在文件被打开的时候触发一个事件</p>
-<p>这些产生事件的对象都是 events.EventEmitter 的实例，这些对象有一个 eventEmitter.on() 函数，用于将一个或多个函数绑定到命名事件上</p>
-<h2 id="二、使用方法"><a href="#二、使用方法" class="headerlink" title="二、使用方法"></a>二、使用方法</h2><p><code>Node </code>的<code>events</code>模块只提供了一个<code>EventEmitter</code>类，这个类实现了<code>Node</code>异步事件驱动架构的基本模式——观察者模式</p>
-<p>在这种模式中，被观察者(主体)维护着一组其他对象派来(注册)的观察者，有新的对象对主体感兴趣就注册观察者，不感兴趣就取消订阅，主体有更新的话就依次通知观察者们</p>
-<p>基本代码如下所示：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> EventEmitter = <span class="built_in">require</span>(<span class="string">&#x27;events&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyEmitter</span> <span class="keyword">extends</span> <span class="title">EventEmitter</span> </span>&#123;&#125;</span><br><span class="line"><span class="keyword">const</span> myEmitter = <span class="keyword">new</span> MyEmitter()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">callback</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;触发了event事件！&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line">myEmitter.on(<span class="string">&#x27;event&#x27;</span>, callback)</span><br><span class="line">myEmitter.emit(<span class="string">&#x27;event&#x27;</span>)</span><br><span class="line">myEmitter.removeListener(<span class="string">&#x27;event&#x27;</span>, callback);</span><br></pre></td></tr></table></figure>
-
-<p>通过实例对象的<code>on</code>方法注册一个名为<code>event</code>的事件，通过<code>emit</code>方法触发该事件，而<code>removeListener</code>用于取消事件的监听</p>
-<p>关于其常见的方法如下：</p>
-<ul>
-<li>emitter.addListener/on(eventName, listener) ：添加类型为 eventName 的监听事件到事件数组尾部</li>
-<li>emitter.prependListener(eventName, listener)：添加类型为 eventName 的监听事件到事件数组头部</li>
-<li>emitter.emit(eventName[, …args])：触发类型为 eventName 的监听事件</li>
-<li>emitter.removeListener/off(eventName, listener)：移除类型为 eventName 的监听事件</li>
-<li>emitter.once(eventName, listener)：添加类型为 eventName 的监听事件，以后只能执行一次并删除</li>
-<li>emitter.removeAllListeners([eventName])： 移除全部类型为 eventName 的监听事件</li>
-</ul>
-<h2 id="三、实现过程"><a href="#三、实现过程" class="headerlink" title="三、实现过程"></a>三、实现过程</h2><p>通过上面的方法了解，<code>EventEmitter</code>是一个构造函数，内部存在一个包含所有事件的对象</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EventEmitter</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.events = &#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>其中<code>events</code>存放的监听事件的函数的结构如下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;event1&quot;</span>: [f1,f2,f3]，</span><br><span class="line">  <span class="string">&quot;event2&quot;</span>: [f4,f5]，</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>然后开始一步步实现实例方法，首先是<code>emit</code>，第一个参数为事件的类型，第二个参数开始为触发事件函数的参数，实现如下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">emit</span>(<span class="params">type, ...args</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.events[type].forEach(<span class="function">(<span class="params">item</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">Reflect</span>.apply(item, <span class="built_in">this</span>, args);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>当实现了<code>emit</code>方法之后，然后实现<code>on</code>、<code>addListener</code>、<code>prependListener</code>这三个实例方法，都是添加事件监听触发函数，实现也是大同小异</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">on</span>(<span class="params">type, handler</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">this</span>.events[type]) &#123;</span><br><span class="line">        <span class="built_in">this</span>.events[type] = [];</span><br><span class="line">   &#125;</span><br><span class="line">    <span class="built_in">this</span>.events[type].push(handler);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">addListener</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.on(type,handler)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">prependListener</span>(<span class="params">type, handler</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">this</span>.events[type]) &#123;</span><br><span class="line">        <span class="built_in">this</span>.events[type] = [];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">this</span>.events[type].unshift(handler);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>紧接着就是实现事件监听的方法<code>removeListener/on</code></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">removeListener</span>(<span class="params">type, handler</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">this</span>.events[type]) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">this</span>.events[type] = <span class="built_in">this</span>.events[type].filter(<span class="function"><span class="params">item</span> =&gt;</span> item !== handler);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">off</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.removeListener(type,handler)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>最后再来实现<code>once</code>方法， 再传入事件监听处理函数的时候进行封装，利用闭包的特性维护当前状态，通过<code>fired</code>属性值判断事件函数是否执行过</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">once</span>(<span class="params">type, handler</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.on(type, <span class="built_in">this</span>._onceWrap(type, handler, <span class="built_in">this</span>));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">_onceWrap</span>(<span class="params">type, handler, target</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> state = &#123; <span class="attr">fired</span>: <span class="literal">false</span>, handler, type , target&#125;;</span><br><span class="line">    <span class="keyword">const</span> wrapFn = <span class="built_in">this</span>._onceWrapper.bind(state);</span><br><span class="line">    state.wrapFn = wrapFn;</span><br><span class="line">    <span class="keyword">return</span> wrapFn;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">_onceWrapper</span>(<span class="params">...args</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">this</span>.fired) &#123;</span><br><span class="line">      <span class="built_in">this</span>.fired = <span class="literal">true</span>;</span><br><span class="line">      <span class="built_in">Reflect</span>.apply(<span class="built_in">this</span>.handler, <span class="built_in">this</span>.target, args);</span><br><span class="line">      <span class="built_in">this</span>.target.off(<span class="built_in">this</span>.type, <span class="built_in">this</span>.wrapFn);</span><br><span class="line">    &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>完整代码如下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EventEmitter</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.events=&#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">on</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!<span class="built_in">this</span>.events[type])&#123;</span><br><span class="line">            <span class="built_in">this</span>.events[type]=[]</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.events[type].push(handler)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">addListener</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.on(type,handler)</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">prependListener</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!<span class="built_in">this</span>.events[type])&#123;</span><br><span class="line">            <span class="built_in">this</span>.events[type]=[]</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.events[type].unshift(handler)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">removeListener</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!<span class="built_in">this</span>.events[type])&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.events[type]=<span class="built_in">this</span>.events[type].filter(<span class="function"><span class="params">item</span>=&gt;</span>item!==handler)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">off</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.removeListener(type,handler)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">emit</span>(<span class="params">type,...args</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.events[type].forEach(<span class="function"><span class="params">item</span>=&gt;</span>&#123;</span><br><span class="line">            <span class="built_in">Reflect</span>.apply(item,<span class="built_in">this</span>,args);</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">once</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">         <span class="comment">//把监听器注销，即利用闭包，在内部函数中销毁了外部函数的引用</span></span><br><span class="line">        <span class="keyword">let</span> temp=<span class="function">(<span class="params">...args</span>)=&gt;</span>&#123;</span><br><span class="line">            handler(args);</span><br><span class="line">            <span class="built_in">this</span>.off(type,temp)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.on(event,temp)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/24/%E9%98%B2%E6%8A%96%E8%8A%82%E6%B5%81/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/24/%E9%98%B2%E6%8A%96%E8%8A%82%E6%B5%81/" class="post-title-link" itemprop="url">防抖节流</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-24 17:49:35" itemprop="dateCreated datePublished" datetime="2022-04-24T17:49:35+08:00">2022-04-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-14 16:22:39" itemprop="dateModified" datetime="2022-08-14T16:22:39+08:00">2022-08-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h1><p>本质上是优化高频率执行代码的一种手段</p>
-<p>如：浏览器的 <code>resize</code>、<code>scroll</code>、<code>keypress</code>、<code>mousemove</code> 等事件在触发时，会不断地调用绑定在事件上的回调函数，极大地浪费资源，降低前端性能</p>
-<p>为了优化体验，需要对这类事件进行调用次数的限制，对此我们就可以采用<code>throttle</code>（节流）和<code>debounce</code>（防抖）的方式来减少调用频率</p>
-<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><ul>
-<li>节流: n 秒内只运行一次，若在 n 秒内重复触发，只有一次生效</li>
-<li>防抖: n 秒后再执行该事件，若在 n 秒内被重复触发，则重新计时</li>
-</ul>
-<h1 id="节流："><a href="#节流：" class="headerlink" title="节流："></a>节流：</h1><p>用时间戳实现：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttled</span>(<span class="params">fn,delay=<span class="number">500</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> oldTime=<span class="keyword">new</span> <span class="built_in">Date</span>.now();</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">let</span> context=<span class="built_in">this</span>;</span><br><span class="line">        <span class="keyword">let</span> newTime=<span class="keyword">new</span> <span class="built_in">Date</span>.now();</span><br><span class="line">        <span class="keyword">if</span>(newTime-oldTime&gt;=delay)&#123;</span><br><span class="line">            fn.apply(context,args);</span><br><span class="line">            oldTime=<span class="keyword">new</span> <span class="built_in">Date</span>.now();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>用定时器实现</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttled</span>(<span class="params">fn,delay=<span class="number">500</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timer=<span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">..args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">let</span> context=<span class="built_in">this</span>;</span><br><span class="line">        <span class="keyword">if</span>(!timer)&#123;<span class="comment">//n秒内只运行一次，若在n秒内重复触发，只有一次生效</span></span><br><span class="line">            timer=<span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">                fn.apply(context,args);</span><br><span class="line">                timer=<span class="literal">null</span>;</span><br><span class="line">            &#125;,delay)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="防抖："><a href="#防抖：" class="headerlink" title="防抖："></a>防抖：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">fn,delay=<span class="number">500</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timer;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">let</span> context=<span class="built_in">this</span>;</span><br><span class="line">        <span class="built_in">clearTimeout</span>(timer);</span><br><span class="line">        timer=<span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">            fn.apply(context,args);<span class="comment">//n秒内只能触发一次,若在n秒内重复触发，都会被清除,重新计时</span></span><br><span class="line">        &#125;,delay)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>立即执行的防抖函数</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">fn,delay=<span class="number">500</span>,immediate</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timer;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">let</span> context=<span class="built_in">this</span>;</span><br><span class="line">        <span class="keyword">if</span>(timer)<span class="built_in">clearTimeout</span>(timer);</span><br><span class="line">        <span class="keyword">if</span>(immediate)&#123;</span><br><span class="line">            immediate=!immediate;</span><br><span class="line">            fn.apply(context,args);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">           </span><br><span class="line">            timer=<span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">                fn.apply(context,args);</span><br><span class="line">            &#125;,delay)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h1><p>相同点：</p>
-<ul>
-<li>都可以通过使用 <code>setTimeout</code> 实现</li>
-<li>目的都是，降低回调执行频率。节省计算资源</li>
-</ul>
-<p>不同点：</p>
-<ul>
-<li>函数防抖，在一段连续操作结束后，处理回调，利用<code>clearTimeout </code>和 <code>setTimeout</code>实现。函数节流，在一段连续操作中，每一段时间只执行一次，频率较高的事件中使用来提高性能</li>
-<li>函数防抖关注一定时间连续触发的事件，因为会清除定时器，只在最后执行一次，而函数节流一段时间内只执行一次,不会清除定时器，因此会在隔一段时间执行一次。</li>
-</ul>
-<p>例如，都设置时间频率为500ms，在2秒时间内，频繁触发函数，节流，每隔 500ms 就执行一次。防抖，则不管调动多少次方法，在2s后，只会执行一次</p>
-<h1 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h1><p>防抖在连续的事件，只需触发一次回调的场景有：</p>
-<ul>
-<li>搜索框搜索输入。只需用户最后一次输入完，再发送请求</li>
-<li>手机号、邮箱验证输入检测</li>
-<li>窗口大小<code>resize</code>。只需窗口调整完成后，计算窗口大小。防止重复渲染。</li>
-</ul>
-<p>节流在间隔一段时间执行一次回调的场景有：</p>
-<ul>
-<li>滚动加载，加载更多或滚到底部监听</li>
-<li>搜索框，搜索联想功能</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1340,7 +1409,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">218</span>
+          <span class="site-state-item-count">223</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1414,7 +1483,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共199.3k字</span>
+  <span class="post-count">博客全站共201.2k字</span>
 </div>
         
 
