@@ -1,9 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>g</title>
-    <url>/2022/11/04/g/</url>
+    <title>from memory cache与from disk cache</title>
+    <url>/2022/11/08/from-memory-cache%E4%B8%8Efrom-disk-cache/</url>
+    <content><![CDATA[<h1 id="浏览器的开发者工具的Network的Size栏出现三种情况："><a href="#浏览器的开发者工具的Network的Size栏出现三种情况：" class="headerlink" title="浏览器的开发者工具的Network的Size栏出现三种情况："></a>浏览器的开发者工具的Network的Size栏出现三种情况：</h1><ul>
+<li>from memory cache</li>
+<li>from disk cache</li>
+<li>资源本身大小(比如13.6k)</li>
+</ul>
+<h1 id="二三级缓存原理："><a href="#二三级缓存原理：" class="headerlink" title="二三级缓存原理："></a>二三级缓存原理：</h1><p>1.先查找内存，如果内存中存在，从内存中加载</p>
+<p>2.如果内存中未查找到，选择硬盘获取，如果硬盘中有，从硬盘中加载</p>
+<p>3.如果硬盘中未查找到，就进行网络请求</p>
+<p>4.加载到的资源缓存到硬盘和内存</p>
+<h1 id="http状态码及区别"><a href="#http状态码及区别" class="headerlink" title="http状态码及区别"></a>http状态码及区别</h1><ul>
+<li>200 from memory cache:不访问服务器，一般已经加载过该资源且缓存在了内存中，直接从内存中读取缓存，浏览器关闭后，数据将不存在（资源被释放掉），<strong>再次打开相同的页面时，不会出现from memory cache，一般脚本，字体，图片会存在内存中</strong></li>
+<li>200 from disk cache:不访问服务器，已经在之前的某个时间加载过该资源，直接从硬盘中读取缓存，关闭浏览器后，数据依然存在，<strong>此资源不会随着该页面的关闭而释放掉，下次打开仍然是from disk cache，一般非脚本存在其中，如css</strong></li>
+<li>200 资源大小数值：从服务器下载最新资源</li>
+<li>304 Not Modified:访问服务器，发现数据没有更新，服务器返回此状态码，然后从缓存中获取数据</li>
+</ul>
+<h1 id="几种状态执行顺序："><a href="#几种状态执行顺序：" class="headerlink" title="几种状态执行顺序："></a>几种状态执行顺序：</h1><p>例子：加载一种资源：访问-&gt;200-&gt;退出浏览器-&gt;再进来-&gt;200(from disk cache)-&gt;刷新-&gt;200(from memory cache)</p>
+]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>组件设计原则</title>
+    <url>/2022/11/08/%E7%BB%84%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</url>
     <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>前端工程化-CI/CD</title>
+    <url>/2022/11/08/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96-CI-CD/</url>
+    <content><![CDATA[<h1 id="概念："><a href="#概念：" class="headerlink" title="概念："></a>概念：</h1><p>1.CI（Continuous integration,<strong>持续集成</strong>)</p>
+<p>频繁地（一天多次）将代码集成到主干</p>
+<p>2.CD(Continous delivery**,持续交付)**</p>
+<p>持续集成的下一步，指的是，频繁将软件的新版本，交付给质量团队或者用户，以供评审，如评审通过，代码进入生产阶段，手动部署</p>
+<p>3.CD(Continous deployment,<strong>持续部署</strong>)</p>
+<p>持续交付的下一步，指的是，代码通过评审后，自动部署到生产环境</p>
+<h1 id="意义："><a href="#意义：" class="headerlink" title="意义："></a>意义：</h1><h2 id="CI（持续集成）"><a href="#CI（持续集成）" class="headerlink" title="CI（持续集成）"></a>CI（持续集成）</h2><p>（1）<strong>快速发现错误</strong>，每完成一点更新，就集成到主干，可以快速发现错误，定位错误也比较容易</p>
+<p>（2）<strong>防止分支大幅偏离主干</strong>，如果不是经常集成，主干又在不断更新，会导致以后集成的难度变大，甚至难以集成</p>
+<p><strong>持续集成的目的，就是让产品可以快速迭代，同时还能保持高质量</strong>，它的核心措施是，代码集成到主干之前，必须通过自动化测试，只要有一个测试用例失败，就不能集成</p>
+<h2 id="CD（持续交付）"><a href="#CD（持续交付）" class="headerlink" title="CD（持续交付）"></a>CD（持续交付）</h2><p>保证不管怎么更新，软件是随时可以交付的</p>
+<h2 id="CD（持续部署）"><a href="#CD（持续部署）" class="headerlink" title="CD（持续部署）"></a>CD（持续部署）</h2><p>保证代码在任何时刻都是可部署，可以进入生产阶段</p>
+<h1 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h1><h2 id="提交"><a href="#提交" class="headerlink" title="提交"></a>提交</h2><p>开发者提交代码</p>
+<h2 id="测试（第一轮）"><a href="#测试（第一轮）" class="headerlink" title="测试（第一轮）"></a>测试（第一轮）</h2><p>代码仓库commit操作配置钩子，只要提交代码合并进主干，就会跑自动化测试</p>
+<p>三种测试：</p>
+<p>单元测试：针对函数或模块的测试</p>
+<p>集成测试：针对整体产品的某个功能的测试，又称功能测试</p>
+<p>端对端测试：从用户界面直达数据库的全链路测试</p>
+<h2 id="构建："><a href="#构建：" class="headerlink" title="构建："></a>构建：</h2><p>测试通过，代码即可进入主干，就算可以交付</p>
+<p>交付后，就先进行构建，再进入第二轮测试</p>
+<p>所谓构建，指的就是将源码转换为可以运行的实际代码，比如安装依赖，配置各种资源（样式，JS脚本，图片）等</p>
+<p>常用的构建工具：</p>
+<p>·<a href="https://links.jianshu.com/go?to=http://jenkins-ci.org/">Jenkins</a></p>
+<p>·<a href="https://links.jianshu.com/go?to=https://travis-ci.com/">Travis</a></p>
+<p>·<a href="https://links.jianshu.com/go?to=https://www.codeship.io/">Codeship</a></p>
+<p>·<a href="https://links.jianshu.com/go?to=http://stridercd.com/">Strider</a></p>
+<h2 id="测试（第二轮）"><a href="#测试（第二轮）" class="headerlink" title="测试（第二轮）"></a>测试（第二轮）</h2><p>全面测试，单元测试和集成测试都会跑，有条件也要做端对端测试，所有测试以自动化为主，少数无法自动化的测试用例，人工跑</p>
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>通过第二轮测试，当前代码就是一个可以直接部署的版本，将这个版本的所有文件打包存档，发到生产服务器，生产服务器将打包文件解包成本地的一个目录，再将允许路径的符号链接指向这个目录，然后重新启动应用</p>
+<h2 id="回滚"><a href="#回滚" class="headerlink" title="回滚"></a>回滚</h2><p>一旦当前版本发送问题，就要回滚到上一个版本的构建结果，最简单的做法就是修改符号链接，指向上一个版本目录</p>
+]]></content>
+      <categories>
+        <category>前端工程化</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>YY直播日常实习</title>
+    <url>/2022/11/08/YY%E7%9B%B4%E6%92%AD%E6%97%A5%E5%B8%B8%E5%AE%9E%E4%B9%A0/</url>
+    <content><![CDATA[<p>1.实习负责的什么项目，项目中遇到了哪些困难 </p>
+<p> 2.你讲到了Vue-i18n插件，设计插件的思想：x </p>
+<p>  3.Vue中封装组件的思想 </p>
+<p>  4.函数式编程的思想 x</p>
+<p>  5.vue和vue3双向绑定原理，区别 </p>
+<p> 6.Proxy的优点</p>
+<p>  6.data中为什么返回函数比较好，不是对象 </p>
+<p>  7.data中如果用对象，造成了数据污染，要怎么避免数据污染 x</p>
+<p>组件复用造成了数据污染，那就只能避免组件的复用？</p>
+<p>  8.vue方法中声明了对象没有响应式，怎么实现响应式 </p>
+<p>  9.vue源码中，data,comouted,methods声明的顺序的是怎样的 x</p>
+<p>  10.vue的生命周期 </p>
+<p>  11.vue3的生命周期和vue2生命周期的不同点 </p>
+<p>  12.讲讲keep-alive </p>
+<p>  13.keep-alive的实现原理 </p>
+<p>  14.你的项目中用到了组件库，讲讲前端工程化 </p>
+<p>  15.tree-traking原理，怎么实现tree-shaking，tree-shaking怎么知道没用的代码 x</p>
+<p>  16.前端中的CI/CD是怎样的流程 x</p>
+<p>  17.了解抽象语法树AST吗 </p>
+<p>  18.babel-loader原理讲讲 </p>
+<p>  19.http缓存 </p>
+<p>  20.如果浏览器中没有设置强缓存和协商缓存，浏览器会自动缓存吗 </p>
+<p>  21.from disk和from memory的区别 x</p>
+<p>  22.http和https的区别 </p>
+<p>  还问了一些有些没想起来 </p>
+<p>  反问：有点紧张，觉得我面试表现得怎么样 </p>
+<p>  回答：看出来你有点紧张，很多东西原理了解的还不深入，但是整个前端体系比较全面，了解工程化知识，框架也熟悉</p>
+]]></content>
+      <categories>
+        <category>面经</category>
+      </categories>
   </entry>
   <entry>
     <title>手写instanceof</title>
@@ -1737,7 +1832,43 @@
   <entry>
     <title>纯函数</title>
     <url>/2022/07/23/%E7%BA%AF%E5%87%BD%E6%95%B0/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<h2 id="什么是函数式编程？"><a href="#什么是函数式编程？" class="headerlink" title="什么是函数式编程？"></a>什么是函数式编程？</h2><p>简单来说，函数式编程是<strong>一种强调以函数使用为主的软件开发风格。</strong></p>
+<p>还有一点你要记住，函数式编程的目的是使用函数来<strong>抽象作用在数据之上的控制流和操作</strong>，从而在系统中<strong>消除副作用</strong>并<strong>减少对状态的改变。</strong></p>
+<h2 id="声明式编程"><a href="#声明式编程" class="headerlink" title="声明式编程"></a>声明式编程</h2><p><strong>函数式编程属于声明式编程范式</strong>：这种范式会<strong>描述一系列的操作</strong>，但并不会<strong>暴露它们是如何实现的</strong>或是<strong>数据流如何传过它们</strong>。</p>
+<p>我们所熟知的 SQL 语句就是一种很典型的声明式编程，它由一个个<strong>描述</strong>查询结果应该是什么样的断言组成，对数据检索的内部机制进行了<strong>抽象</strong>。</p>
+<p>我们再来看一组代码再来对比一下命令式编程和声明式编程。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 命令式方式</span></span><br><span class="line"><span class="keyword">var</span> array = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; array.length; i++) &#123;</span><br><span class="line">    array[i] = <span class="built_in">Math</span>.pow(array[i], <span class="number">2</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">array; <span class="comment">// [0, 1, 4, 9]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 声明式方式</span></span><br><span class="line">[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].map(<span class="function"><span class="params">num</span> =&gt;</span> <span class="built_in">Math</span>.pow(num, <span class="number">2</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>可以看到命令式很具体的告诉计算机如何执行某个任务。</p>
+<p>而声明式是将程序的<strong>描述与求值</strong>分离开来。它关注如何用各种<strong>表达式</strong>来描述程序逻辑，而不一定要指明其控制流或状态关系的变化。</p>
+<h2 id="纯函数"><a href="#纯函数" class="headerlink" title="纯函数"></a>纯函数</h2><p><strong>纯函数是指没有副作用的函数，相同的输入有相同的输出。</strong></p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> counter=<span class="number">0</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">increment</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> ++counter;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个函数是不纯的，它读取了外部变量。这种依赖外部变量进行的计算，结果很难预测，可能在某些地方修改了counter的值，导致increment出来的值不是预期的</p>
+<p><strong>对于纯函数有性质：</strong></p>
+<ul>
+<li>仅取决于提供的输入，而不依赖于任何在函数求值或调用间隔时可能变化的隐藏状态和外部状态</li>
+<li>不会造成超出作用域的变化，例如修改全局变量或引用传递的参数</li>
+</ul>
+<p>对于相同的输入，纯函数的输出结果总是一致的，可预测的，这个也称为引用透明</p>
+<h3 id="引用透明"><a href="#引用透明" class="headerlink" title="引用透明"></a>引用透明</h3><p>引用透明是定义一个纯函数较为正确的方法，纯度在这个意义上表示一个函数的参数和返回值之间的纯度关系，<strong>如果一个函数对于相同的输入始终产生相同的结果，我们就说它是引用透明</strong></p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 非引用透明</span></span><br><span class="line"><span class="keyword">var</span> counter = <span class="number">0</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">increment</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> ++counter</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 引用透明</span></span><br><span class="line"><span class="keyword">var</span> increment = <span class="function">(<span class="params">counter</span>) =&gt;</span> counter + <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="不可变数据"><a href="#不可变数据" class="headerlink" title="不可变数据"></a>不可变数据</h3><p>不可变数据指的是创建后不能更改的数据，与其他语言一样，js里有一些基本类型(String,NUmber等)从本质上是不可变的，但是对象就是在任意的地方可变</p>
+<p>例如：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> sortDesc = <span class="function"><span class="keyword">function</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arr.sort(<span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> a - b</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, <span class="number">3</span>, <span class="number">2</span>]</span><br><span class="line">sortDesc(arr) <span class="comment">// [1, 2, 3]</span></span><br><span class="line">arr <span class="comment">// [1, 2, 3]</span></span><br></pre></td></tr></table></figure>
+
+<p>这段代码会导致在排序中产生副作用，原始数组arr被修改了</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>使用纯函数的代码绝不会更改或破坏全局状态，有助于提高代码的可测试性和可维护性</li>
+<li>函数式编程采用声明式的风格，易于推理，提高代码的可读性。</li>
+<li>函数式编程将函数视为积木，通过一等高阶函数来提高代码的模块化和可重用性。</li>
+</ul>
+<p>内容来至于《JavaScript函数式编程指南》</p>
+]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
   </entry>
   <entry>
     <title>IOC原理</title>
@@ -4172,8 +4303,15 @@
 <p>但是CommonJS规范无法确定在实际运行前需要或者不需要某些模块，所以CommonJS不适合tree-shaking机制。在 ES6 中，引入了完全静态的导入语法：import。</p>
 <p>因为tree shaking只能在静态modules下工作。ECMAScript 6 模块加载是静态的,因此整个依赖树可以被静态地推导出解析语法树。所以在 ES6 中使用 tree shaking 是非常容易的。</p>
 <h1 id="tree-shaking的原理是什么"><a href="#tree-shaking的原理是什么" class="headerlink" title="tree shaking的原理是什么?"></a>tree shaking的原理是什么?</h1><ul>
-<li>ES6 Module引入进行静态分析，故而编译的时候正确判断到底加载了哪些模块</li>
-<li>静态分析程序流，判断哪些模块和变量未被使用或者引用，进而删除对应代码</li>
+<li><p><strong>ES6 Module引入进行静态分析，</strong>故而编译的时候正确判断到底加载了哪些模块</p>
+</li>
+<li><p><strong>静态分析程序流，</strong>判断哪些模块和变量未被使用或者引用，进而删除对应代码</p>
+</li>
+<li><p>webpack中，tree-shaking的实现一是先标记出模块导出值哪些没有被用过，二是使用Terser删除这些没被用到的导出语句，标记过程分为三个步骤：</p>
+<p>（1）Make阶段，收集模块导出变量记录到模块关系依赖图ModuleGraph变量中</p>
+<p>（2）Seal阶段，遍历ModuleGraph标记模块导出变量有没有被使用</p>
+<p>（3）生成产物时，若变量没有被其他模块使用则删除对应导出语句</p>
+</li>
 </ul>
 <h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="将文件标记为无副作用-side-effect-free"><a href="#将文件标记为无副作用-side-effect-free" class="headerlink" title="将文件标记为无副作用(side-effect-free)"></a>将文件标记为无副作用(side-effect-free)</h2><p>在一个纯粹的 ESM 模块世界中，识别出哪些文件有副作用很简单。然而，我们的项目无法达到这种纯度，所以，此时有必要向 webpack 的 compiler 提供提示哪些代码是“纯粹部分”。</p>
 <p>这种方式是通过 package.json 的 <code>&quot;sideEffects&quot;</code> 属性来实现的。</p>
@@ -4195,9 +4333,14 @@
 <p>注意，也可以在命令行接口中使用 <code>--optimize-minimize</code> 标记，来使用 <code>UglifyJSPlugin</code>。为了学会使用 <em>tree shaking</em>，你必须……</p>
 </blockquote>
 <ul>
-<li>使用 ES2015 模块语法（即 <code>import</code> 和 <code>export</code>）。</li>
-<li>在项目 <code>package.json</code> 文件中，添加一个 “sideEffects” 入口。</li>
-<li>引入一个能够删除未引用代码(dead code)的压缩工具(minifier)（例如 <code>UglifyJSPlugin</code>）。</li>
+<li><p>使用 ES2015 模块语法（即 <code>import</code> 和 <code>export</code>）。</p>
+</li>
+<li><p>在项目 <code>package.json</code> 文件中，添加一个 “sideEffects” 入口。</p>
+</li>
+<li><p>引入一个能够删除未引用代码(dead code)的压缩工具(minifier)（例如 <code>UglifyJSPlugin</code>）。</p>
+</li>
+<li><p>配置optimization对象的usedExports为true</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="attr">entry</span>: <span class="string">&quot;./src/index&quot;</span>,</span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&quot;production&quot;</span>,</span><br><span class="line">  <span class="attr">devtool</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">optimization</span>: &#123;</span><br><span class="line">    <span class="attr">usedExports</span>: <span class="literal">true</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 </ul>
 ]]></content>
       <categories>

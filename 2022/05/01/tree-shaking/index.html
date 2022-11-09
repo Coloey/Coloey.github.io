@@ -28,7 +28,7 @@
 <meta property="og:description" content="tree shaking如何工作的呢？虽然 tree shaking 的概念在 1990 就提出了，但直到 ES6 的 ES6-style 模块出现后才真正被利用起来。 在ES6以前，我们可以使用CommonJS引入模块：require()，这种引入是动态的，也意味着我们可以基于条件来导入需要的代码 但是CommonJS规范无法确定在实际运行前需要或者不需要某些模块，所以CommonJS不适合tr">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-05-01T14:15:55.000Z">
-<meta property="article:modified_time" content="2022-05-02T15:28:56.323Z">
+<meta property="article:modified_time" content="2022-11-09T10:18:39.811Z">
 <meta property="article:author" content="小柒">
 <meta name="twitter:card" content="summary">
 
@@ -221,7 +221,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-02 23:28:56" itemprop="dateModified" datetime="2022-05-02T23:28:56+08:00">2022-05-02</time>
+                <time title="修改时间：2022-11-09 18:18:39" itemprop="dateModified" datetime="2022-11-09T18:18:39+08:00">2022-11-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -253,8 +253,15 @@
 <p>但是CommonJS规范无法确定在实际运行前需要或者不需要某些模块，所以CommonJS不适合tree-shaking机制。在 ES6 中，引入了完全静态的导入语法：import。</p>
 <p>因为tree shaking只能在静态modules下工作。ECMAScript 6 模块加载是静态的,因此整个依赖树可以被静态地推导出解析语法树。所以在 ES6 中使用 tree shaking 是非常容易的。</p>
 <h1 id="tree-shaking的原理是什么"><a href="#tree-shaking的原理是什么" class="headerlink" title="tree shaking的原理是什么?"></a>tree shaking的原理是什么?</h1><ul>
-<li>ES6 Module引入进行静态分析，故而编译的时候正确判断到底加载了哪些模块</li>
-<li>静态分析程序流，判断哪些模块和变量未被使用或者引用，进而删除对应代码</li>
+<li><p><strong>ES6 Module引入进行静态分析，</strong>故而编译的时候正确判断到底加载了哪些模块</p>
+</li>
+<li><p><strong>静态分析程序流，</strong>判断哪些模块和变量未被使用或者引用，进而删除对应代码</p>
+</li>
+<li><p>webpack中，tree-shaking的实现一是先标记出模块导出值哪些没有被用过，二是使用Terser删除这些没被用到的导出语句，标记过程分为三个步骤：</p>
+<p>（1）Make阶段，收集模块导出变量记录到模块关系依赖图ModuleGraph变量中</p>
+<p>（2）Seal阶段，遍历ModuleGraph标记模块导出变量有没有被使用</p>
+<p>（3）生成产物时，若变量没有被其他模块使用则删除对应导出语句</p>
+</li>
 </ul>
 <h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="将文件标记为无副作用-side-effect-free"><a href="#将文件标记为无副作用-side-effect-free" class="headerlink" title="将文件标记为无副作用(side-effect-free)"></a>将文件标记为无副作用(side-effect-free)</h2><p>在一个纯粹的 ESM 模块世界中，识别出哪些文件有副作用很简单。然而，我们的项目无法达到这种纯度，所以，此时有必要向 webpack 的 compiler 提供提示哪些代码是“纯粹部分”。</p>
 <p>这种方式是通过 package.json 的 <code>&quot;sideEffects&quot;</code> 属性来实现的。</p>
@@ -276,9 +283,14 @@
 <p>注意，也可以在命令行接口中使用 <code>--optimize-minimize</code> 标记，来使用 <code>UglifyJSPlugin</code>。为了学会使用 <em>tree shaking</em>，你必须……</p>
 </blockquote>
 <ul>
-<li>使用 ES2015 模块语法（即 <code>import</code> 和 <code>export</code>）。</li>
-<li>在项目 <code>package.json</code> 文件中，添加一个 “sideEffects” 入口。</li>
-<li>引入一个能够删除未引用代码(dead code)的压缩工具(minifier)（例如 <code>UglifyJSPlugin</code>）。</li>
+<li><p>使用 ES2015 模块语法（即 <code>import</code> 和 <code>export</code>）。</p>
+</li>
+<li><p>在项目 <code>package.json</code> 文件中，添加一个 “sideEffects” 入口。</p>
+</li>
+<li><p>引入一个能够删除未引用代码(dead code)的压缩工具(minifier)（例如 <code>UglifyJSPlugin</code>）。</p>
+</li>
+<li><p>配置optimization对象的usedExports为true</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="attr">entry</span>: <span class="string">&quot;./src/index&quot;</span>,</span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&quot;production&quot;</span>,</span><br><span class="line">  <span class="attr">devtool</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">optimization</span>: &#123;</span><br><span class="line">    <span class="attr">usedExports</span>: <span class="literal">true</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 </ul>
 
     </div>
@@ -393,14 +405,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">224</span>
+          <span class="site-state-item-count">227</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">27</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -467,7 +479,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共201.1k字</span>
+  <span class="post-count">博客全站共203.7k字</span>
 </div>
         
 
