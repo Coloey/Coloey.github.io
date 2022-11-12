@@ -187,6 +187,245 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/27/Context/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/07/27/Context/" class="post-title-link" itemprop="url">Context</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-07-27 11:02:34 / 修改时间：15:54:21" itemprop="dateCreated datePublished" datetime="2022-07-27T11:02:34+08:00">2022-07-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="理解："><a href="#理解：" class="headerlink" title="理解："></a>理解：</h1><p>一种组件间通信方式，用于祖组件和后代组件之间的通信</p>
+<p>1.使用Context</p>
+<p>2.创建Context容器对象</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> xxxContext = React.createContext(defaultValue)</span><br></pre></td></tr></table></figure>
+
+<p>3.渲染子组件，外面包裹xxxContext.Provider,通过value属性给后代组件传递数据</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;xxxContext.Provider value=&#123;数据&#125;&gt;</span><br><span class="line">&lt;/xxxContext.Provider&gt;</span><br></pre></td></tr></table></figure>
+
+<p>4.后代组件读取数据<br>第一种适用于类组件：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> contextType = xxxContext;<span class="comment">//声明接收context</span></span><br><span class="line"><span class="built_in">this</span>.context<span class="comment">//context是一个对象，读取context中value的值</span></span><br></pre></td></tr></table></figure>
+
+<p>第二种函数组件和类组件都可以：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;xxxContext.Consumer&gt;</span><br><span class="line">    &#123;</span><br><span class="line">    	<span class="function"><span class="params">value</span>=&gt;</span>(<span class="comment">//value是context中的value数据</span></span><br><span class="line">    		要显示的内容</span><br><span class="line">    	)</span><br><span class="line">    </span><br><span class="line">	&#125;</span><br><span class="line">&lt;/xxxContext.Consumer&gt;</span><br></pre></td></tr></table></figure>
+
+<p>例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ThemeContext = React.createContext(&#123;</span><br><span class="line">    <span class="attr">value</span>:<span class="string">&quot;blue&quot;</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params">props</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">super</span>(props)</span><br><span class="line">        <span class="built_in">this</span>.state=&#123;<span class="attr">value</span>:<span class="string">&quot;red&quot;</span>&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">render</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span>(</span><br><span class="line">            <span class="xml"><span class="tag">&lt;<span class="name">ThemeContext.Provider</span> <span class="attr">value</span>=<span class="string">&#123;this.state&#125;</span>&gt;</span></span></span><br><span class="line"><span class="xml">            	<span class="tag">&lt;<span class="name">B</span>/&gt;</span></span></span><br><span class="line"><span class="xml">            <span class="tag">&lt;/<span class="name">ThemeContext.Provider</span>&gt;</span></span></span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">B</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">        <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">        	<span class="tag">&lt;<span class="name">C</span>/&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">C</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        <span class="xml"><span class="tag">&lt;<span class="name">ThemeContext.Consumer</span>&gt;</span></span></span><br><span class="line"><span class="xml">        &#123;(&#123;value&#125;)=&gt;(</span></span><br><span class="line"><span class="xml">        	<span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;value&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="xml">    	)&#125;</span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">ThemeContext.Consumer</span>&gt;</span></span></span><br><span class="line">        </span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>context一般用于封装react插件</p>
+<h1 id="使用useContext"><a href="#使用useContext" class="headerlink" title="使用useContext"></a>使用useContext</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> value = useContext(MyContext)</span><br></pre></td></tr></table></figure>
+
+<p>接收一个<strong>context对象</strong>（React.createContext的返回值）并返回该context的当前值，当前的context值由上层㢟中距离当前组件最近的&lt;MyContext.Provider&gt;的value prop角色</p>
+<p>当组件上层最近的&lt;MyContext.Provider&gt;更新时，该Hook会触发重渲染，使用最新传递给MyContext provider的context value值。</p>
+<p><strong>useContext(MyContext)相当于static contextType=MyContext或者&lt;MyContext.Consumer&gt;</strong></p>
+<p><code>useContext(MyContext)</code> 只是让你能够<em>读取</em> context 的值以及订阅 context 的变化。你仍然需要在上层组件树中使用 <code>&lt;MyContext.Provider&gt;</code> 来为下层组件<em>提供</em> context。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/26/redux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/07/26/redux/" class="post-title-link" itemprop="url">redux</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-07-26 23:48:24" itemprop="dateCreated datePublished" datetime="2022-07-26T23:48:24+08:00">2022-07-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-27 00:30:29" itemprop="dateModified" datetime="2022-07-27T00:30:29+08:00">2022-07-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="概念："><a href="#概念：" class="headerlink" title="概念："></a>概念：</h1><p>Redux 是一个使用”actions”的事件管理和更新应用状态的模式和工具库,以集中式Store的方式对整个应用中使用的状态进行集中管理，其规则确保状态只能以<strong>可预测</strong>的方式更新</p>
+<p>Redux 在以下情况下更有用：</p>
+<ul>
+<li>在应用的大量地方，都存在大量的状态</li>
+<li>应用状态会随着时间的推移而频繁更新</li>
+<li>更新该状态的逻辑可能很复杂</li>
+<li>中型和大型代码量的应用，很多人协同开发</li>
+</ul>
+<h1 id="store"><a href="#store" class="headerlink" title="store:"></a>store:</h1><p>保存应用程序的全局state的容器，是一个Js对象，store是通过传入一个reducer来创建的，并且有一个名为getState的方法，它返回当前状态值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;configureStore&#125; <span class="keyword">from</span> <span class="string">&quot;@reduxjs/toolkit&quot;</span></span><br><span class="line"><span class="keyword">const</span> store=configureStore(&#123;<span class="attr">reducer</span>:counterReducer&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(store.getState())</span><br><span class="line"><span class="comment">//&#123;value:0&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="action"><a href="#action" class="headerlink" title="action:"></a>action:</h1><p>是一个具有type字段的普通js对象，可以将action视为描述应用程序中发生了什么事件，type字段是一个字符串，给这个action一个描述性的名字，比如”todos/todoAdded”(域/事件名称)，第一部分是这个action所属的特征和类别，第二部分是具体发生的具体事情</p>
+<p>action对象可以有其他字段，将其放在名为payload的字段中</p>
+<p><strong>action创建函数</strong>：就是生成action的方法，action创建函数只是简单返回一个action</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addTodo</span>(<span class="params">text</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">type</span>: ADD_TODO,</span><br><span class="line">    text</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="reducers"><a href="#reducers" class="headerlink" title="reducers"></a>reducers</h1><p>reducer是一个函数，接收当前的state和一个action对象，必要时决定如何更新状态，并返回新状态，函数签名(state,action)=&gt;newState,可以将reducer视为一个事件监听器，它根据接收到的action类型处理事件</p>
+<p>reducer必须是一个纯函数：</p>
+<ul>
+<li>仅使用 <code>state</code> 和 <code>action</code> 参数计算新的状态值</li>
+<li>禁止直接修改 <code>state</code>。必须通过复制现有的 <code>state</code> 并对复制的值进行更改的方式来做 <em>不可变更新（immutable updates）</em>。</li>
+<li>禁止任何异步逻辑、依赖随机值或导致其他“副作用”的代码</li>
+</ul>
+<p>reducer 函数内部的逻辑通常遵循以下步骤：</p>
+<ul>
+<li>检查 reducer 是否关心这个 action<ul>
+<li>如果是，则复制 state，使用新值更新 state 副本，然后返回新 state</li>
+</ul>
+</li>
+<li>否则，返回原来的 state 不变</li>
+</ul>
+<h1 id="dispatch"><a href="#dispatch" class="headerlink" title="dispatch"></a>dispatch</h1><p>更新state的唯一方法是调用store.dispatch()并传入一个action对象，store将执行所有reducer函数并计算出更新后的state,调用getState()可以获取更新的state</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">store.dispatch(&#123;<span class="attr">type</span>:<span class="string">&#x27;counter/increamented&#x27;</span>&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(store.getStore())</span><br><span class="line"><span class="comment">//&#123;value:1&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Selectors"><a href="#Selectors" class="headerlink" title="Selectors:"></a>Selectors:</h1><p>Selector函数可以从store状态树中提取指定的片段，随着应用变大，遇到不同应用程序的不同部分需要读取相同数据，selector可以避免重复这样的状态逻辑</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> selectCounterValue=<span class="function"><span class="params">state</span>=&gt;</span>state.value</span><br><span class="line"><span class="keyword">const</span> currentValue = selectCounterValue(store.getState())</span><br><span class="line"><span class="built_in">console</span>.log(currentValue)</span><br><span class="line"><span class="comment">//2</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="核心概念："><a href="#核心概念：" class="headerlink" title="核心概念："></a>核心概念：</h1><p><strong>单一数据源</strong>：应用程序的<strong>全局状态</strong>作为对象存储在单个 <strong>store</strong> 中。任何给定的数据片段都应仅存在于一个位置，而不是在许多位置重复。</p>
+<p><strong>state只读</strong>：</p>
+<p>更改状态的唯一方法是 dispatch 一个 <strong>action</strong>，这是一个描述所发生情况的对象。</p>
+<p>这样，UI 就不会意外覆盖数据，并且更容易跟踪发生状态更新的原因。由于 actions 是普通的 JS 对象，因此可以记录、序列化、存储这些操作，并在以后重放这些操作以进行调试或测试。</p>
+<p><strong>使用reducer纯函数进行更改：</strong></p>
+<p>Reducers 是纯函数，它们采用旧 state 和 action，并返回新 state。</p>
+<h1 id="redux数据流："><a href="#redux数据流：" class="headerlink" title="redux数据流："></a>redux数据流：</h1><p><strong>单向数据流：</strong></p>
+<p>root reducer函数创建Redux store=&gt;store调用一次root reducer,并将返回值保存为它的初始state=&gt;UI首次渲染时，UI组件访问Redux store的当前state,并将数据渲染为内容，监听store的更新：</p>
+<p>应用更新=&gt;dispatch一个action到Redux store=&gt;store用之前的state和当前的action再次运行reducer函数，并将返回值保存为新的state=&gt;store通知所有订阅过的UI,通知store更新=&gt;每个订阅过store数据的UI组件就会检查它们需要的state部分是否被更新=&gt;发现更新，每个组件强制使用新数据渲染，更新网页</p>
+<h1 id="明确两个概念："><a href="#明确两个概念：" class="headerlink" title="明确两个概念："></a>明确两个概念：</h1><p><strong>UI组件：</strong>不能使用任何redux的api,只负责页面的呈现，交互</p>
+<p><strong>容器组件</strong>：负责和redux通信，将结果交给UI组件</p>
+<ul>
+<li><strong>创建一个容器组件</strong>：靠react-redux的connect函数，connect(mapStateToProps,mapDispatchToProps)(UI组件)</li>
+<li>mapStateToProps:映射状态：返回值时一个对象</li>
+<li>mapDispatchToProps:映射操作状态的方法，返回值是一个对象</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; connect &#125; <span class="keyword">from</span> <span class="string">&#x27;react-redux&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; toggleTodo &#125; <span class="keyword">from</span> <span class="string">&#x27;../actions&#x27;</span></span><br><span class="line"><span class="keyword">import</span> TodoList <span class="keyword">from</span> <span class="string">&#x27;../components/TodoList&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> getVisibleTodos = <span class="function">(<span class="params">todos, filter</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">switch</span> (filter) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;SHOW_COMPLETED&#x27;</span>:</span><br><span class="line">      <span class="keyword">return</span> todos.filter(<span class="function"><span class="params">t</span> =&gt;</span> t.completed)</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;SHOW_ACTIVE&#x27;</span>:</span><br><span class="line">      <span class="keyword">return</span> todos.filter(<span class="function"><span class="params">t</span> =&gt;</span> !t.completed)</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;SHOW_ALL&#x27;</span>:</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">return</span> todos</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mapStateToProps = <span class="function"><span class="params">state</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">todos</span>: getVisibleTodos(state.todos, state.visibilityFilter)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mapDispatchToProps = <span class="function"><span class="params">dispatch</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">onTodoClick</span>: <span class="function"><span class="params">id</span> =&gt;</span> &#123;</span><br><span class="line">      dispatch(toggleTodo(id))</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> VisibleTodoList = connect(</span><br><span class="line">  mapStateToProps,</span><br><span class="line">  mapDispatchToProps</span><br><span class="line">)(TodoList)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> VisibleTodoList</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>容器组件中的store是靠props传进去，而不是在容器组件中直接引入</li>
+</ul>
+<h1 id="优化："><a href="#优化：" class="headerlink" title="优化："></a>优化：</h1><ul>
+<li>容器组件和UI组件整合为一个文件</li>
+<li>不用给容器组件传递store,给<APP>包裹一个<Provider store="{store}">即可</Provider></APP></li>
+<li>使用react-redux后不用自己检测redux状态的变化，容器组件自己完成这个工作</li>
+<li>mapDispatchToProps写成一个对象</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">onTodoClick</span>:toggleTodo</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="总结：一个组件与redux打交道步骤："><a href="#总结：一个组件与redux打交道步骤：" class="headerlink" title="总结：一个组件与redux打交道步骤："></a>总结：一个组件与redux打交道步骤：</h1><ul>
+<li>定义UI组件不暴露</li>
+<li>引入connect生成一个容器组件：connect(state=&gt;{key:value}),{key:xxxAction})(UI组件)</li>
+<li>在UI组件中通过this.props.xxx读取和操作状态</li>
+</ul>
+<p>todoList例子：</p>
+<p><a target="_blank" rel="noopener" href="https://www.redux.org.cn/docs/basics/ExampleTodoList.html">https://www.redux.org.cn/docs/basics/ExampleTodoList.html</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/25/%E5%AE%9E%E7%94%A8%E7%A8%8B%E5%BA%8F%E7%B1%BB%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1005,181 +1244,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/05/%E6%98%A0%E5%B0%84%E7%B1%BB%E5%9E%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/05/%E6%98%A0%E5%B0%84%E7%B1%BB%E5%9E%8B/" class="post-title-link" itemprop="url">映射类型</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-07-05 21:28:04 / 修改时间：21:41:11" itemprop="dateCreated datePublished" datetime="2022-07-05T21:28:04+08:00">2022-07-05</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>一个类型需要基于另外一个类型，但是又不想拷贝一份，可以考虑用映射类型</p>
-<h1 id="映射修饰符："><a href="#映射修饰符：" class="headerlink" title="映射修饰符："></a>映射修饰符：</h1><p>在使用映射类型时，两个额外修饰符:readonly用于设置属性只读，?用于设置属性可选，可以通过前缀-或者+删除或者添加这些修饰符，如果没有写前缀，相当于使用了+前缀</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//删除属性中的只读属性</span></span><br><span class="line"><span class="keyword">type</span> CreateMutable&lt;Type&gt;=&#123;</span><br><span class="line">    -<span class="keyword">readonly</span> [Property <span class="keyword">in</span> keyof Type]:Type[Property];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> LockedAccount=&#123;</span><br><span class="line">    <span class="keyword">readonly</span> id:<span class="built_in">string</span>;</span><br><span class="line">    <span class="keyword">readonly</span> name:<span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> UnlockedAccount=CreateMutable&lt;LockedAccount&gt;;</span><br><span class="line"><span class="comment">// type UnlockedAccount = &#123;</span></span><br><span class="line"><span class="comment">//    id: string;</span></span><br><span class="line"><span class="comment">//    name: string;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"><span class="comment">//删除属性中的可选属性</span></span><br><span class="line"><span class="keyword">type</span> Concrete&lt;Type&gt;=&#123;</span><br><span class="line">    [Property <span class="keyword">in</span> keyof Type]-?:Type[Property];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> MaybeUser=&#123;</span><br><span class="line">    <span class="attr">id</span>:<span class="built_in">string</span>;</span><br><span class="line">    name?:<span class="built_in">string</span>;</span><br><span class="line">    age?:<span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> User=Concrete&lt;MaybeUser&gt;;</span><br><span class="line"><span class="comment">// type User = &#123;</span></span><br><span class="line"><span class="comment">//    id: string;</span></span><br><span class="line"><span class="comment">//    name: string;</span></span><br><span class="line"><span class="comment">//    age: number;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="as实现键名重新映射"><a href="#as实现键名重新映射" class="headerlink" title="as实现键名重新映射"></a>as实现键名重新映射</h1><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> MappedTypeWithProperties&lt;Type&gt;=&#123;</span><br><span class="line">    [Properties <span class="keyword">in</span> keyof Type <span class="keyword">as</span> NewKeyType]:Type[Properties]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Getters&lt;Type&gt; = &#123;</span><br><span class="line">    [Property <span class="keyword">in</span> keyof Type <span class="keyword">as</span> <span class="string">`get<span class="subst">$&#123;Capitalize&lt;<span class="built_in">string</span> &amp; Property&gt;&#125;</span>`</span>]: <span class="function">() =&gt;</span> Type[Property]</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">interface</span> Person &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="built_in">string</span>;</span><br><span class="line">    age: <span class="built_in">number</span>;</span><br><span class="line">    location: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> LazyPerson = Getters&lt;Person&gt;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// type LazyPerson = &#123;</span></span><br><span class="line"><span class="comment">//    getName: () =&gt; string;</span></span><br><span class="line"><span class="comment">//    getAge: () =&gt; number;</span></span><br><span class="line"><span class="comment">//    getLocation: () =&gt; string;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>参考：</p>
-<p><a target="_blank" rel="noopener" href="https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html">https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/05/%E6%9D%A1%E4%BB%B6%E7%B1%BB%E5%9E%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/05/%E6%9D%A1%E4%BB%B6%E7%B1%BB%E5%9E%8B/" class="post-title-link" itemprop="url">条件类型</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-07-05 19:32:13 / 修改时间：20:30:47" itemprop="dateCreated datePublished" datetime="2022-07-05T19:32:13+08:00">2022-07-05</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="条件类型"><a href="#条件类型" class="headerlink" title="条件类型"></a>条件类型</h1><p>基于输入的值的类型决定输出的值的类型，条件类型就是用来帮助我们描述输入类型和输出类型之间的关系</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> IdLabel &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="built_in">number</span> <span class="comment">/* some fields */</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> NameLabel &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="built_in">string</span> <span class="comment">/* other fields */</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createLabel</span>(<span class="params">id: <span class="built_in">number</span></span>): <span class="title">IdLabel</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createLabel</span>(<span class="params">name: <span class="built_in">string</span></span>): <span class="title">NameLabel</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createLabel</span>(<span class="params">nameOrId: <span class="built_in">string</span> | <span class="built_in">number</span></span>): <span class="title">IdLabel</span> | <span class="title">NameLabel</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createLabel</span>(<span class="params">nameOrId: <span class="built_in">string</span> | <span class="built_in">number</span></span>): <span class="title">IdLabel</span> | <span class="title">NameLabel</span> </span>&#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="string">&quot;unimplemented&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>把逻辑写在条件类型中可以简化掉函数重载：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> NameOrId&lt;T <span class="keyword">extends</span> <span class="built_in">number</span>|<span class="built_in">string</span>&gt;=T <span class="keyword">extends</span> <span class="built_in">number</span>?IdLabel:NameLabel;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createLabel</span>&lt;<span class="title">T</span> <span class="title">extends</span> <span class="title">number</span>|<span class="title">string</span>&gt;(<span class="params">idOrName:T</span>):<span class="title">NameOrId</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="string">&quot;unimplemented&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> a=createLabel(<span class="string">&quot;typescript&quot;</span>);</span><br><span class="line"><span class="comment">//let a:NameLabel</span></span><br><span class="line"><span class="keyword">let</span> b=createLabel(<span class="number">2.8</span>);</span><br><span class="line"><span class="comment">//let b:IdLabel</span></span><br><span class="line"><span class="keyword">let</span> c=createLabel(<span class="built_in">Math</span>.radom()?<span class="string">&quot;hello&quot;</span>:<span class="number">42</span>);</span><br><span class="line"><span class="comment">//let c:NameLabel|IdLabel</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="条件类型约束"><a href="#条件类型约束" class="headerlink" title="条件类型约束"></a>条件类型约束</h1><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> MessageOf&lt;T <span class="keyword">extends</span> &#123;<span class="attr">message</span>:unknown&#125; ? T[<span class="string">&quot;message&quot;</span>]:<span class="built_in">never</span>;</span><br><span class="line"><span class="keyword">interface</span> Email &#123;</span><br><span class="line">    <span class="attr">message</span>:<span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> Dog &#123;</span><br><span class="line">    bark():<span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> EmailMessageContents=MessageOf&lt;Email&gt;;</span><br><span class="line"><span class="comment">//type EmailMessageContents=string</span></span><br><span class="line"><span class="keyword">type</span> DogMessageContents=MessageOf&lt;Dog&gt;;</span><br><span class="line"><span class="comment">//type DogMessageContents=nerver</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="在条件类型里推断"><a href="#在条件类型里推断" class="headerlink" title="在条件类型里推断"></a>在条件类型里推断</h1><p>infer关键词，<strong>可以从正在比较的类型中推断类型，然后在true分支里引用该推断结果</strong></p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Flatten&lt;T&gt;=T <span class="keyword">extends</span> <span class="built_in">any</span>[]?T[<span class="built_in">number</span>]:T;<span class="comment">//number索引用来获取数组元素的类型</span></span><br><span class="line"><span class="keyword">type</span> Str=Flatten&lt;<span class="built_in">string</span>[]&gt;;</span><br><span class="line"><span class="comment">//type Str=string</span></span><br><span class="line"><span class="keyword">type</span> Num=Flatten&lt;<span class="built_in">number</span>&gt;;</span><br><span class="line"><span class="comment">//type Num=number;</span></span><br><span class="line"><span class="comment">//用infer</span></span><br><span class="line"><span class="keyword">type</span> Flatten&lt;Type&gt;=Type <span class="keyword">extends</span> <span class="built_in">Array</span>&lt;infer Item&gt;?Item:Type</span><br></pre></td></tr></table></figure>
-
-<p>使用infer写一些有用的类型帮助别名，我们可以获取一个函数返回的类型：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> GetReturnType&lt;Type&gt;=Type <span class="keyword">extends</span> (...args:nerver[])=&gt;infer Return ?Return :<span class="built_in">never</span>;</span><br><span class="line"><span class="keyword">type</span> Num=GetReturnType&lt;<span class="function">()=&gt;</span><span class="built_in">number</span>&gt;;</span><br><span class="line"><span class="comment">//type Num=number;</span></span><br><span class="line"><span class="keyword">type</span> Str=GetReturnType&lt;<span class="function">(<span class="params">x:<span class="built_in">string</span></span>)=&gt;</span><span class="built_in">string</span>&gt;;</span><br><span class="line"><span class="comment">//type Str=string</span></span><br></pre></td></tr></table></figure>
-
-<p>当从多重调用签名（比如重载函数）中推断类型时，<strong>会按照最后的签名进行推断，</strong>因为一般这个签名是用来处理所有情况的签名</p>
-<h1 id="分发条件类型"><a href="#分发条件类型" class="headerlink" title="分发条件类型"></a>分发条件类型</h1><p>在泛型中使用条件类型时，如果传入一个联合类型，就会变成分发的。</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ToArray&lt;Type&gt;=Type <span class="keyword">extends</span> <span class="built_in">any</span>?Type[]:nerver;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>在ToArray传入一个联合类型，这个条件类型会被应用到联合类型的每个成员</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> StrArrOrNumArr=ToArr&lt;<span class="built_in">string</span>|<span class="built_in">number</span>&gt;;</span><br><span class="line"><span class="comment">//type StrArrOrNumArr=string[]|number[]</span></span><br></pre></td></tr></table></figure>
-
-<p>先遍历联合类型string|number里的每一个成员，得到ToArray<string>|ToArray<number>,最后结果为string[]|number[]</number></string></p>
-<p>如果要避免这种行为，用方括号包裹extends关键字的每一部分</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ToArrayNonDist&lt;Type&gt;=[Type] <span class="keyword">extends</span> [<span class="built_in">any</span>] ? Type[]: nerver;</span><br><span class="line"><span class="keyword">type</span> StrArrOrNumArr=ToArrayNonDist&lt;<span class="built_in">string</span>|<span class="built_in">number</span>&gt;;</span><br><span class="line"><span class="comment">//type StrArrOrNumArr = (string | number)[]</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>先得到ToArrayNonDist&lt;string|number&gt;结果为(string|number)[]</p>
-<p>参考：</p>
-<p><a target="_blank" rel="noopener" href="https://ts.yayujs.com/handbook/ConditionalTypes.html#%E5%88%86%E5%8F%91%E6%9D%A1%E4%BB%B6%E7%B1%BB%E5%9E%8B-distributive-conditional-types">https://ts.yayujs.com/handbook/ConditionalTypes.html#%E5%88%86%E5%8F%91%E6%9D%A1%E4%BB%B6%E7%B1%BB%E5%9E%8B-distributive-conditional-types</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.typescriptlang.org/docs/handbook/2/conditional-types.html">https://www.typescriptlang.org/docs/handbook/2/conditional-types.html</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1251,7 +1315,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">227</span>
+          <span class="site-state-item-count">229</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1325,7 +1389,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共203.7k字</span>
+  <span class="post-count">博客全站共204.3k字</span>
 </div>
         
 

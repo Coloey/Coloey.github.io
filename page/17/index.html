@@ -187,6 +187,218 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/11/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/11/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" class="post-title-link" itemprop="url">开发环境</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-11 14:51:43" itemprop="dateCreated datePublished" datetime="2022-04-11T14:51:43+08:00">2022-04-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-07 21:08:25" itemprop="dateModified" datetime="2022-05-07T21:08:25+08:00">2022-05-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/webpack/" itemprop="url" rel="index"><span itemprop="name">webpack</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="开发环境中使用source-map"><a href="#开发环境中使用source-map" class="headerlink" title="开发环境中使用source map"></a>开发环境中使用source map</h1><p>当 webpack 打包源代码时，可能会很难追踪到 error(错误) 和 warning(警告) 在源代码中的原始位置。例如，如果将三个源文件（<code>a.js</code>, <code>b.js</code> 和 <code>c.js</code>）打包到一个 bundle（<code>bundle.js</code>）中，而其中一个源文件包含一个错误，那么堆栈跟踪就会直接指向到 <code>bundle.js</code>。你可能需要准确地知道错误来自于哪个源文件，所以这种提示这通常不会提供太多帮助。</p>
+<p>为了更容易地追踪 error 和 warning，JavaScript 提供了 <a target="_blank" rel="noopener" href="http://blog.teamtreehouse.com/introduction-source-maps">source maps</a> 功能，可以将编译后的代码映射回原始源代码。如果一个错误来自于 <code>b.js</code>，source map 就会明确的告诉你。</p>
+<p>source map 有许多 <a target="_blank" rel="noopener" href="https://webpack.docschina.org/configuration/devtool">可用选项</a>，请务必仔细阅读它们，以便可以根据需要进行配置。</p>
+<p>对于本指南，我们将使用 <code>inline-source-map</code> 选项，这有助于解释说明示例意图（此配置仅用于示例，不要用于生产环境）：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path=<span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> HtmlWebpackPlugin=<span class="built_in">require</span>(<span class="string">&quot;html-webpack-plugin&quot;</span>)</span><br><span class="line"><span class="built_in">module</span>.exports=&#123;</span><br><span class="line">    <span class="attr">entry</span>:&#123;</span><br><span class="line">       <span class="attr">index</span>: <span class="string">&#x27;./src/index.js&#x27;</span>,</span><br><span class="line">       <span class="attr">print</span>:<span class="string">&#x27;./src/print.js&#x27;</span></span><br><span class="line"></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">output</span>:&#123;</span><br><span class="line">        <span class="attr">filename</span>:<span class="string">&#x27;[name]bundle.js&#x27;</span>,</span><br><span class="line">        <span class="attr">path</span>:path.resolve(__dirname,<span class="string">&#x27;dist&#x27;</span>),</span><br><span class="line">        <span class="attr">clean</span>:<span class="literal">true</span>,</span><br><span class="line">        <span class="attr">publicPath</span>:<span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">module</span>:&#123;</span><br><span class="line">        <span class="attr">rules</span>:[</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">test</span>: <span class="regexp">/\.css$/i</span>,</span><br><span class="line">                use:[<span class="string">&#x27;style-loader&#x27;</span>,<span class="string">&#x27;css-loader&#x27;</span>],</span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">test</span>:<span class="regexp">/\.(png|jpg|jpeg|svg|gif)$/i</span>,</span><br><span class="line">                type:<span class="string">&#x27;asset/resource&#x27;</span></span><br><span class="line"></span><br><span class="line">            &#125;,</span><br><span class="line">            </span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">devtool</span>:<span class="string">&#x27;inline-source-map&#x27;</span>,</span><br><span class="line">    <span class="attr">devServer</span>:&#123;</span><br><span class="line">        <span class="attr">static</span>:<span class="string">&#x27;./dist&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">plugins</span>:[</span><br><span class="line">        <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">            <span class="attr">title</span>:<span class="string">&#x27;Development&#x27;</span>,</span><br><span class="line">        &#125;)</span><br><span class="line"></span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">mode</span>:<span class="string">&#x27;development&#x27;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="选择开发工具"><a href="#选择开发工具" class="headerlink" title="选择开发工具"></a>选择开发工具</h1><p>webpack 提供几种可选方式，帮助你在代码发生变化后自动编译代码：</p>
+<ol>
+<li>webpack’s <a target="_blank" rel="noopener" href="https://webpack.docschina.org/configuration/watch/#watch">Watch Mode</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/webpack/webpack-dev-server">webpack-dev-server</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/webpack/webpack-dev-middleware">webpack-dev-middleware</a></li>
+</ol>
+<p>多数场景中，你可能需要使用 <code>webpack-dev-server</code>，但是不妨探讨一下以上的所有选项。</p>
+<h2 id="使用watch-mode"><a href="#使用watch-mode" class="headerlink" title="使用watch mode"></a>使用watch mode</h2><p>你可以指示 webpack “watch” 依赖图中所有文件的更改。如果其中一个文件被更新，代码将被重新编译，所以你不必再去手动运行整个构建。</p>
+<p>我们添加一个用于启动 webpack watch mode 的 npm scripts：</p>
+<p><strong>package.json</strong></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   &quot;name&quot;: &quot;webpack-demo&quot;,</span><br><span class="line">   &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line">   &quot;description&quot;: &quot;&quot;,</span><br><span class="line">   &quot;private&quot;: true,</span><br><span class="line">   &quot;scripts&quot;: &#123;</span><br><span class="line">     &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,</span><br><span class="line"><span class="addition">+    &quot;watch&quot;: &quot;webpack --watch&quot;,</span></span><br><span class="line">     &quot;build&quot;: &quot;webpack&quot;</span><br><span class="line">   &#125;,</span><br><span class="line">   &quot;keywords&quot;: [],</span><br><span class="line">   &quot;author&quot;: &quot;&quot;,</span><br><span class="line">   &quot;license&quot;: &quot;ISC&quot;,</span><br><span class="line">   &quot;devDependencies&quot;: &#123;</span><br><span class="line">     &quot;html-webpack-plugin&quot;: &quot;^4.5.0&quot;,</span><br><span class="line">     &quot;webpack&quot;: &quot;^5.4.0&quot;,</span><br><span class="line">     &quot;webpack-cli&quot;: &quot;^4.2.0&quot;</span><br><span class="line">   &#125;,</span><br><span class="line">   &quot;dependencies&quot;: &#123;</span><br><span class="line">     &quot;lodash&quot;: &quot;^4.17.20&quot;</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在，你可以在命令行中运行 <code>npm run watch</code>，然后就会看到 webpack 是如何编译代码。</p>
+<p>唯一的缺点是，为了看到修改后的实际效果，<strong>你需要刷新浏览器</strong>。如果能够自动刷新浏览器就更好了，因此接下来我们会尝试通过 <code>webpack-dev-server</code> 实现此功能。</p>
+<h2 id="webpack-dev-server"><a href="#webpack-dev-server" class="headerlink" title="webpack-dev-server"></a>webpack-dev-server</h2><p><code>webpack-dev-server</code> 为你提供了一个基本的 web server，并且具有 live reloading(实时重新加载) 功能。设置如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev webpack-dev-server</span><br></pre></td></tr></table></figure>
+
+<p>修改配置文件，告知 dev server，从什么位置查找文件：</p>
+<p><strong>webpack.config.js</strong></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"> const path = require(&#x27;path&#x27;);</span><br><span class="line"> const HtmlWebpackPlugin = require(&#x27;html-webpack-plugin&#x27;);</span><br><span class="line"></span><br><span class="line"> module.exports = &#123;</span><br><span class="line">   mode: &#x27;development&#x27;,</span><br><span class="line">   entry: &#123;</span><br><span class="line">     index: &#x27;./src/index.js&#x27;,</span><br><span class="line">     print: &#x27;./src/print.js&#x27;,</span><br><span class="line">   &#125;,</span><br><span class="line">   devtool: &#x27;inline-source-map&#x27;,</span><br><span class="line"><span class="addition">+  devServer: &#123;</span></span><br><span class="line"><span class="addition">+    static: &#x27;./dist&#x27;,</span></span><br><span class="line"><span class="addition">+  &#125;,</span></span><br><span class="line">   plugins: [</span><br><span class="line">     new HtmlWebpackPlugin(&#123;</span><br><span class="line">       title: &#x27;Development&#x27;,</span><br><span class="line">     &#125;),</span><br><span class="line">   ],</span><br><span class="line">   output: &#123;</span><br><span class="line">     filename: &#x27;[name].bundle.js&#x27;,</span><br><span class="line">     path: path.resolve(__dirname, &#x27;dist&#x27;),</span><br><span class="line">     clean: true,</span><br><span class="line">   &#125;,</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>以上配置告知 <code>webpack-dev-server</code>，将 <code>dist</code> 目录下的文件 serve 到 <code>localhost:8080</code> 下。（译注：serve，将资源作为 server 的可访问文件）</p>
+<p>我们添加一个可以直接运行 dev server 的 script：</p>
+<p><strong>package.json</strong></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&quot;scripts&quot;: &#123;</span><br><span class="line">     &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,</span><br><span class="line">     &quot;watch&quot;: &quot;webpack --watch&quot;,</span><br><span class="line"><span class="addition">+    &quot;start&quot;: &quot;webpack serve --open&quot;,</span></span><br><span class="line">     &quot;build&quot;: &quot;webpack&quot;</span><br><span class="line">   &#125;,</span><br></pre></td></tr></table></figure>
+
+<p>现在，在命令行中运行 <code>npm start</code>，我们会看到浏览器自动加载页面。如果你更改任何源文件并保存它们，web server 将在编译代码后自动重新加载</p>
+<h2 id="webpack-dev-middleware"><a href="#webpack-dev-middleware" class="headerlink" title="webpack-dev-middleware"></a>webpack-dev-middleware</h2><p><code>webpack-dev-middleware</code> 是一个封装器(wrapper)，它可以把 webpack 处理过的文件发送到一个 server。<code>webpack-dev-server</code> 在内部使用了它，然而它也可以作为一个单独的 package 来使用，以便根据需求进行更多自定义设置。下面是一个 webpack-dev-middleware 配合 express server 的示例。</p>
+<p>首先，安装 <code>express</code> 和 <code>webpack-dev-middleware</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev express webpack-dev-middleware</span><br></pre></td></tr></table></figure>
+
+<p>调整webpack.config,js</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"> const path = require(&#x27;path&#x27;);</span><br><span class="line"> const HtmlWebpackPlugin = require(&#x27;html-webpack-plugin&#x27;);</span><br><span class="line"></span><br><span class="line"> module.exports = &#123;</span><br><span class="line">   mode: &#x27;development&#x27;,</span><br><span class="line">   entry: &#123;</span><br><span class="line">     index: &#x27;./src/index.js&#x27;,</span><br><span class="line">     print: &#x27;./src/print.js&#x27;,</span><br><span class="line">   &#125;,</span><br><span class="line">   devtool: &#x27;inline-source-map&#x27;,</span><br><span class="line">   devServer: &#123;</span><br><span class="line">     static: &#x27;./dist&#x27;,</span><br><span class="line">   &#125;,</span><br><span class="line">   plugins: [</span><br><span class="line">     new HtmlWebpackPlugin(&#123;</span><br><span class="line">       title: &#x27;Development&#x27;,</span><br><span class="line">     &#125;),</span><br><span class="line">   ],</span><br><span class="line">   output: &#123;</span><br><span class="line">     filename: &#x27;[name].bundle.js&#x27;,</span><br><span class="line">     path: path.resolve(__dirname, &#x27;dist&#x27;),</span><br><span class="line">     clean: true,</span><br><span class="line"><span class="addition">+    publicPath: &#x27;/&#x27;,</span></span><br><span class="line">   &#125;,</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>我们将会在 server 脚本使用 <code>publicPath</code>，以确保文件资源能够正确地 serve 在 <code>http://localhost:3000</code> 下，稍后我们会指定 port number(端口号)。接下来是设置自定义 <code>express</code> server：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> webpack-demo</span><br><span class="line">  |- package.json</span><br><span class="line">  |- package-lock.json</span><br><span class="line">  |- webpack.config.js</span><br><span class="line"><span class="addition">+ |- server.js</span></span><br><span class="line">  |- /dist</span><br><span class="line">  |- /src</span><br><span class="line">    |- index.js</span><br><span class="line">    |- print.js</span><br><span class="line">  |- /node_modules</span><br></pre></td></tr></table></figure>
+
+<p><strong>server.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> webpackDevMiddleware = <span class="built_in">require</span>(<span class="string">&#x27;webpack-dev-middleware&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = express();</span><br><span class="line"><span class="keyword">const</span> config = <span class="built_in">require</span>(<span class="string">&#x27;./webpack.config.js&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> compiler = webpack(config);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 告知 express 使用 webpack-dev-middleware，</span></span><br><span class="line"><span class="comment">// 以及将 webpack.config.js 配置文件作为基础配置。</span></span><br><span class="line">app.use(</span><br><span class="line">  webpackDevMiddleware(compiler, &#123;</span><br><span class="line">    <span class="attr">publicPath</span>: config.output.publicPath,</span><br><span class="line">  &#125;)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将文件 serve 到 port 3000。</span></span><br><span class="line">app.listen(<span class="number">3000</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Example app listening on port 3000!\n&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>现在，添加一个 npm script，以使我们更方便地运行 server：</p>
+<p>package.json</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> &quot;scripts&quot;: &#123;</span><br><span class="line">     &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,</span><br><span class="line">     &quot;watch&quot;: &quot;webpack --watch&quot;,</span><br><span class="line">     &quot;start&quot;: &quot;webpack serve --open&quot;,</span><br><span class="line"><span class="addition">+    &quot;server&quot;: &quot;node server.js&quot;,</span></span><br><span class="line">     &quot;build&quot;: &quot;webpack&quot;</span><br><span class="line">   &#125;,</span><br></pre></td></tr></table></figure>
+
+<p>现在，在 terminal(终端) 中执行 <code>npm run server</code></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/11/Vue%E4%B8%AD%E5%B0%81%E8%A3%85axios%E8%AF%B7%E6%B1%82/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/11/Vue%E4%B8%AD%E5%B0%81%E8%A3%85axios%E8%AF%B7%E6%B1%82/" class="post-title-link" itemprop="url">Vue中封装axios请求</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-11 10:01:47 / 修改时间：10:24:02" itemprop="dateCreated datePublished" datetime="2022-04-11T10:01:47+08:00">2022-04-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Node/" itemprop="url" rel="index"><span itemprop="name">Node</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Node/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在src文件夹中新创建一个utils文件夹，创建index.js来实现axios实例，并配置拦截器</p>
+<h2 id="index-js"><a href="#index-js" class="headerlink" title="index.js"></a>index.js</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&#x27;axios&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123;ElLoading,ElMessage&#125; <span class="keyword">from</span> <span class="string">&#x27;element-plus&#x27;</span></span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">&quot;../router&quot;</span></span><br><span class="line"><span class="keyword">import</span> store <span class="keyword">from</span> <span class="string">&quot;../store&quot;</span></span><br><span class="line"><span class="keyword">import</span> CHAT <span class="keyword">from</span> <span class="string">&quot;../client&quot;</span></span><br><span class="line"><span class="comment">//const pendingMap=new Map();</span></span><br><span class="line"><span class="comment">//axios.defaults.headers.post[&#x27;Content-Type&#x27;] = &#x27;application/x-www-form-urlencoded;charset=UTF-8&#x27;;</span></span><br><span class="line"><span class="comment">//创建一个axios实例</span></span><br><span class="line"><span class="keyword">var</span> instance=axios.create(&#123;</span><br><span class="line">    <span class="attr">baseURL</span>:<span class="string">&quot;http://127.0.0.1:3007&quot;</span>,</span><br><span class="line">    <span class="attr">timeout</span>: <span class="number">10000</span>,<span class="comment">//设置超时</span></span><br><span class="line">    <span class="attr">headers</span>:&#123;</span><br><span class="line">        <span class="string">&#x27;Content-Type&#x27;</span>:<span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span>,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">let</span> loading;</span><br><span class="line"><span class="comment">//多次请求时</span></span><br><span class="line"><span class="keyword">let</span> requestCount=<span class="number">0</span>;</span><br><span class="line"><span class="comment">//显示Loading</span></span><br><span class="line"><span class="keyword">const</span> showLoading=<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(requestCount===<span class="number">0</span>&amp;&amp;!loading)&#123;<span class="comment">//第一次发送请求并且没有loading加载loaing</span></span><br><span class="line">        loading=ElLoading.service(&#123;</span><br><span class="line">            <span class="attr">text</span>:<span class="string">&#x27;Loading&#x27;</span>,</span><br><span class="line">            <span class="attr">background</span>:<span class="string">&#x27;rgba(0,0,0,0.7)&#x27;</span>,</span><br><span class="line">            <span class="attr">spinner</span>:<span class="string">&#x27;el-icon-loading&#x27;</span>,</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    requestCount++;<span class="comment">//多次请求</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//隐藏loading</span></span><br><span class="line"><span class="keyword">const</span> hideLoading=<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    requestCount--;</span><br><span class="line">    <span class="keyword">if</span>(requestCount===<span class="number">0</span>)&#123;</span><br><span class="line">        loading.close()<span class="comment">//直到请求都结束Loading才关闭</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//请求拦截器</span></span><br><span class="line">instance.interceptors.request.use(<span class="function">(<span class="params">config</span>)=&gt;</span>&#123;</span><br><span class="line">    showLoading()</span><br><span class="line">    <span class="comment">//每次发送请求前判断是否存在token如果存在则在header加上token</span></span><br><span class="line">    <span class="keyword">const</span> token=<span class="built_in">window</span>.localStorage.getItem(<span class="string">&#x27;token&#x27;</span>);</span><br><span class="line">    token&amp;&amp;(config.headers.Authorization=token)</span><br><span class="line">    <span class="keyword">return</span> config;</span><br><span class="line">&#125;,<span class="function">(<span class="params">error</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">Promise</span>.reject(error);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">//响应拦截器</span></span><br><span class="line">instance.interceptors.response.use(<span class="function">(<span class="params">response</span>)=&gt;</span>&#123;</span><br><span class="line">    hideLoading()</span><br><span class="line">    <span class="comment">//响应成功</span></span><br><span class="line">   <span class="comment">// console.log(&#x27;拦截器报错&#x27;)</span></span><br><span class="line">   <span class="comment">// console.log(response)</span></span><br><span class="line">    <span class="keyword">const</span> status=response.data.status;</span><br><span class="line">    <span class="keyword">if</span>(status!=<span class="number">1</span>)&#123;</span><br><span class="line">        <span class="keyword">switch</span>(status)&#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>: <span class="comment">//响应成功后如果是登录成功有token把token存储在本地</span></span><br><span class="line">                <span class="keyword">if</span>(response.data.token!=<span class="literal">undefined</span>)<span class="built_in">window</span>.localStorage.setItem(<span class="string">&#x27;token&#x27;</span>,response.data.token);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">200</span>:<span class="comment">//获取用户信息成功后存储在localStorage里和store</span></span><br><span class="line">                <span class="built_in">console</span>.log(response.data);</span><br><span class="line">                store.commit(<span class="string">&quot;saveUserInfo&quot;</span>,(response.data).data);</span><br><span class="line">                <span class="built_in">window</span>.localStorage.setItem(<span class="string">&#x27;userInfo&#x27;</span>,<span class="built_in">JSON</span>.stringify((response.data).data));</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">401</span>:<span class="comment">//登录过期跳转到登录页面</span></span><br><span class="line">            <span class="keyword">case</span> <span class="number">201</span>:<span class="comment">//退出登录清空token跳转登录页面                </span></span><br><span class="line">                <span class="built_in">window</span>.localStorage.removeItem(<span class="string">&#x27;token&#x27;</span>);</span><br><span class="line">                <span class="built_in">window</span>.localStorage.removeItem(<span class="string">&#x27;userInfo&#x27;</span>)</span><br><span class="line">                CHAT.logout();</span><br><span class="line">                router.push(<span class="string">&quot;/login&quot;</span>);  </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(response.data.message)ElMessage.success(response.data.message)           </span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Promise</span>.resolve(response); </span><br><span class="line">    &#125;</span><br><span class="line">     <span class="keyword">else</span> &#123;       </span><br><span class="line">        ElMessage.error(response.data.message);            </span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(response);        </span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">&#125;,<span class="function">(<span class="params">error</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(error);</span><br><span class="line">    <span class="comment">//响应错误</span></span><br><span class="line">    <span class="keyword">if</span>(error.response&amp;&amp;error.response.status)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(error)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(error);</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> instance;</span><br></pre></td></tr></table></figure>
+
+<h2 id="request-js"><a href="#request-js" class="headerlink" title="request.js"></a>request.js</h2><p>request.js中使用axios实例</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> instance <span class="keyword">from</span> <span class="string">&quot;./index&quot;</span></span><br><span class="line"><span class="keyword">const</span> axios=<span class="function">(<span class="params">&#123;</span></span></span><br><span class="line"><span class="params"><span class="function">    method,</span></span></span><br><span class="line"><span class="params"><span class="function">    url,</span></span></span><br><span class="line"><span class="params"><span class="function">    data,</span></span></span><br><span class="line"><span class="params"><span class="function">    config</span></span></span><br><span class="line"><span class="params"><span class="function">&#125;</span>)=&gt;</span>&#123;</span><br><span class="line">    method=method.toLowerCase();</span><br><span class="line">    <span class="keyword">if</span>(method==<span class="string">&#x27;post&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> instance.post(url,data,&#123;...config&#125;)</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(method==<span class="string">&#x27;get&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> instance.get(url,&#123;</span><br><span class="line">            <span class="attr">params</span>:data,</span><br><span class="line">            ...config</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(method==<span class="string">&#x27;delete&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> instance.delete(url,&#123;</span><br><span class="line">            <span class="attr">params</span>:data,</span><br><span class="line">            ...config</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(method==<span class="string">&#x27;put&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> instance.put(url,data,&#123;...config&#125;)</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;未知的方法&#x27;</span>+method)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> axios</span><br></pre></td></tr></table></figure>
+
+<h2 id="api-js"><a href="#api-js" class="headerlink" title="api.js"></a>api.js</h2><p>api.js用来封装各种类型的请求</p>
+<p>默认情况下，axios 将 JavaScript 对象序列化为<code>JSON</code>. 要改为以格式发送数据<code>application/x-www-form-urlencoded</code>，我用的是qs.stringfy将数据转换，其他方法可以参考官网</p>
+<p>[]: <a target="_blank" rel="noopener" href="https://axios-http.com/docs/urlencoded">https://axios-http.com/docs/urlencoded</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&quot;./request&quot;</span></span><br><span class="line"><span class="keyword">import</span> qs <span class="keyword">from</span> <span class="string">&quot;qs&quot;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> login=<span class="function">(<span class="params">data</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> axios(&#123;</span><br><span class="line">        <span class="attr">url</span>:<span class="string">&#x27;/api/login&#x27;</span>,</span><br><span class="line">        <span class="attr">method</span>:<span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">        <span class="attr">data</span>:qs.stringify(data),</span><br><span class="line">         </span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> register=<span class="function">(<span class="params">data</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> axios(&#123;</span><br><span class="line">        <span class="attr">url</span>:<span class="string">&#x27;/api/register&#x27;</span>,</span><br><span class="line">        <span class="attr">method</span>:<span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">        <span class="attr">data</span>:qs.stringify(data)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> logout=<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> axios(&#123;</span><br><span class="line">        <span class="attr">url</span>:<span class="string">&#x27;/api/logout&#x27;</span>,</span><br><span class="line">        <span class="attr">method</span>:<span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> getUserInfo=<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> axios(&#123;</span><br><span class="line">        <span class="attr">url</span>:<span class="string">&#x27;/my/getUserInfo&#x27;</span>,</span><br><span class="line">        <span class="attr">method</span>:<span class="string">&#x27;get&#x27;</span>,</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> updatePassword=<span class="function">(<span class="params">data</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> axios(&#123;</span><br><span class="line">        <span class="attr">url</span>:<span class="string">&#x27;/my/updatePassword&#x27;</span>,</span><br><span class="line">        <span class="attr">method</span>:<span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">        <span class="attr">data</span>:qs.stringify(data)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/10/%E6%89%93%E5%8C%85%E8%B5%84%E6%BA%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1380,205 +1592,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/03/20/MySql%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/20/MySql%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/" class="post-title-link" itemprop="url">MySql基本操作</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-20 14:47:45" itemprop="dateCreated datePublished" datetime="2022-03-20T14:47:45+08:00">2022-03-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-09-17 21:52:40" itemprop="dateModified" datetime="2022-09-17T21:52:40+08:00">2022-09-17</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/MySql/" itemprop="url" rel="index"><span itemprop="name">MySql</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="使用MySql-Workbench管理数据库"><a href="#使用MySql-Workbench管理数据库" class="headerlink" title="使用MySql Workbench管理数据库"></a>使用MySql Workbench管理数据库</h1><p>table中的数据类型：</p>
-<p>int:整数</p>
-<p>varchar(len):字符串</p>
-<p>tinyint(1)：布尔值</p>
-<p>字段的特殊标识：</p>
-<p>PK(Primary Key):主键，唯一标识</p>
-<p>NN(Not Null):值不允许为空</p>
-<p>UQ（Unique):值唯一</p>
-<p>AI(Auto Increment):值自动增长</p>
-<h1 id="Sql语句"><a href="#Sql语句" class="headerlink" title="Sql语句"></a>Sql语句</h1><h3 id="增："><a href="#增：" class="headerlink" title="增："></a>增：</h3><p>insert into 表名 (列名，列名…) values(‘值’,…)</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> users (username,password) <span class="keyword">values</span>(<span class="string">&#x27;李四&#x27;</span>,<span class="string">&#x27;54321&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-<h3 id="删："><a href="#删：" class="headerlink" title="删："></a>删：</h3><p>delete from 表名 where 列 运算符 值</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 删除id为4的用户</span></span><br><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> users <span class="keyword">where</span> id<span class="operator">=</span><span class="string">&#x27;4&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="改："><a href="#改：" class="headerlink" title="改："></a>改：</h3><p>update 表名 set 列=新值 where 列 运算符 值</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- update用于修改数据</span></span><br><span class="line">update users <span class="keyword">set</span> password <span class="operator">=</span><span class="string">&#x27;88888888&#x27;</span> <span class="keyword">where</span> id<span class="operator">=</span><span class="string">&#x27;4&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="查："><a href="#查：" class="headerlink" title="查："></a>查：</h3><p>select 列名 from 表名</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users</span><br><span class="line"><span class="comment">-- 从users表把username,password两列查询</span></span><br><span class="line"><span class="keyword">select</span> username, password <span class="keyword">from</span> users;</span><br></pre></td></tr></table></figure>
-
-<h3 id="where子句："><a href="#where子句：" class="headerlink" title="where子句："></a>where子句：</h3><p>用于限定选择的标准，常见运算符：</p>
-<p>等于：=</p>
-<p>不等于:&lt;&gt;或者!=</p>
-<p>大于:&gt;</p>
-<p>小于:&lt;</p>
-<p>在某个范围:BETWEEN</p>
-<p>搜索某种样式:LIKE</p>
-<h3 id="OR-AND："><a href="#OR-AND：" class="headerlink" title="OR,AND："></a>OR,AND：</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> users <span class="keyword">where</span> status<span class="operator">=</span><span class="number">0</span> <span class="keyword">and</span> id<span class="operator">&gt;</span><span class="number">1</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> users <span class="keyword">where</span> status<span class="operator">=</span><span class="number">0</span> <span class="keyword">or</span> id<span class="operator">&gt;</span><span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="实现排序："><a href="#实现排序：" class="headerlink" title="实现排序："></a>实现排序：</h3><p>order by：用于根据指定列对结果集进行排序,默认按照升序排序，想按照降序排序用desc关键字</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- order by asc实现升序排序</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> users <span class="keyword">order</span> <span class="keyword">by</span> status;</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> users <span class="keyword">order</span> <span class="keyword">by</span> status <span class="keyword">asc</span>;</span><br><span class="line"><span class="comment">-- order by desc实现降序排序</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> users <span class="keyword">order</span> <span class="keyword">by</span> status <span class="keyword">desc</span>;</span><br><span class="line"><span class="comment">-- 多重排序</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> users <span class="keyword">order</span> <span class="keyword">by</span> status <span class="keyword">desc</span>,username <span class="keyword">asc</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="count-统计"><a href="#count-统计" class="headerlink" title="count(*)统计"></a>count(*)统计</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">count</span>(<span class="operator">*</span>）统计</span><br><span class="line"><span class="comment">-- 查询users表中状态为0的用户总数量</span></span><br><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> users <span class="keyword">where</span> status<span class="operator">=</span><span class="string">&#x27;0&#x27;</span>;</span><br><span class="line"><span class="comment">-- as 将列名改为total</span></span><br><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">as</span> total <span class="keyword">from</span> users <span class="keyword">where</span> status<span class="operator">=</span><span class="number">0</span>;</span><br></pre></td></tr></table></figure>
-
-<h1 id="使用mysql模块"><a href="#使用mysql模块" class="headerlink" title="使用mysql模块"></a>使用mysql模块</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">const mysql<span class="operator">=</span>require(<span class="string">&#x27;mysql&#x27;</span>)</span><br><span class="line"><span class="operator">/</span><span class="operator">/</span>建立MYSQL与数据库的联系</span><br><span class="line">const db<span class="operator">=</span>mysql.createPool(&#123;</span><br><span class="line">    host:<span class="string">&#x27;127.0.0.1&#x27;</span>,<span class="operator">/</span><span class="operator">/</span>数据库的ip地址</span><br><span class="line">    <span class="keyword">user</span>:<span class="string">&#x27;root&#x27;</span>,</span><br><span class="line">    password:<span class="string">&#x27;123456&#x27;</span>,</span><br><span class="line">    database:<span class="string">&#x27;my_db_01&#x27;</span>,<span class="operator">/</span><span class="operator">/</span>指定要操作哪个数据库</span><br><span class="line">&#125;)</span><br><span class="line"><span class="operator">/</span><span class="operator">/</span>测试mysql能否正常工作</span><br><span class="line"> db.query(<span class="string">&#x27;select 1&#x27;</span>,(err,<span class="keyword">result</span>)<span class="operator">=</span><span class="operator">&gt;</span>&#123;</span><br><span class="line">    <span class="operator">/</span><span class="operator">/</span>mysql工作期间报错</span><br><span class="line">     if(err)<span class="keyword">return</span> console.<span class="built_in">log</span>(err.message)</span><br><span class="line">    <span class="operator">/</span><span class="operator">/</span>能成功执行<span class="keyword">SQL</span>语句</span><br><span class="line">    console.<span class="built_in">log</span>(<span class="keyword">result</span>);</span><br><span class="line"> &#125;)</span><br></pre></td></tr></table></figure>
-
-<h3 id="增：-1"><a href="#增：-1" class="headerlink" title="增："></a>增：</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">/</span><span class="operator">/</span>要插入到users表中的数据对象</span><br><span class="line">const users<span class="operator">=</span>&#123;username:<span class="string">&#x27;王五&#x27;</span>,password:<span class="string">&#x27;ww123&#x27;</span>&#125;;</span><br><span class="line"><span class="operator">/</span><span class="operator">/</span>待执行的<span class="keyword">SQL</span>语句，其中英文?代表占位符</span><br><span class="line">const sqlStr<span class="operator">=</span><span class="string">&#x27;insert into users (username,password) values(?,?)&#x27;</span></span><br><span class="line"><span class="operator">/</span><span class="operator">/</span>使用数组的形式为占位符指定具体的值,返回的<span class="keyword">result</span>是一个对象，通过affectedRows判读是否插入成功</span><br><span class="line">db.query(sqlStr,[users.username,users.password],(err,<span class="keyword">result</span>)<span class="operator">=</span><span class="operator">&gt;</span>&#123;</span><br><span class="line">    if(err)<span class="keyword">return</span> console.<span class="built_in">log</span>(err.message)</span><br><span class="line">    if(result.affectedRows<span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="number">1</span>)&#123;console.<span class="built_in">log</span>(<span class="string">&#x27;插入数据成功&#x27;</span>)&#125;<span class="operator">/</span><span class="operator">/</span>成功</span><br><span class="line">&#125;)</span><br><span class="line"><span class="operator">/</span><span class="operator">/</span>插入数据的便捷方式</span><br><span class="line">const <span class="keyword">user</span><span class="operator">=</span>&#123;username:<span class="string">&#x27;小煜&#x27;</span>,password:<span class="string">&#x27;ww123&#x27;</span>&#125;;</span><br><span class="line">const sqlStr<span class="operator">=</span>&quot;insert into users set ?&quot;;</span><br><span class="line">db.query(sqlStr,<span class="keyword">user</span>,(err,<span class="keyword">result</span>)<span class="operator">=</span><span class="operator">&gt;</span>&#123;</span><br><span class="line">    if(err)<span class="keyword">return</span> console.<span class="built_in">log</span>(err.message)</span><br><span class="line">    if(result.affectedRows<span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="number">1</span>)&#123;console.<span class="built_in">log</span>(<span class="keyword">result</span>)&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<h3 id="删：-1"><a href="#删：-1" class="headerlink" title="删："></a>删：</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">/</span><span class="operator">/</span>删除数据</span><br><span class="line">const sqlStr<span class="operator">=</span>&quot;delete from users where id=?&quot;</span><br><span class="line"><span class="operator">/</span><span class="operator">/</span>如果<span class="keyword">SQL</span>语句有多个占位符则必须使用数组为每个占位符指定具体的值</span><br><span class="line"><span class="operator">/</span><span class="operator">/</span>如果<span class="keyword">SQL</span>语句只有一个占位符，则可以省略数组</span><br><span class="line">db.query(sqlStr,<span class="number">12</span>,(err,res)<span class="operator">=</span><span class="operator">&gt;</span>&#123;</span><br><span class="line">    if(err)<span class="keyword">return</span> console.<span class="built_in">log</span>(err.message)</span><br><span class="line">    if(res.affectedRows<span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="number">1</span>)&#123;console.<span class="built_in">log</span>(res);&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>标记删除：使用delete语句会把数据从表中真正的删除，为了保险起见。推荐使用标记删除的形式来模拟删除的动作，就是在表中设置类似于status这样的状态字段，来标记当前这条数据是否被删除</p>
-<p>当用户执行删除操作时，并没有执行DELETE语句把数据删除，而是执行了UPDATE语句，将这条数据对应的status字段标记为删除即可</p>
-<h3 id="改：-1"><a href="#改：-1" class="headerlink" title="改："></a>改：</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const <span class="keyword">user</span><span class="operator">=</span>&#123;id:<span class="number">11</span>,username:<span class="string">&#x27;王五&#x27;</span>,password:<span class="string">&#x27;ww000&#x27;</span>&#125;;</span><br><span class="line">const sqlStr<span class="operator">=</span>&quot;update users set ? where id=?&quot;;</span><br><span class="line">db.query(sqlStr,[<span class="keyword">user</span>,user.id],(err,<span class="keyword">result</span>)<span class="operator">=</span><span class="operator">&gt;</span>&#123;</span><br><span class="line">    if(err)<span class="keyword">return</span> console.<span class="built_in">log</span>(err.message)</span><br><span class="line">    if(result.affectedRows<span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="number">1</span>)&#123;console.<span class="built_in">log</span>(<span class="keyword">result</span>)&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/03/20/node%E8%BF%9E%E6%8E%A5MySql%E6%8A%A5%E9%94%99ER-NOT-SUPPORTED-AUTH-MODE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/20/node%E8%BF%9E%E6%8E%A5MySql%E6%8A%A5%E9%94%99ER-NOT-SUPPORTED-AUTH-MODE/" class="post-title-link" itemprop="url">node连接MySql报错ER_NOT_SUPPORTED_AUTH_MODE</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-03-20 13:28:16 / 修改时间：13:33:56" itemprop="dateCreated datePublished" datetime="2022-03-20T13:28:16+08:00">2022-03-20</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Node/" itemprop="url" rel="index"><span itemprop="name">Node</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="报错信息"><a href="#报错信息" class="headerlink" title="报错信息"></a>报错信息</h1><p>本人系统安装的是mysql-installer-community-8.0.18.0.msi这个版本，然后我本地使用node-mysql去连接数据库。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> mysql=<span class="built_in">require</span>(<span class="string">&#x27;mysql&#x27;</span>)</span><br><span class="line"><span class="comment">//建立MYSQL与数据库的联系</span></span><br><span class="line"><span class="keyword">const</span> db=mysql.createPool(&#123;</span><br><span class="line">    <span class="attr">host</span>:<span class="string">&#x27;127.0.0.1&#x27;</span>,<span class="comment">//数据库的ip地址</span></span><br><span class="line">    <span class="attr">user</span>:<span class="string">&#x27;root&#x27;</span>,</span><br><span class="line">    <span class="attr">password</span>:<span class="string">&#x27;123456&#x27;</span>,</span><br><span class="line">    <span class="attr">database</span>:<span class="string">&#x27;my_db_01&#x27;</span>,<span class="comment">//指定要操作哪个数据库</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//测试mysql能否正常工作</span></span><br><span class="line">db.query(<span class="string">&#x27;select 1&#x27;</span>,<span class="function">(<span class="params">err,result</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//mysql工作期间报错</span></span><br><span class="line">    <span class="keyword">if</span>(err)<span class="keyword">return</span> <span class="built_in">console</span>.log(err.message)</span><br><span class="line">    <span class="comment">//能成功执行SQL语句</span></span><br><span class="line">    <span class="built_in">console</span>.log(result);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>运行db.js</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PS D:\Vue-chat\Server&gt; node db.js</span><br><span class="line">ER_NOT_SUPPORTED_AUTH_MODE: Client does not support authentication protocol requested by server; consider upgrading MySQL client</span><br></pre></td></tr></table></figure>
-
-<h1 id="报错原因"><a href="#报错原因" class="headerlink" title="报错原因"></a>报错原因</h1><p>mysql8.0以上加密方式，Node还不支持。</p>
-<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>第一步谷歌<br>查到了 <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-authentication-protocol-requested-by-server">https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-authentication-protocol-requested-by-server</a><br>这个答案，和我报错的步骤基本一样，按照这个进行操作，登录MySql Command Line Client使用这个</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; alter user &#x27;root&#x27;@&#x27;localhost&#x27; identified with mysql_native_password by &#x27;123456&#x27;;</span><br><span class="line">Query OK, 0 rows affected (0.27 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">Query OK, 0 rows affected (0.08 sec)</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1650,7 +1663,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">227</span>
+          <span class="site-state-item-count">229</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1724,7 +1737,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共203.7k字</span>
+  <span class="post-count">博客全站共204.3k字</span>
 </div>
         
 

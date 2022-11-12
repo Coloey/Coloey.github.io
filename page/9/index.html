@@ -187,6 +187,177 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/16/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/16/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">组合模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-16 11:12:05" itemprop="dateCreated datePublished" datetime="2022-05-16T11:12:05+08:00">2022-05-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-09-01 23:24:13" itemprop="dateModified" datetime="2022-09-01T23:24:13+08:00">2022-09-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>组合模式能够给我们提供一个清晰的组成结构，组合对象类通过集成同一个父类使其具有统一的方法，方便我们统一管理和使用。</p>
+<h1 id="组合模式用途："><a href="#组合模式用途：" class="headerlink" title="组合模式用途："></a>组合模式用途：</h1><ul>
+<li>组合模式将对象组合成树形结构，以表示“部分-整体”的层次结构，除了用来表示树形结构外，组合模式可以通过对象的多态性表示，使得用户对单个对象和组合对象的使用具有一致性</li>
+<li>请求在树中传递，从树最顶端往下传，如果当前处理请求的对象是叶对象（普通子命令），叶对象会对请求做出相应处理，如果当前处理请求是组合对象，组合对象则会遍历它属下的子节点，将请求继续传递给子节点。</li>
+</ul>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;button&quot;</span>&gt;</span>按我<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> MacroCammond = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="keyword">return</span>&#123;</span></span><br><span class="line"><span class="javascript">                <span class="attr">commandList</span>:[],</span></span><br><span class="line"><span class="javascript">                <span class="attr">add</span>: <span class="function"><span class="keyword">function</span>(<span class="params">command</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                    <span class="built_in">this</span>.commandList.push(command)</span></span><br><span class="line"><span class="javascript">                &#125;,</span></span><br><span class="line"><span class="javascript">                <span class="attr">execute</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                    <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>,command;command = <span class="built_in">this</span>.commandList[i++];)&#123;</span></span><br><span class="line"><span class="javascript">                        command.execute()</span></span><br><span class="line"><span class="javascript">                    &#125;</span></span><br><span class="line"><span class="javascript">                &#125;</span></span><br><span class="line"><span class="javascript">            &#125;</span></span><br><span class="line"><span class="javascript">        &#125;;</span></span><br><span class="line"><span class="javascript">        <span class="comment">//</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> openAcCommand = &#123;</span></span><br><span class="line"><span class="javascript">            <span class="attr">execute</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                <span class="built_in">console</span>.log(<span class="string">&#x27;打开空调&#x27;</span>)</span></span><br><span class="line"><span class="javascript">            &#125;</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> openTvCommand = &#123;</span></span><br><span class="line"><span class="javascript">            <span class="attr">execute</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                <span class="built_in">console</span>.log(<span class="string">&#x27;打开电视&#x27;</span>)</span></span><br><span class="line"><span class="javascript">            &#125;</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> macroCommand1 = MacroCammond()</span></span><br><span class="line"><span class="javascript">        macroCommand1.add(openAcCommand)</span></span><br><span class="line"><span class="javascript">        macroCommand1.add(openTvCommand)</span></span><br><span class="line"><span class="javascript">        <span class="comment">//</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> closeDoorCommand = &#123;</span></span><br><span class="line"><span class="javascript">            <span class="attr">execute</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                <span class="built_in">console</span>.log(<span class="string">&#x27;关门&#x27;</span>)</span></span><br><span class="line"><span class="javascript">            &#125;</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> openComputer = &#123;</span></span><br><span class="line"><span class="javascript">            <span class="attr">execute</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                <span class="built_in">console</span>.log(<span class="string">&#x27;开电脑&#x27;</span>)</span></span><br><span class="line"><span class="javascript">            &#125;</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> macroCommand2 = MacroCammond()</span></span><br><span class="line"><span class="javascript">        macroCommand2.add(closeDoorCommand)</span></span><br><span class="line"><span class="javascript">        macroCommand2.add(openComputer)</span></span><br><span class="line"><span class="javascript">        <span class="comment">//现在所有命令组合在一起为一个超级命令</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> macroCommand = MacroCammond()</span></span><br><span class="line"><span class="javascript">        macroCommand.add(macroCommand1)</span></span><br><span class="line"><span class="javascript">        macroCommand.add(macroCommand2)</span></span><br><span class="line"><span class="javascript">        <span class="comment">//绑定超级命令</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> setCommand = (<span class="function"><span class="keyword">function</span>(<span class="params">command</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="built_in">document</span>.getElementById(<span class="string">&#x27;button&#x27;</span>).onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                command.execute()</span></span><br><span class="line"><span class="javascript">            &#125;</span></span><br><span class="line"><span class="javascript">        &#125;)(macroCommand)</span></span><br><span class="line"><span class="javascript"></span></span><br><span class="line"><span class="javascript"></span></span><br><span class="line"><span class="javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h1><ol>
+<li>组合模式不是父子关系</li>
+</ol>
+<p>组合模式是一种HAS-A(聚合)关系，而不是IS-A，组合对象包含一组叶对象，但是leaf不是Composite的子类，组合对象把请求委托给它包含的叶子结点，它们能合作的关键是拥有相同的接口。</p>
+<ol start="2">
+<li>对叶子操作的一致性：</li>
+</ol>
+<p>组合模式除了要求组合对象和叶对象拥有相同的接口外，还有一个必要条件，就是对一组叶对象的操作必须具有一致性</p>
+<ol start="3">
+<li>双向映射性：</li>
+</ol>
+<p>给父结点和子结点建立双向映射关系，例如给父对象和叶子分别添加集合保存对方的引用，但是，相互之间的引用1过于复杂时会引使得对象之间产生过多耦合性，可以引入中介者模式管理对象</p>
+<h1 id="组合模式适用情况："><a href="#组合模式适用情况：" class="headerlink" title="组合模式适用情况："></a>组合模式适用情况：</h1><ul>
+<li>表示对象的部分-整体层次结构，组合模式可以很方便地构造一棵树来表示对象的部分-整体结构，特别是开发期间不确定这棵树存在多少层次的时候，在树的构造最终完成之后，只需要通过请求树的最顶层对象，就能对树做统一的操作。在组合模式中增加和删除结点很方便，符合“开放-封闭”原则</li>
+<li>客户希望统一对待树中所有对象。组合模式可以使客户忽略对象和叶对象的区别，客户在面对这棵树时，不用关心正在处理的对象时组合对象还是叶对象，也就是不用写一堆if,else组合对象和叶对象会各自做正确的事情。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/16/%E5%88%92%E5%88%86%E9%93%BE%E8%A1%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/16/%E5%88%92%E5%88%86%E9%93%BE%E8%A1%A8/" class="post-title-link" itemprop="url">划分链表</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-16 00:23:16 / 修改时间：00:34:36" itemprop="dateCreated datePublished" datetime="2022-05-16T00:23:16+08:00">2022-05-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95/%E9%93%BE%E8%A1%A8/" itemprop="url" rel="index"><span itemprop="name">链表</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ListPartition=<span class="function">(<span class="params">head,pivot</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> sH=<span class="literal">null</span>,sT=<span class="literal">null</span>,eH=<span class="literal">null</span>,eT=<span class="literal">null</span>,mH=<span class="literal">null</span>,mT=<span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">let</span> next=<span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">while</span>(head!==<span class="literal">null</span>)&#123;</span><br><span class="line">        next=head.next;</span><br><span class="line">        head.next=<span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">if</span>(head.value&lt;pivot)&#123;</span><br><span class="line">            <span class="keyword">if</span>(sH===<span class="literal">null</span>)&#123;</span><br><span class="line">                sH=head;</span><br><span class="line">                sT=head;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                sT.next=head;</span><br><span class="line">                sT=head;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(head.value===pivot)&#123;</span><br><span class="line">            <span class="keyword">if</span>(eH===<span class="literal">null</span>)&#123;</span><br><span class="line">                eH=head;</span><br><span class="line">                eT=head;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                eT.next=head;</span><br><span class="line">                eT=head;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(mH==<span class="literal">null</span>)&#123;</span><br><span class="line">                mH=head;</span><br><span class="line">                mT=head;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                mT.next=head;</span><br><span class="line">                mT=head;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        head=next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(sT!==<span class="literal">null</span>)&#123;<span class="comment">//如果有小于区域</span></span><br><span class="line">        sT.next=eH;</span><br><span class="line">        eT=eT===<span class="literal">null</span>?sT:eT;<span class="comment">//下一步谁连大于区域的头谁就是eT</span></span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(eT!==<span class="literal">null</span>)&#123;<span class="comment">//小于区域和等于区域不是都没有</span></span><br><span class="line">        eT.next=mH;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sH!==<span class="literal">null</span>?sH:(eH!==<span class="literal">null</span>?eH:mH)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/14/%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -817,298 +988,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/11/%E8%AE%B0vuecli3%E8%81%8A%E5%A4%A9%E5%AE%A4%E9%A1%B9%E7%9B%AEwebpack%E6%89%93%E5%8C%85%E4%BC%98%E5%8C%96/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/11/%E8%AE%B0vuecli3%E8%81%8A%E5%A4%A9%E5%AE%A4%E9%A1%B9%E7%9B%AEwebpack%E6%89%93%E5%8C%85%E4%BC%98%E5%8C%96/" class="post-title-link" itemprop="url">记vuecli3聊天室项目webpack打包优化</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-05-11 17:58:40" itemprop="dateCreated datePublished" datetime="2022-05-11T17:58:40+08:00">2022-05-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-17 12:01:27" itemprop="dateModified" datetime="2022-08-17T12:01:27+08:00">2022-08-17</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>vue.config.js:</p>
-<h2 id="1-UglifyPlugin-Webpack-Plugin-插件用来缩小js文件"><a href="#1-UglifyPlugin-Webpack-Plugin-插件用来缩小js文件" class="headerlink" title="1 UglifyPlugin Webpack Plugin 插件用来缩小js文件"></a>1 UglifyPlugin Webpack Plugin 插件用来缩小js文件</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> UglifyJsPlugin=<span class="built_in">require</span>(<span class="string">&#x27;uglifyjs-webpack-plugin&#x27;</span>)</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    <span class="attr">publicPath</span>: process.env.NODE_ENV === <span class="string">&#x27;production&#x27;</span></span><br><span class="line">    ? <span class="string">&#x27;/Vue-chat/&#x27;</span></span><br><span class="line">    : <span class="string">&#x27;/&#x27;</span> ,</span><br><span class="line">    <span class="comment">// 输出文件目录</span></span><br><span class="line">    <span class="attr">outputDir</span>: <span class="string">&#x27;dist&#x27;</span>,</span><br><span class="line">    <span class="comment">// eslint-loader 是否在保存的时候检查</span></span><br><span class="line">    <span class="attr">lintOnSave</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="comment">// use the full build with in-browser compiler?</span></span><br><span class="line">    <span class="comment">// https://vuejs.org/v2/guide/installation.html#Runtime-Compiler-vs-Runtime-only</span></span><br><span class="line">    <span class="comment">// compiler: false,</span></span><br><span class="line">    <span class="comment">// webpack配置</span></span><br><span class="line">    <span class="comment">// see https://github.com/vuejs/vue-cli/blob/dev/docs/webpack.md</span></span><br><span class="line">    <span class="attr">chainWebpack</span>: <span class="function">() =&gt;</span> &#123;&#125;,</span><br><span class="line">    <span class="comment">//代码压缩</span></span><br><span class="line">    <span class="attr">configureWebpack</span>:&#123;</span><br><span class="line">      <span class="attr">plugins</span>:[</span><br><span class="line">        <span class="keyword">new</span> UglifyJsPlugin(&#123;</span><br><span class="line">          <span class="attr">uglifyOptions</span>:&#123;</span><br><span class="line">            <span class="attr">compress</span>:&#123;</span><br><span class="line">              <span class="attr">drop_debugger</span>:<span class="literal">true</span>,</span><br><span class="line">              <span class="attr">drop_console</span>:<span class="literal">true</span>,</span><br><span class="line">              <span class="attr">pure_funcs</span>:[<span class="string">&#x27;console.log&#x27;</span>]<span class="comment">//删除console.log语句</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="attr">sourceMap</span>:<span class="literal">false</span>,</span><br><span class="line">          <span class="attr">parallel</span>:<span class="literal">true</span></span><br><span class="line">        &#125;)</span><br><span class="line">      ],</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// vue-loader 配置项</span></span><br><span class="line">    <span class="comment">// https://vue-loader.vuejs.org/en/options.html</span></span><br><span class="line">    <span class="comment">// vueLoader: &#123;&#125;,</span></span><br><span class="line">    <span class="comment">// 生产环境是否生成 sourceMap 文件</span></span><br><span class="line">    <span class="attr">productionSourceMap</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="comment">// css相关配置</span></span><br><span class="line">    <span class="comment">//  css: &#123;</span></span><br><span class="line">    <span class="comment">// //  // 是否使用css分离插件 ExtractTextPlugin</span></span><br><span class="line">    <span class="comment">//     extract: true,</span></span><br><span class="line">    <span class="comment">//  // 开启 CSS source maps?</span></span><br><span class="line">    <span class="comment">//     sourceMap: false,</span></span><br><span class="line">    <span class="comment">// //  // css预设器配置项</span></span><br><span class="line">    <span class="comment">//     loaderOptions: &#123;</span></span><br><span class="line">    <span class="comment">//       css:&#123;&#125;,//这里的选项会传递给css-loader</span></span><br><span class="line">    <span class="comment">//       postcss:&#123;&#125;//这里的选项会传递给postcss-loader</span></span><br><span class="line">    <span class="comment">//     &#125;,</span></span><br><span class="line">    <span class="comment">// //  // 启用 CSS modules for all css / pre-processor files.</span></span><br><span class="line">    <span class="comment">//     requireModuleExtension: false</span></span><br><span class="line">    <span class="comment">//  &#125;,</span></span><br><span class="line">    <span class="comment">// use thread-loader for babel &amp; TS in production build</span></span><br><span class="line">    <span class="comment">// enabled by default if the machine has more than 1 cores</span></span><br><span class="line">    <span class="attr">parallel</span>: <span class="built_in">require</span>(<span class="string">&#x27;os&#x27;</span>).cpus().length &gt; <span class="number">1</span>,<span class="comment">// 是否为 Babel 或 TypeScript 使用 thread-loader。该选项在系统的 CPU 有多于一个内核时自动启用，仅作用于生产构建。</span></span><br><span class="line">    <span class="comment">// 是否启用dll</span></span><br><span class="line">    <span class="comment">// See https://github.com/vuejs/vue-cli/blob/dev/docs/cli-service.md#dll-mode</span></span><br><span class="line">    <span class="comment">// dll: false,</span></span><br><span class="line">    <span class="comment">// PWA 插件相关配置</span></span><br><span class="line">    <span class="comment">// see https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-pwa</span></span><br><span class="line">    <span class="attr">pwa</span>: &#123;&#125;,</span><br><span class="line">    <span class="comment">// webpack-dev-server 相关配置</span></span><br><span class="line">    <span class="attr">devServer</span>: &#123;</span><br><span class="line">      <span class="attr">open</span>: process.platform === <span class="string">&#x27;darwin&#x27;</span>,</span><br><span class="line">      <span class="attr">disableHostCheck</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="attr">port</span>:<span class="number">8081</span>,</span><br><span class="line">      <span class="attr">https</span>: <span class="literal">false</span>,</span><br><span class="line">      <span class="attr">hotOnly</span>: <span class="literal">false</span>,</span><br><span class="line">      </span><br><span class="line">     <span class="attr">before</span>: <span class="function"><span class="params">app</span> =&gt;</span> &#123;&#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 第三方插件配置</span></span><br><span class="line">    <span class="attr">pluginOptions</span>: &#123;</span><br><span class="line">     <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">   &#125;</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
-
-<h2 id="2-路由懒加载："><a href="#2-路由懒加载：" class="headerlink" title="2 路由懒加载："></a>2 路由懒加载：</h2><p>把不同路由对应的组件分割成不同的代码块，待路由被请求的时候会单独打包路由，使得入口文件变小，加载速度大大增加，以函数的形式加载路由，这样就可以把各自的路由文件分别打包，只有在解析给定的路由时，才会加载路由组件</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">routes:[&#123;</span><br><span class="line">      <span class="attr">path</span>:<span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">      <span class="attr">name</span>:<span class="string">&quot;通讯录&quot;</span>,</span><br><span class="line">      <span class="attr">component</span>:<span class="function">()=&gt;</span><span class="built_in">Promise</span>.resolve(<span class="keyword">import</span>(<span class="string">&quot;../components/contact/contact.vue&quot;</span>))</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-UI框架按需加载"><a href="#3-UI框架按需加载" class="headerlink" title="3 UI框架按需加载"></a>3 UI框架按需加载</h2><p>在日常使用的UI框架，例如element-plus，我们经常直接使用整个UI库</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> ElemtPlus <span class="keyword">from</span> <span class="string">&#x27;element-plus&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>但实际上我用到的组件只有按钮，分页，表格，输入与警告，所以我们需要按需引用</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;Button,Input,Table,TableColumn,MessageBox&#125; <span class="keyword">from</span> <span class="string">&#x27;element-plus&#x27;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="4-静态资源本地缓存"><a href="#4-静态资源本地缓存" class="headerlink" title="4 静态资源本地缓存"></a>4 静态资源本地缓存</h2><p>后端返回资源问题：</p>
-<ul>
-<li>采用<code>HTTP</code>缓存，设置<code>Cache-Control</code>，<code>Last-Modified</code>，<code>Etag</code>等响应头</li>
-<li>采用<code>Service Worker</code>离线缓存</li>
-</ul>
-<p>前端合理利用<code>localStorage</code></p>
-<h2 id="5-图片资源的压缩"><a href="#5-图片资源的压缩" class="headerlink" title="5 图片资源的压缩"></a>5 图片资源的压缩</h2><p>图片资源虽然不在编码过程中，但它却是对页面性能影响最大的因素</p>
-<p>对于所有的图片资源，我们可以进行适当的压缩</p>
-<p>对页面上使用到的<code>icon</code>，可以使用在线字体图标，或者雪碧图，将众多小图标合并到同一张图上，用以减轻<code>http</code>请求压力。</p>
-<h3 id="开启GZip压缩"><a href="#开启GZip压缩" class="headerlink" title="开启GZip压缩"></a>开启GZip压缩</h3><p>拆完包之后，我们再用<code>gzip</code>做一下压缩 安装<code>compression-webpack-plugin</code></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i compression-webpack-plugin -D</span><br></pre></td></tr></table></figure>
-
-<p>vue.config.js</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> CompressionPlugin = <span class="built_in">require</span>(<span class="string">&#x27;compression-webpack-plugin&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="attr">configureWebpack</span>: <span class="function">(<span class="params">config</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (process.env.NODE_ENV === <span class="string">&#x27;production&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">// 为生产环境修改配置...</span></span><br><span class="line">            config.mode = <span class="string">&#x27;production&#x27;</span></span><br><span class="line">            <span class="keyword">return</span> &#123;</span><br><span class="line">                <span class="attr">plugins</span>: [<span class="keyword">new</span> CompressionPlugin(&#123;</span><br><span class="line">                    <span class="attr">test</span>: <span class="regexp">/\.js$|\.html$|\.css/</span>, <span class="comment">//匹配文件名</span></span><br><span class="line">                    threshold: <span class="number">10240</span>, <span class="comment">//对超过10k的数据进行压缩</span></span><br><span class="line">                    <span class="attr">deleteOriginalAssets</span>: <span class="literal">false</span> <span class="comment">//是否删除原文件</span></span><br><span class="line">                &#125;)]</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="6-使用SSR"><a href="#6-使用SSR" class="headerlink" title="6 使用SSR"></a>6 使用SSR</h2><p>SSR（Server side ），也就是服务端渲染，组件或页面通过服务器生成html字符串，再发送到浏览器</p>
-<p>从头搭建一个服务端渲染是很复杂的，<code>vue</code>应用建议使用<code>Nuxt.js</code>实现服务端渲染</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/10/vue-loader%E7%9A%84%E4%BD%BF%E7%94%A8%E9%85%8D%E7%BD%AE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/10/vue-loader%E7%9A%84%E4%BD%BF%E7%94%A8%E9%85%8D%E7%BD%AE/" class="post-title-link" itemprop="url">vue-loader的使用配置</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-05-10 23:28:58" itemprop="dateCreated datePublished" datetime="2022-05-10T23:28:58+08:00">2022-05-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-13 00:22:52" itemprop="dateModified" datetime="2022-05-13T00:22:52+08:00">2022-05-13</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>一个包含vue-loader的简单webpack配置：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> MiniCssExtractPlugin=<span class="built_in">require</span>(<span class="string">&#x27;mini-css-extract-plugin&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> &#123;VueLoadPlugin&#125;=<span class="built_in">require</span>(<span class="string">&#x27;vue-loader&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> isProduction=process.evv.NODE_ENV===<span class="string">&#x27;production&#x27;</span></span><br><span class="line"><span class="keyword">const</span> extractLoader=&#123;</span><br><span class="line">    <span class="attr">loader</span>:MiniCssExtractPlugin.loader,</span><br><span class="line">    <span class="attr">options</span>:&#123;</span><br><span class="line">        <span class="attr">publicPath</span>:<span class="string">&#x27;../&#x27;</span>,</span><br><span class="line">        <span class="attr">hmr</span>:process.env.NODE_ENV===<span class="string">&#x27;development&#x27;</span><span class="comment">//开发环境下打开热更新</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> cssExtractPlugin=<span class="keyword">new</span> MiniCssExtractPlugin(&#123;</span><br><span class="line">    <span class="attr">filename</span>:<span class="string">&#x27;[name].css&#x27;</span>,</span><br><span class="line">    <span class="attr">chunkFilename</span>:<span class="string">&#x27;[id].css&#x27;</span>,</span><br><span class="line">    <span class="attr">ignoreOrder</span>:<span class="literal">false</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">const</span> webpackConfig=&#123;</span><br><span class="line">    <span class="attr">entryd</span>:&#123;...&#125;,</span><br><span class="line">    <span class="attr">output</span>:&#123;...&#125;,</span><br><span class="line">	<span class="attr">optimization</span>:&#123;...&#125;,</span><br><span class="line">    <span class="attr">resolve</span>:&#123;...&#125;,</span><br><span class="line">    <span class="attr">modules</span>:&#123;</span><br><span class="line">        <span class="attr">rules</span>:[&#123;</span><br><span class="line">        	<span class="attr">test</span>:<span class="regexp">/\.vue$/</span>,</span><br><span class="line">        	loader:<span class="string">&#x27;vue-loader&#x27;</span></span><br><span class="line">        &#125;,&#123;</span><br><span class="line">             <span class="attr">test</span>:<span class="regexp">/\.css$/</span>,</span><br><span class="line">             oneof:[&#123;</span><br><span class="line">                  <span class="attr">resourceQuery</span>:<span class="regexp">/\?vue/</span>,</span><br><span class="line">                  use:[isProduction?extractLoader:<span class="string">&#x27;vue-style-loader&#x27;</span>,<span class="string">&#x27;css-loader&#x27;</span>]</span><br><span class="line">           		  &#125;,&#123;</span><br><span class="line">            	   <span class="attr">use</span>:[isproduction?extractLoader:<span class="string">&#x27;style-loader&#x27;</span>,<span class="string">&#x27;css-loader&#x27;</span>]</span><br><span class="line">            </span><br><span class="line">           &#125;  </span><br><span class="line">            ]</span><br><span class="line">         &#125;]</span><br><span class="line">    &#125;,</span><br><span class="line">     <span class="attr">plugins</span>:[</span><br><span class="line">         <span class="keyword">new</span> VueLoaderPlugin(),</span><br><span class="line">         isProduction?cssExtractPlugin:<span class="string">&#x27;&#x27;</span></span><br><span class="line">     ]</span><br><span class="line">                </span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="vue-loader工作原理"><a href="#vue-loader工作原理" class="headerlink" title="vue-loader工作原理"></a>vue-loader工作原理</h3><p>通过vue-loader,webpack可以将.vue文件转化为浏览器可识别的javascript</p>
-<ul>
-<li><p>将一个.vue文件分割成template,script,styles三部分</p>
-</li>
-<li><p>template部分通过compile生成render,staticRenderFns</p>
-</li>
-<li><p>获取script部分返回的配置对象scriptExports</p>
-</li>
-<li><p>styles部分，会通过css-loader,vue-style-loader,添加到head中，或者通过css-loader,MiniCssExtractPlugin提取到一个公共的css文件</p>
-</li>
-<li><p>使用vue-loader提供的normalizeComponent方法，合并scriptExports,render,staticRenderFns,返回构建vue组件需要的配置对象-options,即{data,props,methods,render,staticRenderFns…}</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 从 template区域块 获取 render、 staticRenderFns 方法</span></span><br><span class="line"><span class="keyword">import</span> &#123; render, staticRenderFns &#125; <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=template&amp;id=7ba5bd90&amp;scoped=true&amp;&quot;</span></span><br><span class="line"><span class="comment">// 从 script区域块 获取 组件的配置项对象</span></span><br><span class="line"><span class="keyword">import</span> script <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=script&amp;lang=js&amp;&quot;</span></span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=script&amp;lang=js&amp;&quot;</span></span><br><span class="line"><span class="comment">// 获取 styles区域块的内容</span></span><br><span class="line"><span class="keyword">import</span> style0 <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=style&amp;index=0&amp;lang=css&amp;&quot;</span></span><br><span class="line"><span class="comment">// 获取 styles(scoped)区域块的内容</span></span><br><span class="line"><span class="keyword">import</span> style1 <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=style&amp;index=1&amp;id=7ba5bd90&amp;scoped=true&amp;lang=css&amp;&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* normalize component */</span></span><br><span class="line"><span class="keyword">import</span> normalizer <span class="keyword">from</span> <span class="string">&quot;!../node_modules/_vue-loader@15.7.1@vue-loader/lib/runtime/componentNormalizer.js&quot;</span></span><br><span class="line"><span class="comment">// 返回构建组件需要的配置项对象， 包含 data、props、render、staticRenderFns 等</span></span><br><span class="line"><span class="keyword">var</span> component = normalizer(</span><br><span class="line">  script,</span><br><span class="line">  render,</span><br><span class="line">  staticRenderFns,</span><br><span class="line">  <span class="literal">false</span>,</span><br><span class="line">  <span class="literal">null</span>,</span><br><span class="line">  <span class="string">&quot;7ba5bd90&quot;</span>,</span><br><span class="line">  <span class="literal">null</span></span><br><span class="line">  </span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">component.options.__file = <span class="string">&quot;src/App.vue&quot;</span></span><br><span class="line"><span class="comment">// 输出组件完整的配置项</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> component.exports</span><br></pre></td></tr></table></figure>
-
-<h3 id="css-scoped"><a href="#css-scoped" class="headerlink" title="css scoped"></a>css scoped</h3><p>当.vue文件中的style标签有scoped属性，它的css样式只作用于当前组件的元素</p>
-<p><strong>css scoped</strong> 的 <strong>工作流程</strong> 如下:</p>
-<ol>
-<li>使用 <strong>vue-loader</strong> 处理 <strong>.vue</strong> 文件， 根据 <strong>.vue 文件</strong> 的 <strong>请求路径</strong> 和 <strong>文件内容</strong>， 生成 <strong>.vue 文件</strong> 的 <strong>hash</strong> 值, 如：<strong>7ba5bd90</strong>；</li>
-<li>如果 <strong>.vue 文件</strong> 的 <strong>某一个 style 标签</strong> 有 <strong>scoped</strong> 属性， 为 <strong>.vue 文件</strong> 生成一个 <strong>scopedId</strong>，<strong>scopedId</strong> 的格式为 <strong>data-v-hash</strong>， 如：<strong>data-v-7ba5bd90</strong>；</li>
-<li>使用 <strong>vue-loader</strong> 从 <strong>.vue 文件</strong> 中获取 <strong>style区域块(scoped)</strong> 的 **样式内容(字符串)**；如果使用了 <strong>less</strong> 或者 <strong>sass</strong>， 要使用 <strong>less-loader</strong> 或者 <strong>sass-loader</strong> 处理 <strong>样式内容</strong>，使 <strong>样式内容</strong> 变为 <strong>浏览器可识别的css样式</strong>； 然后使用 <strong>PostCSS</strong> 提供的 <strong>parser</strong> 处理 <strong>样式内容</strong>， 为 <strong>样式内容</strong> 中的每一个 <strong>css选择器</strong> 添加 **[data-v-hash]**； 再使用 <strong>css-loader</strong>；最后使用 <strong>style-loader</strong> 把 <strong>css 样式</strong> 添加到 <strong>head</strong> 中或者通过 <strong>miniCssExtractPlugin</strong> 将 <strong>css 样式</strong> 提取一个公共的 <strong>css</strong> 文件中。</li>
-<li>通过 <strong>normalizer</strong> 方法返回 <strong>完整的组件配置项 options</strong>， <strong>options</strong> 中有属性 <strong>_scopeId</strong>, 如 <strong>_scopedId: data-v-7ba5bd90</strong>;</li>
-<li>使用 <strong>组件配置项 options</strong> 构建组件实例， 给 <strong>组件</strong> 中每一个 <strong>dom元素</strong> 添加属性: <strong>data-v-hash</strong>。</li>
-</ol>
-<p>经历上述过程，<strong>style(scoped)</strong> 中的样式就变成了 <strong>组件的私有样式</strong>。</p>
-<h3 id="深度作用选择器"><a href="#深度作用选择器" class="headerlink" title="深度作用选择器"></a>深度作用选择器</h3><p>我们可以通过 <strong>&gt;&gt;&gt;</strong> 操作符， 在 <strong>组件</strong> 中修改 <strong>子组件</strong> 的 <strong>私有样式</strong>。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// child component</span></span><br><span class="line">.hello &#123;...&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// parent component </span></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">    .parant .hello &#123;...&#125;</span><br><span class="line">    .parent &gt;&gt;&gt; .hello &#123;...&#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 进过 postCSS 处理以后的 css</span></span><br><span class="line">.parent .hello[data-v-xxx] &#123;...&#125;  <span class="comment">// 无法影响子组件</span></span><br><span class="line"></span><br><span class="line">.parant[data-v-xxx] .hello &#123;....&#125; <span class="comment">// 可影响子组件</span></span><br></pre></td></tr></table></figure>
-
-<p>有些像 <strong>Sass</strong> 之类的 <strong>预处理器</strong> 无法 **正确解析 &gt;&gt;&gt;**。这种情况下我们可以使用 <strong>/deep/</strong> 或 <strong>::v-deep</strong> 操作符取而代之，两者都是 <strong>&gt;&gt;&gt;</strong> 的 <strong>别名</strong>，同样可以正常工作。</p>
-<p><strong>深度作用选择器， 必须在含有 scoped 属性 的 style 标签中使用，否则无效</strong>。 这是因为 <strong>&gt;&gt;&gt;、/deep/、::v-deep</strong> 需要被 <strong>postCSS</strong> 解析才能起作用。 只有 <strong>style 标签</strong> 中有 <strong>scoped 属性</strong>， <strong>样式内容</strong> 才会被 <strong>postCSS</strong> 解析。</p>
-<p><strong>postCSS</strong> 解析样式内容的时候， 会给 <strong>&gt;&gt;</strong>&gt; 操作符 <strong>前面</strong> 的 <strong>css选择器</strong> 添加 **[data-v-hash]**。</p>
-<blockquote>
-<p>注意： <strong>父组件</strong> 中修改 <strong>子组件</strong> 的 <strong>私有样式</strong> 时， <strong>父组件</strong> 中的 <strong>样式的优先级</strong> 要大于 <strong>子组件</strong> 中的 <strong>样式的优先级</strong>， 否则会导致 <strong>父组件中定义的样式不生效</strong>。</p>
-</blockquote>
-</li>
-</ul>
-<h3 id="CSS-Modules"><a href="#CSS-Modules" class="headerlink" title="CSS Modules"></a>CSS Modules</h3><p>我们也可以在 <strong>.vue 文件</strong> 的 <strong>style 标签</strong> 上添加 <strong>module 属性</strong>， 使得 <strong>style 标签</strong> 中的 <strong>样式</strong> 变为 <strong>组件私有</strong>，具体使用方法详见 - <a target="_blank" rel="noopener" href="https://vue-loader.vuejs.org/zh/guide/css-modules.html#%E7%94%A8%E6%B3%95">官网</a>。</p>
-<p><strong>css modules</strong> 和 <strong>css scoped</strong> 都可以使 <strong>样式</strong> 变为 <strong>组件私有</strong>，但是 <strong>原理</strong> 不一样。</p>
-<p><strong>css scoped</strong> 的实质是利用 <strong>css属性选择器</strong> 使得 <strong>样式</strong> 称为 <strong>局部样式</strong>，而 <strong>css modules</strong> 的实质是让 <strong>样式的类名、id名唯一</strong> 使得 <strong>样式</strong> 称为 <strong>局部样式</strong>。</p>
-<p><strong>css modules</strong> 的 <strong>工作流程</strong> 如下:</p>
-<ol>
-<li>使用 <strong>vue-loader</strong> 处理 <strong>.vue</strong> 文件， 将 <strong>.vue 文件内容</strong> 转化为 <strong>js 代码</strong>。 如果 <strong>.vue 文件</strong> 中的 <strong>style 标签</strong> 中有 <strong>module</strong> 属性， 向 <strong>js 代码</strong> 中注入一个 <strong>injectStyle</strong> 方法， 如下：</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; render, staticRenderFns &#125; <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=template&amp;id=3512ffa2&amp;scoped=true&amp;&quot;</span>  </span><br><span class="line"><span class="keyword">import</span> script <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=script&amp;lang=js&amp;&quot;</span>  </span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=script&amp;lang=js&amp;&quot;</span>  </span><br><span class="line"><span class="keyword">import</span> style0 <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=style&amp;index=0&amp;module=a&amp;lang=css&amp;&quot;</span>  </span><br><span class="line"><span class="keyword">import</span> style1 <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=style&amp;index=1&amp;id=3512ffa2&amp;module=true&amp;scoped=true&amp;lang=css&amp;&quot;</span>  </span><br><span class="line"><span class="comment">// 通过injectStyle方法， 会向vue实例中添加属性  </span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">injectStyles</span> (<span class="params">context</span>) </span>&#123;  </span><br><span class="line">    <span class="comment">// 对应 &lt;style module=&quot;a&quot;&gt;...&lt;/style&gt;  </span></span><br><span class="line">    <span class="comment">// 给vue实例添加属性a， 对应的值为使用css-loader处理样式内容以后返回的对象  </span></span><br><span class="line">    <span class="built_in">this</span>[<span class="string">&quot;a&quot;</span>] = (style0.locals || style0)  </span><br><span class="line">    <span class="comment">// 对应 &lt;style module&gt;...&lt;/style&gt;  </span></span><br><span class="line">    <span class="comment">// 给vue实例添加属性$style, 对应的值为使用css-loader处理样式内容以后返回的对象  </span></span><br><span class="line">    <span class="built_in">this</span>[<span class="string">&quot;$style&quot;</span>] = (style1.locals || style1)  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="comment">/* normalize component */</span>  </span><br><span class="line"><span class="keyword">import</span> normalizer <span class="keyword">from</span> <span class="string">&quot;!../node_modules/_vue-loader@15.7.1@vue-loader/lib/runtime/componentNormalizer.js&quot;</span>  </span><br><span class="line"><span class="comment">// normalize 会返回一个组件完整配置项对象  </span></span><br><span class="line"><span class="comment">// 在执行过程中， 会将render方法重新包装成 renderWithStyleInjection 方法  </span></span><br><span class="line"><span class="comment">// 执行 renderWithStyleInjection 方法时的时候， 先执行 injectStyles 方法， 再执行 原来的render 方法  </span></span><br><span class="line"><span class="keyword">var</span> component = normalizer(  </span><br><span class="line">  script,  </span><br><span class="line">  render,  </span><br><span class="line">  staticRenderFns,  </span><br><span class="line">  <span class="literal">false</span>,  </span><br><span class="line">  injectStyles,  </span><br><span class="line">  <span class="string">&quot;3512ffa2&quot;</span>,  </span><br><span class="line">  <span class="literal">null</span>  </span><br><span class="line">    </span><br><span class="line">)  </span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> component.exports<span class="string">&quot;  </span></span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>使用 <strong>css-loader</strong> 处理 <strong>.vue 文件</strong> 的 <strong>style 区域块</strong>，会将 <strong>style 区域块</strong> 中的样式内容， 转化为 <strong>js 代码</strong>， 如下:</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">exports</span> = <span class="built_in">module</span>.exports = <span class="built_in">require</span>(<span class="string">&quot;../node_modules/_css-loader@3.2.0@css-loader/dist/runtime/api.js&quot;</span>)(<span class="literal">false</span>);  </span><br><span class="line"><span class="comment">// Module  </span></span><br><span class="line"><span class="built_in">exports</span>.push([<span class="built_in">module</span>.id, <span class="string">&quot;\n#_3cl756BP8kssTYTEsON-Ao &#123;\n  font-family: &#x27;Avenir&#x27;, Helvetica, Arial, sans-serif;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  text-align: center;\n  color: #2c3e50;\n  margin-top: 60px;\n&#125;\n._3IbrnaW__7RJMXk4rh9tW- &#123;\n  background-color: blue;\n&#125;\n&quot;</span>, <span class="string">&quot;&quot;</span>]);  </span><br><span class="line"><span class="comment">// Exports  </span></span><br><span class="line"><span class="built_in">exports</span>.locals = &#123;  </span><br><span class="line">    <span class="comment">// app是id名  </span></span><br><span class="line">	<span class="string">&quot;app&quot;</span>: <span class="string">&quot;_3cl756BP8kssTYTEsON-Ao&quot;</span>,  </span><br><span class="line">	<span class="comment">// class 是 类名  </span></span><br><span class="line">	<span class="string">&quot;class1&quot;</span>: <span class="string">&quot;_3IbrnaW__7RJMXk4rh9tW-&quot;</span>  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
-
-<p>在处理过程中， <strong>css-loader</strong> 会将样式中的 <strong>类名</strong>、<strong>id名</strong> 等用一个 <strong>唯一的命名代替</strong>。<br>在执行 <strong>步骤1</strong> 的代码时，会执行上面的代码， 返回一个 <strong>对象</strong>， 即 <strong>步骤一</strong> 中的 <strong>style0</strong> 、<strong>style1</strong>， 格式如下:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// css样式内容会通过 style-loader 提供的方法添加到 head 中  </span></span><br><span class="line"><span class="comment">// 或者被 miniCssExtractPlugin 提取到一个 公共的css文件 中  </span></span><br><span class="line">style0 = [[css模块 id, css样式内容字符串, <span class="string">&#x27;&#x27;</span>], ...]  </span><br><span class="line">style0.locals = &#123;  </span><br><span class="line">    <span class="string">&quot;app&quot;</span>: <span class="string">&quot;_3cl756BP8kssTYTEsON-Ao&quot;</span>,  </span><br><span class="line">	<span class="string">&quot;class1&quot;</span>: <span class="string">&quot;_3IbrnaW__7RJMXk4rh9tW-&quot;</span>  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li><strong>运行项目执行打包以后的js代码</strong>， 即 <strong>步骤1中的代码</strong>， 获取 <strong>render</strong>、<strong>staticRenderFns</strong>、<strong>scriptExprots</strong>、 <strong>style0</strong>、<strong>style1</strong>， 然后通过 <strong>normalizer</strong> 方法返回 <strong>组件完整配置项 - options</strong>。 在执行过程中，将 <strong>render</strong> 方法重新包装成 <strong>renderWithStyleInjection</strong> 方法。<br>构建 <strong>vue 实例</strong> 时，执行 <strong>renderWithStyleInjection</strong> 方法， 此时会 <strong>先</strong> 执行 <strong>injectStyles</strong> 方法，给 <strong>vue 实例</strong> 添加 <strong>$style</strong>、<strong>a</strong> 属性，属性值为 <strong>stlye0.locals</strong>、<strong>style1.locals</strong>， 再执行原来的 <strong>render</strong> 方法。<br>这样， 我们就可以通过 <strong>vue 实例</strong> 的 <strong>$styl</strong>e、<strong>a</strong> 属性访问 <strong>样式</strong> 的 <strong>类名</strong>、<strong>id</strong>名。</li>
-</ol>
-<h3 id="热更新"><a href="#热更新" class="headerlink" title="热更新"></a>热更新</h3><p><strong>开发模式</strong> 下，当使用 <strong>vue-loader</strong>、 <strong>vue-style-loader</strong> 处理 <strong>.vue 文件</strong> 的时候， 会向 <strong>生成的js代码</strong> 中注入与 <strong>热更新</strong> 相关的代码逻辑。 当我们修改 <strong>.vue 文件</strong> 时， <strong>dev-server</strong> 会通知 <strong>浏览器</strong> 进行 <strong>热更新</strong>。</p>
-<p><strong>.vue 文件</strong> 的 <strong>各个区域块(template、script、styles)</strong> 对应的 <strong>热更新逻辑</strong> 都不一样。</p>
-<ul>
-<li><h4 id="template-amp-script"><a href="#template-amp-script" class="headerlink" title="template &amp; script"></a>template &amp; script</h4></li>
-</ul>
-<p><strong>vue-loader</strong> 会在 <strong>打包代码</strong> 中注入 <strong>热更新 template、script 区域块</strong> 的代码，如下:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 从 template区域块 获取 render、 staticRenderFns 方法  </span></span><br><span class="line"><span class="keyword">import</span> &#123; render, staticRenderFns &#125; <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=template&amp;id=7ba5bd90&amp;scoped=true&amp;&quot;</span>  </span><br><span class="line"><span class="comment">// 从 script区域块 获取 组件的配置项对象  </span></span><br><span class="line"><span class="keyword">import</span> script <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=script&amp;lang=js&amp;&quot;</span>  </span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=script&amp;lang=js&amp;&quot;</span>  </span><br><span class="line"><span class="comment">// 获取 styles区域块的内容  </span></span><br><span class="line"><span class="keyword">import</span> style0 <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=style&amp;index=0&amp;lang=css&amp;&quot;</span>  </span><br><span class="line"><span class="comment">// 获取 styles(scoped)区域块的内容  </span></span><br><span class="line"><span class="keyword">import</span> style1 <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=style&amp;index=1&amp;id=7ba5bd90&amp;scoped=true&amp;lang=css&amp;&quot;</span>  </span><br><span class="line"><span class="comment">/* normalize component */</span>  </span><br><span class="line"><span class="keyword">import</span> normalizer <span class="keyword">from</span> <span class="string">&quot;!../node_modules/_vue-loader@15.7.1@vue-loader/lib/runtime/componentNormalizer.js&quot;</span>  </span><br><span class="line"><span class="comment">// 返回构建组件需要的配置项对象， 包含 data、props、render、staticRenderFns 等  </span></span><br><span class="line"><span class="keyword">var</span> component = normalizer(  </span><br><span class="line">  script,  </span><br><span class="line">  render,  </span><br><span class="line">  staticRenderFns,  </span><br><span class="line">  <span class="literal">false</span>,  </span><br><span class="line">  <span class="literal">null</span>,  </span><br><span class="line">  <span class="string">&quot;7ba5bd90&quot;</span>,  </span><br><span class="line">  <span class="literal">null</span>  </span><br><span class="line">    </span><br><span class="line">)  </span><br><span class="line"><span class="comment">/* hot reload */</span>  </span><br><span class="line"><span class="comment">// .vue 文件的 script 区域块更改时， 客户端执行这一段代码  </span></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">module</span>.hot) &#123;  </span><br><span class="line">  <span class="keyword">var</span> api = <span class="built_in">require</span>(<span class="string">&quot;D:\\study\\demo\\webpack\\webpack-4-demo\\node_modules\\_vue-hot-reload-api@2.3.3@vue-hot-reload-api\\dist\\index.js&quot;</span>)  </span><br><span class="line">  api.install(<span class="built_in">require</span>(<span class="string">&#x27;vue&#x27;</span>))  </span><br><span class="line">  <span class="keyword">if</span> (api.compatible) &#123;  </span><br><span class="line">    <span class="built_in">module</span>.hot.accept()  </span><br><span class="line">    <span class="keyword">if</span> (!api.isRecorded(<span class="string">&#x27;7ba5bd90&#x27;</span>)) &#123;  </span><br><span class="line">      api.createRecord(<span class="string">&#x27;7ba5bd90&#x27;</span>, component.options)  </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">      <span class="comment">// 执行 reload 方法， 触发更新  </span></span><br><span class="line">      <span class="comment">// 使用 新的 options 替换原来的 options  </span></span><br><span class="line">      api.reload(<span class="string">&#x27;7ba5bd90&#x27;</span>, component.options)  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="built_in">module</span>.hot.accept(<span class="string">&quot;./App.vue?vue&amp;type=template&amp;id=7ba5bd90&amp;scoped=true&amp;&quot;</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;  </span><br><span class="line">      <span class="comment">// 当 .vue 文件的 template 区域块更改时， 客户端执行这一段代码  </span></span><br><span class="line">      <span class="comment">// 使用新的 render、staticRenderFns 更新原来的render、staticRenderFns  </span></span><br><span class="line">      api.rerender(<span class="string">&#x27;7ba5bd90&#x27;</span>, &#123;  </span><br><span class="line">        <span class="attr">render</span>: render,  </span><br><span class="line">        <span class="attr">staticRenderFns</span>: staticRenderFns  </span><br><span class="line">      &#125;)  </span><br><span class="line">    &#125;)  </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;  </span><br><span class="line">component.options.__file = <span class="string">&quot;src/App.vue&quot;</span>  </span><br><span class="line"><span class="comment">// 输出组件完整的配置项  </span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> component.exports  </span><br></pre></td></tr></table></figure>
-
-<p>如果我们只修改了 <strong>.vue 文件</strong> 的 <strong>script</strong> 部分， <strong>客户端(即浏览器)</strong> 会进行 <strong>热更新</strong>， 过程如下：</p>
-<ol>
-<li><strong>服务端</strong> 通过 <strong>websocket 连接</strong> 通知 <strong>客户端</strong> 更新；</li>
-<li><strong>客户端</strong> 通过 <strong>动态添加script元素</strong> 的方式获取 <strong>更新以后的打包文件</strong>；</li>
-<li><strong>安装打包文件</strong>，即执行 <strong>新的打包文件</strong> 中的 <strong>js 代码</strong>， 使用 <strong>打包文件中的 module 更新浏览器缓存的同名 module</strong>；</li>
-<li><strong>重新安装组件对应的 module</strong>， 即 <strong>重新执行组件对应的js代码</strong>， 获取 <strong>render</strong>、<strong>staticRenderFns</strong> 和 新的 <strong>scriptExports</strong>， 重新生成 <strong>组件</strong> 对应的 <strong>完整配置项</strong>；</li>
-<li>执行 <strong>api</strong> 提供的 <strong>reload</strong> 方法， <strong>更新组件</strong>。<br>在 <strong>reload</strong> 方法中，会通过执行 <strong>父组件实例</strong> 的 <strong>$forceUpdate</strong> 方法来 <strong>更新组件</strong>。<br>更新组件的时候， 由于<strong>组件</strong> 的 <strong>配置项(data、props、methods等属性)</strong> 发生变化， 需要为 <strong>组件</strong> 生成 <strong>新的构造函数 VueComponent</strong>， 然后使用 <strong>新的构造函数</strong>，构建 <strong>新的组件实例</strong>。<br>即， 每次修改 <strong>.vue 文件</strong> 的 <strong>script</strong> 部分， 都会为 <strong>组件</strong> 生成一个 <strong>新的实例对象</strong>， <strong>销毁旧的实例对象</strong>。<br>如果我们只修改了 <strong>.vue 文件</strong> 的 <strong>template</strong> 部分, <strong>客户端(即浏览器)</strong> 会进行 <strong>热更新</strong>， 过程如下：</li>
-<li><strong>同上</strong>，<strong>服务端</strong> 通过 <strong>websocket 连接</strong> 通知 <strong>客户端</strong> 更新；</li>
-<li><strong>同上</strong>， <strong>客户端</strong> 通过 <strong>动态添加script元素</strong> 的方式获取 <strong>更新以后的打包文件</strong>；</li>
-<li><strong>同上</strong>， <strong>安装打包文件</strong>，即执行 <strong>新的打包文件</strong> 中的 <strong>js 代码</strong>， 使用 <strong>打包文件中的 module 更新浏览器缓存的同名 module</strong>；</li>
-<li>触发通过 <strong>module.hot.accept</strong> 注册的 <strong>callback</strong>；</li>
-<li>执行 <strong>api</strong> 提供的 <strong>rerender</strong> 方法， <strong>更新组件</strong>。<br>执行 <strong>rerender</strong> 方法时， 会先获取 <strong>修改以后的template区域块</strong> 对应的 <strong>render</strong>、<strong>staticRenderFns</strong>， 然后 <strong>更新原组件的 render、staticRenderFns</strong>， 然后执行 <strong>组件实例</strong> 的 <strong>$forceUpdate</strong> 方法来更新 **组件(更新组件的时候， 会使用新的render方法， 生成新的vnode节点树)**。<br>如果我们 <strong>同时</strong> 修改了 <strong>.vue 文件</strong>的 <strong>template</strong>、 <strong>script</strong>部分， 会按照上面 <strong>第一种情况</strong> 进行 <strong>热更新</strong>，并且不会触发上面代码中通过 <strong>module.hot.accept</strong> 注册的 <strong>callback</strong>。</li>
-</ol>
-<ul>
-<li><h4 id="style"><a href="#style" class="headerlink" title="style"></a>style</h4></li>
-</ul>
-<p><strong>vue-style-loader</strong> 会在 <strong>打包代码</strong> 中注入 <strong>热更新 style区域块</strong> 的代码， 如下:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ar add = <span class="built_in">require</span>(<span class="string">&quot;!../node_modules/_vue-style-loader@4.1.2@vue-style-loader/lib/addStylesClient.js&quot;</span>).default  </span><br><span class="line"><span class="keyword">var</span> update = add(<span class="string">&quot;05835b6f&quot;</span>, content, <span class="literal">false</span>, &#123;&#125;);  </span><br><span class="line"><span class="comment">// Hot Module Replacement  </span></span><br><span class="line"><span class="keyword">if</span>(<span class="built_in">module</span>.hot) &#123;  </span><br><span class="line"> <span class="comment">// When the styles change, update the &lt;style&gt; tags  </span></span><br><span class="line"> <span class="keyword">if</span>(!content.locals) &#123;  </span><br><span class="line">   <span class="built_in">module</span>.hot.accept(<span class="string">&quot;!!../node_modules/_css-loader@3.1.0@css-loader/dist/cjs.js!../node_modules/_vue-loader@15.7.1@vue-loader/lib/loaders/stylePostLoader.js!../node_modules/_vue-loader@15.7.1@vue-loader/lib/index.js??vue-loader-options!./App.vue?vue&amp;type=style&amp;index=0&amp;lang=css&amp;&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;  </span><br><span class="line">     <span class="comment">// 当 .vue 文件的 styles 区域块更改时， 客户端执行这一段代码  </span></span><br><span class="line">     <span class="keyword">var</span> newContent = <span class="built_in">require</span>(<span class="string">&quot;!!../node_modules/_css-loader@3.1.0@css-loader/dist/cjs.js!../node_modules/_vue-loader@15.7.1@vue-loader/lib/loaders/stylePostLoader.js!../node_modules/_vue-loader@15.7.1@vue-loader/lib/index.js??vue-loader-options!./App.vue?vue&amp;type=style&amp;index=0&amp;lang=css&amp;&quot;</span>);  </span><br><span class="line">     <span class="keyword">if</span>(<span class="keyword">typeof</span> newContent === <span class="string">&#x27;string&#x27;</span>) newContent = [[<span class="built_in">module</span>.id, newContent, <span class="string">&#x27;&#x27;</span>]];  </span><br><span class="line">     <span class="comment">// 执行update方法， 更新styles  </span></span><br><span class="line">     update(newContent);  </span><br><span class="line">   &#125;);  </span><br><span class="line"> &#125;  </span><br><span class="line">&#125;  </span><br><span class="line">...  </span><br></pre></td></tr></table></figure>
-
-<p>如果我们修改了 <strong>.vue 文件</strong> 的 <strong>styles 区域块</strong>，<strong>客户端(即浏览器)</strong> 会进行 <strong>热更新</strong>， 过程如下：</p>
-<ol>
-<li>同上，<strong>服务端</strong> 通过 <strong>websocket 连接</strong> 通知 <strong>客户端</strong> 更新；</li>
-<li>同上，<strong>客户端</strong> 通过 <strong>动态添加script元素</strong> 的方式获取 <strong>更新以后的打包文件</strong>；</li>
-<li>同上，<strong>安装打包文件</strong>，即执行 <strong>新的打包文件</strong> 中的 <strong>js 代码</strong>， 使用 <strong>打包文件中的 module 更新浏览器缓存的同名 module</strong>;</li>
-<li>触发通过 <strong>module.hot.accept</strong> 注册的 <strong>callback</strong>；</li>
-<li>执行 <strong>update</strong> 方法， <strong>更新样式</strong>。<br><strong>更新样式</strong> 的时候， 会先 <strong>移除原来的 style 标签</strong>， 然后 <strong>添加新的 style 标签</strong>。<br>如果 <strong>style 标签</strong> 上有 <strong>module 属性</strong>，除了 <strong>vue-style-loader</strong> 会注入 <strong>热更新代码</strong> 外，<strong>vue-loader</strong> 也会在 <strong>打包代码</strong> 中注入 <strong>热更新代码</strong>，如下:</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 热更新代码  </span></span><br><span class="line">   <span class="built_in">module</span>.hot &amp;&amp; <span class="built_in">module</span>.hot.accept([<span class="string">&quot;./App.vue?vue&amp;type=style&amp;index=1&amp;id=7ba5bd90&amp;module=true&amp;scoped=true&amp;lang=css&amp;&quot;</span>], <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;  </span><br><span class="line">     <span class="comment">// 当.vue的style区域块发生变化， 且style标签有module属性， 执行这一段逻辑  </span></span><br><span class="line">     <span class="keyword">var</span> oldLocals = cssModules[<span class="string">&quot;$style&quot;</span>]  </span><br><span class="line">     <span class="keyword">if</span> (oldLocals) &#123;  </span><br><span class="line">       <span class="comment">// 获取新的唯一类名、id名  </span></span><br><span class="line">       <span class="keyword">var</span> newLocals = <span class="built_in">require</span>(<span class="string">&quot;./App.vue?vue&amp;type=style&amp;index=1&amp;id=7ba5bd90&amp;module=true&amp;scoped=true&amp;lang=css&amp;&quot;</span>)  </span><br><span class="line">       <span class="keyword">if</span> (<span class="built_in">JSON</span>.stringify(newLocals) !== <span class="built_in">JSON</span>.stringify(oldLocals)) &#123;  </span><br><span class="line">         <span class="comment">// 更新vue实例的$style属性  </span></span><br><span class="line">         cssModules[<span class="string">&quot;$style&quot;</span>] = newLocals  </span><br><span class="line">         <span class="comment">// 执行vue实例的 $forceUpdate 方法，重新执行 render 方法  </span></span><br><span class="line">         <span class="built_in">require</span>(<span class="string">&quot;D:\\study\\demo\\webpack\\webpack-4-demo\\node_modules\\_vue-hot-reload-api@2.3.3@vue-hot-reload-api\\dist\\index.js&quot;</span>).rerender(<span class="string">&quot;7ba5bd90&quot;</span>)  </span><br><span class="line">       &#125;  </span><br><span class="line">     &#125;  </span><br><span class="line">   &#125;)  </span><br></pre></td></tr></table></figure>
-
-<p>执行上述 <strong>热更新代码</strong>， 会 <strong>更新 vue实例 的 $style 属性</strong>， 然后触发 <strong>vue 实例</strong> 的 <strong>$forceUpdate</strong> 方法， <strong>重新渲染</strong>。<br>一个 <strong>style 区域块</strong> 对应一个 <strong>style 标签</strong>。修改某一个 <strong>style 区域块</strong> 之后，会更新对应的 <strong>style 标签</strong>。<br><strong>style 区域块</strong> 的 <strong>热更新</strong> 和 <strong>template</strong>、<strong>script 区域块</strong>的 <strong>热更新</strong> 互不影响。</p>
-<h3 id="tree-shaking-副作用"><a href="#tree-shaking-副作用" class="headerlink" title="tree shaking 副作用"></a>tree shaking 副作用</h3><p><strong>生产模式</strong> 下， <strong>webpack</strong> 默认启用 <strong>tree shaking</strong>。如果此时项目 <strong>根目录</strong> 中的 <strong>package.json</strong> 中的 <strong>sideEffects</strong> 的值为 <strong>false</strong>，且 <strong>.vue 文件</strong> 的 <strong>style 标签</strong> 没有 <strong>module 属性</strong>，使用 <strong>vue-loader</strong> 处理 <strong>.vue 文件</strong> 的时候， 会产生 <strong>样式丢失</strong> 的情况，即 <strong>styles 区域块 不会添加到 head 中或者 被提取到公共的css文件中</strong>。</p>
-<p>首先，先看一下 <strong>.vue 文件</strong> 经过处理以后生成的 <strong>js代码</strong>， 如下:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">/ 从 template区域块 获取 render、 staticRenderFns 方法</span><br><span class="line"><span class="keyword">import</span> &#123; render, staticRenderFns &#125; <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=template&amp;id=7ba5bd90&amp;scoped=true&amp;&quot;</span></span><br><span class="line"><span class="comment">// 从 script区域块 获取 组件的配置项对象</span></span><br><span class="line"><span class="keyword">import</span> scriptExports <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=script&amp;lang=js&amp;&quot;</span></span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=script&amp;lang=js&amp;&quot;</span></span><br><span class="line"><span class="comment">// 获取 styles区域块的内容</span></span><br><span class="line"><span class="keyword">import</span> style0 <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=style&amp;index=0&amp;lang=css&amp;&quot;</span></span><br><span class="line"><span class="comment">// 获取 styles(scoped)区域块的内容</span></span><br><span class="line"><span class="keyword">import</span> style1 <span class="keyword">from</span> <span class="string">&quot;./App.vue?vue&amp;type=style&amp;index=1&amp;id=7ba5bd90&amp;scoped=true&amp;lang=css&amp;&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* normalize component */</span></span><br><span class="line"><span class="keyword">import</span> normalizer <span class="keyword">from</span> <span class="string">&quot;!../node_modules/_vue-loader@15.7.1@vue-loader/lib/runtime/componentNormalizer.js&quot;</span></span><br><span class="line"><span class="comment">// 返回构建组件需要的配置项对象， 包含 data、props、render、staticRenderFns 等</span></span><br><span class="line"><span class="keyword">var</span> component = normalizer(</span><br><span class="line">  scriptExports,</span><br><span class="line">  render,</span><br><span class="line">  staticRenderFns,</span><br><span class="line">  <span class="literal">false</span>,</span><br><span class="line">  <span class="literal">null</span>,</span><br><span class="line">  <span class="string">&quot;7ba5bd90&quot;</span>,</span><br><span class="line">  <span class="literal">null</span></span><br><span class="line">  </span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">component.options.__file = <span class="string">&quot;src/App.vue&quot;</span></span><br><span class="line"><span class="comment">// 输出组件完整的配置项</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> component.exports</span><br></pre></td></tr></table></figure>
-
-<p>在上面的代码中，<strong>template 区域块</strong> 返回的 <strong>render</strong>、<strong>staticRenderFns</strong>， <strong>script 区域块</strong> 返回的 <strong>scriptExports</strong>， 都有被 <strong>normalizer</strong> 方法使用， 而 <strong>styles 区域块</strong> 返回的 <strong>style0</strong>、<strong>style1</strong> 则没有被使用。 在 <strong>打包代码</strong> 的时候， <strong>tree shaking</strong> 就会自动移除 <strong>styles 区域块</strong> 对应的代码，导致 <strong>样式丢失</strong>。</p>
-<p><strong>解决方法</strong>:</p>
-<ol>
-<li>修改 <strong>package.json</strong> 文件中的 <strong>sideEffects 属性</strong>， 告诉 <strong>webpack</strong> <strong>.vue 文件</strong>在使用 <strong>tree shaking</strong> 的时候会有 <strong>副作用</strong>， 如下:</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;sideEffects&quot;: [  </span><br><span class="line">    &quot;*.vue&quot;  </span><br><span class="line"> ]  </span><br></pre></td></tr></table></figure>
-
-<p>有了上述配置， <strong>webpack</strong> 在处理 <strong>.vue</strong> 文件的时候， 不会使用 <strong>tree shaking</strong>， <strong>不会出现样式丢失的问题</strong>。<br>但是这种解决方法有一个问题， 如果 <strong>script 区域块</strong> 中通过 <strong>import</strong> 的方式引入了 <strong>未使用的模块</strong>，<strong>未使用的模块在最后打包代码的时候不会被删除</strong>。</p>
-<ol>
-<li>通过 <strong>rule.sideEffects</strong> 指定 <strong>具体的模块</strong> 在使用 <strong>tree shaking</strong> 的时候会有 <strong>副作用</strong>， 如下:</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">// webpackConfig：  </span><br><span class="line">&#123;  </span><br><span class="line">    test: /\.css$/,  </span><br><span class="line">    oneOf: [&#123;  </span><br><span class="line">        resourceQuery: /\?vue/,  </span><br><span class="line">        // 指定.vue文件的 style区域块 使用 tree shaking 时会有副作用  </span><br><span class="line">        sideEffects: true,  </span><br><span class="line">        use: [isProduction ? MiniCssExtractPlugin.loader  : &#x27;vue-style-loader&#x27;, &#x27;css-loader&#x27;]  </span><br><span class="line">    &#125;, &#123;  </span><br><span class="line">        use: [isProduction ? MiniCssExtractPlugin.loader  : &#x27;style-loader&#x27;, &#x27;css-loader&#x27;]  </span><br><span class="line">    &#125;]  </span><br><span class="line">&#125;,  </span><br><span class="line">&#123;  </span><br><span class="line">    test: /\.scss$/,  </span><br><span class="line">    oneOf: [&#123;  </span><br><span class="line">        resourceQuery: /\?vue/,  </span><br><span class="line">        // 指定.vue文件的 style(lang=scss)区域块 使用 tree shaking 时会有副作用  </span><br><span class="line">        sideEffects: true,  </span><br><span class="line">        use: [isProduction ? MiniCssExtractPlugin.loader  : &#x27;vue-style-loader&#x27;, &#x27;css-loader&#x27;, &#x27;sass-loader&#x27;]  </span><br><span class="line">    &#125;, &#123;  </span><br><span class="line">        use: [isProduction ? MiniCssExtractPlugin.loader  : &#x27;style-loader&#x27;, &#x27;css-loader&#x27;, &#x27;sass-loader&#x27;]  </span><br><span class="line">    &#125;]  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">// package.json  </span><br><span class="line">&#123;  </span><br><span class="line">    sideEffects: false  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
-
-<p>上述配置， 明确说明了 <strong>.vue 文件</strong> 的 <strong>style 区域块</strong> 在使用 <strong>tree shaking</strong> 的时候， 会有 <strong>副作用</strong>，<strong>在打包的时候不会删除</strong>。<br>这样的话，样式不会丢失， 并且如果 <strong>script 区域块</strong> 中通过 <strong>import</strong> 的方式引入了 <strong>未使用的模块</strong>，<strong>未使用的模块在最后打包代码的时候会被删除</strong></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1180,7 +1059,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">227</span>
+          <span class="site-state-item-count">229</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1254,7 +1133,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共203.7k字</span>
+  <span class="post-count">博客全站共204.3k字</span>
 </div>
         
 
