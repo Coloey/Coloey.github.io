@@ -187,6 +187,92 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/06/keyof/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/07/06/keyof/" class="post-title-link" itemprop="url">keyof</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-07-06 10:19:50 / 修改时间：11:12:08" itemprop="dateCreated datePublished" datetime="2022-07-06T10:19:50+08:00">2022-07-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="keyof"><a href="#keyof" class="headerlink" title="keyof"></a>keyof</h1><p>对一个对象使用keyof操作符，会返回<strong>该对象属性名组成的一个字符串或者数字字面量的联合</strong></p>
+<p>如果这个类型有一个<strong>string或者number的类型的索引签名</strong>，keyof直接返回这些类型</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Arrayish=&#123;[n:<span class="built_in">number</span>]:unknown&#125;;</span><br><span class="line"><span class="keyword">type</span> A=keypf Arrayish;</span><br><span class="line"><span class="comment">//type A=number</span></span><br><span class="line"><span class="keyword">type</span> Mapish=&#123;[k:<span class="built_in">string</span>]:<span class="built_in">boolean</span>&#125;;</span><br><span class="line"><span class="keyword">type</span> M=keyof Mapish;</span><br><span class="line"><span class="comment">//type M=string |number</span></span><br></pre></td></tr></table></figure>
+
+<p>M是stirng|number,这是因为<strong>JavaScript对象的属性名会被强制转换为一个字符串，所以obj[0]和obj[“0”]是一样的</strong></p>
+<p>数字字面量联合类型</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> NumericObject =&#123;</span><br><span class="line">    [<span class="number">1</span>]:<span class="string">&quot;1&quot;</span>;</span><br><span class="line">    [<span class="number">2</span>]:<span class="string">&quot;2&quot;</span>;</span><br><span class="line">	[<span class="number">3</span>]:<span class="string">&quot;3&quot;</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> result=keyof <span class="keyword">typeof</span> NumericObject;</span><br><span class="line"><span class="comment">// typeof NumbericObject 的结果为：</span></span><br><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">//   1: string;</span></span><br><span class="line"><span class="comment">//   2: string;</span></span><br><span class="line"><span class="comment">//   3: string;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"><span class="comment">// 所以最终的结果为：</span></span><br><span class="line"><span class="comment">// type result = 1 | 2 | 3</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<p>下面例子会报错</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">useKey</span>&lt;<span class="title">T</span>,<span class="title">K</span> <span class="title">extends</span> <span class="title">keyof</span> <span class="title">T</span>&gt;(<span class="params">o:T,k:K</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name:<span class="built_in">string</span>=k;</span><br><span class="line">    <span class="comment">//Type &#x27;string|number|symbol&#x27; is not assignable to type &#x27;stirng&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果确定只使用字符串类型的属性名，</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">useKey</span>&lt;<span class="title">T</span>,<span class="title">K</span> <span class="title">extends</span> <span class="title">Extract</span>&lt;<span class="title">keyof</span> <span class="title">T</span>,<span class="title">string</span>&gt;&gt;(<span class="params">o:T,k:K</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name:<span class="built_in">string</span>=k;<span class="comment">//OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果要处理所有属性名：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">useKey</span>&lt;<span class="title">T</span>,<span class="title">K</span> <span class="title">extends</span> <span class="title">keyof</span> <span class="title">T</span>&gt;(<span class="params">o:T,k:K</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name:<span class="built_in">string</span> | <span class="built_in">number</span> |symbol=k;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/05/%E6%98%A0%E5%B0%84%E7%B1%BB%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1094,88 +1180,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/31/%E5%88%A4%E6%96%AD%E6%95%B0%E7%BB%84%E7%B1%BB%E5%9E%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/31/%E5%88%A4%E6%96%AD%E6%95%B0%E7%BB%84%E7%B1%BB%E5%9E%8B/" class="post-title-link" itemprop="url">判断数组类型</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-05-31 19:24:58 / 修改时间：19:43:40" itemprop="dateCreated datePublished" datetime="2022-05-31T19:24:58+08:00">2022-05-31</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="instanceof"><a href="#instanceof" class="headerlink" title="instanceof"></a>instanceof</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="built_in">console</span>.log(arr <span class="keyword">instanceof</span> <span class="built_in">Array</span>)</span><br></pre></td></tr></table></figure>
-
-<h1 id="变量-constructor-变量类型"><a href="#变量-constructor-变量类型" class="headerlink" title="变量.constructor===变量类型"></a>变量.constructor===变量类型</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="built_in">console</span>.log(arr.constructor===<span class="built_in">Array</span>)</span><br></pre></td></tr></table></figure>
-
-<h1 id="Array-isArray-变量"><a href="#Array-isArray-变量" class="headerlink" title="Array.isArray(变量)"></a>Array.isArray(变量)</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Array</span>.isArray(arr))</span><br></pre></td></tr></table></figure>
-
-<h1 id="Object-prototype-toString-call-返回true则变量时数组类型"><a href="#Object-prototype-toString-call-返回true则变量时数组类型" class="headerlink" title="Object.prototype.toString.call(),返回true则变量时数组类型"></a>Object.prototype.toString.call(),返回true则变量时数组类型</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.prototype.toString.call(arr)===<span class="string">&#x27;[object Array]&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
-<h1 id="判断对象原型"><a href="#判断对象原型" class="headerlink" title="判断对象原型"></a>判断对象原型</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="built_in">console</span>.log(arr.__proto__===<span class="built_in">Array</span>.prototype)</span><br></pre></td></tr></table></figure>
-
-<h1 id="Object-getPrototypeOf-来判断是否为数组类型"><a href="#Object-getPrototypeOf-来判断是否为数组类型" class="headerlink" title="Object.getPrototypeOf()来判断是否为数组类型"></a>Object.getPrototypeOf()来判断是否为数组类型</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.getPrototypeOf(arr)===<span class="built_in">Array</span>.prototype);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="isPrototypeOf-判断是否为数组类型"><a href="#isPrototypeOf-判断是否为数组类型" class="headerlink" title="isPrototypeOf()判断是否为数组类型"></a>isPrototypeOf()判断是否为数组类型</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Array</span>.prototype.isPrototypeOf(arr))</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1247,7 +1251,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">229</span>
+          <span class="site-state-item-count">230</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1321,7 +1325,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共204.3k字</span>
+  <span class="post-count">博客全站共206.3k字</span>
 </div>
         
 

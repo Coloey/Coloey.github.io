@@ -187,6 +187,114 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/05/ajax/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/05/ajax/" class="post-title-link" itemprop="url">ajax</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-05 15:41:40 / 修改时间：18:18:10" itemprop="dateCreated datePublished" datetime="2022-05-05T15:41:40+08:00">2022-05-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h1><p>AJAX全称是Async JavaScript and XML,即异步的JavaScript和XML，是一种创建交互式网页应用的网页开发技术，可以在不重新加载整个网页的情况下，与服务器交换数据，并且更新部分网页</p>
+<p><img src="/2022/05/05/ajax/ajax1.png"></p>
+<h2 id="实现过程"><a href="#实现过程" class="headerlink" title="实现过程"></a>实现过程</h2><p>实现Ajax异步交互需要服务器逻辑进行配合，需要完成以下步骤：</p>
+<ul>
+<li>创建Ajax的核心对象XMLHttpRequest对象</li>
+<li>通过XMLHttpRequest对象的open()方法与服务器建立连接</li>
+<li>构建请求所需的数据内容，并通过XMLHttpRequest对象的send()方法发送给服务器端</li>
+<li>通过XMLHttpRequest对象提供的onreadystatechange事件监听服务端你的通信状态</li>
+<li>接受并处理服务端向客户端响应的数据结果</li>
+<li>将处理结果更新到HTML页面中</li>
+</ul>
+<h3 id="创建XMLHttpReauest对象"><a href="#创建XMLHttpReauest对象" class="headerlink" title="创建XMLHttpReauest对象"></a>创建XMLHttpReauest对象</h3><p>通过XMLHttpRequest()构造函数用于初始化一个XMLHttpRequest实例对象</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> xhr=<span class="keyword">new</span> XMLHttpRequest()</span><br></pre></td></tr></table></figure>
+
+<h3 id="与服务器端建立连接"><a href="#与服务器端建立连接" class="headerlink" title="与服务器端建立连接"></a>与服务器端建立连接</h3><p>通过XMLHttpRequest对象的open()方法与服务器建立连接</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xhr.open(method,url,[<span class="keyword">async</span>][,user][,password])</span><br></pre></td></tr></table></figure>
+
+<p>method:表示当前请求方式，常见的有GET,POST</p>
+<p>url:服务端地址</p>
+<p>async:布尔值，表示用于异步执行操作，默认为true</p>
+<p>user:可选的用户名用于认证用途，默认为null</p>
+<p>password:可选的密码用于认证用途，默认为null</p>
+<h3 id="给服务端发送数据"><a href="#给服务端发送数据" class="headerlink" title="给服务端发送数据"></a>给服务端发送数据</h3><p>通过XMLHttpRequest对象的send()方法，<strong>将客户端页面的数据发送给服务端</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xhr.send([body])</span><br></pre></td></tr></table></figure>
+
+<p>body:在XHR请求中要发送的数据体，如果不传递数据则为null</p>
+<p>如果使用GET请求发送数据，需要注意：</p>
+<ul>
+<li>将请求数据添加到open()方法的url地址中</li>
+<li>发送请求数据的send()方法中参数设置为null</li>
+</ul>
+<p>绑定onreadystatechange事件</p>
+<p>onreadystatechange事件用于监听服务器端的通信状态，主要监听的属性为XMLHttpRequest.readyState,关于XMLHttpRequest.readyState属性有五个状态</p>
+<p><img src="/2022/05/05/ajax/ajx2.png"></p>
+<p>只要readyState属性值一变化，就会触发一次readyStatechange事件，XMLHttpRequest.reponseText属性用于接收服务器端的响应结果</p>
+<h1 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ajax</span>(<span class="params">options</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//创建一个XMLHttpRequest对象</span></span><br><span class="line">    <span class="keyword">const</span> xhr=<span class="keyword">new</span> XHRHttpRequest()</span><br><span class="line">    <span class="comment">//初始化参数内容</span></span><br><span class="line">    options=options||&#123;&#125;</span><br><span class="line">    options.type=(options||<span class="string">&#x27;GET&#x27;</span>).toUpperCase</span><br><span class="line">    options.dataType=options.dataType||<span class="string">&#x27;json&#x27;</span></span><br><span class="line">    <span class="keyword">const</span> params=options.data</span><br><span class="line"></span><br><span class="line">    <span class="comment">//发送请求</span></span><br><span class="line">    <span class="keyword">if</span>(options.type===<span class="string">&#x27;GET&#x27;</span>)&#123;</span><br><span class="line">        xhr.open(<span class="string">&#x27;GET&#x27;</span>,options.url+<span class="string">&quot;?&quot;</span>+params,<span class="literal">true</span>)</span><br><span class="line">        xhr.send(<span class="literal">null</span>)</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(options.type===<span class="string">&#x27;POST&#x27;</span>)&#123;</span><br><span class="line">        xhr.open(<span class="string">&#x27;POST&#x27;</span>,options.url,<span class="literal">true</span>)</span><br><span class="line">        xhr.send(params)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//接收请求</span></span><br><span class="line">    xhr.onreadystatechange=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(xhr.readyState===<span class="number">4</span>)&#123;</span><br><span class="line">            <span class="keyword">let</span> status=xhr.status</span><br><span class="line">            <span class="keyword">if</span>(status&gt;=<span class="number">200</span>&amp;&amp;status&lt;<span class="number">300</span>)&#123;</span><br><span class="line">                options.success&amp;&amp;options.success(xhr.responseText,xhr,responseXML)</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                options.fail&amp;&amp;options.fail(status)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ajax(&#123;</span><br><span class="line">    <span class="attr">type</span>:<span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">    <span class="attr">dataType</span>:<span class="string">&#x27;json&#x27;</span>,</span><br><span class="line">    <span class="attr">data</span>:&#123;&#125;,</span><br><span class="line">    <span class="attr">url</span>:<span class="string">&#x27;https://xxx&#x27;</span>,</span><br><span class="line">    <span class="attr">success</span>:<span class="function"><span class="keyword">function</span>(<span class="params">text,xml</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(text)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">fail</span>:<span class="function"><span class="keyword">function</span>(<span class="params">status</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(status)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/04/Vue3%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1329,120 +1437,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/01/HMR/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/01/HMR/" class="post-title-link" itemprop="url">HMR</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-05-01 17:42:46" itemprop="dateCreated datePublished" datetime="2022-05-01T17:42:46+08:00">2022-05-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-07 21:04:50" itemprop="dateModified" datetime="2022-05-07T21:04:50+08:00">2022-05-07</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/webpack/" itemprop="url" rel="index"><span itemprop="name">webpack</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h1><p>HMR 全称是Hot Module Replacement,理解为模块热替换，指在应用程序运行过程中，替换，添加，删除模块，而无需重新刷新整个应用。</p>
-<p>例如，我们在应用运行过程中修改了某个模块，通过自动刷新会导致整个应用的整体刷新，那页面中的状态信息都会丢失，如果使用HME，就可以实现只将修改的模块实时替换至应用中，不必完全舒心整个应用。</p>
-<p>在webpack中配置热模块：</p>
-<p>webpack.config.js</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> webpack=<span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>)</span><br><span class="line"><span class="built_in">module</span>.exports=&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="attr">devServer</span>:&#123;</span><br><span class="line">        <span class="attr">hot</span>:<span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>通过上述这种配置，如果我们修改并保存CSS文件，确实能够以不刷新地形式更新到页面中，但是，当我们修改并保存js文件之后，页面依旧舒刷新了，这里并没有触发热模块，所以，HMR并不像Webpack的其他特性一样可以开箱即用，需要取指定那些模块发生更新时进行HMR</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="built_in">module</span>.hot)&#123;</span><br><span class="line">    <span class="built_in">module</span>.hot.accept(<span class="string">&#x27;./util.js&#x27;</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;utils.js更新了&#x27;</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p><img src="/2022/05/01/HMR/hmr1.png"></p>
-<ul>
-<li>Webpack Compile:将JS源代码编译成bundle.js</li>
-<li>HMR Server:用来将热更新的文件输出给HMR Runtime</li>
-<li>Bundle Server:静态资源文件服务器，提供文件访问路径</li>
-<li>HMR Runtime:socket服务器，会被注入到浏览器，更新文件的变化</li>
-<li>bundle.js:构建输出的文件</li>
-<li>在HMR Runtime和HMR Server之间建立websocket，即图上4号线，用于实时更新文件变化</li>
-</ul>
-<p>分成两个阶段：</p>
-<p>启动阶段为1-2-A-B</p>
-<p>在编写未经过webpack打包的源码后，Webpack Compile将源码和HMR Runtime一起编译成bundle文件，传输Bundle Server静态资源服务器</p>
-<p>更新阶段为1-2-3-4</p>
-<p>当某一个文件或者模块发生变化时，webpack监听到文件变化对文件重新编译打包，编译生成唯一的hash值，这个hash值用来作为下一次热更新的标识，根据变化的内容生成两个补丁文件:manifest(包含了hash和chunkId,用来说明变化的内容)和chunk.js模块，由于socket服务器在HMR Runtime和HMR Server之间建立websocket链接，单文件发生改动的时候，服务端会向浏览器推送一条消息，消息包含文件改动后生成的hash值，如下图的h属性，做为下一次热更新的标识</p>
-<p><img src="/2022/05/01/HMR/hmr2.png"></p>
-<p>在浏览器接收到这条消息之前，浏览器已经在上一次socket消息中记住了此时的hash标识，这时候我们会<strong>创建一个ajax去服务端请求获取到变化内容的manifest文件</strong></p>
-<p>manifest文件包含重新build生成的hash值，以及变化的模块，对应上图的c属性,<strong>浏览器根据manifest文件获取模块变化的内容，从而触发render流程，实现局部模块更新</strong></p>
-<p><img src="/2022/05/01/HMR/hmr3.png"></p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>关于webpack热模块更新总结：</p>
-<ul>
-<li>通过webpack-dev-server创建两个服务器，提供静态资源的服务(express)和Socket服务</li>
-<li>express server负责直接提供静态资源的服务（打包后的资源直接被浏览器请求和解析）</li>
-<li>socket server是一个websocket的长连接，双方可以通信</li>
-<li>当socket server监听到对应的模块发生变化时，会生成两个文件.json(manifest文件)和.js文件(update chunk)</li>
-<li>通过长连接，socket server可以直接将这两个文件主动发送给客户端（浏览器）</li>
-<li>浏览器拿到两个新的文件后，通过HMR runtime机制，加载这两个文件，并且针对修改的模块进行更新</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1514,7 +1508,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">229</span>
+          <span class="site-state-item-count">230</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1588,7 +1582,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共204.3k字</span>
+  <span class="post-count">博客全站共206.3k字</span>
 </div>
         
 
