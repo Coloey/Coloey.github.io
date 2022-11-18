@@ -187,6 +187,104 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/11/01/computed%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/11/01/computed%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">computed原理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-11-01 09:13:00 / 修改时间：11:50:37" itemprop="dateCreated datePublished" datetime="2022-11-01T09:13:00+08:00">2022-11-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>effect是用来注册副作用函数，同时它允许指定一些选项参数options,例如指定scheduler调度器控制副作用函数的执行时机和方式，先实现一个懒执行的副作用函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">effect</span>(<span class="params">fn,options = &#123;&#125;</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> effectFn = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        cleanup(effectFn)</span><br><span class="line">        activeEffect = effectFn</span><br><span class="line">        effectStack.push(effectFn)</span><br><span class="line">        fn()</span><br><span class="line">        effectStack.pop()</span><br><span class="line">        activeEffect = effectStack[effectStack.length-<span class="number">1</span>]</span><br><span class="line">    &#125;</span><br><span class="line">    effectFn.options = options</span><br><span class="line">    effectFn.deps = []</span><br><span class="line">    <span class="comment">//只有非lazy才执行</span></span><br><span class="line">    <span class="keyword">if</span>(!options.lazy) &#123;</span><br><span class="line">        effectFn()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//将副作用函数作为返回值返回</span></span><br><span class="line">    <span class="keyword">return</span> effectFn<span class="comment">//新增</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现了让副作用函数不立即执行的功能，将副作用函数effectFn作为effect函数的返回值，这就意味着当调用effect函数时，通过其返回值能够拿到对应的副作用函数，这样我们能够手动执行副作用函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> effectFn = effect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(obj.foo)</span><br><span class="line">&#125;,&#123;<span class="attr">lazy</span>:<span class="literal">true</span>&#125;)</span><br><span class="line"><span class="comment">//手动执行副作用函数</span></span><br><span class="line">effectFn()</span><br></pre></td></tr></table></figure>
+
+<p>如果把传递给effect的函数看做一个getter，那么这个getter函数可以返回任何值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> effectFn = effect(</span><br><span class="line"><span class="comment">//getter返回obj.foo和obj.bar</span></span><br><span class="line">    <span class="function">() =&gt;</span> obj.foo + obj.bar,</span><br><span class="line">    &#123; <span class="attr">lazy</span>: <span class="literal">true</span>&#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>为了手动执行副作用函数时就能拿到其返回值，改动effect函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">effect</span>(<span class="params">fn,options = &#123;&#125;</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> effectFn = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        cleanup(effectFn)</span><br><span class="line">        activeEffect = effectFn</span><br><span class="line">        effectStack.push(effectFn)</span><br><span class="line">        <span class="comment">//将fn执行结果存储到res</span></span><br><span class="line">        <span class="keyword">const</span> res = fn()</span><br><span class="line">        effectStack.pop()</span><br><span class="line">        activeEffect = effectStack[effectStack.length-<span class="number">1</span>]</span><br><span class="line">        <span class="comment">//将res作为effectFn返回值</span></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    effectFn.options = options</span><br><span class="line">    effectFn.deps = []</span><br><span class="line">    <span class="keyword">if</span>(!options.lazy)&#123;</span><br><span class="line">        effectFn()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> effectFn</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>传递给effect函数的参数fn才是真正的副作用函数，而effectFn是我们包装后的副作用函数，为了通过effectFn得到真正的副作用函数fn的执行结果，我们需要将其保存到res变量，然后将其作为effectFn函数的返回值</p>
+<p>接下来就可以定义cmputed函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">computed</span>(<span class="params">getter</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//把getter作为副作用函数，创建一个lazy的effect</span></span><br><span class="line">    <span class="keyword">const</span> effectFn = effect(getter,&#123;</span><br><span class="line">        <span class="attr">lazy</span>: <span class="literal">true</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">const</span> obj = &#123;</span><br><span class="line">        <span class="comment">//当读取value时才执行effectFn</span></span><br><span class="line">        <span class="keyword">get</span> <span class="title">value</span>() &#123;</span><br><span class="line">            <span class="keyword">return</span> effectFn()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> obj</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>computed函数接收一个getter函数作为参数，我们把getter函数作为副作用函数，用它创建一个lazy的effect,computed函数的执行会返回一个对象，该对象的value属性是一个访问器属性，只有当读取value值时，才执行effectFn并将结果作为返回值返回</p>
+<p>使用computed函数创建一个计算属性：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> data =&#123; <span class="attr">foo</span>: <span class="number">1</span>, <span class="attr">bar</span>: <span class="number">2</span>&#125;</span><br><span class="line"><span class="keyword">const</span> obj = <span class="keyword">new</span> <span class="built_in">Proxy</span>(data, &#123;...&#125;)</span><br><span class="line"><span class="keyword">const</span> sumRes = computed(<span class="function">() =&gt;</span> obj.foo + obj.bar)</span><br><span class="line"><span class="built_in">console</span>.log(sumRes.value)<span class="comment">//3</span></span><br></pre></td></tr></table></figure>
+
+<p>当多次访问sumRes.value的值，会导致effectFn进行多次计算，即使obj.foo和obj,bar的值本身没有变化，利用闭包实现对值进行缓存的功能</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">computed</span>(<span class="params">getter</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//value用来缓存上一次计算的值</span></span><br><span class="line">    <span class="keyword">let</span> value</span><br><span class="line">    <span class="comment">//dirty标志，用来标识是否需要重新计算值，为true意味着“脏”没需要计算</span></span><br><span class="line">    <span class="keyword">let</span> dirty = <span class="literal">true</span></span><br><span class="line">    <span class="keyword">const</span> effectFn = effect(getter,&#123;</span><br><span class="line">        <span class="attr">lazy</span>:<span class="literal">true</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">const</span> obj = &#123;</span><br><span class="line">        <span class="keyword">get</span> <span class="title">value</span>()&#123;</span><br><span class="line">            <span class="comment">//只有脏时才计算值，并将得到的值缓存到value</span></span><br><span class="line">            <span class="keyword">if</span>(dirty)&#123;</span><br><span class="line">                value = effectFn()</span><br><span class="line">                <span class="comment">//将dirty设置为false,下一次访问直接使用缓存到value中的值</span></span><br><span class="line">                dirty = <span class="literal">false</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> value</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> obj</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是此时改变obj.foo或者obj.bar,再访问sumRes.value会发现访问到的值没有发生变化</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> data = &#123;<span class="attr">foo</span>: <span class="number">1</span>,<span class="attr">bar</span>: <span class="number">2</span>&#125;</span><br><span class="line"><span class="keyword">const</span> obj = <span class="keyword">new</span> <span class="built_in">Proxy</span>(data,&#123;...&#125;)</span><br><span class="line"><span class="keyword">const</span> sumRes = computed(<span class="function">() =&gt;</span> obj.foo+obj.bar)</span><br><span class="line"><span class="built_in">console</span>.log(sumRes.value)<span class="comment">//3</span></span><br><span class="line"><span class="built_in">console</span>.log(sumRes.value)<span class="comment">//3</span></span><br><span class="line">obj.foo++;</span><br><span class="line"><span class="comment">//再次访问得到的仍然是3</span></span><br><span class="line"><span class="built_in">console</span>.log(sumRes.value)<span class="comment">//3</span></span><br></pre></td></tr></table></figure>
+
+<p>这是因为，第一次访问sumRes.value的值后，变量dirty被设置为false,代表不需要计算，即使我们修改obj.foo的值，但只要dirty的值为false,就不会重新计算，所有导致我们得到错误的值，因此当obj.foo或者obj.bar的值发生改变时，只要dirty的值重置为true就可以，这时就用到scheduler选项</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">computed</span>(<span class="params">getter</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> value</span><br><span class="line">    <span class="keyword">let</span> dirty = <span class="literal">true</span></span><br><span class="line">    cont effectFn = effect(getter, &#123;</span><br><span class="line">        <span class="attr">lazy</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="function"><span class="title">scheduler</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">            <span class="keyword">if</span>(!dirty) &#123;</span><br><span class="line">                dirty = <span class="literal">true</span></span><br><span class="line">                <span class="comment">//当计算属性依赖的响应式数据变化时，手动调用trigger函数触发响应</span></span><br><span class="line">                trigger(obj,<span class="string">&#x27;value&#x27;</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">const</span> obj = &#123;</span><br><span class="line">        <span class="keyword">get</span> <span class="title">value</span>() &#123;</span><br><span class="line">            <span class="keyword">if</span>(dirty)&#123;</span><br><span class="line">                value = effectFn()</span><br><span class="line">                dirty = <span class="literal">false</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//当读取value手动调用track函数进行追踪</span></span><br><span class="line">            track(obj,<span class="string">&#x27;value&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span> value</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> obj</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当读取一个计算属性value，需要手动调用track函数，把计算属性返回的对象obj作为target,同时作为第一个参数传递给track函数，当计算属性所依赖的响应式数据变化时会立即调度函数，在调度函数内手动调用trigger函数触发响应即可。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/30/%E6%95%B0%E7%BB%84%E6%8B%8D%E5%B9%B3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1040,68 +1138,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/20/%E5%AE%9E%E4%B9%A0%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/20/%E5%AE%9E%E4%B9%A0%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">实习遇到的问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-10-20 18:01:08" itemprop="dateCreated datePublished" datetime="2022-10-20T18:01:08+08:00">2022-10-20</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1169,7 +1209,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">230</span>
+          <span class="site-state-item-count">231</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1243,7 +1283,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共206.3k字</span>
+  <span class="post-count">博客全站共208.8k字</span>
 </div>
         
 

@@ -187,6 +187,157 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/11/17/Vue3%E7%BC%96%E8%AF%91%E4%BC%98%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/11/17/Vue3%E7%BC%96%E8%AF%91%E4%BC%98%E5%8C%96/" class="post-title-link" itemprop="url">Vue3编译优化</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-11-17 21:25:00" itemprop="dateCreated datePublished" datetime="2022-11-17T21:25:00+08:00">2022-11-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-11-18 18:06:53" itemprop="dateModified" datetime="2022-11-18T18:06:53+08:00">2022-11-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>编译优化指的是编译器将模板编译为渲染函数的过程中，尽可能多的提取关键信息，并以此指导生成最优代码的过程，优化的方向主要是<strong>区分动态内容和静态内容，并针对不同的内容采用不同的优化策略</strong></p>
+<h1 id="动态节点收集与补丁标志："><a href="#动态节点收集与补丁标志：" class="headerlink" title="动态节点收集与补丁标志："></a>动态节点收集与补丁标志：</h1><p>Vue2中：渲染器在运行时得不到足够的信息，传统diff算法无法利用编译时提取得到的关键信息，这导致渲染器在运行时不可能去做相关优化</p>
+<p>Vue3:<strong>会将编译时得到的关键信息附着在它生成的虚拟DOM上，这些信息会通过虚拟DOM传递给渲染器</strong>，最终渲染器会因为这些关键信息执行“快捷路径”，提升性能</p>
+<p>传统虚拟DOM：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> vnode=&#123;</span><br><span class="line">    <span class="attr">tag</span>:<span class="string">&#x27;div&#x27;</span>.</span><br><span class="line">    <span class="attr">children</span>:[</span><br><span class="line">    &#123;<span class="attr">tag</span>:<span class="string">&#x27;div&#x27;</span>,<span class="attr">children</span>:<span class="string">&#x27;foo&#x27;</span>&#125;,</span><br><span class="line">    &#123;<span class="attr">tag</span>:<span class="string">&#x27;p&#x27;</span>,<span class="attr">children</span>:ctx.bar&#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>加了patchFlag:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> vnode=&#123;</span><br><span class="line">    <span class="attr">tag</span>:<span class="string">&#x27;div&#x27;</span>.</span><br><span class="line">    <span class="attr">children</span>:[</span><br><span class="line">    &#123;<span class="attr">tag</span>:<span class="string">&#x27;div&#x27;</span>,<span class="attr">children</span>:<span class="string">&#x27;foo&#x27;</span>&#125;,</span><br><span class="line">    &#123;<span class="attr">tag</span>:<span class="string">&#x27;p&#x27;</span>,<span class="attr">children</span>:ctx.bar,<span class="attr">patchFlag</span>:<span class="number">1</span>&#125;<span class="comment">//动态节点</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>patchFlag属性就是补丁标志。理解为一系列数字标记，不同数字值的不同赋予它不同意义：</p>
+<p>1:代表节点有动态的textContent</p>
+<p>2：代表元素有动态class绑定</p>
+<p>3:代表元素有动态style绑定</p>
+<p>…</p>
+<p>我们可以在虚拟结点的创建阶段，将它的动态子节点提取出来，并将其存储到该虚拟结点的dynamicChildren中,与普通虚拟节点比较，它多出了一个dynamicChildren,把含有该属性的虚拟节点称为块，即Block,一个Block还需要可以收集它的所有动态子节点</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> PatchFlags=&#123;</span><br><span class="line">    <span class="attr">TEXT</span>:<span class="number">1</span>,</span><br><span class="line">    <span class="attr">CLASS</span>:<span class="number">2</span>,</span><br><span class="line">    <span class="attr">STYLE</span>:<span class="number">3</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> vnode=&#123;</span><br><span class="line">    <span class="attr">tag</span>:<span class="string">&#x27;div&#x27;</span>.</span><br><span class="line">    <span class="attr">children</span>:[</span><br><span class="line">    &#123;<span class="attr">tag</span>:<span class="string">&#x27;div&#x27;</span>,<span class="attr">children</span>:<span class="string">&#x27;foo&#x27;</span>&#125;,</span><br><span class="line">    &#123;<span class="attr">tag</span>:<span class="string">&#x27;p&#x27;</span>,<span class="attr">children</span>:ctx.bar,<span class="attr">patchFlag</span>:<span class="number">1</span>&#125;<span class="comment">//动态节点</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="comment">//将children中的动态节点提取到dynamicChildren数组</span></span><br><span class="line">    <span class="attr">dynamicChildren</span>:[</span><br><span class="line">        &#123;<span class="attr">tag</span>:<span class="string">&#x27;p&#x27;</span>,<span class="attr">children</span>:ctx.bar,<span class="attr">patchFlag</span>:PatchFlags.TEXT&#125;<span class="comment">//动态节点</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="收集所有动态子节点："><a href="#收集所有动态子节点：" class="headerlink" title="收集所有动态子节点："></a>收集所有动态子节点：</h1><p>在渲染函数内，对createVNode的函数的调用是层层嵌套，并且函数的执行顺序是内层先执行，外层后执行</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">render</span>(<span class="params"></span>)</span>&#123; </span><br><span class="line">    <span class="keyword">return</span> createVNode(<span class="string">&#x27;div&#x27;</span>,&#123;&#125;,[</span><br><span class="line">        createVNode(<span class="string">&#x27;div&#x27;</span>,&#123;&#125;,[</span><br><span class="line">            ...</span><br><span class="line">        ])</span><br><span class="line">    ])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当外层createVNode函数执行时，内层的createVNode已经执行完毕，因此，为了让外层的Block结点能够收集到内层结点，就需要一个栈结构的数据来临时存储内层的动态节点，如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//动态节点栈：临时存储内层的动态节点</span></span><br><span class="line"><span class="keyword">const</span> dynamicChildrenStack = []</span><br><span class="line"><span class="comment">//当前动态节点的集合</span></span><br><span class="line"><span class="keyword">let</span> currentDynamicChildren = <span class="literal">null</span></span><br><span class="line"><span class="comment">//openBlock用来创建一个新的动态节点集合,将currentDynamicChildren初始化为空数组</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">openBlock</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    dynamicChildrenStack.push((currentDynamicChildren=[]))</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//closeBlock用来将通过openBlock创建的动态节点集合从栈中弹出</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">closeBlock</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    currentDynamicChildren = dynamicChildrenStack.pop()</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//在createVNode函数内部，检测节点是否存在补丁标志，如果存在，则说明该节点是动态节点，将其添加到当前动态节点集合currentDynamicChildren中</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createVNode</span>(<span class="params">tag,props,children,flags</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> key = props &amp;&amp; props.key</span><br><span class="line">    props &amp;&amp; <span class="keyword">delete</span> props.key</span><br><span class="line">    <span class="keyword">const</span> vnode = &#123;</span><br><span class="line">        tag,</span><br><span class="line">        props,</span><br><span class="line">        children,</span><br><span class="line">        key,</span><br><span class="line">        <span class="attr">patchFlags</span>: flags</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> flags !== <span class="string">&#x27;undefined&#x27;</span> &amp;&amp; currentDynamicChildren) &#123;</span><br><span class="line">        <span class="comment">//动态节点，将其添加到当前动态节点集合中</span></span><br><span class="line">        currentDynamicChildren.push(vnode)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    <span class="comment">//使用createBlock代替createNode来创建Block</span></span><br><span class="line">    <span class="comment">//每次调用createBlcok之前先调用openBlock</span></span><br><span class="line">    <span class="keyword">return</span> (openBlock(),createBlock(<span class="string">&#x27;div&#x27;</span>,<span class="literal">null</span>,[</span><br><span class="line">        createVNode(<span class="string">&#x27;p&#x27;</span>,&#123;<span class="attr">class</span>: <span class="string">&#x27;foo&#x27;</span>&#125;,<span class="literal">null</span>,<span class="number">1</span>),</span><br><span class="line">        createVNode(<span class="string">&#x27;p&#x27;</span>,&#123;<span class="attr">class</span>:<span class="string">&#x27;bar&#x27;</span>&#125;,<span class="literal">null</span>)</span><br><span class="line">    ]))</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createBlock</span>(<span class="params">tag,props,children</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//block本质是一个vnode</span></span><br><span class="line">    <span class="keyword">const</span> block = createVNode(tag,props,children)</span><br><span class="line">    <span class="comment">//内层的createNode函数已经执行完毕，这里的currentDynamicChildren存储的就是属于当前Block的所有动态子节点</span></span><br><span class="line">    block.dynamicChldren = currentDynamicChildren</span><br><span class="line">    <span class="comment">//关闭block</span></span><br><span class="line">    closeBlock()</span><br><span class="line">    <span class="keyword">return</span> block</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>利用逗号运算符保证渲染函数的返回值仍然是VNode对象，任何作为Block的节点都应该使用createBlock函数完成虚拟节点创建，由于createVNode函数和createBlock函数时由内向外，因此，当createBlock执行时，内层所有createVNode函数已经执行完毕，currentDynamicChildren存储的就是当前Block的所有动态子节点，将currentDynamicChildren赋值给dynamicChldren,完成了动态子节点的收集</p>
+<h1 id="渲染器运行时支持："><a href="#渲染器运行时支持：" class="headerlink" title="渲染器运行时支持："></a>渲染器运行时支持：</h1><p>优先检测虚拟DOM是否存在动态节点集合，即dynamicChildren数组，如果存在，直接调用patchBlockChildren函数完成更新，这样，渲染器只会更新动态节点，而跳过所有静态结点，<strong>进行针对性的靶向更新</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">patchElement</span>(<span class="params">n1,n2</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> el=n1.el=n2.el</span><br><span class="line">    <span class="keyword">const</span> oldProps = n1.props</span><br><span class="line">    <span class="keyword">const</span> newProps = n2.props</span><br><span class="line">    <span class="keyword">if</span>(n2.patchFlags) &#123;</span><br><span class="line">        <span class="comment">///靶向更新</span></span><br><span class="line">        <span class="keyword">if</span>(n2.patchFlags===<span class="number">1</span>)&#123;</span><br><span class="line">            <span class="comment">//只更新Text</span></span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(n2.patchFlags===<span class="number">2</span>) &#123;</span><br><span class="line">            <span class="comment">//更新class</span></span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(n2.patchFlags===<span class="number">3</span>)&#123;</span><br><span class="line">            <span class="comment">//...</span></span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="comment">//全量更新</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">const</span> key <span class="keyword">in</span> newProps) &#123;</span><br><span class="line">                <span class="keyword">if</span>(newProps[key]!==oldProps[key]) &#123;</span><br><span class="line">                    patchProps(el,key,oldProps[key],newProps[key])</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">const</span> key <span class="keyword">in</span> oldProps) &#123;</span><br><span class="line">                <span class="keyword">if</span>(!(key <span class="keyword">in</span> newProps))&#123;</span><br><span class="line">                    patchProps(el,key,oldProps[key],<span class="literal">null</span>)<span class="comment">//卸载</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//调用patchChildren处理children</span></span><br><span class="line">    patchChilren(n1,n2,el)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于Block会收集所有动态子节点，所以对动态子节点的操作时忽略DOM层级结构的，会带来额外的问题，即v-if,v-for等结构化指令会影响DOM层级结构，使之不稳定，会间接导致Block树的对比算法失效，解决办法就是让带有v-if和v-for等指令的结点也作为Block角色，</p>
+<p>v-if指令的结点：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">section</span> <span class="attr">v-if</span>=<span class="string">&quot;foo&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line">            &#123;&#123;a&#125;&#125;</span><br><span class="line">        <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">section</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">v-else</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line">            &#123;&#123;a&#125;&#125;</span><br><span class="line">        <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>当foo为true或false,block收集到的动态节点均是：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> block = &#123;</span><br><span class="line">    <span class="attr">tag</span>:<span class="string">&#x27;div&#x27;</span>,</span><br><span class="line">    <span class="attr">dynamicChildren</span>: [</span><br><span class="line">        &#123;<span class="attr">tag</span>: <span class="string">&#x27;p&#x27;</span>,<span class="attr">children</span>: ctx.a,<span class="attr">patchFlags</span>:<span class="number">1</span>&#125;</span><br><span class="line">    ]</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在Diff中就不会做更新，然而更新前后标签不一样，不做更新会产生bug,结构化指令导致更新前后模板的结构发生变化，即模板结构不稳定，因此需要让v-if/v-else等结构化指令的结点也作为Block角色</p>
+<p>即上面这段模板会构成一颗Block树：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Block(div)</span><br><span class="line">	-Block(Section v-<span class="keyword">if</span>)</span><br><span class="line">	-Block(div v-<span class="keyword">else</span>)</span><br></pre></td></tr></table></figure>
+
+<p>父级Block除了会收集动态子节点外，也会收集子Block,因此两个子Block将作为父Block的动态节点被收集到父级Block的dynamicChildren数组中</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> block =&#123;</span><br><span class="line">    <span class="attr">tag</span>: <span class="string">&#x27;div&#x27;</span>,</span><br><span class="line">    <span class="attr">dynamicChildren</span>:[</span><br><span class="line">        <span class="comment">//Block(section v-if)或者Block(div v-else),key值根据不同Block发生变化</span></span><br><span class="line">        &#123;<span class="attr">tag</span>:<span class="string">&#x27;section&#x27;</span>,&#123;<span class="attr">key</span>:<span class="number">0</span>&#125;,<span class="attr">dynamicChildren</span>:[...]&#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>v-for指令的结点：</p>
+<p>下面的模板：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">v-for</span>=<span class="string">&quot;item in list&quot;</span>&gt;</span></span><br><span class="line">        &#123;&#123;item&#125;&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">i</span>&gt;</span>&#123;&#123;foo&#125;&#125;<span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">i</span>&gt;</span>&#123;&#123;bar&#125;&#125;<span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>只有最外层的div标签作为Block:</p>
+<p>更新前：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> prevBlock = &#123;</span><br><span class="line">    <span class="attr">tag</span>:<span class="string">&#x27;div&#x27;</span>,</span><br><span class="line">    <span class="attr">dynamicChildren</span>:[</span><br><span class="line">        &#123;<span class="attr">tag</span>:<span class="string">&#x27;p&#x27;</span>,<span class="attr">children</span>:<span class="number">1</span>,<span class="number">1</span>&#125;,</span><br><span class="line">        &#123;<span class="attr">tag</span>:<span class="string">&#x27;p&#x27;</span>,<span class="attr">children</span>:<span class="number">2</span>,<span class="number">1</span>&#125;,</span><br><span class="line">        &#123;<span class="attr">tag</span>:<span class="string">&#x27;i&#x27;</span>,<span class="attr">children</span>:ctx.foo,<span class="number">1</span>&#125;,</span><br><span class="line">        &#123;<span class="attr">tag</span>:<span class="string">&#x27;i&#x27;</span>,<span class="attr">children</span>:ctx.bar,<span class="number">1</span>&#125;</span><br><span class="line"></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>更新后：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> prevBlock = &#123;</span><br><span class="line">    <span class="attr">tag</span>:<span class="string">&#x27;div&#x27;</span>,</span><br><span class="line">    <span class="attr">dynamicChildren</span>:[</span><br><span class="line">        &#123;<span class="attr">tag</span>:<span class="string">&#x27;p&#x27;</span>,<span class="attr">children</span>:<span class="number">1</span>,<span class="number">1</span>&#125;,</span><br><span class="line">        &#123;<span class="attr">tag</span>:<span class="string">&#x27;i&#x27;</span>,<span class="attr">children</span>:ctx.foo,<span class="number">1</span>&#125;,</span><br><span class="line">        &#123;<span class="attr">tag</span>:<span class="string">&#x27;i&#x27;</span>,<span class="attr">children</span>:ctx.bar,<span class="number">1</span>&#125;</span><br><span class="line"></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>更新前后的block动态节点个数不一致，为了让DOM树有稳定的结构，让带有v-for指令的标签也作为Block角色，使用类型为Fragment的结点来表达v-for指令的渲染结果，并作为Block角色</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> block = &#123;</span><br><span class="line">    <span class="attr">tag</span>:<span class="string">&#x27;div&#x27;</span>,</span><br><span class="line">    <span class="attr">dynamicChildren</span>: [</span><br><span class="line">        <span class="comment">//这是一个Block,它有dynamicChildren</span></span><br><span class="line">        &#123;<span class="attr">tag</span>:Fragment,<span class="attr">dynamicChildren</span>:[<span class="comment">/*v-for结点*/</span>]&#125;</span><br><span class="line">        &#123;<span class="attr">tag</span>:<span class="string">&#x27;i&#x27;</span>,<span class="attr">children</span>:ctx.foo,<span class="number">1</span>&#125;,</span><br><span class="line">        &#123;<span class="attr">tag</span>:<span class="string">&#x27;i&#x27;</span>,<span class="attr">children</span>:ctx.bar,<span class="number">1</span>&#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然而Fragment本身收集的动态节点依然会结构不稳定，就是更新前后一个block的dynamicChildren数组中收集的动态节点数量或顺序不一致，导致我们无法直接进行靶向更新，只能用传统diff算法</p>
+<h1 id="静态提升："><a href="#静态提升：" class="headerlink" title="静态提升："></a>静态提升：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> hoist1=createVNode(<span class="string">&#x27;p&#x27;</span>,<span class="literal">null</span>,<span class="string">&#x27;static text&#x27;</span>),</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (openBlock(),createBlock(<span class="string">&#x27;div&#x27;</span>,<span class="literal">null</span>,[</span><br><span class="line">        hoist1,</span><br><span class="line">        creatVNode(<span class="string">&#x27;p&#x27;</span>,nulll,ctx.title,<span class="number">1</span>)</span><br><span class="line">    ]))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在渲染函数内只会持有对静态结点的引用，当响应式数据变化，是的渲染函数重新执行时，并不会重新创建静态的虚拟结点，避免了额外的性开销</p>
+<h1 id="预字符串化："><a href="#预字符串化：" class="headerlink" title="预字符串化："></a>预字符串化：</h1><p>静态提升的虚拟节点或虚拟节点树本身是静态的，可以将其预字符串化：</p>
+<p>比如：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> hoistStatic=createStaticVNode(<span class="string">&#x27;&lt;p&gt;&lt;/p&gt;&lt;p&gt;&lt;/p&gt;...&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span>(openBlock(),createBlock(<span class="string">&#x27;div&#x27;</span>,<span class="literal">null</span>,[</span><br><span class="line">        hoistStatic</span><br><span class="line">    ]))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>好处：</p>
+<ul>
+<li>大块的静态内容可以通过innerHTML进行设置，性能上有优势</li>
+<li>减少创建虚拟节点产生的性能开销和内存占用</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>除了Block和补丁标志，Vue3还在编译性能上做了其他优化：</p>
+<ul>
+<li>静态提升：把纯静态的结点提升到渲染函数外，渲染函数内只会持有对静态结点的引用，当响应式数据变化，是的渲染函数重新执行时，并不会重新创建静态的虚拟结点，避免了额外的性开销</li>
+<li>预字符串化：在静态提升基础上，对静态结点进行字符串化，这样能减少创建虚拟节点产生的性能开销和内存占用，大块的静态内容可以通过innerHTML进行设置</li>
+<li>缓存内联事件处理函数：避免造成不必要的组件更新</li>
+<li>v-once指令：代码中存在setBlockTracking(-1)函数调用，用来暂停动态结点的收集，<strong>也就是说使用v-once包裹的动态节点不会被父级Block收集，被v-once包裹的动态节点在组件更新时，不会参与DIff操作</strong>，缓存全部或者部分虚拟节点，避免组件更新时重新创建虚拟DOM带来的性能开销，也可以避免无用的Diff操作</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/11/16/keepAlive%E5%8E%9F%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -954,108 +1105,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/11/01/computed%E5%8E%9F%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/11/01/computed%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">computed原理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-11-01 09:13:00 / 修改时间：11:50:37" itemprop="dateCreated datePublished" datetime="2022-11-01T09:13:00+08:00">2022-11-01</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>effect是用来注册副作用函数，同时它允许指定一些选项参数options,例如指定scheduler调度器控制副作用函数的执行时机和方式，先实现一个懒执行的副作用函数</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">effect</span>(<span class="params">fn,options = &#123;&#125;</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> effectFn = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        cleanup(effectFn)</span><br><span class="line">        activeEffect = effectFn</span><br><span class="line">        effectStack.push(effectFn)</span><br><span class="line">        fn()</span><br><span class="line">        effectStack.pop()</span><br><span class="line">        activeEffect = effectStack[effectStack.length-<span class="number">1</span>]</span><br><span class="line">    &#125;</span><br><span class="line">    effectFn.options = options</span><br><span class="line">    effectFn.deps = []</span><br><span class="line">    <span class="comment">//只有非lazy才执行</span></span><br><span class="line">    <span class="keyword">if</span>(!options.lazy) &#123;</span><br><span class="line">        effectFn()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//将副作用函数作为返回值返回</span></span><br><span class="line">    <span class="keyword">return</span> effectFn<span class="comment">//新增</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>实现了让副作用函数不立即执行的功能，将副作用函数effectFn作为effect函数的返回值，这就意味着当调用effect函数时，通过其返回值能够拿到对应的副作用函数，这样我们能够手动执行副作用函数</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> effectFn = effect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(obj.foo)</span><br><span class="line">&#125;,&#123;<span class="attr">lazy</span>:<span class="literal">true</span>&#125;)</span><br><span class="line"><span class="comment">//手动执行副作用函数</span></span><br><span class="line">effectFn()</span><br></pre></td></tr></table></figure>
-
-<p>如果把传递给effect的函数看做一个getter，那么这个getter函数可以返回任何值</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> effectFn = effect(</span><br><span class="line"><span class="comment">//getter返回obj.foo和obj.bar</span></span><br><span class="line">    <span class="function">() =&gt;</span> obj.foo + obj.bar,</span><br><span class="line">    &#123; <span class="attr">lazy</span>: <span class="literal">true</span>&#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-<p>为了手动执行副作用函数时就能拿到其返回值，改动effect函数</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">effect</span>(<span class="params">fn,options = &#123;&#125;</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> effectFn = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        cleanup(effectFn)</span><br><span class="line">        activeEffect = effectFn</span><br><span class="line">        effectStack.push(effectFn)</span><br><span class="line">        <span class="comment">//将fn执行结果存储到res</span></span><br><span class="line">        <span class="keyword">const</span> res = fn()</span><br><span class="line">        effectStack.pop()</span><br><span class="line">        activeEffect = effectStack[effectStack.length-<span class="number">1</span>]</span><br><span class="line">        <span class="comment">//将res作为effectFn返回值</span></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    effectFn.options = options</span><br><span class="line">    effectFn.deps = []</span><br><span class="line">    <span class="keyword">if</span>(!options.lazy)&#123;</span><br><span class="line">        effectFn()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> effectFn</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>传递给effect函数的参数fn才是真正的副作用函数，而effectFn是我们包装后的副作用函数，为了通过effectFn得到真正的副作用函数fn的执行结果，我们需要将其保存到res变量，然后将其作为effectFn函数的返回值</p>
-<p>接下来就可以定义cmputed函数</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">computed</span>(<span class="params">getter</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//把getter作为副作用函数，创建一个lazy的effect</span></span><br><span class="line">    <span class="keyword">const</span> effectFn = effect(getter,&#123;</span><br><span class="line">        <span class="attr">lazy</span>: <span class="literal">true</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">const</span> obj = &#123;</span><br><span class="line">        <span class="comment">//当读取value时才执行effectFn</span></span><br><span class="line">        <span class="keyword">get</span> <span class="title">value</span>() &#123;</span><br><span class="line">            <span class="keyword">return</span> effectFn()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> obj</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>computed函数接收一个getter函数作为参数，我们把getter函数作为副作用函数，用它创建一个lazy的effect,computed函数的执行会返回一个对象，该对象的value属性是一个访问器属性，只有当读取value值时，才执行effectFn并将结果作为返回值返回</p>
-<p>使用computed函数创建一个计算属性：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> data =&#123; <span class="attr">foo</span>: <span class="number">1</span>, <span class="attr">bar</span>: <span class="number">2</span>&#125;</span><br><span class="line"><span class="keyword">const</span> obj = <span class="keyword">new</span> <span class="built_in">Proxy</span>(data, &#123;...&#125;)</span><br><span class="line"><span class="keyword">const</span> sumRes = computed(<span class="function">() =&gt;</span> obj.foo + obj.bar)</span><br><span class="line"><span class="built_in">console</span>.log(sumRes.value)<span class="comment">//3</span></span><br></pre></td></tr></table></figure>
-
-<p>当多次访问sumRes.value的值，会导致effectFn进行多次计算，即使obj.foo和obj,bar的值本身没有变化，利用闭包实现对值进行缓存的功能</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">computed</span>(<span class="params">getter</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//value用来缓存上一次计算的值</span></span><br><span class="line">    <span class="keyword">let</span> value</span><br><span class="line">    <span class="comment">//dirty标志，用来标识是否需要重新计算值，为true意味着“脏”没需要计算</span></span><br><span class="line">    <span class="keyword">let</span> dirty = <span class="literal">true</span></span><br><span class="line">    <span class="keyword">const</span> effectFn = effect(getter,&#123;</span><br><span class="line">        <span class="attr">lazy</span>:<span class="literal">true</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">const</span> obj = &#123;</span><br><span class="line">        <span class="keyword">get</span> <span class="title">value</span>()&#123;</span><br><span class="line">            <span class="comment">//只有脏时才计算值，并将得到的值缓存到value</span></span><br><span class="line">            <span class="keyword">if</span>(dirty)&#123;</span><br><span class="line">                value = effectFn()</span><br><span class="line">                <span class="comment">//将dirty设置为false,下一次访问直接使用缓存到value中的值</span></span><br><span class="line">                dirty = <span class="literal">false</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> value</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> obj</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>但是此时改变obj.foo或者obj.bar,再访问sumRes.value会发现访问到的值没有发生变化</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> data = &#123;<span class="attr">foo</span>: <span class="number">1</span>,<span class="attr">bar</span>: <span class="number">2</span>&#125;</span><br><span class="line"><span class="keyword">const</span> obj = <span class="keyword">new</span> <span class="built_in">Proxy</span>(data,&#123;...&#125;)</span><br><span class="line"><span class="keyword">const</span> sumRes = computed(<span class="function">() =&gt;</span> obj.foo+obj.bar)</span><br><span class="line"><span class="built_in">console</span>.log(sumRes.value)<span class="comment">//3</span></span><br><span class="line"><span class="built_in">console</span>.log(sumRes.value)<span class="comment">//3</span></span><br><span class="line">obj.foo++;</span><br><span class="line"><span class="comment">//再次访问得到的仍然是3</span></span><br><span class="line"><span class="built_in">console</span>.log(sumRes.value)<span class="comment">//3</span></span><br></pre></td></tr></table></figure>
-
-<p>这是因为，第一次访问sumRes.value的值后，变量dirty被设置为false,代表不需要计算，即使我们修改obj.foo的值，但只要dirty的值为false,就不会重新计算，所有导致我们得到错误的值，因此当obj.foo或者obj.bar的值发生改变时，只要dirty的值重置为true就可以，这时就用到scheduler选项</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">computed</span>(<span class="params">getter</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> value</span><br><span class="line">    <span class="keyword">let</span> dirty = <span class="literal">true</span></span><br><span class="line">    cont effectFn = effect(getter, &#123;</span><br><span class="line">        <span class="attr">lazy</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="function"><span class="title">scheduler</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">            <span class="keyword">if</span>(!dirty) &#123;</span><br><span class="line">                dirty = <span class="literal">true</span></span><br><span class="line">                <span class="comment">//当计算属性依赖的响应式数据变化时，手动调用trigger函数触发响应</span></span><br><span class="line">                trigger(obj,<span class="string">&#x27;value&#x27;</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">const</span> obj = &#123;</span><br><span class="line">        <span class="keyword">get</span> <span class="title">value</span>() &#123;</span><br><span class="line">            <span class="keyword">if</span>(dirty)&#123;</span><br><span class="line">                value = effectFn()</span><br><span class="line">                dirty = <span class="literal">false</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//当读取value手动调用track函数进行追踪</span></span><br><span class="line">            track(obj,<span class="string">&#x27;value&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span> value</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> obj</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>当读取一个计算属性value，需要手动调用track函数，把计算属性返回的对象obj作为target,同时作为第一个参数传递给track函数，当计算属性所依赖的响应式数据变化时会立即调度函数，在调度函数内手动调用trigger函数触发响应即可。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1123,7 +1176,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">230</span>
+          <span class="site-state-item-count">231</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1197,7 +1250,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共206.3k字</span>
+  <span class="post-count">博客全站共208.8k字</span>
 </div>
         
 
