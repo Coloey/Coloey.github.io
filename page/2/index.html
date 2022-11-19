@@ -187,6 +187,162 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/11/02/%E6%89%8B%E5%86%99instanceof/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/11/02/%E6%89%8B%E5%86%99instanceof/" class="post-title-link" itemprop="url">手写instanceof</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-11-02 20:11:11 / 修改时间：20:12:09" itemprop="dateCreated datePublished" datetime="2022-11-02T20:11:11+08:00">2022-11-02</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myInstanceof</span>(<span class="params">left,right</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> prototype = right.prototype</span><br><span class="line">    left = left.__proto__</span><br><span class="line">    <span class="keyword">while</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(!left)<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">        <span class="keyword">if</span>(left == prototype)<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">        left = left.__proto__</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/11/01/hook%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/11/01/hook%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">hook原理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-11-01 15:55:12 / 修改时间：16:55:27" itemprop="dateCreated datePublished" datetime="2022-11-01T15:55:12+08:00">2022-11-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>hook就是解决函数组件没有state,生命周期，逻辑不能复用的一种解决方案</p>
+<p>dispatcher</p>
+<p>在真实hook中，组件mount时的hook和update时的hook来源于不同对象，这类对象在源码中称为dispatcher</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mount时的Dispatcher</span></span><br><span class="line"><span class="keyword">const</span> HooksDispatcherOnMount: Dispatcher = &#123;</span><br><span class="line">  <span class="attr">useCallback</span>: mountCallback,</span><br><span class="line">  <span class="attr">useContext</span>: readContext,</span><br><span class="line">  <span class="attr">useEffect</span>: mountEffect,</span><br><span class="line">  <span class="attr">useImperativeHandle</span>: mountImperativeHandle,</span><br><span class="line">  <span class="attr">useLayoutEffect</span>: mountLayoutEffect,</span><br><span class="line">  <span class="attr">useMemo</span>: mountMemo,</span><br><span class="line">  <span class="attr">useReducer</span>: mountReducer,</span><br><span class="line">  <span class="attr">useRef</span>: mountRef,</span><br><span class="line">  <span class="attr">useState</span>: mountState,</span><br><span class="line">  <span class="comment">// ...省略</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// update时的Dispatcher</span></span><br><span class="line"><span class="keyword">const</span> HooksDispatcherOnUpdate: Dispatcher = &#123;</span><br><span class="line">  <span class="attr">useCallback</span>: updateCallback,</span><br><span class="line">  <span class="attr">useContext</span>: readContext,</span><br><span class="line">  <span class="attr">useEffect</span>: updateEffect,</span><br><span class="line">  <span class="attr">useImperativeHandle</span>: updateImperativeHandle,</span><br><span class="line">  <span class="attr">useLayoutEffect</span>: updateLayoutEffect,</span><br><span class="line">  <span class="attr">useMemo</span>: updateMemo,</span><br><span class="line">  <span class="attr">useReducer</span>: updateReducer,</span><br><span class="line">  <span class="attr">useRef</span>: updateRef,</span><br><span class="line">  <span class="attr">useState</span>: updateState,</span><br><span class="line">  <span class="comment">// ...省略</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>可见，mount时调用的hook和update时调用的hook是两个不同的函数，在FunctionComponent render前，会根据FunctionComponent对应fiber的一下条件区分mount和update</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">current === <span class="literal">null</span> || current.memoizedState === <span class="literal">null</span></span><br></pre></td></tr></table></figure>
+
+<p>并把不同情况对应的dispatcher赋值给全局变量ReactCurrentDispatcher的current属性</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ReactCurrentDispatcher.current =</span><br><span class="line">    current === <span class="literal">null</span> || current.memoizedState === <span class="literal">null</span> ? HookDispatcherOnMount : HooksDispatcherOnUpdate</span><br></pre></td></tr></table></figure>
+
+<p>在FuntionComponent render时，会从ReactCurrentDispatcher.current（即当前dispatcher，则FunctionComponent render时调用的hook是不同函数）</p>
+<p>Hook数据结构：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> hook: Hook = &#123;</span><br><span class="line">    <span class="attr">memoizedState</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">baseState</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">baseQueue</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">queue</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">next</span>: <span class="literal">null</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>memoizedState:</p>
+<p>hook与FunctionComponent fiber都存在memoizedState属性：</p>
+<p>fiber.memoizedState:FunctionComponent对应fiber保存的Hooks链表</p>
+<p>hook.memoizedState:Hooks链表中保存的单一hook对应的数据</p>
+<p>不同类型hook的memoizedState保存不同类型数据：</p>
+<p>useState:对于const [state,updateState] = useState(initialState),memoizedState保存state的值</p>
+<p>useReducer:对于const[state,dispatch]=useReducer(reducer,[]),memoizedState保存state的值</p>
+<p>useEffect:memoizedState保存包含useEffect回调函数，依赖项等的链表数据结构effect,effect会保存在fiber.updateQueue</p>
+<p>useRef:对于useRef(1),memoizedState保存{current:1}</p>
+<p>useMemo:对于useMemo(callback,[depA]),memoizedState保存[callback,depA],与useMemo的区别是，useCallback保存的是callback函数本身，而useMemo保存的是callback函数的执行结果</p>
+<p>有些hook没有memoizedState:</p>
+<p>如useContext</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/11/01/computed%E5%8E%9F%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -953,191 +1109,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/24/%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AAloader/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/24/%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AAloader/" class="post-title-link" itemprop="url">手写一个loader</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-10-24 09:48:09 / 修改时间：10:33:44" itemprop="dateCreated datePublished" datetime="2022-10-24T09:48:09+08:00">2022-10-24</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/webpack/" itemprop="url" rel="index"><span itemprop="name">webpack</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>loader是导出为一个函数的node模块，该函数在loader转换资源时调用，给定函数将调用loader API,并通过this上下文访问</p>
-<h1 id="最简单的loader源码："><a href="#最简单的loader源码：" class="headerlink" title="最简单的loader源码："></a>最简单的loader源码：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">source</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//source为compiler传递给Loader的一个文件的原内容</span></span><br><span class="line">    <span class="comment">//该函数需要返回处理后的内容</span></span><br><span class="line">    <span class="keyword">return</span> source</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="获得Loader的options"><a href="#获得Loader的options" class="headerlink" title="获得Loader的options:"></a>获得Loader的options:</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> loaderUtils = <span class="built_in">require</span>(<span class="string">&quot;loader-utils&quot;</span>)</span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">source</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//获取到用户给当前loader传入的options</span></span><br><span class="line">    <span class="keyword">const</span> options = loaderUtils.getOptions(<span class="built_in">this</span>)</span><br><span class="line">    <span class="keyword">return</span> source</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="返回其他结果"><a href="#返回其他结果" class="headerlink" title="返回其他结果"></a>返回其他结果</h1><p>有些场景下还需要返回除了内容外的东西，比如source Map,以方便调试源码</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">source</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//通过this.callback告诉webpack返回的结果</span></span><br><span class="line">    <span class="built_in">this</span>.callback(<span class="literal">null</span>,source,sourceMaps)</span><br><span class="line">    <span class="comment">//当使用this.callback返回内容时，该loader必须返回undefined</span></span><br><span class="line">    <span class="comment">//以让webpack知道该loader返回的结果在thi.callback中，而不是在return中</span></span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>this.callback是webpack给loader注入的api,以方便loader和webpack之间的通信，this.callback详细用法：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">this</span>.callback(</span><br><span class="line">    <span class="comment">// 当无法转换原内容时，给 Webpack 返回一个 Error</span></span><br><span class="line">    err: <span class="built_in">Error</span> | <span class="literal">null</span>,</span><br><span class="line">    <span class="comment">// 原内容转换后的内容</span></span><br><span class="line">    <span class="attr">content</span>: string | Buffer,</span><br><span class="line">    <span class="comment">// 用于把转换后的内容得出原内容的 Source Map，方便调试</span></span><br><span class="line">    sourceMap?: SourceMap,</span><br><span class="line">    <span class="comment">// 如果本次转换为原内容生成了 AST 语法树，可以把这个 AST 返回，</span></span><br><span class="line">    <span class="comment">// 以方便之后需要 AST 的 Loader 复用该 AST，以避免重复生成 AST，提升性能</span></span><br><span class="line">    abstractSyntaxTree?: AST</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<h1 id="同步和异步"><a href="#同步和异步" class="headerlink" title="同步和异步"></a>同步和异步</h1><p>loader有同步和异步，同步loader的转换流程都是同步的，转换完成后再返回结果，但在有些场景下转换是异步的，例如一些网络请求</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">source</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 告诉 Webpack 本次转换是异步的，Loader 会在 callback 中回调结果</span></span><br><span class="line">    <span class="keyword">var</span> callback = <span class="built_in">this</span>.async();</span><br><span class="line">    someAsyncOperation(source, <span class="function"><span class="keyword">function</span>(<span class="params">err, result, sourceMaps, ast</span>) </span>&#123;</span><br><span class="line">        <span class="comment">// 通过 callback 返回异步执行后的结果</span></span><br><span class="line">        callback(err, result, sourceMaps, ast);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="本地测试自定义loader"><a href="#本地测试自定义loader" class="headerlink" title="本地测试自定义loader:"></a>本地测试自定义loader:</h1><p>1.在rule对象使用path.resolve指定一个本地文件</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    <span class="attr">module</span>:&#123;</span><br><span class="line">        <span class="attr">rules</span>:[</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">test</span>:<span class="regexp">/\.js$/</span>,</span><br><span class="line">                use:[</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="attr">loader</span>: path.resolve(<span class="string">&#x27;path/to/loader.js&#x27;</span>),</span><br><span class="line">                        <span class="attr">options</span>:&#123;</span><br><span class="line">                            </span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                ]</span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>匹配多个loader可以使用resolveLoader.modules配置，webpack将会从这些目录中搜索这些loaders，例如你的项目中有一个/loaders本地目录：</p>
-<p>webpack.config.js:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    <span class="attr">resolveLoader</span>:&#123;</span><br><span class="line">        <span class="attr">modules</span>: [<span class="string">&#x27;node_modules&#x27;</span>,path.resolve(__dirname,<span class="string">&#x27;loaders&#x27;</span>)]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/22/%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E6%8F%92%E4%BB%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/22/%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E6%8F%92%E4%BB%B6/" class="post-title-link" itemprop="url">编写一个插件</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-10-22 16:11:26 / 修改时间：18:10:24" itemprop="dateCreated datePublished" datetime="2022-10-22T16:11:26+08:00">2022-10-22</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/webpack/" itemprop="url" rel="index"><span itemprop="name">webpack</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="webpack插件由以下组成："><a href="#webpack插件由以下组成：" class="headerlink" title="webpack插件由以下组成："></a>webpack插件由以下组成：</h1><p>一个javaScript命名函数或者JavaScript类</p>
-<p>由插件函数的prototype上定义的一个apply方法</p>
-<p>指定一个绑定到webpack自身的事件钩子</p>
-<p>处理webpack内部实例的特定数据</p>
-<p>功能完成后调用webpack提供的回调</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一个 JavaScript 类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyExampleWebpackPlugin</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 在插件函数的 prototype 上定义一个 `apply` 方法，以 compiler 为参数。</span></span><br><span class="line">  <span class="function"><span class="title">apply</span>(<span class="params">compiler</span>)</span> &#123;</span><br><span class="line">    <span class="comment">// 指定一个挂载到 webpack 自身的事件钩子。</span></span><br><span class="line">    compiler.hooks.emit.tapAsync(</span><br><span class="line">      <span class="string">&#x27;MyExampleWebpackPlugin&#x27;</span>,</span><br><span class="line">      <span class="function">(<span class="params">compilation, callback</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;这是一个示例插件！&#x27;</span>);</span><br><span class="line">        <span class="built_in">console</span>.log(</span><br><span class="line">          <span class="string">&#x27;这里表示了资源的单次构建的 `compilation` 对象：&#x27;</span>,</span><br><span class="line">          compilation</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 用 webpack 提供的插件 API 处理构建过程</span></span><br><span class="line">        compilation.addModule(<span class="comment">/* ... */</span>);</span><br><span class="line"></span><br><span class="line">        callback();</span><br><span class="line">      &#125;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>webpack通过plugin机制让其更加灵活，以适应各种应用场景，在webpack运行的生命周期中会广播出许多事件，plugin可以监听这些事件，在合适的时机通过webpack提供的api改变输出结果</p>
-<h1 id="Compiler和Compilation"><a href="#Compiler和Compilation" class="headerlink" title="Compiler和Compilation"></a>Compiler和Compilation</h1><p>插件开发中最重要的两个资源就是compiler和compilation对象，理解它们的角色是扩展webpack引擎重要的第一步</p>
-<p>compiler对象代表了完整的webpack环境配置，这个对象在<strong>启动webpack时被一次性实例化</strong>，可以简单理解为webpack实例，并配置好所有可操作的设置，包括options,loader和plugin。当在webpack环境中启用一个插件时，插件将受到compiler对象的引用，可以使用它来访问webpack的主环境</p>
-<p>compilation对象代表一次资源版本构建，当运行webpack开发环境中间件时，每当检测一个文件变化，就会创建一个新的compilation，从而生成一组新的编译资源，一个compilation对象表现了当前的模块资源、编译生成资源、变化的文件、以及被跟踪依赖大的状态信息。compilation对象也提供了很多关键时机的回调，以供插件做自定义处理时选择使用，通过compilation也能读取到compiler对象</p>
-<p><strong>compiler和compilation区别在于：compiler代表了整个webpack从启动到关闭的生命周期，而compilation只是代表了一次新的编译</strong></p>
-<h1 id="基本插件架构"><a href="#基本插件架构" class="headerlink" title="基本插件架构"></a>基本插件架构</h1><p>插件是由具有apply方法的prototype对象所实例化出来的，这个apply方法在安装插件时，会被webpack compiler调用一次，apply方法可以接受一个webpack compiler对象的引用，从而可以在回调函数中访问到compiler对象。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HelloWorldPlugin</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">apply</span>(<span class="params">compiler</span>)</span> &#123;</span><br><span class="line">    compiler.hooks.done.tap(</span><br><span class="line">      <span class="string">&#x27;Hello World Plugin&#x27;</span>,</span><br><span class="line">      <span class="function">(<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="function">        stats <span class="comment">/* 绑定 done 钩子后，stats 会作为参数传入。 */</span></span></span></span><br><span class="line"><span class="params"><span class="function">      </span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;Hello World!&#x27;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = HelloWorldPlugin;</span><br></pre></td></tr></table></figure>
-
-<p>安装插件：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line"><span class="keyword">var</span> HelloWorldPlugin = <span class="built_in">require</span>(<span class="string">&#x27;hello-world&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="comment">// ... 这里是其他配置 ...</span></span><br><span class="line">  <span class="attr">plugins</span>: [<span class="keyword">new</span> HelloWorldPlugin(&#123; <span class="attr">options</span>: <span class="literal">true</span> &#125;)],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1209,7 +1180,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">231</span>
+          <span class="site-state-item-count">233</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1283,7 +1254,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共208.8k字</span>
+  <span class="post-count">博客全站共211.7k字</span>
 </div>
         
 

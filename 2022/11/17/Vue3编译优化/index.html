@@ -28,7 +28,7 @@
 <meta property="og:description" content="编译优化指的是编译器将模板编译为渲染函数的过程中，尽可能多的提取关键信息，并以此指导生成最优代码的过程，优化的方向主要是区分动态内容和静态内容，并针对不同的内容采用不同的优化策略 动态节点收集与补丁标志：Vue2中：渲染器在运行时得不到足够的信息，传统diff算法无法利用编译时提取得到的关键信息，这导致渲染器在运行时不可能去做相关优化 Vue3:会将编译时得到的关键信息附着在它生成的虚拟DOM上，">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-11-17T13:25:00.000Z">
-<meta property="article:modified_time" content="2022-11-18T10:06:53.749Z">
+<meta property="article:modified_time" content="2022-11-18T12:10:51.749Z">
 <meta property="article:author" content="小柒">
 <meta name="twitter:card" content="summary">
 
@@ -221,7 +221,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-11-18 18:06:53" itemprop="dateModified" datetime="2022-11-18T18:06:53+08:00">2022-11-18</time>
+                <time title="修改时间：2022-11-18 20:10:51" itemprop="dateModified" datetime="2022-11-18T20:10:51+08:00">2022-11-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -316,7 +316,7 @@
 </ul>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>除了Block和补丁标志，Vue3还在编译性能上做了其他优化：</p>
 <ul>
-<li>静态提升：把纯静态的结点提升到渲染函数外，渲染函数内只会持有对静态结点的引用，当响应式数据变化，是的渲染函数重新执行时，并不会重新创建静态的虚拟结点，避免了额外的性开销</li>
+<li>静态提升：把纯静态的结点提升到渲染函数外，渲染函数内只会持有对静态结点的引用，当响应式数据变化，使得渲染函数重新执行时，并不会重新创建静态的虚拟结点，避免了额外的性开销</li>
 <li>预字符串化：在静态提升基础上，对静态结点进行字符串化，这样能减少创建虚拟节点产生的性能开销和内存占用，大块的静态内容可以通过innerHTML进行设置</li>
 <li>缓存内联事件处理函数：避免造成不必要的组件更新</li>
 <li>v-once指令：代码中存在setBlockTracking(-1)函数调用，用来暂停动态结点的收集，<strong>也就是说使用v-once包裹的动态节点不会被父级Block收集，被v-once包裹的动态节点在组件更新时，不会参与DIff操作</strong>，缓存全部或者部分虚拟节点，避免组件更新时重新创建虚拟DOM带来的性能开销，也可以避免无用的Diff操作</li>
@@ -356,7 +356,10 @@
     <a href="/2022/11/16/keepAlive%E5%8E%9F%E7%90%86/" rel="prev" title="keepAlive原理">
       <i class="fa fa-chevron-left"></i> keepAlive原理
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/11/18/%E5%93%8D%E5%BA%94%E5%BC%8F%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%89%AF%E4%BD%9C%E7%94%A8%E5%87%BD%E6%95%B0%E6%94%B6%E9%9B%86/" rel="next" title="响应式数据与副作用函数收集">
+      响应式数据与副作用函数收集 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -431,7 +434,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">231</span>
+          <span class="site-state-item-count">233</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -505,7 +508,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共208.8k字</span>
+  <span class="post-count">博客全站共211.7k字</span>
 </div>
         
 

