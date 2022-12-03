@@ -187,6 +187,109 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/25/fiber%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/25/fiber%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">fiber架构原理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-25 21:38:41" itemprop="dateCreated datePublished" datetime="2022-10-25T21:38:41+08:00">2022-10-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-11-12 16:53:06" itemprop="dateModified" datetime="2022-11-12T16:53:06+08:00">2022-11-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Fiber起源"><a href="#Fiber起源" class="headerlink" title="Fiber起源"></a>Fiber起源</h1><p>React15之前，Reconciler采用递归创建虚拟DOM，递归过程不能中断，如果组件树的层级很深，递归会占用线程很多时间，造成卡顿</p>
+<p>React16将递归的无法中断的更新重构为异步的可中断更新，由于曾经用于递归的虚拟DOM数据结构已经无法满足需要，全新的Fiber诞生</p>
+<h1 id="Fiber含义"><a href="#Fiber含义" class="headerlink" title="Fiber含义"></a>Fiber含义</h1><p>1.作为架构，React15的Reconciler采用递归的方式执行，数据保存在递归调用栈中，所以被称为stack Reconciler,React 16 的Reconciler基于Fiber节点实现，<strong>被称为Fiber Reconciler</strong></p>
+<p>2.作为静态数据结构来说，每个Fiber节点对应于一个React element**,保存了该组件的类型**（函数组件/类组件/原生组件…），对应的DOM结点信息</p>
+<p>3.对于动态的工作单元来说，每个Fiber结点保存了<strong>本次更新中该组件改变的状态，要执行的工作（需要被删除/被插入页面/被更新）</strong></p>
+<h1 id="Fiber结构："><a href="#Fiber结构：" class="headerlink" title="Fiber结构："></a>Fiber结构：</h1><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">FiberNode</span> (<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="function">    tag: WorkTag,</span></span></span><br><span class="line"><span class="params"><span class="function">    pendingProps:mixed,</span></span></span><br><span class="line"><span class="params"><span class="function">    key: <span class="literal">null</span>|stirng,</span></span></span><br><span class="line"><span class="params"><span class="function">    mode: TypeofMode,</span></span></span><br><span class="line"><span class="params"><span class="function"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//作为静态数据结构的属性</span></span><br><span class="line">        <span class="built_in">this</span>.tag = tag;</span><br><span class="line">        <span class="built_in">this</span>.key=key;</span><br><span class="line">        <span class="built_in">this</span>.elementType=<span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.type=<span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.stateNode=<span class="literal">null</span>;</span><br><span class="line">        <span class="comment">//用于连接其他Fiber结点形成Fiber树</span></span><br><span class="line">        <span class="built_in">this</span>.return=<span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.child=<span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.sibling=<span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.index=<span class="number">0</span>;</span><br><span class="line">        <span class="built_in">this</span>.ref=<span class="literal">null</span>;</span><br><span class="line">        <span class="comment">//作为动态的工作单元的属性</span></span><br><span class="line">        <span class="built_in">this</span>.pendingProps=pendingProps;</span><br><span class="line">        <span class="built_in">this</span>.memoizedProps=<span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.updateQueue=<span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.memoizedState=<span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.dependencies=<span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.mode=mode;</span><br><span class="line">        <span class="built_in">this</span>.effectTag = NoEffect;</span><br><span class="line">        <span class="built_in">this</span>.nextEffect = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">this</span>.firstEffect = <span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.lastEffect = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 调度优先级相关</span></span><br><span class="line">        <span class="built_in">this</span>.lanes = NoLanes;</span><br><span class="line">        <span class="built_in">this</span>.childLanes = NoLanes;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 指向该fiber在另一次更新时对应的fiber</span></span><br><span class="line">        <span class="built_in">this</span>.alternate = <span class="literal">null</span>;</span><br><span class="line">        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="作为架构来说"><a href="#作为架构来说" class="headerlink" title="作为架构来说"></a>作为架构来说</h1><p>每个Fiber节点有个对应的React element,多个Fiber节点如何连接成树？</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//指向父级Fiber结点</span></span><br><span class="line"><span class="built_in">this</span>.return=<span class="literal">null</span>;</span><br><span class="line"><span class="comment">//指向子Fiber节点</span></span><br><span class="line"><span class="built_in">this</span>.child=<span class="literal">null</span>;</span><br><span class="line"><span class="comment">//指向右边第一个兄弟Fiber结点</span></span><br><span class="line"><span class="built_in">this</span>.sibling=<span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="作为静态的数据结构"><a href="#作为静态的数据结构" class="headerlink" title="作为静态的数据结构"></a>作为静态的数据结构</h1><p>保存了相关组件的信息</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Fiber对应组件的类型 Function/Class/Host...</span></span><br><span class="line"><span class="built_in">this</span>.tag = tag;</span><br><span class="line"><span class="comment">// key属性</span></span><br><span class="line"><span class="built_in">this</span>.key = key;</span><br><span class="line"><span class="comment">// 大部分情况同type，某些情况不同，比如FunctionComponent使用React.memo包裹</span></span><br><span class="line"><span class="built_in">this</span>.elementType = <span class="literal">null</span>;</span><br><span class="line"><span class="comment">// 对于 FunctionComponent，指函数本身，对于ClassComponent，指class，对于HostComponent，指DOM节点tagName</span></span><br><span class="line"><span class="built_in">this</span>.type = <span class="literal">null</span>;</span><br><span class="line"><span class="comment">// Fiber对应的真实DOM节点</span></span><br><span class="line"><span class="built_in">this</span>.stateNode = <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="作为动态的工作单元"><a href="#作为动态的工作单元" class="headerlink" title="作为动态的工作单元"></a>作为动态的工作单元</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 保存本次更新造成的状态改变相关信息</span></span><br><span class="line"><span class="built_in">this</span>.pendingProps = pendingProps;</span><br><span class="line"><span class="built_in">this</span>.memoizedProps = <span class="literal">null</span>;</span><br><span class="line"><span class="built_in">this</span>.updateQueue = <span class="literal">null</span>;</span><br><span class="line"><span class="built_in">this</span>.memoizedState = <span class="literal">null</span>;</span><br><span class="line"><span class="built_in">this</span>.dependencies = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">this</span>.mode = mode;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 保存本次更新会造成的DOM操作</span></span><br><span class="line"><span class="built_in">this</span>.effectTag = NoEffect;</span><br><span class="line"><span class="built_in">this</span>.nextEffect = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">this</span>.firstEffect = <span class="literal">null</span>;</span><br><span class="line"><span class="built_in">this</span>.lastEffect = <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>保存优先级调度的相关信息</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 调度优先级相关</span></span><br><span class="line"><span class="built_in">this</span>.lanes = NoLanes;</span><br><span class="line"><span class="built_in">this</span>.childLanes = NoLanes;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Fiber架构的工作原理："><a href="#Fiber架构的工作原理：" class="headerlink" title="Fiber架构的工作原理："></a>Fiber架构的工作原理：</h1><h2 id="双缓存："><a href="#双缓存：" class="headerlink" title="双缓存："></a>双缓存：</h2><p><strong>在内存中构建并直接替换的技术叫做双缓存</strong></p>
+<p>React使用双缓存来完成Fiber树的构建和替换——对应着DOM树的创建和更新</p>
+<h2 id="双缓存Fiber树"><a href="#双缓存Fiber树" class="headerlink" title="双缓存Fiber树"></a>双缓存Fiber树</h2><p>React中最多同时存在两棵Fiber树，当前屏幕显示内容对应的Fiber树称为current Fiber树，正在内存中构建的Fiber树称为workInProgress Fiber树，current Fiber树中的Fiber节点称为current fiber,workInProgress Fiber树中的Fiber节点被称为workInProgress fiber,它们通过alternate属性连接</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">currentFiber.alternate === workInProgressFiber;</span><br><span class="line">workInProgressFiber.alternate === currentFiber;</span><br></pre></td></tr></table></figure>
+
+<p>React应用的根节点通过<strong>使用current指针在不同的Fiber树的rootFiber间切换来完成current Fiber树之间的切换</strong></p>
+<p>即当workInProgress Fiber树构建完成交给Renderer渲染在页面后，应用根结点的current指针指向workInProgress Fiber树，此时workInProgress Fiber树就变为current Fiber树</p>
+<p>总结:</p>
+<p>Reconciler工作的阶段称为render阶段，因为该阶段会调用组件的render方法</p>
+<p>Renderer工作的阶段称为commit阶段，commit阶段会把renderer阶段提交的信息渲染到页面</p>
+<p>render与commit阶段统称为work,即React在工作中，相对应的，如果任务正在Scheduler内调度，不属于work.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/24/%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AAloader/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -996,87 +1099,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/05/Freshness/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/05/Freshness/" class="post-title-link" itemprop="url">Freshness</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-10-05 20:53:13" itemprop="dateCreated datePublished" datetime="2022-10-05T20:53:13+08:00">2022-10-05</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-22 16:12:22" itemprop="dateModified" datetime="2022-10-22T16:12:22+08:00">2022-10-22</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Freshness会进行更严格的对象字面量检查，用来确保对象字面量在结构上类型兼容</p>
-<p>结构类型兼容规则：如果两个类型的结构一样，就说它们是互相兼容的，且可以相互赋值的（即如果类型x要兼容类型y,那么类型y至少具有与类型x相同的属性)</p>
-<h1 id="Freshness-特性"><a href="#Freshness-特性" class="headerlink" title="Freshness 特性"></a>Freshness 特性</h1><p>如上所述，只要满足结构类型兼容规则的两个类型便可相互兼容。那是否有例外存在呢？让我们看下面的例子：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Named &#123;</span><br><span class="line">    <span class="attr">name</span>:<span class="built_in">string</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> Person &#123;</span><br><span class="line">    <span class="attr">id</span>: <span class="built_in">number</span>;</span><br><span class="line">    name: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> p: Named;</span><br><span class="line">p = &#123;</span><br><span class="line">    <span class="attr">id</span>:<span class="number">1</span>,<span class="comment">// 不能将类型“&#123; id: number; name: string; &#125;”分配给类型“Named”。 对象文字可以只指定已知属性，并且“id”不在类型“Named”中。ts(2322)</span></span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;Tom&#x27;</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>虽然为变量p赋予的字面值完全符合结构类型兼容规则，但它却抛出异常，这主要是由TypeScript中的Freshness特性导致，该特性会对对象字面量进行更为严格的类型检测：只有目标变量的类型与该对象字面量的类型完全一致，对象字面量才可能赋值给目标变量，否则抛出类型错误，我们可以通过类型断言消除异常：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> p: Named;</span><br><span class="line">p = &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;Tom&#x27;</span>,</span><br><span class="line">&#125; <span class="keyword">as</span> Person;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1148,7 +1170,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">233</span>
+          <span class="site-state-item-count">234</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1222,7 +1244,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共211.7k字</span>
+  <span class="post-count">博客全站共212.8k字</span>
 </div>
         
 

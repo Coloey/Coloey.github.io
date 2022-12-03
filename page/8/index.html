@@ -187,6 +187,143 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/04/%E5%AF%B9%E8%B1%A1%E7%B1%BB%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/07/04/%E5%AF%B9%E8%B1%A1%E7%B1%BB%E5%9E%8B/" class="post-title-link" itemprop="url">对象类型</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-07-04 17:42:40" itemprop="dateCreated datePublished" datetime="2022-07-04T17:42:40+08:00">2022-07-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-05 15:15:40" itemprop="dateModified" datetime="2022-07-05T15:15:40+08:00">2022-07-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="readonly属性"><a href="#readonly属性" class="headerlink" title="readonly属性"></a>readonly属性</h1><p>在 TypeScript 中，属性可以被标记为 <code>readonly</code>，这不会改变任何运行时的行为，但在类型检查的时候，一个标记为 <code>readonly</code>的属性是不能被写入的。</p>
+<p>不过使用 <code>readonly</code> 并不意味着一个值就完全是不变的，亦或者说，内部的内容是不能变的。<code>readonly</code> 仅仅表明属性本身是不能被重新写入的。</p>
+<p><strong>TypeScript 在检查两个类型是否兼容的时候，并不会考虑两个类型里的属性是否是 <code>readonly</code>，这就意味着，<code>readonly</code> 的值是可以通过别名修改的。</strong></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Person &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="built_in">string</span>;</span><br><span class="line">  age: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">interface</span> ReadonlyPerson &#123;</span><br><span class="line">  <span class="keyword">readonly</span> name: <span class="built_in">string</span>;</span><br><span class="line">  <span class="keyword">readonly</span> age: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> writablePerson: Person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Person McPersonface&quot;</span>,</span><br><span class="line">  <span class="attr">age</span>: <span class="number">42</span>,</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// works</span></span><br><span class="line"><span class="keyword">let</span> readonlyPerson: ReadonlyPerson = writablePerson;</span><br><span class="line"> </span><br><span class="line"><span class="built_in">console</span>.log(readonlyPerson.age); <span class="comment">// prints &#x27;42&#x27;</span></span><br><span class="line">writablePerson.age++;</span><br><span class="line"><span class="built_in">console</span>.log(readonlyPerson.age); <span class="comment">// prints &#x27;43&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="索引签名"><a href="#索引签名" class="headerlink" title="索引签名"></a>索引签名</h1><p>索引签名用来描述可能的值的类型</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> StringArray&#123;</span><br><span class="line">    [index:<span class="built_in">number</span>]:<span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> myArray:StringArray=getStringArray();</span><br><span class="line"><span class="keyword">const</span> secondItem=myArray[<span class="number">1</span>];</span><br></pre></td></tr></table></figure>
+
+<p>我们有了一个具有索引签名的接口StringArray,这个索引签名表示当一个StringArray类型的值使用number类型的值进行索引的时候，会返回一个string类型的值</p>
+<p>一个索引签名的属性类型必须是<strong>string或者是number</strong></p>
+<p>虽然TypeScript同时支持string和number类型，<strong>但数字索引的返回类型一定要是字符索引返回类型的子类型</strong>，因为当使用一个数字进行索引时，JavaScript实际上把它转成了一个字符串，这意味着使用数字100进行索引跟使用字符串100索引是一样的。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Animal &#123;</span><br><span class="line">    <span class="attr">name</span>:<span class="built_in">string</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> Dog <span class="keyword">extends</span> Animal &#123;</span><br><span class="line">    <span class="attr">breed</span>:<span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> NotOkay &#123;</span><br><span class="line">    [x:<span class="built_in">number</span>]:Animal;</span><br><span class="line">    [x:<span class="built_in">string</span>]:Dog;</span><br><span class="line">    <span class="comment">//error TS2413: &#x27;number&#x27; index type &#x27;Animal&#x27; is not assignable to &#x27;string&#x27; index type &#x27;Dog&#x27;.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="属性继承："><a href="#属性继承：" class="headerlink" title="属性继承："></a>属性继承：</h1><p>有时我们需要一个比其他类型更具体的类型。举个例子，假设我们有一个 <code>BasicAddress</code> 类型用来描述在美国邮寄信件和包裹的所需字段。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> BasicAddress &#123;</span><br><span class="line">  name?: <span class="built_in">string</span>;</span><br><span class="line">  street: <span class="built_in">string</span>;</span><br><span class="line">  city: <span class="built_in">string</span>;</span><br><span class="line">  country: <span class="built_in">string</span>;</span><br><span class="line">  postalCode: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">interface</span> AddressWithUnit <span class="keyword">extends</span> BasicAddress &#123;</span><br><span class="line">  <span class="attr">unit</span>: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接口也可以继承多个类型：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Colorful &#123;</span><br><span class="line">    <span class="attr">color</span>:<span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> Circle &#123;</span><br><span class="line">    <span class="attr">radius</span>:<span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> ColorfulCircle <span class="keyword">extends</span> Colorful,Circle&#123;&#125;</span><br><span class="line"><span class="keyword">const</span> cc:ColorfulCircle=&#123;</span><br><span class="line">    <span class="attr">color</span>:<span class="string">&quot;red&quot;</span>,</span><br><span class="line">    <span class="attr">radius</span>:<span class="number">42</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="交叉类型"><a href="#交叉类型" class="headerlink" title="交叉类型"></a>交叉类型</h1><p><strong>用于合并已经存在的对象类型</strong></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Colorful &#123;</span><br><span class="line">    <span class="attr">color</span>:<span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> Circle &#123;</span><br><span class="line">    <span class="attr">radius</span>:<span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> ColorfulCircle=Colorful&amp;Circle;</span><br></pre></td></tr></table></figure>
+
+<p>连结Coloeful和Circle产生了一个新的类型，新类型拥有Colorful和Circle的所有成员</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">draw</span>(<span class="params">circle:Colorful&amp;Circle</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`Color was <span class="subst">$&#123;circle.color&#125;</span>`</span>);</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`Radius was <span class="subst">$&#123;circle.radius&#125;</span>`</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// okay</span></span><br><span class="line">draw(&#123; <span class="attr">color</span>: <span class="string">&quot;blue&quot;</span>, <span class="attr">radius</span>: <span class="number">42</span> &#125;);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// oops</span></span><br><span class="line">draw(&#123; <span class="attr">color</span>: <span class="string">&quot;red&quot;</span>, <span class="attr">raidus</span>: <span class="number">42</span> &#125;);</span><br><span class="line"><span class="comment">// Argument of type &#x27;&#123; color: string; raidus: number; &#125;&#x27; is not assignable to parameter of type &#x27;Colorful &amp; Circle&#x27;.</span></span><br><span class="line"><span class="comment">// Object literal may only specify known properties, but &#x27;raidus&#x27; does not exist in type &#x27;Colorful &amp; Circle&#x27;. Did you mean to write &#x27;radius&#x27;?</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="接口继承和交叉类型"><a href="#接口继承和交叉类型" class="headerlink" title="接口继承和交叉类型"></a>接口继承和交叉类型</h1><p><strong>区别在于冲突怎么处理，</strong>这也是选择要使用哪种方式的主要原因</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Colorful &#123;</span><br><span class="line">    <span class="attr">color</span>:<span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> ColorfulSub <span class="keyword">extends</span> Colorful &#123;</span><br><span class="line">    <span class="attr">color</span>:<span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Interface &#x27;ColorfulSub&#x27; incorrectly extends interface &#x27;Colorful&#x27;.</span></span><br><span class="line"><span class="comment">// Types of property &#x27;color&#x27; are incompatible.</span></span><br><span class="line"><span class="comment">// Type &#x27;number&#x27; is not assignable to type &#x27;string&#x27;.</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>使用继承方式，如果重写类型会导致编译错误，但交叉类型不会</strong></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Colorful &#123;</span><br><span class="line">    <span class="attr">color</span>:<span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> ColorfulSub=Colorful&amp;&#123;</span><br><span class="line">    <span class="attr">color</span>:<span class="built_in">number</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不报错，<strong>color属性的类型是nerver,取得的是string和number的交集</strong></p>
+<h1 id="类型别名和接口："><a href="#类型别名和接口：" class="headerlink" title="类型别名和接口："></a>类型别名和接口：</h1><p><strong>类型别名不同于接口，可以描述的不止是对象类型，我们也可以用类型别名写一些其他种类的泛型帮助类型</strong></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> OrNull&lt;Type&gt; = Type | <span class="literal">null</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> OneOrMany&lt;Type&gt; = Type | Type[];</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> OneOrManyOrNull&lt;Type&gt; = OrNull&lt;OneOrMany&lt;Type&gt;&gt;;</span><br><span class="line">           </span><br><span class="line"><span class="keyword">type</span> OneOrManyOrNull&lt;Type&gt; = OneOrMany&lt;Type&gt; | <span class="literal">null</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> OneOrManyOrNullStrings = OneOrManyOrNull&lt;<span class="built_in">string</span>&gt;;</span><br><span class="line">               </span><br><span class="line"><span class="keyword">type</span> OneOrManyOrNullStrings = OneOrMany&lt;<span class="built_in">string</span>&gt; | <span class="literal">null</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="元组："><a href="#元组：" class="headerlink" title="元组："></a>元组：</h1><p>元组类型是另外一种 <code>Array</code> 类型，当你明确知道数组包含多少个元素，并且每个位置元素的类型都明确知道的时候，就适合使用元组类型</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> StringNumberPair = [<span class="built_in">string</span>, <span class="built_in">number</span>];</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>元组类型在重度依赖约定的 API 中很有用，因为它会让每个元素的意义都很明显。当我们解构的时候，元组给了我们命名变量的自由度。</p>
+</blockquote>
+<p><strong>元组类型中，可以写一个可选属性，但可选元素必须在最后面，而且会影响类型的length</strong></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Either2dOr3d=[<span class="built_in">number</span>,<span class="built_in">number</span>,<span class="built_in">number</span>?];</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">setCoordinate</span>(<span class="params">coord:Either2dOr3d</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> [x,y,z]=coord;</span><br><span class="line">    <span class="comment">//const z:number|undefined</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`Provided coordinates had <span class="subst">$&#123;coord.length&#125;</span> dismensions`</span>);</span><br><span class="line">    <span class="comment">//(property) length:2|3</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Tuples可以使用剩余元素语法，但必须是array/tuple类型：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> StringNumberBooleans=[<span class="built_in">string</span>,<span class="built_in">number</span>,...boolean[]];</span><br><span class="line"><span class="keyword">type</span> StringBooleansNumber = [<span class="built_in">string</span>, ...boolean[], <span class="built_in">number</span>];</span><br><span class="line"><span class="keyword">type</span> BooleansStringNumber = [...boolean[], <span class="built_in">string</span>, <span class="built_in">number</span>];</span><br></pre></td></tr></table></figure>
+
+<p>有剩余元素的元组不会设置length,因为它只知道在不同位置上的已知元素信息：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a: StringNumberBooleans = [<span class="string">&quot;hello&quot;</span>, <span class="number">1</span>];</span><br><span class="line"><span class="keyword">const</span> b: StringNumberBooleans = [<span class="string">&quot;beautiful&quot;</span>, <span class="number">2</span>, <span class="literal">true</span>];</span><br><span class="line"><span class="keyword">const</span> c: StringNumberBooleans = [<span class="string">&quot;world&quot;</span>, <span class="number">3</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(a.length); <span class="comment">// (property) length: number</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> StringNumberPair = [<span class="built_in">string</span>, <span class="built_in">number</span>];</span><br><span class="line"><span class="keyword">const</span> d: StringNumberPair = [<span class="string">&#x27;1&#x27;</span>, <span class="number">1</span>];</span><br><span class="line"><span class="built_in">console</span>.log(d.length); <span class="comment">// (property) length: 2</span></span><br></pre></td></tr></table></figure>
+
+<p>参数列表使用元组：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">readButtonInput</span>(<span class="params">...args:[<span class="built_in">string</span>,<span class="built_in">number</span>,...<span class="built_in">boolean</span>[]]</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> [name,version,...input]=args;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>等同于：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">readButtonInput</span>(<span class="params">name:<span class="built_in">string</span>,version:<span class="built_in">number</span>,...input:<span class="built_in">boolean</span>[]</span>)</span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>readonly元组</p>
+<p><strong>大部分代码中，元组只是被创建，使用后不会被修改，所以尽可能将元组设置为readonly是一个好习惯。</strong></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> point=[<span class="number">3</span>,<span class="number">4</span>] <span class="keyword">as</span> <span class="keyword">const</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">distanceFromOrigin</span>(<span class="params">[x,y]:[<span class="built_in">number</span>,<span class="built_in">number</span>]</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Math</span>.sqrt(x**<span class="number">2</span>+y**<span class="number">2</span>);</span><br><span class="line">&#125;</span><br><span class="line">distanceFromOrigin(point);</span><br><span class="line"><span class="comment">// Argument of type &#x27;readonly [3, 4]&#x27; is not assignable to parameter of type &#x27;[number, number]&#x27;.</span></span><br><span class="line"><span class="comment">// The type &#x27;readonly [3, 4]&#x27; is &#x27;readonly&#x27; and cannot be assigned to the mutable type &#x27;[number, number]&#x27;.</span></span><br></pre></td></tr></table></figure>
+
+<p>尽管distanceFromOrigin并没有更改传入的元素，但函数希望传入一个可变元组，但是point的类型被推断为readonly[3,4],它跟[number,number]并不兼容，所以TypeScript给了一个报错</p>
+<h1 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h1><p><a target="_blank" rel="noopener" href="https://ts.yayujs.com/handbook/TypeofTypeOperator.html">https://ts.yayujs.com/handbook/TypeofTypeOperator.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.typescriptlang.org/docs/handbook/2/typeof-types.html">https://www.typescriptlang.org/docs/handbook/2/typeof-types.html</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/03/%E5%87%BD%E6%95%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1120,82 +1257,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/24/%E6%89%8B%E5%86%99Object-is/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/24/%E6%89%8B%E5%86%99Object-is/" class="post-title-link" itemprop="url">手写Object.is</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-05-24 16:23:28" itemprop="dateCreated datePublished" datetime="2022-05-24T16:23:28+08:00">2022-05-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-29 15:46:09" itemprop="dateModified" datetime="2022-05-29T15:46:09+08:00">2022-05-29</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">is=<span class="function"><span class="keyword">function</span>(<span class="params">x,y</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(x===y)&#123;<span class="comment">//如果x===y并且+0和-0=&gt;+0!==0false -0!==0false 1/+0===1/-0false返回false</span></span><br><span class="line">        <span class="keyword">return</span> x!==<span class="number">0</span>||y!==<span class="number">0</span>||<span class="number">1</span>/x===<span class="number">1</span>/y</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//解决NaN===NaN为false,NaN!==NaNtrue NaN!==NaN true 返回true</span></span><br><span class="line">        <span class="keyword">return</span> x!==x&amp;&amp;y!==y;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(is(<span class="number">0</span>,<span class="number">0</span>))<span class="comment">//true</span></span><br><span class="line"><span class="built_in">console</span>.log(is(+<span class="number">0</span>,-<span class="number">0</span>))<span class="comment">//false</span></span><br><span class="line"><span class="built_in">console</span>.log(is(<span class="literal">NaN</span>,<span class="literal">NaN</span>))<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1267,7 +1328,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">233</span>
+          <span class="site-state-item-count">234</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1341,7 +1402,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共211.7k字</span>
+  <span class="post-count">博客全站共212.8k字</span>
 </div>
         
 
