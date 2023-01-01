@@ -187,6 +187,172 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/23/%E7%BA%AF%E5%87%BD%E6%95%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/07/23/%E7%BA%AF%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">纯函数</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-07-23 16:15:51" itemprop="dateCreated datePublished" datetime="2022-07-23T16:15:51+08:00">2022-07-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-11-08 21:49:21" itemprop="dateModified" datetime="2022-11-08T21:49:21+08:00">2022-11-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="什么是函数式编程？"><a href="#什么是函数式编程？" class="headerlink" title="什么是函数式编程？"></a>什么是函数式编程？</h2><p>简单来说，函数式编程是<strong>一种强调以函数使用为主的软件开发风格。</strong></p>
+<p>还有一点你要记住，函数式编程的目的是使用函数来<strong>抽象作用在数据之上的控制流和操作</strong>，从而在系统中<strong>消除副作用</strong>并<strong>减少对状态的改变。</strong></p>
+<h2 id="声明式编程"><a href="#声明式编程" class="headerlink" title="声明式编程"></a>声明式编程</h2><p><strong>函数式编程属于声明式编程范式</strong>：这种范式会<strong>描述一系列的操作</strong>，但并不会<strong>暴露它们是如何实现的</strong>或是<strong>数据流如何传过它们</strong>。</p>
+<p>我们所熟知的 SQL 语句就是一种很典型的声明式编程，它由一个个<strong>描述</strong>查询结果应该是什么样的断言组成，对数据检索的内部机制进行了<strong>抽象</strong>。</p>
+<p>我们再来看一组代码再来对比一下命令式编程和声明式编程。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 命令式方式</span></span><br><span class="line"><span class="keyword">var</span> array = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; array.length; i++) &#123;</span><br><span class="line">    array[i] = <span class="built_in">Math</span>.pow(array[i], <span class="number">2</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">array; <span class="comment">// [0, 1, 4, 9]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 声明式方式</span></span><br><span class="line">[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].map(<span class="function"><span class="params">num</span> =&gt;</span> <span class="built_in">Math</span>.pow(num, <span class="number">2</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>可以看到命令式很具体的告诉计算机如何执行某个任务。</p>
+<p>而声明式是将程序的<strong>描述与求值</strong>分离开来。它关注如何用各种<strong>表达式</strong>来描述程序逻辑，而不一定要指明其控制流或状态关系的变化。</p>
+<h2 id="纯函数"><a href="#纯函数" class="headerlink" title="纯函数"></a>纯函数</h2><p><strong>纯函数是指没有副作用的函数，相同的输入有相同的输出。</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> counter=<span class="number">0</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">increment</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> ++counter;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个函数是不纯的，它读取了外部变量。这种依赖外部变量进行的计算，结果很难预测，可能在某些地方修改了counter的值，导致increment出来的值不是预期的</p>
+<p><strong>对于纯函数有性质：</strong></p>
+<ul>
+<li>仅取决于提供的输入，而不依赖于任何在函数求值或调用间隔时可能变化的隐藏状态和外部状态</li>
+<li>不会造成超出作用域的变化，例如修改全局变量或引用传递的参数</li>
+</ul>
+<p>对于相同的输入，纯函数的输出结果总是一致的，可预测的，这个也称为引用透明</p>
+<h3 id="引用透明"><a href="#引用透明" class="headerlink" title="引用透明"></a>引用透明</h3><p>引用透明是定义一个纯函数较为正确的方法，纯度在这个意义上表示一个函数的参数和返回值之间的纯度关系，<strong>如果一个函数对于相同的输入始终产生相同的结果，我们就说它是引用透明</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 非引用透明</span></span><br><span class="line"><span class="keyword">var</span> counter = <span class="number">0</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">increment</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> ++counter</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 引用透明</span></span><br><span class="line"><span class="keyword">var</span> increment = <span class="function">(<span class="params">counter</span>) =&gt;</span> counter + <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="不可变数据"><a href="#不可变数据" class="headerlink" title="不可变数据"></a>不可变数据</h3><p>不可变数据指的是创建后不能更改的数据，与其他语言一样，js里有一些基本类型(String,NUmber等)从本质上是不可变的，但是对象就是在任意的地方可变</p>
+<p>例如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> sortDesc = <span class="function"><span class="keyword">function</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arr.sort(<span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> a - b</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, <span class="number">3</span>, <span class="number">2</span>]</span><br><span class="line">sortDesc(arr) <span class="comment">// [1, 2, 3]</span></span><br><span class="line">arr <span class="comment">// [1, 2, 3]</span></span><br></pre></td></tr></table></figure>
+
+<p>这段代码会导致在排序中产生副作用，原始数组arr被修改了</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>使用纯函数的代码绝不会更改或破坏全局状态，有助于提高代码的可测试性和可维护性</li>
+<li>函数式编程采用声明式的风格，易于推理，提高代码的可读性。</li>
+<li>函数式编程将函数视为积木，通过一等高阶函数来提高代码的模块化和可重用性。</li>
+</ul>
+<p>内容来至于《JavaScript函数式编程指南》</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/17/IOC%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/07/17/IOC%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">IOC原理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-07-17 17:04:33 / 修改时间：17:04:34" itemprop="dateCreated datePublished" datetime="2022-07-17T17:04:33+08:00">2022-07-17</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/10/mini-vue/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -990,213 +1156,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/05/typeof/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/05/typeof/" class="post-title-link" itemprop="url">typeof</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-07-05 15:16:56 / 修改时间：16:36:03" itemprop="dateCreated datePublished" datetime="2022-07-05T15:16:56+08:00">2022-07-05</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="typeof"><a href="#typeof" class="headerlink" title="typeof"></a>typeof</h1><p>typeof 在类型上下文中使用，用于获取一个变量或者属性的类型,<strong>只能对标识符和属性使用</strong></p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> s=<span class="string">&quot;hello&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> n:<span class="keyword">typeof</span> s;<span class="comment">//let n:string</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> shouldContinue:<span class="keyword">typeof</span> msgbox(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line"><span class="comment">//&#x27;,&#x27; expected.</span></span><br></pre></td></tr></table></figure>
-
-<p>要获取msgbox(“hello”)返回值的类型，正确写：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ReturnType&lt;<span class="keyword">typeof</span> msgbox&gt;</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="ReturnType"><a href="#ReturnType" class="headerlink" title="ReturnType"></a>ReturnType<T></T></h1><p>你传入一个<strong>函数类型</strong>，ReturnType<T>会返回<strong>该函数的返回值的类型</strong></T></p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Predicate=<span class="function">(<span class="params">x:unknown</span>)=&gt;</span><span class="built_in">boolean</span>;</span><br><span class="line"><span class="keyword">type</span> K=ReturnType&lt;Predicate&gt;;<span class="comment">//type K=boolean</span></span><br></pre></td></tr></table></figure>
-
-<p>值（values)和类型(types)并不是一种东西，为了获取值f也就是函数f的类型，需要使用typeof,而ReturnType<T>,T必须是一个类型</T></p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="attr">x</span>:<span class="number">10</span>,<span class="attr">y</span>:<span class="number">3</span>&#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> P=ReturnType&lt;f&gt;;<span class="comment">// &#x27;f&#x27; refers to a value, but is being used as a type here. Did you mean &#x27;typeof f&#x27;?</span></span><br><span class="line"><span class="keyword">type</span> P=ReturnType&lt;<span class="keyword">typeof</span> f&gt;</span><br><span class="line"> <span class="comment">// type P = &#123;</span></span><br><span class="line"><span class="comment">//    x: number;</span></span><br><span class="line"><span class="comment">//    y: number;</span></span><br><span class="line"><span class="comment">// &#125;                 </span></span><br></pre></td></tr></table></figure>
-
-<p>对enum类型使用typeof </p>
-<p>在TypeScript中，在具体运行时，enum类型会被编译成对象</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">enum</span> UserResponse &#123;</span><br><span class="line">    No=<span class="number">0</span>,</span><br><span class="line">    Yes=<span class="number">1</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>对应编译的JavaScript</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> UserResponse;</span><br><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params">UserResponse</span>) </span>&#123;</span><br><span class="line">    UserResponse[UserResponse[<span class="string">&quot;No&quot;</span>] = <span class="number">0</span>] = <span class="string">&quot;No&quot;</span>;</span><br><span class="line">    UserResponse[UserResponse[<span class="string">&quot;Yes&quot;</span>] = <span class="number">1</span>] = <span class="string">&quot;Yes&quot;</span>;</span><br><span class="line">&#125;)(UserResponse || (UserResponse = &#123;&#125;));</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(UserResponse);</span><br><span class="line"></span><br><span class="line"><span class="comment">// [LOG]: &#123;</span></span><br><span class="line"><span class="comment">//   &quot;0&quot;: &quot;No&quot;,</span></span><br><span class="line"><span class="comment">//   &quot;1&quot;: &quot;Yes&quot;,</span></span><br><span class="line"><span class="comment">//   &quot;No&quot;: 0,</span></span><br><span class="line"><span class="comment">//   &quot;Yes&quot;: 1</span></span><br><span class="line"><span class="comment">// &#125; </span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">type result = <span class="keyword">typeof</span> UserResponse;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ok</span></span><br><span class="line"><span class="keyword">const</span> a: result = &#123;</span><br><span class="line">      <span class="string">&quot;No&quot;</span>: <span class="number">2</span>,</span><br><span class="line">      <span class="string">&quot;Yes&quot;</span>: <span class="number">3</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">result 类型类似于：</span><br><span class="line"></span><br><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">//	&quot;No&quot;: number,</span></span><br><span class="line"><span class="comment">//  &quot;YES&quot;: number</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>一般搭配keyof用于获取属性名的联合字符串</strong></p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> result=keyof <span class="keyword">typeof</span> UserResponse;</span><br></pre></td></tr></table></figure>
-
-<p>参考：</p>
-<p><a target="_blank" rel="noopener" href="https://ts.yayujs.com/handbook/TypeofTypeOperator.html#%E5%AF%B9-enum-%E4%BD%BF%E7%94%A8-typeof">https://ts.yayujs.com/handbook/TypeofTypeOperator.html#%E5%AF%B9-enum-%E4%BD%BF%E7%94%A8-typeof</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.typescriptlang.org/docs/handbook/2/typeof-types.html">https://www.typescriptlang.org/docs/handbook/2/typeof-types.html</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/05/%E6%B3%9B%E5%9E%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/05/%E6%B3%9B%E5%9E%8B/" class="post-title-link" itemprop="url">泛型</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-07-05 11:09:05 / 修改时间：15:16:09" itemprop="dateCreated datePublished" datetime="2022-07-05T11:09:05+08:00">2022-07-05</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>用来创建可复用组件的工具，我们称之为泛型（generics）。利用泛型，我们可以创建一个支持众多类型的组件，这让用户可以使用自己的类型消费（consume）这些组件</p>
-<h1 id="泛型类型变量"><a href="#泛型类型变量" class="headerlink" title="泛型类型变量"></a>泛型类型变量</h1><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">identity</span>&lt;<span class="title">Type</span>&gt;(<span class="params">arg:Type</span>):<span class="title">Type</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> output=identity&lt;<span class="built_in">string</span>&gt;(<span class="string">&quot;myString&quot;</span>);<span class="comment">//let output:string</span></span><br></pre></td></tr></table></figure>
-
-<p>Type允许我们捕获用户提供的类型，使得我们接下来可以使用这个类型。调用函数里的&lt;&gt;明确设置Type为string作为函数调用的一个参数</p>
-<p>或者直接使用类型参数推断</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> output=identity(<span class="string">&quot;myString&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<p>假如我们要使用arg的.length属性，如果传进的参数不拥有length属性，则会报错，有两种写法：</p>
-<p>使用Type类型的数组而不是Type</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loggingIdentity</span>&lt;<span class="title">Type</span>&gt;(<span class="params">arg:Type[]</span>):<span class="title">Type</span>[]</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(arg.length);</span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>泛型函数loggingIdentity接受一个Type类型参数和一个实参arg,实参arg是一个Type类型数组，该函数返回一个Type类型数组，<strong>使用类型变量Type,作为我们使用类型的一部分，而不是之前的一整个类型</strong></p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loggingIdentity</span>&lt;<span class="title">Type</span>&gt;(<span class="params">arg:<span class="built_in">Array</span>&lt;Type&gt;</span>):<span class="title">Array</span>&lt;<span class="title">Type</span>&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(arg.length);</span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="泛型接口"><a href="#泛型接口" class="headerlink" title="泛型接口"></a>泛型接口</h1><p>泛型函数作为接口的函数</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> GenericIdentityfn&#123;</span><br><span class="line">    &lt;Type&gt;(arg:Type):Type;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">identity</span>&lt;<span class="title">Type</span>&gt;(<span class="params">arg:Type</span>):<span class="title">Type</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> myidentity:GenericIdentityfn=identity;</span><br></pre></td></tr></table></figure>
-
-<p>有时，我们会将泛型参数作为整个接口的参数，可以让我们<strong>清楚知道传入的是什么参数（</strong>GenericIdentityfn<number>而不是GenericIdentityfn），<strong>而且接口里的其他成员也可以看到</strong></number></p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> GenericIdentityfn&#123;</span><br><span class="line">    (arg:Type):Type;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">identity</span>&lt;<span class="title">Type</span>&gt;(<span class="params">arg:Type</span>):<span class="title">Type</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> myidentity:GenericIdentityfn&lt;<span class="built_in">number</span>&gt;=identity;</span><br></pre></td></tr></table></figure>
-
-<p>泛型类</p>
-<p>类似于泛型接口,下面这个例子，不仅可以使用number类型，也可以使用其他类型，和接口一样，可以把类型参数放在类上，确保类中所有属性使用相同类型</p>
-<p>一个类有两部分：静态部分和实例部分，<strong>泛型类仅仅对实例部分生效，静态成员不能使用类型参数</strong></p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GenericNumber</span>&lt;<span class="title">NumType</span>&gt;</span>&#123;</span><br><span class="line">    <span class="attr">zeroValue</span>:NumType;</span><br><span class="line">    add:<span class="function">(<span class="params">x:NumType,y:NumType</span>)=&gt;</span>NumType;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> myGenericNumber=<span class="keyword">new</span> GenericNumber&lt;<span class="built_in">number</span>&gt;();</span><br><span class="line">myGenericNumber.zeroValue=<span class="number">0</span>;</span><br><span class="line">myGenericNumber.add = <span class="function"><span class="keyword">function</span> (<span class="params">x, y</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> x + y;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<h1 id="泛型约束"><a href="#泛型约束" class="headerlink" title="泛型约束"></a>泛型约束</h1><p>在接口中列出约束条件，然后使用接口和extends关键词实现约束</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Lengthwise &#123;</span><br><span class="line">    <span class="attr">length</span>:<span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loggingIdentity</span>&lt;<span class="title">Type</span> <span class="title">extends</span> <span class="title">Lengthwise</span>&gt;(<span class="params">arg:Type</span>):<span class="title">Type</span></span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(arg.length);</span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="使用类型参数约束另一个类型参数"><a href="#使用类型参数约束另一个类型参数" class="headerlink" title="使用类型参数约束另一个类型参数"></a>使用类型参数约束另一个类型参数</h1><p>要获取一个对象给定属性名的值，我们需要确保我们捕获获取obj上不存在的属性，所以在两个类型之间建立一个约束：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getProperty</span>&lt;<span class="title">Type</span>,<span class="title">Key</span> <span class="title">extends</span> <span class="title">keyof</span> <span class="title">Type</span>&gt;(<span class="params">obj:Type,key:Key</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> obj[key];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> x=&#123;<span class="attr">a</span>:<span class="number">1</span>,<span class="attr">b</span>:<span class="number">2</span>,<span class="attr">c</span>:<span class="number">3</span>,<span class="attr">d</span>:<span class="number">4</span>&#125;;</span><br><span class="line">getProperty(x,<span class="string">&#x27;a&#x27;</span>);</span><br><span class="line">getProperty(x,<span class="string">&#x27;m&#x27;</span>);</span><br><span class="line"><span class="comment">// Argument of type &#x27;&quot;m&quot;&#x27; is not assignable to parameter of type &#x27;&quot;a&quot; | &quot;b&quot; | &quot;c&quot; | &quot;d&quot;&#x27;.</span></span><br></pre></td></tr></table></figure>
-
-<p>在泛型中使用类</p>
-<p>在TypeScript,当使用工厂模式创建实例时，有必要通过他们的构造函数推断出类的类型</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">create</span>&lt;<span class="title">Type</span>&gt;(<span class="params">c:&#123;<span class="keyword">new</span>():Type&#125;</span>):<span class="title">Type</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> c();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>参考：</p>
-<p><a target="_blank" rel="noopener" href="https://www.typescriptlang.org/docs/handbook/2/generics.html">https://www.typescriptlang.org/docs/handbook/2/generics.html</a></p>
-<p><a target="_blank" rel="noopener" href="https://ts.yayujs.com/handbook/Generics.html#%E6%B3%9B%E5%9E%8B-generics">https://ts.yayujs.com/handbook/Generics.html#%E6%B3%9B%E5%9E%8B-generics</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1268,7 +1227,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">234</span>
+          <span class="site-state-item-count">236</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1319,7 +1278,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -1342,7 +1301,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共213k字</span>
+  <span class="post-count">博客全站共217.9k字</span>
 </div>
         
 

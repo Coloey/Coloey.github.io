@@ -187,6 +187,102 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/11/08/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96-CI-CD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/11/08/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96-CI-CD/" class="post-title-link" itemprop="url">前端工程化-CI/CD</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-11-08 17:16:40 / 修改时间：20:53:40" itemprop="dateCreated datePublished" datetime="2022-11-08T17:16:40+08:00">2022-11-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="概念："><a href="#概念：" class="headerlink" title="概念："></a>概念：</h1><p>1.CI（Continuous integration,<strong>持续集成</strong>)</p>
+<p>频繁地（一天多次）将代码集成到主干</p>
+<p>2.CD(Continous delivery**,持续交付)**</p>
+<p>持续集成的下一步，指的是，频繁将软件的新版本，交付给质量团队或者用户，以供评审，如评审通过，代码进入生产阶段，手动部署</p>
+<p>3.CD(Continous deployment,<strong>持续部署</strong>)</p>
+<p>持续交付的下一步，指的是，代码通过评审后，自动部署到生产环境</p>
+<h1 id="意义："><a href="#意义：" class="headerlink" title="意义："></a>意义：</h1><h2 id="CI（持续集成）"><a href="#CI（持续集成）" class="headerlink" title="CI（持续集成）"></a>CI（持续集成）</h2><p>（1）<strong>快速发现错误</strong>，每完成一点更新，就集成到主干，可以快速发现错误，定位错误也比较容易</p>
+<p>（2）<strong>防止分支大幅偏离主干</strong>，如果不是经常集成，主干又在不断更新，会导致以后集成的难度变大，甚至难以集成</p>
+<p><strong>持续集成的目的，就是让产品可以快速迭代，同时还能保持高质量</strong>，它的核心措施是，代码集成到主干之前，必须通过自动化测试，只要有一个测试用例失败，就不能集成</p>
+<h2 id="CD（持续交付）"><a href="#CD（持续交付）" class="headerlink" title="CD（持续交付）"></a>CD（持续交付）</h2><p>保证不管怎么更新，软件是随时可以交付的</p>
+<h2 id="CD（持续部署）"><a href="#CD（持续部署）" class="headerlink" title="CD（持续部署）"></a>CD（持续部署）</h2><p>保证代码在任何时刻都是可部署，可以进入生产阶段</p>
+<h1 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h1><h2 id="提交"><a href="#提交" class="headerlink" title="提交"></a>提交</h2><p>开发者提交代码</p>
+<h2 id="测试（第一轮）"><a href="#测试（第一轮）" class="headerlink" title="测试（第一轮）"></a>测试（第一轮）</h2><p>代码仓库commit操作配置钩子，只要提交代码合并进主干，就会跑自动化测试</p>
+<p>三种测试：</p>
+<p>单元测试：针对函数或模块的测试</p>
+<p>集成测试：针对整体产品的某个功能的测试，又称功能测试</p>
+<p>端对端测试：从用户界面直达数据库的全链路测试</p>
+<h2 id="构建："><a href="#构建：" class="headerlink" title="构建："></a>构建：</h2><p>测试通过，代码即可进入主干，就算可以交付</p>
+<p>交付后，就先进行构建，再进入第二轮测试</p>
+<p>所谓构建，指的就是将源码转换为可以运行的实际代码，比如安装依赖，配置各种资源（样式，JS脚本，图片）等</p>
+<p>常用的构建工具：</p>
+<p>·<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=http://jenkins-ci.org/">Jenkins</a></p>
+<p>·<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=https://travis-ci.com/">Travis</a></p>
+<p>·<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=https://www.codeship.io/">Codeship</a></p>
+<p>·<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=http://stridercd.com/">Strider</a></p>
+<h2 id="测试（第二轮）"><a href="#测试（第二轮）" class="headerlink" title="测试（第二轮）"></a>测试（第二轮）</h2><p>全面测试，单元测试和集成测试都会跑，有条件也要做端对端测试，所有测试以自动化为主，少数无法自动化的测试用例，人工跑</p>
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>通过第二轮测试，当前代码就是一个可以直接部署的版本，将这个版本的所有文件打包存档，发到生产服务器，生产服务器将打包文件解包成本地的一个目录，再将允许路径的符号链接指向这个目录，然后重新启动应用</p>
+<h2 id="回滚"><a href="#回滚" class="headerlink" title="回滚"></a>回滚</h2><p>一旦当前版本发送问题，就要回滚到上一个版本的构建结果，最简单的做法就是修改符号链接，指向上一个版本目录</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/11/08/YY%E7%9B%B4%E6%92%AD%E6%97%A5%E5%B8%B8%E5%AE%9E%E4%B9%A0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1028,85 +1124,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/28/nextTick%E5%8E%9F%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/28/nextTick%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">nextTick原理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-10-28 12:21:20" itemprop="dateCreated datePublished" datetime="2022-10-28T12:21:20+08:00">2022-10-28</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-11-01 09:20:55" itemprop="dateModified" datetime="2022-11-01T09:20:55+08:00">2022-11-01</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="为什么有nextTick？"><a href="#为什么有nextTick？" class="headerlink" title="为什么有nextTick？"></a>为什么有nextTick？</h1><p>因为vue采用的异步更新策略，当检测到数据发生变化时不会立即更新DOM，而是开启一个任务队列，并缓存在同一个事件循环中发送的所有变更，<strong>当直接操作DOM改变数据时，DOM不会立刻更新，会等到异步队列清空，也就是下一个事件循环开始时执行更新时才会进行必要的DOM更新</strong>，这种做法带来的好处就是可以将多次数据更新合并成一次，减少操作DOM的次数，如果不采用这种方法，假设数据改变100次就要去更新100次DOM，而频繁的DOM更新是很耗性能的；</p>
-<h1 id="nextTick作用"><a href="#nextTick作用" class="headerlink" title="nextTick作用"></a>nextTick作用</h1><p>nextTick <strong>接收一个回调函数作为参数，并将这个回调函数延迟到DOM更新后才执行</strong>；<br><strong>使用场景</strong>：想要操作 <em>基于最新数据生成的DOM</em> 时，就将这个操作放在 nextTick 的回调中</p>
-<h1 id="nextTick实现原理"><a href="#nextTick实现原理" class="headerlink" title="nextTick实现原理"></a>nextTick实现原理</h1><p>将传入的回调函数包装成异步任务，异步任务又分为微任务和宏任务，为了尽快执行选择微任务，nextTick 提供了四种异步方法 Promise.then、MutationObserver、setImmediate、setTimeout(fn,0)</p>
-<h2 id="源码解读："><a href="#源码解读：" class="headerlink" title="源码解读："></a>源码解读：</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; noop &#125; <span class="keyword">from</span> <span class="string">&#x27;shared/util&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; handleError &#125; <span class="keyword">from</span> <span class="string">&#x27;./error&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; isIE, isIOS, isNative &#125; <span class="keyword">from</span> <span class="string">&#x27;./env&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//  上面三行与核心代码关系不大，了解即可</span></span><br><span class="line"><span class="comment">//  noop 表示一个无操作空函数，用作函数默认值，防止传入 undefined 导致报错</span></span><br><span class="line"><span class="comment">//  handleError 错误处理函数</span></span><br><span class="line"><span class="comment">//  isIE, isIOS, isNative 环境判断函数，</span></span><br><span class="line"><span class="comment">//  isNative 判断某个属性或方法是否原生支持，如果不支持或通过第三方实现支持都会返回 false</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">let</span> isUsingMicroTask = <span class="literal">false</span>     <span class="comment">// 标记 nextTick 最终是否以微任务执行</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> callbacks = []     <span class="comment">// 存放调用 nextTick 时传入的回调函数</span></span><br><span class="line"><span class="keyword">let</span> pending = <span class="literal">false</span>     <span class="comment">// 标记是否已经向任务队列中添加了一个任务，如果已经添加了就不能再添加了</span></span><br><span class="line">    <span class="comment">// 当向任务队列中添加了任务时，将 pending 置为 true，当任务被执行时将 pending 置为 false</span></span><br><span class="line">    <span class="comment">// </span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 声明 nextTick 函数，接收一个回调函数和一个执行上下文作为参数</span></span><br><span class="line"><span class="comment">// 回调的 this 自动绑定到调用它的实例上</span></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">nextTick</span>(<span class="params">cb?: <span class="built_in">Function</span>, ctx?: <span class="built_in">Object</span></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> _resolve</span><br><span class="line">    <span class="comment">// 将传入的回调函数存放到数组中，后面会遍历执行其中的回调</span></span><br><span class="line">    callbacks.push(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (cb) &#123;   <span class="comment">// 对传入的回调进行 try catch 错误捕获</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                cb.call(ctx)</span><br><span class="line">            &#125; <span class="keyword">catch</span> (e) &#123;    <span class="comment">// 进行统一的错误处理</span></span><br><span class="line">                handleError(e, ctx, <span class="string">&#x27;nextTick&#x27;</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (_resolve) &#123;</span><br><span class="line">            _resolve(ctx)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 如果当前没有在 pending 的回调，</span></span><br><span class="line">    <span class="comment">// 就执行 timeFunc 函数选择当前环境优先支持的异步方法</span></span><br><span class="line">    <span class="keyword">if</span> (!pending) &#123;</span><br><span class="line">        pending = <span class="literal">true</span></span><br><span class="line">        timerFunc()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 如果没有传入回调，并且当前环境支持 promise，就返回一个 promise</span></span><br><span class="line">    <span class="comment">// 在返回的这个 promise.then 中 DOM 已经更新好了，</span></span><br><span class="line">    <span class="keyword">if</span> (!cb &amp;&amp; <span class="keyword">typeof</span> <span class="built_in">Promise</span> !== <span class="string">&#x27;undefined&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">            _resolve = resolve</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 判断当前环境优先支持的异步方法，优先选择微任务</span></span><br><span class="line"><span class="comment">// 优先级：Promise---&gt; MutationObserver---&gt; setImmediate---&gt; setTimeout</span></span><br><span class="line"><span class="comment">// setTimeout 可能产生一个 4ms 的延迟，而 setImmediate 会在主线程执行完后立刻执行</span></span><br><span class="line"><span class="comment">// setImmediate 在 IE10 和 node 中支持</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 当在同一轮事件循环中多次调用 nextTick 时 ,timerFunc 只会执行一次</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> timerFunc   </span><br><span class="line"><span class="comment">// 判断当前环境是否原生支持 promise</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">Promise</span> !== <span class="string">&#x27;undefined&#x27;</span> &amp;&amp; isNative(<span class="built_in">Promise</span>)) &#123;  <span class="comment">// 支持 promise</span></span><br><span class="line">    <span class="keyword">const</span> p = <span class="built_in">Promise</span>.resolve()</span><br><span class="line">    timerFunc = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 用 promise.then 把 flushCallbacks 函数包裹成一个异步微任务</span></span><br><span class="line">        p.then(flushCallbacks)</span><br><span class="line">        <span class="keyword">if</span> (isIOS) <span class="built_in">setTimeout</span>(noop)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 标记当前 nextTick 使用的微任务</span></span><br><span class="line">    isUsingMicroTask = <span class="literal">true</span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 如果不支持 promise，就判断是否支持 MutationObserver</span></span><br><span class="line">    <span class="comment">// 不是IE环境，并且原生支持 MutationObserver，那也是一个微任务</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!isIE &amp;&amp; <span class="keyword">typeof</span> MutationObserver !== <span class="string">&#x27;undefined&#x27;</span> &amp;&amp; (</span><br><span class="line">    isNative(MutationObserver) ||</span><br><span class="line">    MutationObserver.toString() === <span class="string">&#x27;[object MutationObserverConstructor]&#x27;</span></span><br><span class="line">)) &#123;</span><br><span class="line">    <span class="keyword">let</span> counter = <span class="number">1</span></span><br><span class="line">    <span class="comment">// new 一个 MutationObserver 类</span></span><br><span class="line">    <span class="keyword">const</span> observer = <span class="keyword">new</span> MutationObserver(flushCallbacks) </span><br><span class="line">    <span class="comment">// 创建一个文本节点</span></span><br><span class="line">    <span class="keyword">const</span> textNode = <span class="built_in">document</span>.createTextNode(<span class="built_in">String</span>(counter))   </span><br><span class="line">    <span class="comment">// 监听这个文本节点，当数据发生变化就执行 flushCallbacks </span></span><br><span class="line">    observer.observe(textNode, &#123; <span class="attr">characterData</span>: <span class="literal">true</span> &#125;)</span><br><span class="line">    timerFunc = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        counter = (counter + <span class="number">1</span>) % <span class="number">2</span></span><br><span class="line">        textNode.data = <span class="built_in">String</span>(counter)  <span class="comment">// 数据更新</span></span><br><span class="line">    &#125;</span><br><span class="line">    isUsingMicroTask = <span class="literal">true</span>    <span class="comment">// 标记当前 nextTick 使用的微任务</span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 判断当前环境是否原生支持 setImmediate</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> setImmediate !== <span class="string">&#x27;undefined&#x27;</span> &amp;&amp; isNative(setImmediate)) &#123;</span><br><span class="line">    timerFunc = <span class="function">() =&gt;</span> &#123; setImmediate(flushCallbacks)  &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 以上三种都不支持就选择 setTimeout</span></span><br><span class="line">    timerFunc = <span class="function">() =&gt;</span> &#123; <span class="built_in">setTimeout</span>(flushCallbacks, <span class="number">0</span>) &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果多次调用 nextTick，会依次执行上面的方法，将 nextTick 的回调放在 callbacks 数组中</span></span><br><span class="line"><span class="comment">// 最后通过 flushCallbacks 函数遍历 callbacks 数组的拷贝并执行其中的回调</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">flushCallbacks</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    pending = <span class="literal">false</span>    </span><br><span class="line">    <span class="keyword">const</span> copies = callbacks.slice(<span class="number">0</span>)    <span class="comment">// 拷贝一份 callbacks</span></span><br><span class="line">    callbacks.length = <span class="number">0</span>    <span class="comment">// 清空 callbacks</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; copies.length; i++) &#123;    <span class="comment">// 遍历执行传入的回调</span></span><br><span class="line">        copies[i]()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 为什么要拷贝一份 callbacks</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 用 callbacks.slice(0) 将 callbacks 拷贝出来一份，</span></span><br><span class="line"><span class="comment">// 是因为考虑到在 nextTick 回调中可能还会调用 nextTick 的情况,</span></span><br><span class="line"><span class="comment">// 如果在 nextTick 回调中又调用了一次 nextTick，则又会向 callbacks 中添加回调，</span></span><br><span class="line"><span class="comment">// 而 nextTick 回调中的 nextTick 应该放在下一轮执行，</span></span><br><span class="line"><span class="comment">// 否则就可能出现一直循环的情况，</span></span><br><span class="line"><span class="comment">// 所以需要将 callbacks 复制一份出来然后清空，再遍历备份列表执行回调</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1178,7 +1195,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">234</span>
+          <span class="site-state-item-count">236</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1229,7 +1246,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -1252,7 +1269,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共213k字</span>
+  <span class="post-count">博客全站共217.9k字</span>
 </div>
         
 

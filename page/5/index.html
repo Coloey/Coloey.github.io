@@ -187,6 +187,263 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/09/07/Vue%E6%8C%82%E8%BD%BD%E5%AD%90%E8%8A%82%E7%82%B9%E5%92%8C%E5%85%83%E7%B4%A0%E5%B1%9E%E6%80%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/09/07/Vue%E6%8C%82%E8%BD%BD%E5%AD%90%E8%8A%82%E7%82%B9%E5%92%8C%E5%85%83%E7%B4%A0%E5%B1%9E%E6%80%A7/" class="post-title-link" itemprop="url">Vue挂载子节点和元素属性</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-09-07 16:54:46 / 修改时间：17:44:43" itemprop="dateCreated datePublished" datetime="2022-09-07T16:54:46+08:00">2022-09-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>渲染器的核心功能就是挂载与更新</p>
+<p>首先，有一个虚拟dom的代码如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> vnode = &#123;</span><br><span class="line">    <span class="attr">type</span>:<span class="string">&#x27;div&#x27;</span>,</span><br><span class="line">    <span class="comment">//使用props描述一个元素得特性</span></span><br><span class="line">    <span class="attr">props</span>:&#123;</span><br><span class="line">        <span class="attr">id</span>:<span class="string">&#x27;foo&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">children</span>:[</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">type</span>:<span class="string">&#x27;p&#x27;</span>,</span><br><span class="line">            <span class="attr">children</span>:<span class="string">&#x27;hello&#x27;</span></span><br><span class="line">        &#125;        </span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>检查vnode.props字段可以使用el[key]=vnode.props[key]或者el.setAttribute(key,vnode.props[key]),先来了解下HTML Attributes和DOM Properties的不同</p>
+<h2 id="HTML-Attributes和DOM-Properties"><a href="#HTML-Attributes和DOM-Properties" class="headerlink" title="HTML Attributes和DOM Properties"></a>HTML Attributes和DOM Properties</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;foo&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个DOM对象有很多属性，HTML Attributes在DOM对象上有与之同名的DOM Properties，例如id=”my-input”对应el.id,但DOM Properties并不与HTML Attributes的名字总是一样，例如</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;foo&quot;</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>class=’foo’对应的DOM Properties是el.className,不是所有的HTML Adttributes都有和它对应的DOM Properties,例如aria-*类的HTML Attributes就没有和它对应的DOM Properties</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">value</span>=<span class="string">&#x27;foo&#x27;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>当用户修改了文本框的值，那么el.value的值时当前文本的值，而el.getAttribute(‘value’)仍然是之前的值</p>
+<p>总之：<strong>HTML Attributes的作用是设置与之对应的DOM Properties的初始值</strong></p>
+<h2 id="正确设置元素的属性"><a href="#正确设置元素的属性" class="headerlink" title="正确设置元素的属性"></a>正确设置元素的属性</h2><p>例子：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">:disabled</span>=<span class="string">&#x27;false&#x27;</span>&gt;</span></span><br><span class="line">    Button</span><br><span class="line"><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个HTML模板会被编译成vnode:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> button = &#123;</span><br><span class="line">    <span class="attr">type</span>: <span class="string">&#x27;button&#x27;</span>,</span><br><span class="line">    <span class="attr">props</span>: &#123;</span><br><span class="line">        <span class="attr">disabled</span>:<span class="literal">false</span></span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的props.disabled的值时空字符串，如果在渲染器中调用setAttribute函数设置属性，相当于：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">el.setAttribute(<span class="string">&#x27;disabled&#x27;</span>,<span class="literal">false</span>)</span><br></pre></td></tr></table></figure>
+
+<p>用户本意是不禁用，但是用setAttribute按钮仍然被禁用了，这是因为使用setAttribute函数设置的值总是会被字符串化，等价于</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">el.setAttribute(<span class="string">&#x27;disabled&#x27;</span>,<span class="string">&#x27;false&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>el.disabled的值时布尔值，我们不关心值是什么，只要disabled属性存在，按钮就被禁用，不使用setAttribute,用el.disabled=false</p>
+<p>但是如果是下面的模板：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">disabled</span>&gt;</span></span><br><span class="line">    Button</span><br><span class="line"><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>对应的vnode:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> button = &#123;</span><br><span class="line">    <span class="attr">type</span>:<span class="string">&#x27;button&#x27;</span>,</span><br><span class="line">    <span class="attr">props</span>: &#123;</span><br><span class="line">        <span class="attr">disabled</span>: <span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用DOM Properties设置元素属性时，el.disabled=’’,类型转换会设置为el.disabled=false,用户本意是禁用按钮，则只能优先设置setAttribute,如果是空字符串则手动矫正</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mountElement</span>(<span class="params">vnode,container</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> el = createElement(vnode.type)</span><br><span class="line">    <span class="comment">//省略children处理</span></span><br><span class="line">    <span class="keyword">if</span>(vnode.props)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">const</span> key <span class="keyword">in</span> vnode.props)&#123;</span><br><span class="line">            <span class="keyword">if</span>(key <span class="keyword">in</span> vnode.props)&#123;</span><br><span class="line">                 <span class="comment">//用in操作判断key是否存在对应的DOM Properties</span></span><br><span class="line">                <span class="keyword">if</span>(key <span class="keyword">in</span> el)&#123;</span><br><span class="line">                    <span class="comment">//获取该DOM Properties的类型</span></span><br><span class="line">                    <span class="keyword">const</span> type = el[key]</span><br><span class="line">                    <span class="keyword">const</span> value = vnode.props[key]</span><br><span class="line">                    <span class="keyword">if</span>(type === <span class="string">&#x27;boolean&#x27;</span> &amp;&amp; value ===<span class="string">&#x27;&#x27;</span>)&#123;</span><br><span class="line">                        e[key]=<span class="literal">true</span></span><br><span class="line">                    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                        e[key]=value</span><br><span class="line">                    &#125;                </span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    el.setAttribute(key,vnode.props[key])</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    insert(el,container)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/30/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E9%80%82%E9%85%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/30/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E9%80%82%E9%85%8D/" class="post-title-link" itemprop="url">移动端适配</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-30 09:27:34 / 修改时间：10:51:55" itemprop="dateCreated datePublished" datetime="2022-08-30T09:27:34+08:00">2022-08-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h1><p>屏幕尺寸：以屏幕对角线的长度计算，单位是英寸</p>
+<p>像素 pixel:显示屏画面上表示出来的最小单位</p>
+<p>屏幕分辨率：一个屏幕具体由多少个像素点组成，单位是px</p>
+<p>物理像素：在同一个设备上，他的物理像素是固定的，也就是厂家在生产显示设备时就决定的实际点的个数，对于不同设备物理像素点的大小是不一样的</p>
+<p>逻辑像素（设备独立像素）：（与设备无关的逻辑像素，代表可以通过程序控制使用的虚拟像素）</p>
+<p>设备像素比dpr:计算公式为：<code>DPR = 物理像素/逻辑像素</code></p>
+<p>当设备像素比为1:1时，使用1（1×1）个设备像素显示1个CSS像素；</p>
+<p>当设备像素比为2:1时，使用4（2×2）个设备像素显示1个CSS像素；</p>
+<p>当设备像素比为3:1时，使用9（3×3）个设备像素显示1个CSS像素。</p>
+<p>视口viewport:</p>
+<p>viewport指的是视口，它是浏览器或者app中webview显示页面的区域，一般，PC端的视口指的是浏览器窗口区域，而移动端有三个视口：</p>
+<p>layout viewport:布局视口</p>
+<p>visual viewport:视觉视口</p>
+<p>ideal viewport:理想视口</p>
+<p>布局视口(layout viewport):</p>
+<p>由浏览器提出的一种虚拟的布局视口，用来解决页面在收上显示的问题，这种视口可以通过<meta>标签设置viewport来改变，移动设备上的浏览器会把自己默认的viewport设为980px或者1024px，也可能是其它值，这个是由设备自己决定的），但带来的后果就是浏览器会出现横向滚动条，因为浏览器可视区域的宽度是比这个默认的viewport的宽度要小的。</p>
+<p>我们可以通过<code>document.documentElement.clientWidth</code>来获取布局视口大小</p>
+<p>视觉视口（visual viewport）</p>
+<p>它指的是浏览器的可视区域，也就是我们在移动端设备上能够看到的区域。默认与当前浏览器窗口大小相等，当用户对浏览器进行缩放时，不会改变布局视口的大小，但会改变视觉窗口的大小。</p>
+<p>meta viewport</p>
+<p>对于移动端页面，可以采用<code>&lt;meta&gt;</code>标签来配置视口大小和缩放等。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot;</span> /&gt;</span></span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>width</strong>：该属性被用来控制视窗的宽度，可以将width设置为320这样确切的像素数，也可以设为device-width这样的关键字，表示设备的实际宽度，一般为了自适应布局，普遍的做法是将width设置为<code>device-width</code>。</li>
+<li><strong>height</strong>：该属性被用来控制视窗的高度，可以将height设置为640这样确切的像素数，也可以设为<code>device-height</code>这样的关键字，表示设备的实际高度，一般不会设置视窗的高度，这样内容超出的话采用滚动方式浏览。</li>
+<li><strong>initial-scale</strong>：该属性用于指定页面的初始缩放比例，可以配置<code>0.0～10</code>的数字，<strong>initial-scale=1表示不进行缩放，视窗刚好等于理想视窗</strong>，当大于1时表示将视窗进行放大，小于1时表示缩小。这里只表示初始视窗缩放值，用户也可以自己进行缩放，例如双指拖动手势缩放或者双击手势放大。<strong>安卓设备上的initial-scale默认值：</strong> 无默认值，一定要设置，这个属性才会起作用。在iphone和ipad上，无论你给viewport设的宽的是多少，如果<strong>没有指定默认的缩放值</strong>，则iphone和ipad会<strong>自动计算这个缩放值</strong>，以达到当前页面不会出现横向滚动条(或者说viewport的宽度就是屏幕的宽度)的目的。</li>
+<li><strong>maximum-scale</strong>：该属性表示用户能够手动放大的最大比例，可以配置<code>0.0～10</code>的数字。</li>
+<li><strong>minimum-scale</strong>：该属性类似maximum-scale，用来指定页面缩小的最小比例。通常情况下，不会定义该属性的值，页面太小将难以浏览。</li>
+<li><strong>user-scalable</strong>：该属性表示是否允许用户手动进行缩放，可配置<code>no或者yes</code>。当配置成no时，用户将不能通过手势操作的方式对页面进行缩放。</li>
+</ul>
+<p>这里需要注意的是<code>viewport</code>只对移动端浏览器有效，对PC端浏览器是无效的。</p>
+<h1 id="rem适配："><a href="#rem适配：" class="headerlink" title="rem适配："></a>rem适配：</h1><p>是CSS3新增的一个相对单位，是指相对于根元素的字体大小的单位。</p>
+<ul>
+<li>将屏幕宽度分为10份，设置html的font-size为window.innerWidth/10px</li>
+<li>1rem=window.innerWidth/10px</li>
+<li>根据UI的px计算相应rem:比如盒子宽320px，（320px/window.innerWidth)*10=5.333rem</li>
+<li>将rem转为不同的px尺寸在不同手机上呈现：5.333rem*window.innerWidth/10px</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//给html标签添加font-size</span></span><br><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&#x27;DOMContentLoaded&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">document</span>.getElementsByTagName(<span class="string">&#x27;html&#x27;</span>)[<span class="number">0</span>].style.fontSize = <span class="built_in">window</span>.innerWidth / <span class="number">10</span> + <span class="string">&#x27;px&#x27;</span>;</span><br><span class="line">&#125;, <span class="literal">false</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>使用Sass定义一个ps2rem函数</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@funtion</span> px2rem(<span class="variable">$px</span>)&#123;</span><br><span class="line">    <span class="variable">$rem</span>: <span class="number">75px</span>;<span class="comment">//750/10</span></span><br><span class="line">    <span class="keyword">@return</span> (<span class="variable">$px</span>/<span class="variable">$rem</span>)+rem</span><br><span class="line">&#125;</span><br><span class="line">.box1 &#123;</span><br><span class="line">    <span class="attribute">width</span>: px2rem(<span class="number">320px</span>);<span class="comment">//(320/750)*10=4.266rem</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="vw-vh适配："><a href="#vw-vh适配：" class="headerlink" title="vw,vh适配："></a>vw,vh适配：</h1><p><code>vw（Viewport Width）</code>、<code>vh(Viewport Height)</code>是基于视图窗口的单位，是css3中提出来的，基于视图窗口的单位。</p>
+<p><code>vh、vw</code>方案即将视觉视口宽度 <code>window.innerWidth</code>和视觉视口高度 <code>window.innerHeight</code> 等分为 100 份。</p>
+<p>上面的<code>flexible</code>方案就是模仿这种方案，因为早些时候<code>vw</code>还没有得到很好的兼容。</p>
+<ul>
+<li><code>vw(Viewport&#39;s width)</code>：<code>1vw</code>等于视觉视口的<code>1%</code></li>
+<li><code>vh(Viewport&#39;s height)</code> :<code>1vh</code> 为视觉视口高度的<code>1%</code></li>
+<li><code>vmin</code> : <code>vw</code> 和 <code>vh</code> 中的较小值</li>
+<li><code>vmax</code> : 选取 <code>vw</code> 和 <code>vh</code> 中的较大值</li>
+</ul>
+<p>如果按视觉视口为<code>375px</code>，那么<code>1vw = 3.75px</code>，这时<code>UI</code>给定一个元素的宽为<code>75px</code>（设备独立像素），我们只需要将它设置为<code>75 / 3.75 = 20vw</code></p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@device-width:</span> <span class="number">375</span></span><br><span class="line"><span class="variable">@vw</span>: (<span class="number">100vw</span>/device-<span class="attribute">width</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div class=&quot;songyao&quot;&gt;</span><br><span class="line">        &lt;h1&gt;&#123;&#123; username &#125;&#125;&lt;/h1&gt;</span><br><span class="line">    &lt;p&gt;</span><br><span class="line">      了解脚手架及脚手架指令请移步个人博客&lt;br&gt;</span><br><span class="line">      check out the</span><br><span class="line">      &lt;a href=&quot;http://47.100.126.169/zmengBlog&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;逐梦博客&lt;/a&gt;.</span><br><span class="line">    &lt;/p&gt;</span><br><span class="line">    &lt;p&gt;微信公众号：&lt;span class=&quot;wx_name&quot;&gt;前端南玖&lt;/span&gt;&lt;/p&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">    name: &#x27;songyao&#x27;,</span><br><span class="line">    data() &#123;</span><br><span class="line">        return &#123;</span><br><span class="line">            username: &#x27;songyao-cli(vue 模板)&#x27;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style lang=&quot;less&quot;&gt;</span><br><span class="line">.songyao&#123;</span><br><span class="line">    h1&#123;</span><br><span class="line">       </span><br><span class="line">        font-size: 24*@vw;</span><br><span class="line">    &#125;</span><br><span class="line">    p&#123;</span><br><span class="line">       </span><br><span class="line">        font-size: 16*@vw;</span><br><span class="line">    &#125;</span><br><span class="line">   .wx_name&#123;</span><br><span class="line">    color:brown;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<h1 id="viewport和px"><a href="#viewport和px" class="headerlink" title="viewport和px"></a>viewport和px</h1><p>这种方案可以让我们在开发时不用关注设备屏幕尺寸的差异，直接按照设计稿上的标注进行开发，也无需单位的换算，直接用px。HTML 的 head 标签里加入 <code>&lt;meta name=&quot;viewport&quot; content=&quot;width=&#123;设计稿宽度&#125;, initial-scale=&#123;屏幕逻辑像素宽度/设计稿宽度&#125;&quot; &gt;</code> 。</p>
+<p>假如UI给我们提供的设计稿宽度时375px，我们则需要将页面的viewport的width设为375，然后再根据设备的逻辑像素将页面进行整体放缩。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">initViewport</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> width = <span class="number">375</span>;  <span class="comment">// 设计稿宽度</span></span><br><span class="line">    <span class="keyword">const</span> scale = <span class="built_in">window</span>.innerWidth / width</span><br><span class="line">    <span class="comment">// console.log(&#x27;scale&#x27;, scale)</span></span><br><span class="line">    <span class="keyword">let</span> meta = <span class="built_in">document</span>.querySelector(<span class="string">&#x27;meta[name=viewport]&#x27;</span>)</span><br><span class="line">    <span class="keyword">let</span> content = <span class="string">`width=<span class="subst">$&#123;width&#125;</span>, init-scale=<span class="subst">$&#123;scale&#125;</span>, user-scalable=no`</span></span><br><span class="line">    <span class="keyword">if</span>(!meta) &#123;</span><br><span class="line">        meta = <span class="built_in">document</span>.createElement(<span class="string">&#x27;meta&#x27;</span>)</span><br><span class="line">        meta.setAttribute(<span class="string">&#x27;name&#x27;</span>, <span class="string">&#x27;viewport&#x27;</span>)</span><br><span class="line">        <span class="built_in">document</span>.head.appendChild(meta)</span><br><span class="line">    &#125;</span><br><span class="line">    meta.setAttribute(<span class="string">&#x27;content&#x27;</span>, content)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h1><p>rem:</p>
+<ul>
+<li>适配原理复杂</li>
+<li>需要使用js</li>
+<li>设计稿标注px换算到css的rem计算简单</li>
+<li>方案灵活，即能实现整体缩放，又能实现局部不缩放</li>
+</ul>
+<p>vw:</p>
+<ul>
+<li>适配原理简单</li>
+<li>不需要使用js</li>
+<li>设计稿标注的px换算为css的vw计算复杂</li>
+</ul>
+<p>viewport+px:</p>
+<ul>
+<li>适配原理简单</li>
+<li>需要使用js</li>
+<li>直接使用设计稿标注无需换算</li>
+<li>方案死板，只能实现页面级别肢体缩放</li>
+</ul>
+<p>参考：<a target="_blank" rel="noopener" href="https://juejin.cn/post/7085931616136069156#heading-19">https://juejin.cn/post/7085931616136069156#heading-19</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903590968950797#heading-7">https://juejin.cn/post/6844903590968950797#heading-7</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/27/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -824,7 +1081,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-23 00:01:18" itemprop="dateModified" datetime="2022-08-23T00:01:18+08:00">2022-08-23</time>
+                <time title="修改时间：2022-12-27 20:22:11" itemprop="dateModified" datetime="2022-12-27T20:22:11+08:00">2022-12-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -914,176 +1171,17 @@
 
 <p>即后缀为js,css,ico等文件统统不进行请求转发，直接从本地的/usr/local/nginx/html目录下读取并返回到前端（我们需要将静态资源文件上传到/usr/local/nginx/html/目录下）</p>
 <h1 id="聊天功能实现："><a href="#聊天功能实现：" class="headerlink" title="聊天功能实现："></a>聊天功能实现：</h1><p>socket.io的主要靠emit()和on()实现实时聊天，关键在于设计对话的数据结构，对话用一个对象保存，里面包含发送者姓名，接收者姓名，信息，将对话展示在对话页面中主要靠fromUser,toUser识别，<strong>根据路由参数显示对话列表，每个用户登录将用户名作为参数通过emit触发服务端addUser，服务端用一个onLineUsers对象存储socket对象，键为用户名，值为用户socket对象，每个socket对象是唯一的，服务端on监听sendMessage事件，客户端emit触发sendMessage事件,当服务端的sendMessage事件被客户端触发后回调函数执行，触发客户端展示消息的函数</strong>，表情包发送是通过写一个emoji表情包子组件，通过和对话列表父组件进行通信，点击表情包Icon,展示一个表情包列表，点击里面任意一个表情，子组件触发emit(chooseEmoji,emoji),传递emoji信息给父组件的chooseEmoji函数，父组件就能在输入框中显示被选中的emoji</p>
+<h1 id="实现聊天记录持久存储"><a href="#实现聊天记录持久存储" class="headerlink" title="实现聊天记录持久存储"></a>实现聊天记录持久存储</h1><p>用vuex-persistedstate</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> createStore(&#123;</span><br><span class="line">  <span class="attr">state</span>: &#123;</span><br><span class="line">    ...</span><br><span class="line">  &#125;,</span><br><span class="line">  mutations,</span><br><span class="line">  actions,</span><br><span class="line">  getters,</span><br><span class="line">  <span class="attr">plugins</span>: [</span><br><span class="line">    persistedState(&#123;</span><br><span class="line">      <span class="attr">key</span>: <span class="string">&quot;state&quot;</span>,</span><br><span class="line">      <span class="function"><span class="title">render</span>(<span class="params">state</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> state.msg;</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;),</span><br><span class="line">  ], <span class="comment">//默认使用localStorage存储数据</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-      
-    </div>
+<p>实现刷新页面断线重连</p>
+<p>因为socket.io会在页面刷新时自动断开socket连接，因此需要删除onLineUsers[fromUser]，监听页面刷新事件，load表示页面刷新完成，页面刷新时重新建立socket连接，将对象加入，但是客户端部分监听连接时异步回调，message方法监听服务端的信息并保存信息到vue是同步事件，所以message方法中socket还未建立，因此，要在socket建立连接后再监听服务端信息，并将对话信息存储到vuex中，对应代码如下：</p>
+<p>contact-dialogue.vue</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> handler = <span class="function">() =&gt;</span> &#123;      </span><br><span class="line">      <span class="keyword">const</span> username = <span class="built_in">JSON</span>.parse(<span class="built_in">window</span>.localStorage.getItem(<span class="string">&quot;userInfo&quot;</span>)).username</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&#x27;刷新&#x27;</span>,username)</span><br><span class="line">      <span class="comment">//刷新页面时，socket.io和主动断开连接，因此如果localStorage里面有用户信息，则可以直接</span></span><br><span class="line">      <span class="comment">//再为用户初始化一个socket对象，加入onlineUsers</span></span><br><span class="line">      <span class="keyword">if</span>(username)&#123;</span><br><span class="line">        nextTick(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">          CHAT.init(username,<span class="literal">true</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    onMounted(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">      <span class="comment">//监听刷新事件</span></span><br><span class="line">       <span class="built_in">window</span>.addEventListener(<span class="string">&#x27;load&#x27;</span>,handler)</span><br><span class="line">       CHAT.message(store.state.userInfo.username)</span><br><span class="line">    &#125;)</span><br><span class="line">    onUnmounted(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">      <span class="comment">//卸载刷新事件</span></span><br><span class="line">      <span class="built_in">window</span>.removeEventListener(<span class="string">&#x27;load&#x27;</span>,handler)</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+<p>client.js:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">init: <span class="function"><span class="keyword">function</span> (<span class="params">username, flush = <span class="literal">false</span></span>) </span>&#123;</span><br><span class="line">    socket = io(<span class="string">&quot;http://127.0.0.1:3007&quot;</span>, &#123;</span><br><span class="line">      <span class="string">&quot;force new connection&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">    &#125;);</span><br><span class="line">    socket.on(<span class="string">&quot;open&quot;</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="comment">//如果</span></span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&quot;已连接&quot;</span>);</span><br><span class="line">      <span class="comment">//console.log(`client:$&#123;socket.connected&#125;`);</span></span><br><span class="line">      <span class="comment">//刷新成功后，重新建立socket连接，但是message方法是同步的，这时候socket还是undefined,</span></span><br><span class="line">      <span class="comment">//因此要在刷新后成功建立连接后再监听服务端发过来的信息，才会成功建立新的socket连接</span></span><br><span class="line">      <span class="keyword">if</span> (flush) &#123;</span><br><span class="line">        socket.on(username, <span class="function"><span class="keyword">function</span> (<span class="params">obj</span>) </span>&#123;</span><br><span class="line">          <span class="built_in">console</span>.log(<span class="string">&quot;CHAT.msgArr&quot;</span>, obj);</span><br><span class="line">          store.commit(<span class="string">&quot;ChangeMsg&quot;</span>, obj);</span><br><span class="line">        &#125;);</span><br><span class="line">        flush = <span class="literal">false</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    socket.emit(<span class="string">&quot;addUser&quot;</span>, username);</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/12/antd%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A1%A8%E5%8D%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/08/12/antd%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A1%A8%E5%8D%95/" class="post-title-link" itemprop="url">antd初始化表单</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-08-12 21:41:44" itemprop="dateCreated datePublished" datetime="2022-08-12T21:41:44+08:00">2022-08-12</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/04/%E4%BB%A3%E7%90%86%E6%95%B0%E7%BB%84/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/08/04/%E4%BB%A3%E7%90%86%E6%95%B0%E7%BB%84/" class="post-title-link" itemprop="url">代理数组</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-08-04 11:38:19 / 修改时间：14:59:22" itemprop="dateCreated datePublished" datetime="2022-08-04T11:38:19+08:00">2022-08-04</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="对数组元素或者属性的读取操作："><a href="#对数组元素或者属性的读取操作：" class="headerlink" title="对数组元素或者属性的读取操作："></a>对数组元素或者属性的读取操作：</h1><p>通过索引访问数组元素值:arr[0]</p>
-<p>访问数组的长度:arr.length</p>
-<p>把数组作为对象，使用for…in循环遍历</p>
-<p>使用for…of迭代遍历数组</p>
-<p>数组的原型方法，如concat/join/every/some/find/findIndex/includes等，以及不改变原数组的原型方法</p>
-<h2 id="1-数组索引与length"><a href="#1-数组索引与length" class="headerlink" title="1 数组索引与length"></a><strong>1 数组索引与length</strong></h2><p>通过索引设置数组元素的值时，会执行内部方法[[Set]],内部方法[[Set]]依赖于[[DefineOwnProperty]],当设置的索引值大于数组当前长度，更新数组length属性，触发与length属性相关联的副作用函数重新执行，修改set拦截函数</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">set</span>(<span class="params">target,key,newValue</span>)</span>&#123;</span><br><span class="line">            <span class="comment">//如果是只读的打印警告信息</span></span><br><span class="line">            <span class="keyword">if</span>(isReadOnly)&#123;</span><br><span class="line">                <span class="built_in">console</span>.warn(<span class="string">`属性<span class="subst">$&#123;key&#125;</span>是只读的`</span>)</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//获取旧值</span></span><br><span class="line">            <span class="keyword">const</span> oldValue=target[key]</span><br><span class="line">            <span class="comment">//如果代理目标对象是数组，则检测被设置的索引值是否小于数组长度</span></span><br><span class="line">            <span class="comment">//如果是，则为SET操作，否则为ADD操作</span></span><br><span class="line">            <span class="keyword">const</span> type=<span class="built_in">Array</span>.isArray(target)</span><br><span class="line">                        ?<span class="built_in">Number</span>(key)&lt;length?<span class="string">&#x27;SET&#x27;</span>:<span class="string">&#x27;ADD&#x27;</span></span><br><span class="line">                        :<span class="built_in">Object</span>.prototype.hasOwnProperty.call(target,key)?<span class="string">&#x27;SET&#x27;</span>:<span class="string">&#x27;ADD&#x27;</span></span><br><span class="line">           </span><br><span class="line">            <span class="comment">//设置属性值</span></span><br><span class="line">            <span class="keyword">const</span> res=<span class="built_in">Reflect</span>.set(target,key,receiver,newValue)</span><br><span class="line">            <span class="comment">//说明receiver是target的代理对象</span></span><br><span class="line">            <span class="keyword">if</span>(target===receiver.raw)&#123;</span><br><span class="line">                <span class="comment">//比较新值和旧值，只有当它们不全等并且都不是NAN才触发响应</span></span><br><span class="line">                <span class="keyword">if</span>(oldValue!==newValue&amp;&amp;(oldValue===oldValue||newValue===newValue))&#123;</span><br><span class="line">                   <span class="comment">//假如设置数组length属性为0，会影响数组元素，因此要触发新的响应</span></span><br><span class="line">                    trigger(target,key,type,newValue)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">trigger</span>(<span class="params">target,key</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> depsMap=bucket.get(target)</span><br><span class="line">    <span class="keyword">if</span>(!depsMap)<span class="keyword">return</span></span><br><span class="line">    <span class="keyword">const</span> effects=depsMap.get(key)</span><br><span class="line">    <span class="keyword">const</span> effectsToRun=<span class="keyword">new</span> <span class="built_in">Set</span>(effects)</span><br><span class="line">    <span class="comment">//当操作类型是ADD或者DELETE,需要触发与length相关的副作用函数执行</span></span><br><span class="line">    <span class="keyword">if</span>(type===<span class="string">&#x27;ADD&#x27;</span>||type===<span class="string">&#x27;DELETE&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">const</span> iterateEffects=depsMap.get(<span class="string">&#x27;length&#x27;</span>)</span><br><span class="line">        lengthEffects&amp;&amp;lengthEffects.forEach(<span class="function"><span class="params">effectfn</span>=&gt;</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(effectfn!==activeEffect)&#123;</span><br><span class="line">                effectsToRun.add(effectfn)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    effects&amp;&amp;effects.forEach(<span class="function"><span class="params">effectfn</span>=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(activeEffect!=effectfn)&#123;<span class="comment">//只有当trigger触发执行的副作用函数和当前正在执行的副作用函数不相同时才触发执行，否则会出现栈溢出</span></span><br><span class="line">            effectsToRun.add(effectfn)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)   </span><br><span class="line">    effectsToRun.forEach(<span class="function"><span class="params">effectfn</span>=&gt;</span>effectfn())</span><br><span class="line">    <span class="comment">//effect&amp;&amp;effect.forEach(fn=&gt;fn())//会产生无限执行</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-数组查找方法"><a href="#2-数组查找方法" class="headerlink" title="2 数组查找方法"></a>2 数组查找方法</h2><p>arr.includes(arr[0])中arr是代理对象，includes函数执行时this指向的是代理对象，即arr,includes方法会通过索引读取数组元素值，如果值时可以被代理的，那么得到的值就是新的代理对象，</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reactive</span>(<span class="params">obj</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//每次调用reactive时都会创建新的代理对象</span></span><br><span class="line">    <span class="keyword">return</span> createReactive(obj)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>解决方法：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//当参数Obj是相同的不用创建新的代理对象</span></span><br><span class="line"><span class="comment">//存储原始对象到代理对象的映射</span></span><br><span class="line"><span class="keyword">const</span> reactiveMap=<span class="keyword">new</span> <span class="built_in">Map</span>()</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reactive</span>(<span class="params">obj</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//优先通过原始对象obj查找之前创建的代理对象，如果找到了，直接返回已有的代理对象</span></span><br><span class="line">    <span class="keyword">const</span> existionProxy=reactiveMap.get(obj)</span><br><span class="line">    <span class="keyword">if</span>(existionProxy)<span class="keyword">return</span> existionProxy</span><br><span class="line">    <span class="comment">//否则创建新的代理对象</span></span><br><span class="line">    proxy=createReactive(obj)</span><br><span class="line">    reactiveMap.set(obj,proxy)</span><br><span class="line">    <span class="keyword">return</span> proxy</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>然而，下面这段代码</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;&#125;;</span><br><span class="line"><span class="keyword">const</span> arr = reactive([obj])</span><br><span class="line"><span class="built_in">console</span>.log(arr.includes[obj])<span class="comment">//false</span></span><br></pre></td></tr></table></figure>
-
-<p>includes内部的this指向的是代理对象arr,并且在获取数组元素时得到的也是代理对象，所以用原始对象obj去查找找不到，返回false,因此我们需要重写includes方法</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arrInstrumentations=&#123;&#125;</span><br><span class="line"><span class="comment">//重写方法</span></span><br><span class="line">[<span class="string">&#x27;includes&#x27;</span>,<span class="string">&#x27;indexOf&#x27;</span>,<span class="string">&#x27;lastIndexOf&#x27;</span>].forEach(<span class="function"><span class="params">method</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> originMethod=<span class="built_in">Array</span>.prototype[method]</span><br><span class="line">    arrInstrumentations[method]=<span class="function"><span class="keyword">function</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">        <span class="comment">//先在代理对象中查找，结果存储在res实现了arr.includes(obj)的默认方法</span></span><br><span class="line">        <span class="comment">//找不到就去原始数组上查找</span></span><br><span class="line">        <span class="keyword">const</span> res=originMethod.apply(<span class="built_in">this</span>,args)</span><br><span class="line">        <span class="comment">//找不到则在原始对象中查找</span></span><br><span class="line">        <span class="keyword">if</span>(res===<span class="literal">false</span>)&#123;</span><br><span class="line">            res=originMethod.apply(<span class="built_in">this</span>.raw,args)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">get</span>(<span class="params">target,key,receiver</span>)</span>&#123;</span><br><span class="line">            <span class="comment">//通过&quot;raw”属性访问原始对象</span></span><br><span class="line">            <span class="keyword">if</span>(key===<span class="string">&#x27;raw&#x27;</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> target</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//如果操作对象存在于arrInstrumentations上，返回定义在arrInstrumentation上的值</span></span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">Array</span>.isArray(target)&amp;&amp;arrInstrumentations.hasOwnProperty(key))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">Reflect</span>.get(arrInstrumentations,key,receiver)</span><br><span class="line">            &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
-
-<h2 id="3-push-pop-shift-unshift等方法"><a href="#3-push-pop-shift-unshift等方法" class="headerlink" title="3 push/pop/shift/unshift等方法"></a>3 push/pop/shift/unshift等方法</h2><p>当调用数组的push方法时，即会读取数组length属性值也会设置数组length属性值，会导致两个独立的副作用函数相互影响，就像</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr=reactive([])</span><br><span class="line">effect=(<span class="function">()=&gt;</span>&#123;arr.push(<span class="number">1</span>)&#125;)</span><br><span class="line">effect=(<span class="function">()=&gt;</span>&#123;arr.push(<span class="number">1</span>)&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>会得到栈溢出的错误</p>
-<p>分析：</p>
-<ul>
-<li>第一个副作用函数执行，在该函数内，调用arr.push方法向数组中添加一个元素，调用数组push方法时会间接读取数组的length属性，所以第一个副作用函数执行完毕会与length属性建立响应联系</li>
-<li>第二个副作用函数执行，同样，与length属性建立响应联系，同时调用arr.push会设置length属性，于是响应式系统尝试把与length有关的副作用函数全部取出执行，就包括第一个副作用函数，此时，第二个副作用函数还未执行完毕就去调用第一个副作用函数</li>
-<li>第一个副作用函数再次执行，也会间接设置数组的length属性，于是响应系统又尝试把所以与length属性相关联娿副作用取出执行，其中包括第二个副作用函数</li>
-<li>循环往复导致栈溢出</li>
-</ul>
-<p>因此，我们可以通过屏蔽对length属性的读取，避免在它与副作用函数之间建立联系</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//一个标记变量，代表是否追踪</span></span><br><span class="line"><span class="keyword">let</span> shouldTrack = <span class="literal">true</span></span><br><span class="line">[<span class="string">&#x27;push&#x27;</span>].forEach(<span class="function"><span class="params">method</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//取得原始push方法</span></span><br><span class="line">    <span class="keyword">const</span> originMethod = <span class="built_in">Array</span>.prototype[method]</span><br><span class="line">    <span class="comment">//重写</span></span><br><span class="line">    arrInstrumentations[method] = <span class="function"><span class="keyword">function</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">        <span class="comment">//在调用方法前禁止追踪</span></span><br><span class="line">        shouldTrack=<span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">let</span> res = originMethod.apply(<span class="built_in">this</span>,args)</span><br><span class="line">        <span class="comment">//调用原始方法后，恢复原来行为，即允许追踪</span></span><br><span class="line">        shouldTrack=<span class="literal">true</span></span><br><span class="line">        <span class="keyword">return</span> res</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>在执行默认行为之前先将shouldTrack置false,禁止追踪，当push方法默认行为执行完毕后，将shouldTrack还原为true,</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">track</span>(<span class="params">target,key</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//禁止追踪时直接返回</span></span><br><span class="line">    <span class="keyword">if</span>(!activeEffect || !shouldTrack)<span class="keyword">return</span> </span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>当push方法间接读取length属性，由于此时是禁止追踪状态，所以length属性与副作用函数之间不会建立响应联系，也就不会产生栈溢出</p>
 
       
     </div>
@@ -1170,7 +1268,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">234</span>
+          <span class="site-state-item-count">236</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1221,7 +1319,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -1244,7 +1342,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共213k字</span>
+  <span class="post-count">博客全站共217.9k字</span>
 </div>
         
 

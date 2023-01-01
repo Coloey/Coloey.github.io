@@ -187,6 +187,93 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/10/%E6%B7%B7%E5%90%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/10/%E6%B7%B7%E5%90%88/" class="post-title-link" itemprop="url">混合</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-10-10 21:09:57 / 修改时间：22:17:41" itemprop="dateCreated datePublished" datetime="2022-10-10T21:09:57+08:00">2022-10-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>TypeScript只能严格的单继承，因此你不能：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Tagged</span>,<span class="title">Timestamped</span> </span>&#123;</span><br><span class="line">    <span class="comment">//ERROR：不能多重继承</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从可重用组件构建类的另一种方式是通过基类构建它们，这种方式成为混合</p>
+<p>混合是一个函数：</p>
+<ul>
+<li>传入一个构造函数；</li>
+<li>创建一个带有新功能，并且扩展构造函数的新类</li>
+<li>返回这个新类</li>
+</ul>
+<p>example:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//所有mixins都需要</span></span><br><span class="line"><span class="keyword">type</span> Constructor&lt;T = &#123;&#125;&gt; = <span class="keyword">new</span> (...args: <span class="built_in">any</span>[]) =&gt; T;</span><br><span class="line"><span class="comment">//添加属性的混合例子</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Timestamped</span>&lt;<span class="title">TBase</span> <span class="title">extends</span> <span class="title">Constructor</span>&gt;(<span class="params">Base: TBase</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="class"><span class="keyword">class</span> <span class="keyword">extends</span> <span class="title">Base</span> </span>&#123;</span><br><span class="line">        timestamp = <span class="built_in">Date</span>.now()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//添加属性和方法的混合例子</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Activatable</span>&lt;<span class="title">TBase</span> <span class="title">extends</span> <span class="title">Constructor</span>&gt;(<span class="params">Base: TBase</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="class"><span class="keyword">class</span> <span class="keyword">extends</span> <span class="title">Base</span> </span>&#123;</span><br><span class="line">        isActivated = <span class="literal">false</span>;</span><br><span class="line">        <span class="function"><span class="title">activate</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.isActivated = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="title">deactivate</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.isActivated = <span class="literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    name=<span class="string">&#x27;&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//添加TImestamped的User</span></span><br><span class="line"><span class="keyword">const</span> Timestamped = Timestamped(User)</span><br><span class="line"><span class="keyword">const</span> TimestampedActivatableUser = Timestamped(Activatable(User))</span><br><span class="line"><span class="keyword">const</span> timestampUserExample = <span class="keyword">new</span> Timestamped()</span><br><span class="line"><span class="built_in">console</span>.log(timestampUserExample.timestamp)</span><br><span class="line"><span class="keyword">const</span> timestampedActivatableUserExample = <span class="keyword">new</span> TimestampedActivatableUser()</span><br><span class="line"><span class="built_in">console</span>.log(timestampedActivatableUserExample.timestamp)</span><br></pre></td></tr></table></figure>
+
+<p>上面这个例子中，</p>
+<h2 id="创建一个构造函数"><a href="#创建一个构造函数" class="headerlink" title="创建一个构造函数"></a>创建一个构造函数</h2><p>混合接受一个类，并且使用新功能扩展它，因此，我们需要定义构造函数的类型：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Constructor&lt;T = &#123;&#125;&gt; = <span class="keyword">new</span> (...args:<span class="built_in">any</span>[]) =&gt; T</span><br></pre></td></tr></table></figure>
+
+<h2 id="扩展一个类并且返回它："><a href="#扩展一个类并且返回它：" class="headerlink" title="扩展一个类并且返回它："></a>扩展一个类并且返回它：</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//添加属性的混合例子</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Timestamped</span>&lt;<span class="title">TBase</span> <span class="title">extends</span> <span class="title">Constructor</span>&gt;(<span class="params">Base: TBase</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="class"><span class="keyword">class</span> <span class="keyword">extends</span> <span class="title">Base</span> </span>&#123;</span><br><span class="line">        timestamp = <span class="built_in">Date</span>.now()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/05/Freshness/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -470,6 +557,102 @@
 
 <p>转换为：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> history(<span class="string">&#x27;div&#x27;</span>,[h(<span class="string">&#x27;p&#x27;</span>,<span class="string">&#x27;Vue&#x27;</span>),h(<span class="string">&#x27;p&#x27;</span>,<span class="string">&#x27;Template&#x27;</span>)])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/09/18/AST%E6%9E%84%E5%BB%BA%E4%B8%8E%E8%BD%AC%E6%8D%A2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/09/18/AST%E6%9E%84%E5%BB%BA%E4%B8%8E%E8%BD%AC%E6%8D%A2/" class="post-title-link" itemprop="url">AST的构建与转换</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-09-18 10:53:58" itemprop="dateCreated datePublished" datetime="2022-09-18T10:53:58+08:00">2022-09-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-12-21 14:39:26" itemprop="dateModified" datetime="2022-12-21T14:39:26+08:00">2022-12-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">项目总结</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Vue-js模板编译器用于把模板编译为渲染函数："><a href="#Vue-js模板编译器用于把模板编译为渲染函数：" class="headerlink" title="Vue.js模板编译器用于把模板编译为渲染函数："></a>Vue.js模板编译器用于把模板编译为渲染函数：</h1><ul>
+<li>分析模板，将其解析为AST</li>
+<li>将模板AST转换为用于描述渲染函数的JavaScript AST</li>
+<li>根据JavaScript AST生成渲染函数代码</li>
+</ul>
+<h1 id="解析Token"><a href="#解析Token" class="headerlink" title="解析Token"></a>解析Token</h1><p>为Vue.js模板构造AST，AST在结构上和模板同构</p>
+<p>首先，将模板解析为一个个token,利用有限状态机进行分词</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义状态机状态</span></span><br><span class="line"><span class="keyword">const</span> State = &#123;</span><br><span class="line">  <span class="attr">initial</span>: <span class="number">1</span>, <span class="comment">//初始状态</span></span><br><span class="line">  <span class="attr">tagOpen</span>: <span class="number">2</span>, <span class="comment">//标签开始状态</span></span><br><span class="line">  <span class="attr">tagName</span>: <span class="number">3</span>, <span class="comment">//标签名称状态</span></span><br><span class="line">  <span class="attr">text</span>: <span class="number">4</span>, <span class="comment">//文本状态</span></span><br><span class="line">  <span class="attr">tagEnd</span>: <span class="number">5</span>, <span class="comment">//结束状态</span></span><br><span class="line">  <span class="attr">tagEndName</span>: <span class="number">6</span>, <span class="comment">//结束标签名称状态</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//一个辅助函数，用于判断是否是字母</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isAlpha</span>(<span class="params">char</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (char &gt;= <span class="string">&quot;a&quot;</span> &amp;&amp; char &lt;= <span class="string">&quot;z&quot;</span>) || (char &gt;= <span class="string">&quot;A&quot;</span> &amp;&amp; char &lt;= <span class="string">&quot;Z&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//接收模板字符串作为参数，并将模板切割为Token返回</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">tokenize</span>(<span class="params">str</span>) </span>&#123;</span><br><span class="line">  <span class="comment">//设置状态机的当前状态为初始状态</span></span><br><span class="line">  <span class="keyword">let</span> currentState = State.initial;</span><br><span class="line">  <span class="comment">//用于缓存字符</span></span><br><span class="line">  <span class="keyword">const</span> chars = [];</span><br><span class="line">  <span class="comment">//生成的token会存储到tokens中，并作为函数返回值返回</span></span><br><span class="line">  <span class="keyword">const</span> tokens = [];</span><br><span class="line">  <span class="comment">//使用while循环开启自动机，只要模板字符串没有被消费完，自动机一直运行</span></span><br><span class="line">  <span class="keyword">while</span> (str) &#123;</span><br><span class="line">    <span class="comment">//查看第一个字符只是查看，没有消费</span></span><br><span class="line">    <span class="keyword">const</span> char = str[<span class="number">0</span>];</span><br><span class="line">    <span class="comment">//switch语句匹配状态</span></span><br><span class="line">    <span class="keyword">switch</span> (currentState) &#123;</span><br><span class="line">      <span class="comment">//状态机处于初始状态</span></span><br><span class="line">      <span class="keyword">case</span> State.initial:</span><br><span class="line">        <span class="comment">//遇到字符&lt;</span></span><br><span class="line">        <span class="keyword">if</span> (char === <span class="string">&quot;&lt;&quot;</span>) &#123;</span><br><span class="line">          <span class="comment">//切换到标签开始状态</span></span><br><span class="line">          currentState = State.tagOpen;</span><br><span class="line">          <span class="comment">//消费字符</span></span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isAlpha(str)) &#123;</span><br><span class="line">          <span class="comment">//初始状态下遇到文本，切换到文本状态</span></span><br><span class="line">          currentState = State.text;</span><br><span class="line">          <span class="comment">//将当前文本存到chars数组</span></span><br><span class="line">          chars.push(char);</span><br><span class="line">          <span class="comment">//消费字符</span></span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="comment">//状态机处于标签开始状态</span></span><br><span class="line">      <span class="keyword">case</span> State.tagOpen:</span><br><span class="line">        <span class="comment">//遇到字母，切换到标签名称状态</span></span><br><span class="line">        <span class="keyword">if</span> (isAlpha(char)) &#123;</span><br><span class="line">          currentState = State.tagName;</span><br><span class="line">          <span class="comment">//将当前字符缓存到chars数组</span></span><br><span class="line">          chars.push(char);</span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (char === <span class="string">&quot;/&quot;</span>) &#123;</span><br><span class="line">          <span class="comment">//遇到&quot;/&quot;切换到标签结束状态</span></span><br><span class="line">          currentState = State.tagEnd;</span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="comment">//状态机处于标签名状态</span></span><br><span class="line">      <span class="keyword">case</span> State.tagName:</span><br><span class="line">        <span class="comment">//遇到字母，仍然处于标签名状态，不需要切换状态</span></span><br><span class="line">        <span class="comment">//但需要将字符缓存进chars数组</span></span><br><span class="line">        <span class="keyword">if</span> (isAlpha(char)) &#123;</span><br><span class="line">          chars.push(char);</span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (char === <span class="string">&quot;&gt;&quot;</span>) &#123;</span><br><span class="line">          <span class="comment">//切换到初始状态</span></span><br><span class="line">          currentState = State.initial;</span><br><span class="line">          <span class="comment">//同时创建一个标签Token,并添加到tokens数组</span></span><br><span class="line">          <span class="comment">//此时chars数组中缓存的就是标签名</span></span><br><span class="line">          tokens.push(&#123;</span><br><span class="line">            <span class="attr">type</span>: <span class="string">&quot;tag&quot;</span>,</span><br><span class="line">            <span class="attr">name</span>: chars.join(<span class="string">&quot;&quot;</span>),</span><br><span class="line">          &#125;);</span><br><span class="line">          <span class="comment">//chars数组已经被消费，清空</span></span><br><span class="line">          chars.length = <span class="number">0</span>;</span><br><span class="line">          <span class="comment">//同时消费当前字符&gt;</span></span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="comment">//状态机处于文本状态</span></span><br><span class="line">      <span class="keyword">case</span> State.text:</span><br><span class="line">        <span class="keyword">if</span> (isAlpha(char)) &#123;</span><br><span class="line">          chars.push(char);</span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (char === <span class="string">&quot;&lt;&quot;</span>) &#123;</span><br><span class="line">          <span class="comment">//切换标签开始状态</span></span><br><span class="line">          currentState = State.tagOpen;</span><br><span class="line">          <span class="comment">//从文本状态到标签开始状态，此时应该创建文本Token,并添加到tokens数组</span></span><br><span class="line">          <span class="comment">//chars数组中的内容就是文本内容</span></span><br><span class="line">          tokens.push(&#123;</span><br><span class="line">            <span class="attr">type</span>: <span class="string">&quot;text&quot;</span>,</span><br><span class="line">            <span class="attr">content</span>: chars.join(<span class="string">&quot;&quot;</span>),</span><br><span class="line">          &#125;);</span><br><span class="line">          <span class="comment">//清空数组内容</span></span><br><span class="line">          chars.length = <span class="number">0</span>;</span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="comment">//状态机处于标签结束状态</span></span><br><span class="line">      <span class="keyword">case</span> State.tagEnd:</span><br><span class="line">        <span class="comment">///遇到字母切换到标签结束名</span></span><br><span class="line">        <span class="keyword">if</span> (isAlpha(char)) &#123;</span><br><span class="line">          currentState = State.tagEndName;</span><br><span class="line">          chars.push(char);</span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="comment">//状态机处于结束标签名称状态</span></span><br><span class="line">      <span class="keyword">case</span> State.tagEndName:</span><br><span class="line">        <span class="keyword">if</span> (isAlpha(char)) &#123;</span><br><span class="line">          chars.push(char);</span><br><span class="line">          str = str.slice(<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (char === <span class="string">&quot;&gt;&quot;</span>) &#123;</span><br><span class="line">          currentState = State.initial;</span><br><span class="line">          tokens.push(&#123;</span><br><span class="line">            <span class="attr">type</span>: <span class="string">&quot;tagEnd&quot;</span>,</span><br><span class="line">            <span class="attr">name</span>: chars.join(<span class="string">&quot;&quot;</span>),</span><br><span class="line">          &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">        chars.length = <span class="number">0</span>;</span><br><span class="line">        str = str.slice(<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//最后返回tokens</span></span><br><span class="line">  <span class="keyword">return</span> tokens;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>比如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> tokens = tokenize(<span class="string">`&lt;div&gt;&lt;p&gt;Vue&lt;/p&gt;&lt;/div&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>得到：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> tokens = [</span><br><span class="line">    &#123;<span class="attr">type</span>:<span class="string">&quot;tag&quot;</span>,<span class="attr">name</span>:<span class="string">&quot;div&quot;</span>&#125;,<span class="comment">//div开始标签</span></span><br><span class="line">    &#123;<span class="attr">type</span>:<span class="string">&#x27;tag&#x27;</span>,<span class="attr">name</span>:<span class="string">&#x27;p&#x27;</span>&#125;,<span class="comment">//p开始标签</span></span><br><span class="line">    &#123;<span class="attr">type</span>:<span class="string">&#x27;text&#x27;</span>,<span class="attr">context</span>:<span class="string">&#x27;Vue&#x27;</span>&#125;,<span class="comment">//文本节点</span></span><br><span class="line">    &#123;<span class="attr">type</span>:<span class="string">&#x27;tagEnd&#x27;</span>,<span class="attr">name</span>:<span class="string">&#x27;p&#x27;</span>&#125;,<span class="comment">//p结束标签</span></span><br><span class="line">    &#123;<span class="attr">type</span>:<span class="string">&#x27;tagEnd&#x27;</span>,<span class="attr">name</span>:<span class="string">&#x27;div&#x27;</span>&#125;<span class="comment">//div结束标签</span></span><br><span class="line">    </span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h1 id="构建AST："><a href="#构建AST：" class="headerlink" title="构建AST："></a>构建AST：</h1><p>接下来，扫描token列表构建AST：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//扫描token列表构建AST</span></span><br><span class="line"><span class="comment">//parse函数接收模板作为参数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">parse</span>(<span class="params">str</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//首先对模板标记化，得到tokens</span></span><br><span class="line">    <span class="keyword">const</span> tokens = tokenize(str)</span><br><span class="line">    <span class="comment">//创建Root节点</span></span><br><span class="line">    <span class="keyword">const</span> root = &#123;</span><br><span class="line">        <span class="attr">type</span>: <span class="string">&#x27;Root&#x27;</span>,</span><br><span class="line">        <span class="attr">children</span>: []</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//创建elementStack，起初里面只有Root根结点</span></span><br><span class="line">    <span class="keyword">const</span> elementStack = [root]</span><br><span class="line">    <span class="comment">//开启一个while循环扫描tokens,直到所有Token都被扫描完毕为止</span></span><br><span class="line">    <span class="keyword">while</span>(tokens.length) &#123;</span><br><span class="line">        <span class="comment">//获取栈顶节点作为父结点</span></span><br><span class="line">        <span class="keyword">const</span> parent = elementStack[elementStack.length-<span class="number">1</span>]</span><br><span class="line">        <span class="comment">//当前扫描的Token</span></span><br><span class="line">        <span class="keyword">const</span> t = tokens[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">switch</span>(t.type)&#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;tag&#x27;</span>:</span><br><span class="line">                <span class="comment">//如果当前token是开始标签，则创建Element类型的AST节点</span></span><br><span class="line">                <span class="keyword">const</span> elementNode = &#123;</span><br><span class="line">                    <span class="attr">type</span>: <span class="string">&#x27;Element&#x27;</span>,</span><br><span class="line">                    <span class="attr">tag</span>: t.name,</span><br><span class="line">                    <span class="attr">children</span>: []</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//将其添加到父级节点的children</span></span><br><span class="line">                parent.children.push(elementNode)</span><br><span class="line">                <span class="comment">//将当前结点压入栈</span></span><br><span class="line">                elementStack.push(elementNode)</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;text&#x27;</span>:</span><br><span class="line">                <span class="keyword">const</span> textNode = &#123;</span><br><span class="line">                    <span class="attr">type</span>: <span class="string">&#x27;Text&#x27;</span>,</span><br><span class="line">                    <span class="attr">content</span>: t.content</span><br><span class="line">                &#125;</span><br><span class="line">                parent.children.push(textNode)</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;tagEnd&#x27;</span>:</span><br><span class="line">                <span class="comment">//遇到结束标签，将栈顶节点弹出</span></span><br><span class="line">                elementStack.pop()</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//消费已经扫描过的token</span></span><br><span class="line">        tokens.shift()</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="AST的转换"><a href="#AST的转换" class="headerlink" title="AST的转换"></a>AST的转换</h1><p>AST的转换，即对AST的一系列操作</p>
+<p>transform函数完成AST的转换，使用深度遍历算法对节点进行访问</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//首先需要编写一个深度优先遍历算法</span></span><br><span class="line"><span class="comment">//转换上下文context看做是在程序中某个范围内的全局变量,下面，所有AST转换函数都可以通过context共享数据</span></span><br><span class="line"><span class="comment">//将对结点的访问和操作进行解耦</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">traverseNode</span>(<span class="params">ast,context</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//设置当前转换的结点信息context.currentNode</span></span><br><span class="line">    context.currentNode = ast</span><br><span class="line">    <span class="keyword">const</span> transforms = context.nodeTransforms</span><br><span class="line">    <span class="comment">//执行对结点的操作</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>;i&lt;transforms.length;i++)&#123;</span><br><span class="line">        transforms[i](context.currentNode,context)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> children = context.currentNode.children</span><br><span class="line">    <span class="comment">//执行对结点的深度遍历访问</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>;i&lt;children.length;i++)&#123;</span><br><span class="line">        <span class="comment">//递归调用traverseNode转换子节点之前，将当前结点设置为父结点</span></span><br><span class="line">        context.parent = context.currentNode</span><br><span class="line">        <span class="comment">//设置位置索引</span></span><br><span class="line">        context.childIndex = i</span><br><span class="line">        <span class="comment">//递归调用时，将context透传</span></span><br><span class="line">        traverseNode(children[i],context)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">transformElement</span>(<span class="params">node,context</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(node.type === <span class="string">&#x27;Element&#x27;</span> &amp;&amp; node.tag === <span class="string">&#x27;p&#x27;</span>) &#123;</span><br><span class="line">        context.removeNode()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">transformText</span>(<span class="params">node,context</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(node.type === <span class="string">&#x27;Text&#x27;</span>) &#123;</span><br><span class="line">        context.replaceNode(&#123;</span><br><span class="line">            <span class="attr">type</span>:<span class="string">&#x27;Element&#x27;</span>,</span><br><span class="line">            <span class="attr">tag</span>: <span class="string">&#x27;span&#x27;</span></span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">transform</span>(<span class="params">ast</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> context = &#123;</span><br><span class="line">        <span class="comment">//增加currentNode用来存储当前正在转换的结点</span></span><br><span class="line">        <span class="attr">currentNode</span>:<span class="literal">null</span>,</span><br><span class="line">        <span class="comment">//增加currentIndex，用来存储当前结点在父结点的children中的位置索引</span></span><br><span class="line">        <span class="attr">childIndex</span>: <span class="number">0</span>,</span><br><span class="line">        <span class="comment">//增加parant用来存储当前转换结点的父结点</span></span><br><span class="line">        <span class="attr">parent</span>: <span class="literal">null</span>,</span><br><span class="line">        <span class="comment">//用于替换结点的函数，接收新节点作为参数</span></span><br><span class="line">        <span class="function"><span class="title">replaceNode</span>(<span class="params">node</span>)</span>&#123;</span><br><span class="line">            <span class="comment">//为了替换结点，需要修改AST</span></span><br><span class="line">            <span class="comment">//找到当前结点在父结点的children位置：context.childIndex</span></span><br><span class="line">            <span class="comment">//使用新节点替换</span></span><br><span class="line">            context.parent.children[context.childIndex]=node</span><br><span class="line">            context.currentNode = node</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="comment">//用于移除当前访问结点</span></span><br><span class="line">        <span class="function"><span class="title">removeNode</span>(<span class="params">node</span>)</span>&#123;</span><br><span class="line">            <span class="comment">//根据当前结点在父结点中的索引删除结点</span></span><br><span class="line">            context.parent.children.splice(context.childIndex,<span class="number">1</span>)</span><br><span class="line">            context.currentNode = <span class="literal">null</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">nodeTransforms</span>: [</span><br><span class="line">            transformElement,</span><br><span class="line">            transformText</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">    traverseNode(ast,context)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
       
@@ -1034,263 +1217,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/09/07/Vue%E6%8C%82%E8%BD%BD%E5%AD%90%E8%8A%82%E7%82%B9%E5%92%8C%E5%85%83%E7%B4%A0%E5%B1%9E%E6%80%A7/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/07/Vue%E6%8C%82%E8%BD%BD%E5%AD%90%E8%8A%82%E7%82%B9%E5%92%8C%E5%85%83%E7%B4%A0%E5%B1%9E%E6%80%A7/" class="post-title-link" itemprop="url">Vue挂载子节点和元素属性</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-09-07 16:54:46 / 修改时间：17:44:43" itemprop="dateCreated datePublished" datetime="2022-09-07T16:54:46+08:00">2022-09-07</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>渲染器的核心功能就是挂载与更新</p>
-<p>首先，有一个虚拟dom的代码如下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> vnode = &#123;</span><br><span class="line">    <span class="attr">type</span>:<span class="string">&#x27;div&#x27;</span>,</span><br><span class="line">    <span class="comment">//使用props描述一个元素得特性</span></span><br><span class="line">    <span class="attr">props</span>:&#123;</span><br><span class="line">        <span class="attr">id</span>:<span class="string">&#x27;foo&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">children</span>:[</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">type</span>:<span class="string">&#x27;p&#x27;</span>,</span><br><span class="line">            <span class="attr">children</span>:<span class="string">&#x27;hello&#x27;</span></span><br><span class="line">        &#125;        </span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>检查vnode.props字段可以使用el[key]=vnode.props[key]或者el.setAttribute(key,vnode.props[key]),先来了解下HTML Attributes和DOM Properties的不同</p>
-<h2 id="HTML-Attributes和DOM-Properties"><a href="#HTML-Attributes和DOM-Properties" class="headerlink" title="HTML Attributes和DOM Properties"></a>HTML Attributes和DOM Properties</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;foo&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>这个DOM对象有很多属性，HTML Attributes在DOM对象上有与之同名的DOM Properties，例如id=”my-input”对应el.id,但DOM Properties并不与HTML Attributes的名字总是一样，例如</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;foo&quot;</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>class=’foo’对应的DOM Properties是el.className,不是所有的HTML Adttributes都有和它对应的DOM Properties,例如aria-*类的HTML Attributes就没有和它对应的DOM Properties</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">value</span>=<span class="string">&#x27;foo&#x27;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>当用户修改了文本框的值，那么el.value的值时当前文本的值，而el.getAttribute(‘value’)仍然是之前的值</p>
-<p>总之：<strong>HTML Attributes的作用是设置与之对应的DOM Properties的初始值</strong></p>
-<h2 id="正确设置元素的属性"><a href="#正确设置元素的属性" class="headerlink" title="正确设置元素的属性"></a>正确设置元素的属性</h2><p>例子：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">:disabled</span>=<span class="string">&#x27;false&#x27;</span>&gt;</span></span><br><span class="line">    Button</span><br><span class="line"><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>这个HTML模板会被编译成vnode:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> button = &#123;</span><br><span class="line">    <span class="attr">type</span>: <span class="string">&#x27;button&#x27;</span>,</span><br><span class="line">    <span class="attr">props</span>: &#123;</span><br><span class="line">        <span class="attr">disabled</span>:<span class="literal">false</span></span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里的props.disabled的值时空字符串，如果在渲染器中调用setAttribute函数设置属性，相当于：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">el.setAttribute(<span class="string">&#x27;disabled&#x27;</span>,<span class="literal">false</span>)</span><br></pre></td></tr></table></figure>
-
-<p>用户本意是不禁用，但是用setAttribute按钮仍然被禁用了，这是因为使用setAttribute函数设置的值总是会被字符串化，等价于</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">el.setAttribute(<span class="string">&#x27;disabled&#x27;</span>,<span class="string">&#x27;false&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
-<p>el.disabled的值时布尔值，我们不关心值是什么，只要disabled属性存在，按钮就被禁用，不使用setAttribute,用el.disabled=false</p>
-<p>但是如果是下面的模板：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">disabled</span>&gt;</span></span><br><span class="line">    Button</span><br><span class="line"><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>对应的vnode:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> button = &#123;</span><br><span class="line">    <span class="attr">type</span>:<span class="string">&#x27;button&#x27;</span>,</span><br><span class="line">    <span class="attr">props</span>: &#123;</span><br><span class="line">        <span class="attr">disabled</span>: <span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>用DOM Properties设置元素属性时，el.disabled=’’,类型转换会设置为el.disabled=false,用户本意是禁用按钮，则只能优先设置setAttribute,如果是空字符串则手动矫正</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mountElement</span>(<span class="params">vnode,container</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> el = createElement(vnode.type)</span><br><span class="line">    <span class="comment">//省略children处理</span></span><br><span class="line">    <span class="keyword">if</span>(vnode.props)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">const</span> key <span class="keyword">in</span> vnode.props)&#123;</span><br><span class="line">            <span class="keyword">if</span>(key <span class="keyword">in</span> vnode.props)&#123;</span><br><span class="line">                 <span class="comment">//用in操作判断key是否存在对应的DOM Properties</span></span><br><span class="line">                <span class="keyword">if</span>(key <span class="keyword">in</span> el)&#123;</span><br><span class="line">                    <span class="comment">//获取该DOM Properties的类型</span></span><br><span class="line">                    <span class="keyword">const</span> type = el[key]</span><br><span class="line">                    <span class="keyword">const</span> value = vnode.props[key]</span><br><span class="line">                    <span class="keyword">if</span>(type === <span class="string">&#x27;boolean&#x27;</span> &amp;&amp; value ===<span class="string">&#x27;&#x27;</span>)&#123;</span><br><span class="line">                        e[key]=<span class="literal">true</span></span><br><span class="line">                    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                        e[key]=value</span><br><span class="line">                    &#125;                </span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    el.setAttribute(key,vnode.props[key])</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    insert(el,container)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/30/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E9%80%82%E9%85%8D/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/08/30/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E9%80%82%E9%85%8D/" class="post-title-link" itemprop="url">移动端适配</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-08-30 09:27:34 / 修改时间：10:51:55" itemprop="dateCreated datePublished" datetime="2022-08-30T09:27:34+08:00">2022-08-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h1><p>屏幕尺寸：以屏幕对角线的长度计算，单位是英寸</p>
-<p>像素 pixel:显示屏画面上表示出来的最小单位</p>
-<p>屏幕分辨率：一个屏幕具体由多少个像素点组成，单位是px</p>
-<p>物理像素：在同一个设备上，他的物理像素是固定的，也就是厂家在生产显示设备时就决定的实际点的个数，对于不同设备物理像素点的大小是不一样的</p>
-<p>逻辑像素（设备独立像素）：（与设备无关的逻辑像素，代表可以通过程序控制使用的虚拟像素）</p>
-<p>设备像素比dpr:计算公式为：<code>DPR = 物理像素/逻辑像素</code></p>
-<p>当设备像素比为1:1时，使用1（1×1）个设备像素显示1个CSS像素；</p>
-<p>当设备像素比为2:1时，使用4（2×2）个设备像素显示1个CSS像素；</p>
-<p>当设备像素比为3:1时，使用9（3×3）个设备像素显示1个CSS像素。</p>
-<p>视口viewport:</p>
-<p>viewport指的是视口，它是浏览器或者app中webview显示页面的区域，一般，PC端的视口指的是浏览器窗口区域，而移动端有三个视口：</p>
-<p>layout viewport:布局视口</p>
-<p>visual viewport:视觉视口</p>
-<p>ideal viewport:理想视口</p>
-<p>布局视口(layout viewport):</p>
-<p>由浏览器提出的一种虚拟的布局视口，用来解决页面在收上显示的问题，这种视口可以通过<meta>标签设置viewport来改变，移动设备上的浏览器会把自己默认的viewport设为980px或者1024px，也可能是其它值，这个是由设备自己决定的），但带来的后果就是浏览器会出现横向滚动条，因为浏览器可视区域的宽度是比这个默认的viewport的宽度要小的。</p>
-<p>我们可以通过<code>document.documentElement.clientWidth</code>来获取布局视口大小</p>
-<p>视觉视口（visual viewport）</p>
-<p>它指的是浏览器的可视区域，也就是我们在移动端设备上能够看到的区域。默认与当前浏览器窗口大小相等，当用户对浏览器进行缩放时，不会改变布局视口的大小，但会改变视觉窗口的大小。</p>
-<p>meta viewport</p>
-<p>对于移动端页面，可以采用<code>&lt;meta&gt;</code>标签来配置视口大小和缩放等。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot;</span> /&gt;</span></span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>width</strong>：该属性被用来控制视窗的宽度，可以将width设置为320这样确切的像素数，也可以设为device-width这样的关键字，表示设备的实际宽度，一般为了自适应布局，普遍的做法是将width设置为<code>device-width</code>。</li>
-<li><strong>height</strong>：该属性被用来控制视窗的高度，可以将height设置为640这样确切的像素数，也可以设为<code>device-height</code>这样的关键字，表示设备的实际高度，一般不会设置视窗的高度，这样内容超出的话采用滚动方式浏览。</li>
-<li><strong>initial-scale</strong>：该属性用于指定页面的初始缩放比例，可以配置<code>0.0～10</code>的数字，<strong>initial-scale=1表示不进行缩放，视窗刚好等于理想视窗</strong>，当大于1时表示将视窗进行放大，小于1时表示缩小。这里只表示初始视窗缩放值，用户也可以自己进行缩放，例如双指拖动手势缩放或者双击手势放大。<strong>安卓设备上的initial-scale默认值：</strong> 无默认值，一定要设置，这个属性才会起作用。在iphone和ipad上，无论你给viewport设的宽的是多少，如果<strong>没有指定默认的缩放值</strong>，则iphone和ipad会<strong>自动计算这个缩放值</strong>，以达到当前页面不会出现横向滚动条(或者说viewport的宽度就是屏幕的宽度)的目的。</li>
-<li><strong>maximum-scale</strong>：该属性表示用户能够手动放大的最大比例，可以配置<code>0.0～10</code>的数字。</li>
-<li><strong>minimum-scale</strong>：该属性类似maximum-scale，用来指定页面缩小的最小比例。通常情况下，不会定义该属性的值，页面太小将难以浏览。</li>
-<li><strong>user-scalable</strong>：该属性表示是否允许用户手动进行缩放，可配置<code>no或者yes</code>。当配置成no时，用户将不能通过手势操作的方式对页面进行缩放。</li>
-</ul>
-<p>这里需要注意的是<code>viewport</code>只对移动端浏览器有效，对PC端浏览器是无效的。</p>
-<h1 id="rem适配："><a href="#rem适配：" class="headerlink" title="rem适配："></a>rem适配：</h1><p>是CSS3新增的一个相对单位，是指相对于根元素的字体大小的单位。</p>
-<ul>
-<li>将屏幕宽度分为10份，设置html的font-size为window.innerWidth/10px</li>
-<li>1rem=window.innerWidth/10px</li>
-<li>根据UI的px计算相应rem:比如盒子宽320px，（320px/window.innerWidth)*10=5.333rem</li>
-<li>将rem转为不同的px尺寸在不同手机上呈现：5.333rem*window.innerWidth/10px</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//给html标签添加font-size</span></span><br><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&#x27;DOMContentLoaded&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">document</span>.getElementsByTagName(<span class="string">&#x27;html&#x27;</span>)[<span class="number">0</span>].style.fontSize = <span class="built_in">window</span>.innerWidth / <span class="number">10</span> + <span class="string">&#x27;px&#x27;</span>;</span><br><span class="line">&#125;, <span class="literal">false</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>使用Sass定义一个ps2rem函数</p>
-<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@funtion</span> px2rem(<span class="variable">$px</span>)&#123;</span><br><span class="line">    <span class="variable">$rem</span>: <span class="number">75px</span>;<span class="comment">//750/10</span></span><br><span class="line">    <span class="keyword">@return</span> (<span class="variable">$px</span>/<span class="variable">$rem</span>)+rem</span><br><span class="line">&#125;</span><br><span class="line">.box1 &#123;</span><br><span class="line">    <span class="attribute">width</span>: px2rem(<span class="number">320px</span>);<span class="comment">//(320/750)*10=4.266rem</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="vw-vh适配："><a href="#vw-vh适配：" class="headerlink" title="vw,vh适配："></a>vw,vh适配：</h1><p><code>vw（Viewport Width）</code>、<code>vh(Viewport Height)</code>是基于视图窗口的单位，是css3中提出来的，基于视图窗口的单位。</p>
-<p><code>vh、vw</code>方案即将视觉视口宽度 <code>window.innerWidth</code>和视觉视口高度 <code>window.innerHeight</code> 等分为 100 份。</p>
-<p>上面的<code>flexible</code>方案就是模仿这种方案，因为早些时候<code>vw</code>还没有得到很好的兼容。</p>
-<ul>
-<li><code>vw(Viewport&#39;s width)</code>：<code>1vw</code>等于视觉视口的<code>1%</code></li>
-<li><code>vh(Viewport&#39;s height)</code> :<code>1vh</code> 为视觉视口高度的<code>1%</code></li>
-<li><code>vmin</code> : <code>vw</code> 和 <code>vh</code> 中的较小值</li>
-<li><code>vmax</code> : 选取 <code>vw</code> 和 <code>vh</code> 中的较大值</li>
-</ul>
-<p>如果按视觉视口为<code>375px</code>，那么<code>1vw = 3.75px</code>，这时<code>UI</code>给定一个元素的宽为<code>75px</code>（设备独立像素），我们只需要将它设置为<code>75 / 3.75 = 20vw</code></p>
-<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@device-width:</span> <span class="number">375</span></span><br><span class="line"><span class="variable">@vw</span>: (<span class="number">100vw</span>/device-<span class="attribute">width</span>)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div class=&quot;songyao&quot;&gt;</span><br><span class="line">        &lt;h1&gt;&#123;&#123; username &#125;&#125;&lt;/h1&gt;</span><br><span class="line">    &lt;p&gt;</span><br><span class="line">      了解脚手架及脚手架指令请移步个人博客&lt;br&gt;</span><br><span class="line">      check out the</span><br><span class="line">      &lt;a href=&quot;http://47.100.126.169/zmengBlog&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;逐梦博客&lt;/a&gt;.</span><br><span class="line">    &lt;/p&gt;</span><br><span class="line">    &lt;p&gt;微信公众号：&lt;span class=&quot;wx_name&quot;&gt;前端南玖&lt;/span&gt;&lt;/p&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">    name: &#x27;songyao&#x27;,</span><br><span class="line">    data() &#123;</span><br><span class="line">        return &#123;</span><br><span class="line">            username: &#x27;songyao-cli(vue 模板)&#x27;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style lang=&quot;less&quot;&gt;</span><br><span class="line">.songyao&#123;</span><br><span class="line">    h1&#123;</span><br><span class="line">       </span><br><span class="line">        font-size: 24*@vw;</span><br><span class="line">    &#125;</span><br><span class="line">    p&#123;</span><br><span class="line">       </span><br><span class="line">        font-size: 16*@vw;</span><br><span class="line">    &#125;</span><br><span class="line">   .wx_name&#123;</span><br><span class="line">    color:brown;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
-
-<h1 id="viewport和px"><a href="#viewport和px" class="headerlink" title="viewport和px"></a>viewport和px</h1><p>这种方案可以让我们在开发时不用关注设备屏幕尺寸的差异，直接按照设计稿上的标注进行开发，也无需单位的换算，直接用px。HTML 的 head 标签里加入 <code>&lt;meta name=&quot;viewport&quot; content=&quot;width=&#123;设计稿宽度&#125;, initial-scale=&#123;屏幕逻辑像素宽度/设计稿宽度&#125;&quot; &gt;</code> 。</p>
-<p>假如UI给我们提供的设计稿宽度时375px，我们则需要将页面的viewport的width设为375，然后再根据设备的逻辑像素将页面进行整体放缩。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">initViewport</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> width = <span class="number">375</span>;  <span class="comment">// 设计稿宽度</span></span><br><span class="line">    <span class="keyword">const</span> scale = <span class="built_in">window</span>.innerWidth / width</span><br><span class="line">    <span class="comment">// console.log(&#x27;scale&#x27;, scale)</span></span><br><span class="line">    <span class="keyword">let</span> meta = <span class="built_in">document</span>.querySelector(<span class="string">&#x27;meta[name=viewport]&#x27;</span>)</span><br><span class="line">    <span class="keyword">let</span> content = <span class="string">`width=<span class="subst">$&#123;width&#125;</span>, init-scale=<span class="subst">$&#123;scale&#125;</span>, user-scalable=no`</span></span><br><span class="line">    <span class="keyword">if</span>(!meta) &#123;</span><br><span class="line">        meta = <span class="built_in">document</span>.createElement(<span class="string">&#x27;meta&#x27;</span>)</span><br><span class="line">        meta.setAttribute(<span class="string">&#x27;name&#x27;</span>, <span class="string">&#x27;viewport&#x27;</span>)</span><br><span class="line">        <span class="built_in">document</span>.head.appendChild(meta)</span><br><span class="line">    &#125;</span><br><span class="line">    meta.setAttribute(<span class="string">&#x27;content&#x27;</span>, content)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h1><p>rem:</p>
-<ul>
-<li>适配原理复杂</li>
-<li>需要使用js</li>
-<li>设计稿标注px换算到css的rem计算简单</li>
-<li>方案灵活，即能实现整体缩放，又能实现局部不缩放</li>
-</ul>
-<p>vw:</p>
-<ul>
-<li>适配原理简单</li>
-<li>不需要使用js</li>
-<li>设计稿标注的px换算为css的vw计算复杂</li>
-</ul>
-<p>viewport+px:</p>
-<ul>
-<li>适配原理简单</li>
-<li>需要使用js</li>
-<li>直接使用设计稿标注无需换算</li>
-<li>方案死板，只能实现页面级别肢体缩放</li>
-</ul>
-<p>参考：<a target="_blank" rel="noopener" href="https://juejin.cn/post/7085931616136069156#heading-19">https://juejin.cn/post/7085931616136069156#heading-19</a></p>
-<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903590968950797#heading-7">https://juejin.cn/post/6844903590968950797#heading-7</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1362,7 +1288,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">234</span>
+          <span class="site-state-item-count">236</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1413,7 +1339,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -1436,7 +1362,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共213k字</span>
+  <span class="post-count">博客全站共217.9k字</span>
 </div>
         
 
