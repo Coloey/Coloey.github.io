@@ -187,6 +187,105 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/25/%E5%AE%9E%E7%94%A8%E7%A8%8B%E5%BA%8F%E7%B1%BB%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/07/25/%E5%AE%9E%E7%94%A8%E7%A8%8B%E5%BA%8F%E7%B1%BB%E5%9E%8B/" class="post-title-link" itemprop="url">实用程序类型</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-07-25 15:39:45 / 修改时间：16:08:01" itemprop="dateCreated datePublished" datetime="2022-07-25T15:39:45+08:00">2022-07-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Partial"><a href="#Partial" class="headerlink" title="Partial"></a>Partial<Type></Type></h1><p>构造一个所有属性的Type都设置为可选的类型，返回一个表示给定类型的所有子集的类型</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Todo &#123;</span><br><span class="line">    <span class="attr">title</span>:<span class="built_in">string</span>;</span><br><span class="line">    description:stirng;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateTodo</span>(<span class="params">todo:Todo,fieldsToUpdate:Partial&lt;Todo&gt;</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;...todo,...fieldsToUpdate&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> todo1 = &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&quot;organize desk&quot;</span>,</span><br><span class="line">  <span class="attr">description</span>: <span class="string">&quot;clear clutter&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> todo2 = updateTodo(todo1, &#123;</span><br><span class="line">  <span class="attr">description</span>: <span class="string">&quot;throw out trash&quot;</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h1 id="Required"><a href="#Required" class="headerlink" title="Required"></a>Required<Type></Type></h1><p>构造一个由所有属性类型都是required的类型，与Partial相反</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Props &#123;</span><br><span class="line">  a?: <span class="built_in">number</span>;</span><br><span class="line">  b?: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> obj: Props = &#123; <span class="attr">a</span>: <span class="number">5</span> &#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> obj2: Required&lt;Props&gt; = &#123; <span class="attr">a</span>: <span class="number">5</span> &#125;;</span><br><span class="line"><span class="comment">//Property &#x27;b&#x27; is missing in type &#x27;&#123; a: number; &#125;&#x27; but required in type &#x27;Required&lt;Props&gt;&#x27;.</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Readonly"><a href="#Readonly" class="headerlink" title="Readonly"></a>Readonly<Type></Type></h1><p>构造一个所有属性的Type都设置为readonly的类型，这意味着构造类型的属性不能重新分配</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Todo &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> todo: Readonly&lt;Todo&gt; = &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&quot;Delete inactive users&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">todo.title = <span class="string">&quot;Hello&quot;</span>;</span><br><span class="line"><span class="comment">//Cannot assign to &#x27;title&#x27; because it is a read-only property.</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Record-lt-Keys-Type-gt"><a href="#Record-lt-Keys-Type-gt" class="headerlink" title="Record&lt;Keys,Type&gt;"></a>Record&lt;Keys,Type&gt;</h1><p>构造一个对象类型，其属性键为keys，属性值为Type,可用于将一种类型的属性映射到另一种类型</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> CatInfo &#123;</span><br><span class="line">  <span class="attr">age</span>: <span class="built_in">number</span>;</span><br><span class="line">  breed: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> CatName = <span class="string">&quot;miffy&quot;</span> | <span class="string">&quot;boris&quot;</span> | <span class="string">&quot;mordred&quot;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> cats: Record&lt;CatName, CatInfo&gt; = &#123;</span><br><span class="line">  <span class="attr">miffy</span>: &#123; <span class="attr">age</span>: <span class="number">10</span>, <span class="attr">breed</span>: <span class="string">&quot;Persian&quot;</span> &#125;,</span><br><span class="line">  <span class="attr">boris</span>: &#123; <span class="attr">age</span>: <span class="number">5</span>, <span class="attr">breed</span>: <span class="string">&quot;Maine Coon&quot;</span> &#125;,</span><br><span class="line">  <span class="attr">mordred</span>: &#123; <span class="attr">age</span>: <span class="number">16</span>, <span class="attr">breed</span>: <span class="string">&quot;British Shorthair&quot;</span> &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">cats.boris;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//const cats: Record&lt;CatName, CatInfo</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Pick-lt-Type-Keys-gt"><a href="#Pick-lt-Type-Keys-gt" class="headerlink" title="Pick&lt;Type,Keys&gt;"></a>Pick&lt;Type,Keys&gt;</h1><p>通过从中选择一组属性keys来构造类型Type</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Todo &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="built_in">string</span>;</span><br><span class="line">  description: <span class="built_in">string</span>;</span><br><span class="line">  completed: <span class="built_in">boolean</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> TodoPreview = Pick&lt;Todo, <span class="string">&quot;title&quot;</span> | <span class="string">&quot;completed&quot;</span>&gt;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> todo: TodoPreview = &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&quot;Clean room&quot;</span>,</span><br><span class="line">  <span class="attr">completed</span>: <span class="literal">false</span>,</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">todo;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//const todo: TodoPreview</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="omit-lt-Type-Keys-gt"><a href="#omit-lt-Type-Keys-gt" class="headerlink" title="omit&lt;Type,Keys&gt;"></a>omit&lt;Type,Keys&gt;</h1><p>Type通过从中选择所有属性然后删除keys来构造类型</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Todo &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="built_in">string</span>;</span><br><span class="line">  description: <span class="built_in">string</span>;</span><br><span class="line">  completed: <span class="built_in">boolean</span>;</span><br><span class="line">  createdAt: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> TodoPreview = Omit&lt;Todo, <span class="string">&quot;description&quot;</span>&gt;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> todo: TodoPreview = &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&quot;Clean room&quot;</span>,</span><br><span class="line">  <span class="attr">completed</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">createdAt</span>: <span class="number">1615544252770</span>,</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">todo;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//const todo: TodoPreview</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> TodoInfo = Omit&lt;Todo, <span class="string">&quot;completed&quot;</span> | <span class="string">&quot;createdAt&quot;</span>&gt;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> todoInfo: TodoInfo = &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&quot;Pick up kids&quot;</span>,</span><br><span class="line">  <span class="attr">description</span>: <span class="string">&quot;Kindergarten closes at 5pm&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">todoInfo;</span><br><span class="line">   </span><br><span class="line"><span class="comment">//const todoInfo: TodoInfo</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Exclude-lt-UnionType-ExcludedMembers-gt"><a href="#Exclude-lt-UnionType-ExcludedMembers-gt" class="headerlink" title="Exclude&lt;UnionType,ExcludedMembers&gt;"></a>Exclude&lt;UnionType,ExcludedMembers&gt;</h1><p>通过从UnionType中排除可以赋值给ExcludedMembers的值</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> T0=Exclude&lt;<span class="string">&quot;a&quot;</span>|<span class="string">&quot;b&quot;</span>|<span class="string">&quot;c&quot;</span>,<span class="string">&quot;a&quot;</span>&gt;</span><br><span class="line"><span class="comment">//type T0=&quot;b&quot;|&quot;c&quot;</span></span><br><span class="line"><span class="keyword">type</span> T1=Exclude&lt;<span class="string">&quot;a&quot;</span>|<span class="string">&quot;b&quot;</span>|<span class="string">&quot;c&quot;</span>,<span class="string">&quot;a&quot;</span>|<span class="string">&quot;b&quot;</span>&gt;;</span><br><span class="line"><span class="comment">//type T1=&quot;c&quot;</span></span><br><span class="line"><span class="keyword">type</span> T2 = Exclude&lt;<span class="built_in">string</span> | <span class="built_in">number</span> | (<span class="function">() =&gt;</span> <span class="built_in">void</span>), <span class="built_in">Function</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T2 = string | number</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Extract-lt-Type-Union-gt"><a href="#Extract-lt-Type-Union-gt" class="headerlink" title="Extract&lt;Type,Union&gt;"></a>Extract&lt;Type,Union&gt;</h1><p>提取出Type和Union的交集（可以赋值给Union成员的值）</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> T0 = Extract&lt;<span class="string">&quot;a&quot;</span> | <span class="string">&quot;b&quot;</span> | <span class="string">&quot;c&quot;</span>, <span class="string">&quot;a&quot;</span> | <span class="string">&quot;f&quot;</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T0 = &quot;a&quot;</span></span><br><span class="line"><span class="keyword">type</span> T1 = Extract&lt;<span class="built_in">string</span> | <span class="built_in">number</span> | (<span class="function">() =&gt;</span> <span class="built_in">void</span>), <span class="built_in">Function</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T1 = () =&gt; void</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="NonNullable"><a href="#NonNullable" class="headerlink" title="NonNullable"></a>NonNullable<Type></Type></h1><p>构造一个类型，可以从Type中排除null和undefined</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> T0 = NonNullable&lt;<span class="built_in">string</span> | <span class="built_in">number</span> | <span class="literal">undefined</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T0 = string | number</span></span><br><span class="line"><span class="keyword">type</span> T1 = NonNullable&lt;<span class="built_in">string</span>[] | <span class="literal">null</span> | <span class="literal">undefined</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T1 = string[]</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="ReturnType"><a href="#ReturnType" class="headerlink" title="ReturnType"></a>ReturnType<Type></Type></h1><p>由函数返回类型组成（<strong>Type必须是一个（…args:any）=&gt;any)</strong></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>): </span>&#123; a: <span class="built_in">number</span>; b: <span class="built_in">string</span> &#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> T0 = ReturnType&lt;<span class="function">() =&gt;</span> <span class="built_in">string</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T0 = string</span></span><br><span class="line"><span class="keyword">type</span> T1 = ReturnType&lt;<span class="function">(<span class="params">s: <span class="built_in">string</span></span>) =&gt;</span> <span class="built_in">void</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T1 = void</span></span><br><span class="line"><span class="keyword">type</span> T2 = ReturnType&lt;&lt;T&gt;<span class="function">() =&gt;</span> T&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T2 = unknown</span></span><br><span class="line"><span class="keyword">type</span> T3 = ReturnType&lt;&lt;T <span class="keyword">extends</span> U, U <span class="keyword">extends</span> <span class="built_in">number</span>[]&gt;<span class="function">() =&gt;</span> T&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T3 = number[]</span></span><br><span class="line"><span class="keyword">type</span> T4 = ReturnType&lt;<span class="keyword">typeof</span> f1&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T4 = &#123;</span></span><br><span class="line">  <span class="comment">//  a: number;</span></span><br><span class="line">   <span class="comment">// b: string;</span></span><br><span class="line"><span class="comment">//&#125;</span></span><br><span class="line"><span class="keyword">type</span> T5 = ReturnType&lt;<span class="built_in">any</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T5 = any</span></span><br><span class="line"><span class="keyword">type</span> T6 = ReturnType&lt;<span class="built_in">never</span>&gt;;</span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T6 = never</span></span><br><span class="line"><span class="keyword">type</span> T7 = ReturnType&lt;<span class="built_in">string</span>&gt;;</span><br><span class="line"><span class="comment">//Type &#x27;string&#x27; does not satisfy the constraint &#x27;(...args: any) =&gt; any&#x27;.</span></span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T7 = any</span></span><br><span class="line"><span class="keyword">type</span> T8 = ReturnType&lt;<span class="built_in">Function</span>&gt;;</span><br><span class="line"><span class="comment">//Type &#x27;Function&#x27; does not satisfy the constraint &#x27;(...args: any) =&gt; any&#x27;.</span></span><br><span class="line"><span class="comment">//  Type &#x27;Function&#x27; provides no match for the signature &#x27;(...args: any): any&#x27;.</span></span><br><span class="line">     </span><br><span class="line"><span class="comment">//type T8 = any</span></span><br></pre></td></tr></table></figure>
+
+<p>官网链接：<a target="_blank" rel="noopener" href="https://www.typescriptlang.org/docs/handbook/utility-types.html#returntypetype">https://www.typescriptlang.org/docs/handbook/utility-types.html#returntypetype</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/23/%E7%BA%AF%E5%87%BD%E6%95%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1081,81 +1180,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/05/%E7%B4%A2%E5%BC%95%E8%AE%BF%E9%97%AE%E7%B1%BB%E5%9E%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/05/%E7%B4%A2%E5%BC%95%E8%AE%BF%E9%97%AE%E7%B1%BB%E5%9E%8B/" class="post-title-link" itemprop="url">索引访问类型</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-07-05 16:35:46 / 修改时间：16:41:03" itemprop="dateCreated datePublished" datetime="2022-07-05T16:35:46+08:00">2022-07-05</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>用索引访问类型查找<strong>另外一个类型</strong>上的特定属性</p>
-<p>使用typeof获取数组类型，使用number获取数组元素类型</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> MyArray=[</span><br><span class="line">     &#123; <span class="attr">name</span>: <span class="string">&quot;Alice&quot;</span>, <span class="attr">age</span>: <span class="number">15</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&quot;Bob&quot;</span>, <span class="attr">age</span>: <span class="number">23</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&quot;Eve&quot;</span>, <span class="attr">age</span>: <span class="number">38</span> &#125;,</span><br><span class="line">];</span><br><span class="line"><span class="keyword">type</span> Person=<span class="keyword">typeof</span> MyArray;</span><br><span class="line"><span class="comment">//type Person=&#123;name:string;age:number&#125;[];</span></span><br><span class="line"><span class="keyword">type</span> Person1=<span class="keyword">typeof</span> MyArray[<span class="built_in">number</span>];</span><br><span class="line"><span class="comment">// type Person = &#123;</span></span><br><span class="line"><span class="comment">//    name: string;</span></span><br><span class="line"><span class="comment">//    age: number;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"><span class="keyword">type</span> Age=<span class="keyword">typeof</span> MyArray[<span class="built_in">number</span>][<span class="string">&quot;age&quot;</span>];</span><br><span class="line"><span class="comment">//type Age=number;</span></span><br><span class="line"><span class="keyword">type</span> Age2=Person[<span class="string">&quot;age&quot;</span>];</span><br><span class="line"><span class="comment">//typr Age2=number;</span></span><br></pre></td></tr></table></figure>
-
-<p>参考：</p>
-<p><a target="_blank" rel="noopener" href="https://ts.yayujs.com/handbook/IndexedAccessTypes.html#%E7%B4%A2%E5%BC%95%E8%AE%BF%E9%97%AE%E7%B1%BB%E5%9E%8B-indexed-access-types">https://ts.yayujs.com/handbook/IndexedAccessTypes.html#%E7%B4%A2%E5%BC%95%E8%AE%BF%E9%97%AE%E7%B1%BB%E5%9E%8B-indexed-access-types</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.typescriptlang.org/docs/handbook/2/indexed-access-types.html">https://www.typescriptlang.org/docs/handbook/2/indexed-access-types.html</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1227,7 +1251,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">236</span>
+          <span class="site-state-item-count">237</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1301,7 +1325,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共217.9k字</span>
+  <span class="post-count">博客全站共218.7k字</span>
 </div>
         
 

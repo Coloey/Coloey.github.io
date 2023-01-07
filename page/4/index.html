@@ -187,6 +187,87 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/10/ThisType/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/10/ThisType/" class="post-title-link" itemprop="url">ThisType</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-10-10 22:10:26 / 修改时间：22:25:08" itemprop="dateCreated datePublished" datetime="2022-10-10T22:10:26+08:00">2022-10-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在对象字面量方法中的this类型，将由以下决定：</p>
+<p>如果这个方法显示指定了this参数，那么this具有该参数的类型</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> bar = &#123;</span><br><span class="line">    <span class="attr">x</span>: <span class="string">&quot;hello&quot;</span>,</span><br><span class="line">    <span class="function"><span class="title">f</span>(<span class="params"><span class="built_in">this</span>:&#123; message: <span class="built_in">string</span> &#125;</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>;<span class="comment">//&#123;message: string&#125;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>否则，如果方法由带this参数的签名进行上下文键入，那么this具有该参数的类型</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> foo = &#123;</span><br><span class="line">    <span class="attr">x</span>: <span class="string">&quot;hello&quot;</span>,</span><br><span class="line">    <span class="function"><span class="title">f</span>(<span class="params">n: <span class="built_in">number</span></span>)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>;<span class="comment">//&#123;x:string,f(n: number): void&#125;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果–noImplicityThis选项启用，并且对象字面量中包含由ThisType<T>键入的上下文类型，那么this的类型为T</T></p>
+<p>如果–noImplicityThis选项启用，并且对象字面量中包含由ThisType<T>键入的上下文类型，那么this的类型为该上下文类型</T></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ObjectDescriptor&lt;D,M&gt; = &#123;</span><br><span class="line">    data?: D;</span><br><span class="line">    methods?: M &amp; ThisType&lt;D&amp;M&gt;<span class="comment">//Type of &#x27;this&#x27; is D&amp;M</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeObject</span>&lt;<span class="title">D</span>,<span class="title">M</span>&gt;(<span class="params">desc:ObjectDescriptor&lt;D,M&gt;:D &amp; M</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> data: <span class="built_in">object</span> = desc.data || &#123;&#125;</span><br><span class="line">    <span class="keyword">let</span> methods: <span class="built_in">object</span> = desc.methods || &#123;&#125;</span><br><span class="line">    <span class="keyword">return</span> &#123;...data,...methods&#125; <span class="keyword">as</span> D&amp;M;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> obj = makeObject(&#123;</span><br><span class="line">    <span class="attr">data</span>: &#123;<span class="attr">x</span>:<span class="number">0</span>,<span class="attr">y</span>:<span class="number">0</span>&#125;,</span><br><span class="line">    <span class="attr">methods</span>: &#123;</span><br><span class="line">        <span class="function"><span class="title">moveBy</span>(<span class="params">dx:<span class="built_in">number</span>,dy:<span class="built_in">number</span></span>)</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.x+=dx;<span class="comment">//Strongly typed this</span></span><br><span class="line">            <span class="built_in">this</span>.y+=dy;<span class="comment">//Strongly typed this</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line">obj.x=<span class="number">10</span>;</span><br><span class="line">obj.y=<span class="number">20</span>;</span><br><span class="line">obj.moveBy(<span class="number">5</span>,<span class="number">5</span>);</span><br></pre></td></tr></table></figure>
+
+<p>否则，如果 <code>--noImplicitThis</code> 选项已经启用，<code>this</code> 具有该对象字面量的类型。</p>
+<p>否则，<code>this</code> 的类型为 <code>any</code>。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/10/10/%E6%B7%B7%E5%90%88/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1149,74 +1230,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/09/11/gulp/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/11/gulp/" class="post-title-link" itemprop="url">gulp</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-09-11 14:48:34 / 修改时间：14:58:09" itemprop="dateCreated datePublished" datetime="2022-09-11T14:48:34+08:00">2022-09-11</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1288,7 +1301,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">236</span>
+          <span class="site-state-item-count">237</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1362,7 +1375,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共217.9k字</span>
+  <span class="post-count">博客全站共218.7k字</span>
 </div>
         
 

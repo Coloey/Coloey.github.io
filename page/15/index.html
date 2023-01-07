@@ -187,6 +187,144 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/19/%E5%BC%82%E6%AD%A5%E8%AF%B7%E6%B1%82/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/19/%E5%BC%82%E6%AD%A5%E8%AF%B7%E6%B1%82/" class="post-title-link" itemprop="url">异步请求</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-19 16:14:15" itemprop="dateCreated datePublished" datetime="2022-04-19T16:14:15+08:00">2022-04-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-09-17 21:52:12" itemprop="dateModified" datetime="2022-09-17T21:52:12+08:00">2022-09-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="XMLHttpRequest对象"><a href="#XMLHttpRequest对象" class="headerlink" title="XMLHttpRequest对象"></a>XMLHttpRequest对象</h1><p>XHR对象有一个readyState属性，表示当前处在请求/响应过程的哪个阶段</p>
+<p>0：未初始化</p>
+<p>1：已打开（open),已调用open()方法，未调用send()方法</p>
+<p>2：已发送（send)已调用send()方法，尚未收到响应</p>
+<p>3：接受中（Receiving),已经收到部分响应</p>
+<p>4：完成（Complete),已经收到所有响应，可以使用</p>
+<p>每次readyState从一个值变为另一个值，会触发readystatechange事件，可以借此机会检查readyState的值，一般来说，我们只关心readyState值是4，表示数据已经就绪</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> form = <span class="built_in">document</span>.getElementById(<span class="string">&quot;myForm&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> xhr=<span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line"><span class="keyword">var</span> formData = <span class="keyword">new</span> FormData(form);</span><br><span class="line">xhr.onreadystatechange=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">   <span class="keyword">if</span>(xhr.readyState==<span class="number">4</span>)&#123;</span><br><span class="line">       <span class="keyword">if</span>((xhr.status&gt;=<span class="number">200</span>&amp;&amp;xhr.status&lt;<span class="number">300</span>)||xhr.status===<span class="number">304</span>)&#123;</span><br><span class="line">                        alert(xhr.responseText)</span><br><span class="line">                    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                        alert(<span class="string">&quot;Request was unsuccessful:&quot;</span>+xhr.status)</span><br><span class="line">                    &#125;</span><br><span class="line">                </span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        xhr.open(<span class="string">&quot;post&quot;</span>,<span class="string">&quot;http://127.0.0.1:3007/api/login&quot;</span>,<span class="literal">true</span>)</span><br><span class="line">        xhr.setRequestHeader(<span class="string">&#x27;Content-Type&#x27;</span>,<span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span>)<span class="comment">//设置发送请求的头部</span></span><br><span class="line">        xhr.timeout=<span class="number">1000</span>;<span class="comment">//设置超时</span></span><br><span class="line">        xhr.ontimeout=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            alert(<span class="string">&quot;Request didn not return in a second&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        xhr.send(serialize(form))</span><br><span class="line">    	<span class="comment">//使用FormData</span></span><br><span class="line">    	<span class="comment">//xhr.send(new FormData(form))</span></span><br><span class="line">       </span><br><span class="line">   &#125; </span><br></pre></td></tr></table></figure>
+
+
+
+<p>凭据请求：</p>
+<p>默认情况下，跨域请求不提供凭据（cookie,HTTP认证和客户端SSL证书），可以通过withCredentials属性设置为true来表明请求会发送凭据，如果服务器允许待凭据的请求，那么可以在响应中包含如下HTTP头部：Access-Control-Allow-Credentials:true</p>
+<p>如果发送了凭据请求而服务器返回的响应中没有这个头部，则浏览器不会把响应交给JavaScript，服务器也可以在预检请求的响应中发送这个HTTP头部，以表明这个源允许发送凭据请求</p>
+<h1 id="Fetch-API"><a href="#Fetch-API" class="headerlink" title="Fetch API"></a>Fetch API</h1><p>fetch()只有一个必须的参数input,这个参数是要获取的资源的URL，这个方法返回一个期约；</p>
+<p>当你的服务端返回的数据是 JSON 格式时，你肯定希望 fetch 返回给你的是一个普通 JavaScript 对象，然而你拿到的是一个 Response 对象，而真正的请求结果 —— 即 response.body —— 则是一个 ReadableStream 。</p>
+<p>此外， <strong>Response 还限制了响应内容的重复读取和转换</strong>，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> button=<span class="built_in">document</span>.querySelector(<span class="string">&#x27;[type=button]&#x27;</span>)</span><br><span class="line">       button.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">       <span class="keyword">var</span> form = <span class="built_in">document</span>.getElementById(<span class="string">&quot;myForm&quot;</span>);</span><br><span class="line">       <span class="keyword">let</span> paramsHeaders=<span class="keyword">new</span> Headers(&#123;</span><br><span class="line">           <span class="string">&#x27;Content-Type&#x27;</span>:<span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span></span><br><span class="line">       &#125;);</span><br><span class="line">       fetch(<span class="string">&#x27;http://127.0.0.1:3007/api/login&#x27;</span>,&#123;<span class="comment">// 服务端返回 &#123;&quot;name&quot;: &quot;test&quot;, &quot;age&quot;: 1&#125; 字符串 </span></span><br><span class="line">           <span class="attr">method</span>:<span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">           <span class="attr">body</span>:serialize(form),</span><br><span class="line">           <span class="attr">headers</span>:paramsHeaders</span><br><span class="line">       &#125;).then(<span class="function">(<span class="params">res</span>)=&gt;</span>&#123;</span><br><span class="line">           <span class="keyword">return</span> res.json()<span class="comment">// 将 response.body 通过 JSON.parse 转换为 JS 对象并且记得return给下一个.then使用,或者使用res.text()</span></span><br><span class="line">       &#125;,<span class="function">(<span class="params">err</span>)=&gt;</span>&#123;</span><br><span class="line">           <span class="built_in">console</span>.log(err)</span><br><span class="line">       &#125;)</span><br><span class="line">       </span><br></pre></td></tr></table></figure>
+
+<h2 id="常见Fetch请求模式"><a href="#常见Fetch请求模式" class="headerlink" title="常见Fetch请求模式"></a>常见Fetch请求模式</h2><h3 id="发送JSON数据"><a href="#发送JSON数据" class="headerlink" title="发送JSON数据"></a>发送JSON数据</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> payload=<span class="built_in">JSON</span>.stringfy(&#123;<span class="attr">foo</span>:<span class="string">&#x27;bar&#x27;</span>&#125;);</span><br><span class="line"><span class="keyword">let</span> jsonHeaders=<span class="keyword">new</span> Headers(&#123;</span><br><span class="line">    <span class="string">&#x27;Content-Type&#x27;</span>:<span class="string">&#x27;application/json&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line">fetch(<span class="string">&#x27;/send-me-json&#x27;</span>,&#123;</span><br><span class="line">    <span class="attr">method</span>:<span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">    <span class="attr">body</span>:payload,</span><br><span class="line">    <span class="attr">headers</span>:jsonHeaders</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="请求体中发送参数"><a href="#请求体中发送参数" class="headerlink" title="请求体中发送参数"></a>请求体中发送参数</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> payload=<span class="string">&#x27;foo=bar&amp;baz=qux&#x27;</span>;</span><br><span class="line"><span class="keyword">let</span> paramheaders=newHeaders(&#123;</span><br><span class="line">    <span class="string">&#x27;Content-Type&#x27;</span>:<span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line">fetch(<span class="string">&#x27;/send-me-params&#x27;</span>,&#123;</span><br><span class="line">    <span class="attr">method</span>:<span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">    <span class="attr">body</span>:payload,</span><br><span class="line">    <span class="attr">headers</span>:paramHeaders</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="发送文件："><a href="#发送文件：" class="headerlink" title="发送文件："></a>发送文件：</h3><p>fetch()序列化并发送文件字段中的文件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> imageFormData=<span class="keyword">new</span> FormData();</span><br><span class="line"><span class="keyword">let</span> imageInput=<span class="built_in">document</span>.querySelector(<span class="string">&quot;input[type=&#x27;file&#x27;]&quot;</span>);</span><br><span class="line"><span class="comment">//上传多个文件</span></span><br><span class="line"><span class="comment">/*imageInput=document.querySelctor(&quot;input[type=&#x27;file&#x27;][multiple]&quot;);</span></span><br><span class="line"><span class="comment">for(let i=0;i&lt;imaeInput.files.length;++i)&#123;</span></span><br><span class="line"><span class="comment">    imageFormData.append(&#x27;image&#x27;,imageInput.files[i])</span></span><br><span class="line"><span class="comment">&#125;*/</span></span><br><span class="line">imageFormData.append(<span class="string">&#x27;image&#x27;</span>,imageInput.files[<span class="number">0</span>]);</span><br><span class="line">fetch(<span class="string">&#x27;/img-upload&#x27;</span>,&#123;</span><br><span class="line">    <span class="attr">method</span>:<span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">    <span class="attr">body</span>:imageFormData</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="中断请求："><a href="#中断请求：" class="headerlink" title="中断请求："></a>中断请求：</h2><p>通过AbortController/AbortSignal对中断请求，调用AbortController.abort()会中断所有网络的传输</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> abortController=<span class="keyword">new</span> AbortController();</span><br><span class="line">fetch(<span class="string">&#x27;wikipedia.zip&#x27;</span>,&#123;<span class="attr">signal</span>:abortController.signal&#125;)</span><br><span class="line">.catch(<span class="function">()=&gt;</span>&#123;<span class="built_in">console</span>.log(<span class="string">&#x27;aborted&#x27;</span>);</span><br><span class="line">            <span class="comment">//10ms中断请求</span></span><br><span class="line">            <span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>abortController.abort(),<span class="number">10</span>)</span><br><span class="line">           &#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Request对象"><a href="#Request对象" class="headerlink" title="Request对象"></a>Request对象</h2><p>通过构造函数初始化Request对象，接收两个参数，第一个参数是一个input参数，一般是URL，第二个参数是一个init对象，没有在init对象中涉及的值会使用默认值</p>
+<p>创建Request对象副本</p>
+<ul>
+<li>创建Request构造函数</li>
+<li>使用clone()方法</li>
+</ul>
+<p>使用构造函数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> r1=<span class="keyword">new</span> Request(<span class="string">&#x27;http://foo.com&#x27;</span>);</span><br><span class="line"><span class="keyword">let</span> r2=<span class="keyword">new</span> Request(r1,&#123;<span class="attr">method</span>:<span class="string">&#x27;POST&#x27;</span>&#125;);</span><br><span class="line"><span class="built_in">console</span>.log(r1.method);<span class="comment">//GET</span></span><br><span class="line"><span class="built_in">console</span>.log(r2.method);<span class="comment">//POST</span></span><br><span class="line"><span class="comment">//这种克隆方式不能总得到一模一样的副本</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>使用clone</p>
+<p>请求体被读取后再克隆会导致抛出TypeError</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> r=<span class="keyword">new</span> Request(<span class="string">&#x27;http://foo.com&#x27;</span>);</span><br><span class="line">r.clone();</span><br><span class="line"><span class="keyword">new</span> Request(r);<span class="comment">//没有错</span></span><br><span class="line">r.text();<span class="comment">//设置bodyUsed为true</span></span><br><span class="line">r.clone();<span class="comment">//TypeError</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在fetch()中使用Request对象</p>
+<p>如果有第二个参数init对象，也会覆盖传入请求对象的值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> r=<span class="keyword">new</span> Request(<span class="string">&#x27;http://127.0.0.1:3007/api/login&#x27;</span>);</span><br><span class="line">       fetch(r,&#123;</span><br><span class="line">           <span class="attr">method</span>:<span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">           <span class="attr">body</span>:serialize(form),</span><br><span class="line">           <span class="attr">headers</span>:paramsHeaders</span><br><span class="line">       &#125;).then(<span class="function">(<span class="params">res</span>)=&gt;</span>&#123;</span><br><span class="line">           <span class="keyword">return</span> res.json()</span><br><span class="line">       &#125;,<span class="function">(<span class="params">err</span>)=&gt;</span>&#123;</span><br><span class="line">           <span class="built_in">console</span>.log(err)</span><br><span class="line">       &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>要基于包含请求体的相同Request对象多次调用fetch()，必须在第一次发送fetch()请求前调用clone()</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> r=<span class="keyword">new</span> Request(...);</span><br><span class="line">fetch(r.clone());</span><br><span class="line">fetch(r.clone());</span><br><span class="line">fetch(r);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Response对象"><a href="#Response对象" class="headerlink" title="Response对象"></a>Response对象</h2><p>产生Response对象的主要方式是调用fetch()，它返回一个最后会解决Response对象的期约</p>
+<p>响应状态信息</p>
+<p><img src="/2022/04/19/%E5%BC%82%E6%AD%A5%E8%AF%B7%E6%B1%82/1-16503633602341.jpg" alt="1"></p>
+<h2 id="其它问题"><a href="#其它问题" class="headerlink" title="其它问题"></a>其它问题</h2><ol>
+<li>fetch 不支持同步请求</li>
+</ol>
+<p>大家都知道同步请求阻塞页面交互，但事实上仍有不少项目在使用同步请求，可能是历史架构等等原因。如果你切换了 fetch 则无法实现这一点。</p>
+<ol>
+<li>fetch 不支持取消一个请求</li>
+</ol>
+<p>使用 XMLHttpRequest 你可以用 xhr.abort() 方法取消一个请求（虽然这个方法也不是那么靠谱，同时是否真的「取消」还依赖于服务端的实现），但是使用 fetch 就无能为力了，至少目前是这样的。</p>
+<ol>
+<li>fetch 无法查看请求的进度</li>
+</ol>
+<p>使用 XMLHttpRequest 你可以通过 xhr.onprogress 回调来动态更新请求的进度，而这一点目前 fetch 还没有原生支持。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/18/%E5%AE%BD%E6%9D%BE%E7%9B%B8%E7%AD%89%E5%92%8C%E4%B8%A5%E6%A0%BC%E7%9B%B8%E7%AD%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1049,129 +1187,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/15/%E7%B1%BB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/15/%E7%B1%BB/" class="post-title-link" itemprop="url">类</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-15 10:03:02 / 修改时间：22:21:17" itemprop="dateCreated datePublished" datetime="2022-04-15T10:03:02+08:00">2022-04-15</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="类构造函数"><a href="#类构造函数" class="headerlink" title="类构造函数"></a>类构造函数</h1><p>方法名constructor会告诉解释器在使用new操作符创建类的新实例时，应该调用这个函数，构造函数的定义不是必须的，不定义构造函数相当于将构造函数定义为空函数</p>
-<h2 id="使用new调用类的构造函数会执行如下操作："><a href="#使用new调用类的构造函数会执行如下操作：" class="headerlink" title="使用new调用类的构造函数会执行如下操作："></a>使用new调用类的构造函数会执行如下操作：</h2><ul>
-<li>在内存中创建一个新对象</li>
-<li><strong>这个新对象内部的[[Prototype]]即__proto__指针被赋值为构造函数的prototype属性</strong></li>
-<li>构造函数内部的this被赋值为这个新对象（即this指向新对象）</li>
-<li>执行构造函数内部的代码（给新对象添加属性）</li>
-<li>如果构造函数返回非空对象，则返回该对象；否则，返回刚创建的新对象</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">let</span> p1=<span class="keyword">new</span> Person();</span><br><span class="line">        <span class="built_in">console</span>.log(p1.__proto__===Person.prototype);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<p>默认情况下，类构造函数会在执行后返回this对象，构造函数返回的对象会被用作实例化的对象，如果没用引用新创建的this对象，那么这个对象会被销毁。不过，如果，返回的不是this对象，而是其他对象，那么这个对象不会通过instanceof操作符检测出跟类有关联。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">          <span class="function"><span class="title">constructor</span>(<span class="params">override</span>)</span>&#123;</span><br><span class="line">              <span class="built_in">this</span>.foo=<span class="string">&quot;foo&quot;</span>;</span><br><span class="line">              <span class="keyword">if</span>(override)&#123;</span><br><span class="line">                  <span class="keyword">return</span> &#123;</span><br><span class="line">                      <span class="attr">bar</span>:<span class="string">&quot;bar&quot;</span></span><br><span class="line">                  &#125;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">let</span> p1=<span class="keyword">new</span> Person(),p2=<span class="keyword">new</span> Person(<span class="literal">true</span>);</span><br><span class="line">      <span class="built_in">console</span>.log(p1)</span><br><span class="line">      <span class="built_in">console</span>.log(p1 <span class="keyword">instanceof</span> Person);</span><br><span class="line">      <span class="built_in">console</span>.log(p2);<span class="comment">//没有引用构造函数创建的this对象，对象被销毁而返回的其他对象与类没有关系</span></span><br><span class="line">      <span class="built_in">console</span>.log(p2 <span class="keyword">instanceof</span> Person)</span><br></pre></td></tr></table></figure>
-
-<h2 id="类构造函数与普通构造函数区别"><a href="#类构造函数与普通构造函数区别" class="headerlink" title="类构造函数与普通构造函数区别"></a>类构造函数与普通构造函数区别</h2><p>调用类构造函数必须使用new操作符，而普通构造函数如果不使用new调用，那么就会以全局的this作为内部对象，调用类构造函数<strong>没有使用new则会抛出错误</strong></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> p3=Person();<span class="comment">//TypeError</span></span><br></pre></td></tr></table></figure>
-
-<p>类构造函数在实例化后，可以在实例上引用它</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;&#125;</span><br><span class="line"><span class="keyword">let</span> p1=<span class="keyword">new</span> Person();</span><br><span class="line"><span class="comment">//使用对类构造函数的引用创建一个新实例</span></span><br><span class="line"><span class="keyword">let</span> p2=<span class="keyword">new</span> p1.constructor();</span><br></pre></td></tr></table></figure>
-
-<h2 id="把类当成特殊的函数"><a href="#把类当成特殊的函数" class="headerlink" title="把类当成特殊的函数"></a>把类当成特殊的函数</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;&#125;</span><br><span class="line"><span class="built_in">console</span>.log(Person);<span class="comment">//class Person&#123;&#125;</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> Person)<span class="comment">//function</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>类标识符有prototype属性，而这个原型也有一个constructor属性指向类自身</strong></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line"></span><br><span class="line">       &#125;</span><br><span class="line">       <span class="built_in">console</span>.log(Person===Person.prototype.constructor);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>使用instanceof检查一个对象和类构造函数，以确定对象是不是类的实例。</strong></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> p=<span class="keyword">new</span> Person();</span><br><span class="line"><span class="built_in">console</span>.log(p <span class="keyword">instanceof</span> Person)<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<p>类本身具有和普通构造函数一样的行为，在类的上下文中，类本身使用new调用时就被当做构造函数，<strong>类中的constructor方法不会被当做构造函数，</strong></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line"></span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">let</span> p1=<span class="keyword">new</span> Person();</span><br><span class="line">       <span class="built_in">console</span>.log(p1 <span class="keyword">instanceof</span> Person);<span class="comment">//true</span></span><br><span class="line">       <span class="built_in">console</span>.log(p1.constructor=== Person);<span class="comment">//true</span></span><br><span class="line">       <span class="built_in">console</span>.log(p1 <span class="keyword">instanceof</span> Person.constructor)<span class="comment">//false</span></span><br><span class="line">       <span class="keyword">let</span> p2=<span class="keyword">new</span> Person.constructor();</span><br><span class="line">       <span class="built_in">console</span>.log(p2 <span class="keyword">instanceof</span> Person)<span class="comment">//false</span></span><br><span class="line">       <span class="built_in">console</span>.log(p2 .constructor=== Person);<span class="comment">//false</span></span><br><span class="line">       <span class="built_in">console</span>.log(p2 <span class="keyword">instanceof</span> Person.constructor)<span class="comment">//true</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="实例，原型和类成员"><a href="#实例，原型和类成员" class="headerlink" title="实例，原型和类成员"></a>实例，原型和类成员</h1><h2 id="实例成员"><a href="#实例成员" class="headerlink" title="实例成员"></a>实例成员</h2><p>每次通过new调用类标识符时都会执行类构造函数，可以为新创建的实例this添加自有属性。<strong>每个实例都对应一个唯一的成员对象，所有成员都不会在原型上共享</strong></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">           <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">               <span class="built_in">this</span>.name=<span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">&#x27;Jack&#x27;</span>);</span><br><span class="line">               <span class="built_in">this</span>.sayName=<span class="function">()=&gt;</span><span class="built_in">console</span>.log(<span class="built_in">this</span>.name);</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="function"><span class="title">sayAge</span>(<span class="params">age</span>)</span>&#123;</span><br><span class="line">               <span class="built_in">console</span>.log(age)</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">let</span> p1=<span class="keyword">new</span> Person(),p2=<span class="keyword">new</span> Person();</span><br><span class="line">       <span class="built_in">console</span>.log(p1.name===p2.name)<span class="comment">//false</span></span><br><span class="line">       <span class="built_in">console</span>.log(p1.sayAge(<span class="number">18</span>)===p2.sayAge(<span class="number">19</span>))<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="原型方法"><a href="#原型方法" class="headerlink" title="原型方法"></a>原型方法</h2><p>为了在实例间共享方法，类定义语法在类块中定义的方法作为原型方法</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">//在类块中定义的所有内容都会定义在类的原型上</span></span><br><span class="line"><span class="built_in">console</span>.log(p1.sayAge===Person.prototype.sayAge);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<p>可以把方法定义在类构造函数或者类块中，<strong>但不能在类块给原型添加原始值或对象作为成员数据</strong>,但是可以在类块外部手动添加成员数据</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Person.greeting=<span class="string">&quot;My name is&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>类方法等同于对象属性因此可以使用字符串，符号或计算的值作为键,</p>
-<p>也支持获取和设置访问器</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> symbolKey=<span class="built_in">Symbol</span>(<span class="string">&#x27;symbolkey&#x27;</span>);</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span>()</span>&#123;</span><br><span class="line">    <span class="function"><span class="title">stringKey</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;invoked stringKey&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    [symbolKey]()&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;invoked symbolKey&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="string">&#x27;computed&#x27;</span>+<span class="string">&#x27;Key&#x27;</span>]()&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;invoked computedKey&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">set</span> <span class="title">name</span>(<span class="params">newvalue</span>)&#123;</span><br><span class="line">        <span class="built_in">this</span>.name_=newName;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">get</span> <span class="title">name</span>()&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.name_</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> p=<span class="keyword">new</span> Person()</span><br><span class="line">p.stringKey();</span><br><span class="line">p[symbolKey]();</span><br><span class="line">p.computedKey();</span><br><span class="line">p.name=<span class="string">&#x27;jake&#x27;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(p.name);<span class="comment">//Jake</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="静态类方法"><a href="#静态类方法" class="headerlink" title="静态类方法"></a>静态类方法</h2><p>这些方法通常用于执行<strong>不特定于实例的操作，也不要求存在类的实例</strong></p>
-<p>与原型成员类似，静态成员每个类上只能有一个</p>
-<p>静态类成员在类定义中使用static关键字作为前缀，在静态成员中，this引用类自身，其他所有约定跟原型成员一样，静态类方法适合作为实例工厂</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">            <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                <span class="built_in">this</span>.name=<span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">&#x27;Jack&#x27;</span>);</span><br><span class="line">                <span class="built_in">this</span>.sayName=<span class="function">()=&gt;</span><span class="built_in">console</span>.log(<span class="built_in">this</span>.name);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="function"><span class="title">sayAge</span>(<span class="params">age</span>)</span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(age)</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">static</span> <span class="function"><span class="title">create</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> Person(<span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random()*<span class="number">100</span>))</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">console</span>.log(Person.create())<span class="comment">//Person &#123;name: String, sayName: ƒ&#125;name: String &#123;&#x27;Jack&#x27;&#125;sayName: ()=&gt;console.log(this.name)[[Prototype]]: Object</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="关于继承"><a href="#关于继承" class="headerlink" title="关于继承"></a>关于继承</h1><p>[]: <a target="_blank" rel="noopener" href="https://www.bookstack.cn/read/es6-3rd/spilt.1.docs-class-extends.md">https://www.bookstack.cn/read/es6-3rd/spilt.1.docs-class-extends.md</a></p>
-<h1 id="关于super"><a href="#关于super" class="headerlink" title="关于super"></a>关于super</h1><p>[]: <a target="_blank" rel="noopener" href="https://www.bookstack.cn/read/es6-3rd/spilt.3.docs-class-extends.md">https://www.bookstack.cn/read/es6-3rd/spilt.3.docs-class-extends.md</a></p>
-<h1 id="抽象基类"><a href="#抽象基类" class="headerlink" title="抽象基类"></a>抽象基类</h1><p>通过new.target<strong>保存通过new关键字调用的类或函数</strong>，<strong>在普通函数中调用new.target返回undefined</strong>,通过在实例化时检测new.target是不是抽象基类，可以阻止对抽象基类的实例化</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Vehicle</span></span>&#123;</span><br><span class="line">           <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">               <span class="built_in">console</span>.log(<span class="keyword">new</span>.target);</span><br><span class="line">               <span class="keyword">if</span>(<span class="keyword">new</span>.target===Vehicle)&#123;</span><br><span class="line">                   <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;Vehicle cannot be directly instantiated&#x27;</span>)</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="class"><span class="keyword">class</span> <span class="title">Bus</span> <span class="keyword">extends</span> <span class="title">Vehicle</span></span>&#123;&#125;</span><br><span class="line">       <span class="keyword">new</span> Bus();</span><br><span class="line">       <span class="keyword">new</span> Vehicle()<span class="comment">//testIframe.html:193 Uncaught Error: Vehicle cannot be directly instantiated</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="继承内置类型"><a href="#继承内置类型" class="headerlink" title="继承内置类型"></a>继承内置类型</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperArray</span> <span class="keyword">extends</span> <span class="title">Array</span></span>&#123;</span><br><span class="line">           <span class="function"><span class="title">shuffle</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">               <span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="built_in">this</span>.length-<span class="number">1</span>;i&gt;=<span class="number">0</span>;i--)&#123;</span><br><span class="line">                   <span class="keyword">let</span> j=<span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random(<span class="number">0</span>,i+<span class="number">1</span>));<span class="comment">//0-i+1向下取整</span></span><br><span class="line">                   [<span class="built_in">this</span>[i],<span class="built_in">this</span>[j]]=[<span class="built_in">this</span>[j],<span class="built_in">this</span>[i]]</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">let</span> a=<span class="keyword">new</span> SuperArray(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>);</span><br><span class="line">       a.shuffle()</span><br><span class="line">       <span class="built_in">console</span>.log(a);</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1243,7 +1258,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">236</span>
+          <span class="site-state-item-count">237</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1317,7 +1332,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共217.9k字</span>
+  <span class="post-count">博客全站共218.7k字</span>
 </div>
         
 
