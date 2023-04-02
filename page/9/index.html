@@ -187,6 +187,101 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/29/%E4%B8%BA%E4%BB%80%E4%B9%88data%E5%B1%9E%E6%80%A7%E6%97%B6%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%E8%80%8C%E4%B8%8D%E6%98%AF%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/29/%E4%B8%BA%E4%BB%80%E4%B9%88data%E5%B1%9E%E6%80%A7%E6%97%B6%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%E8%80%8C%E4%B8%8D%E6%98%AF%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1/" class="post-title-link" itemprop="url">为什么data属性是一个函数而不是一个对象</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-29 17:08:36 / 修改时间：17:23:15" itemprop="dateCreated datePublished" datetime="2022-05-29T17:08:36+08:00">2022-05-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="组件data定义函数与对象的区别"><a href="#组件data定义函数与对象的区别" class="headerlink" title="组件data定义函数与对象的区别"></a>组件data定义函数与对象的区别</h1><p>在我们定义好一个组件的时候，vue最终都会通过Vue.extend()构成组件实例</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Component</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line">Component.prototype.data=&#123;</span><br><span class="line">    <span class="attr">count</span>:<span class="number">0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建两个组件实例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> componentA=<span class="keyword">new</span> Component()</span><br><span class="line"><span class="keyword">const</span> componentB=<span class="keyword">new</span> Component();</span><br><span class="line"><span class="built_in">console</span>.log(componentB.data.count);<span class="comment">//0</span></span><br><span class="line">componentA.data.count=<span class="number">1</span>;</span><br><span class="line"><span class="built_in">console</span>.log(componentB.data.count)<span class="comment">//1</span></span><br></pre></td></tr></table></figure>
+
+<p>产生这样的原因是两者共用了同一个内存地址，compoentA修改的内容，同样对componentB产生了影响</p>
+<p>如果采用函数形式，则不会出现这种情况（函数返回的对象内存地址并不相同）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Component</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">this</span>.data = <span class="built_in">this</span>.data()</span><br><span class="line">&#125;</span><br><span class="line">Component.prototype.data = <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">   		<span class="attr">count</span> : <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(componentB.data.count)  <span class="comment">// 0</span></span><br><span class="line">componentA.data.count = <span class="number">1</span></span><br><span class="line"><span class="built_in">console</span>.log(componentB.data.count)  <span class="comment">// 0</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>vue组件可能有多个实例，采用函数返回一个全新data形式，使每个实例对象的数据不会受到其他实例对象数据的污染</strong></p>
+<h1 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h1><p>vue初始化data的代码时，data的定义可以是函数或者对象</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">initData</span> (<span class="params">vm: Component</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> data = vm.$options.data</span><br><span class="line">  data = vm._data = <span class="keyword">typeof</span> data === <span class="string">&#x27;function&#x27;</span></span><br><span class="line">    ? getData(data, vm)</span><br><span class="line">    : data || &#123;&#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是组件在创建的时候，会进行选项的合并，自定义组件会进入mergeOptions进行选择合并</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Vue.prototype._init = <span class="function"><span class="keyword">function</span> (<span class="params">options?: <span class="built_in">Object</span></span>) </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// merge options</span></span><br><span class="line">    <span class="keyword">if</span> (options &amp;&amp; options._isComponent) &#123;</span><br><span class="line">      <span class="comment">// optimize internal component instantiation</span></span><br><span class="line">      <span class="comment">// since dynamic options merging is pretty slow, and none of the</span></span><br><span class="line">      <span class="comment">// internal component options needs special treatment.</span></span><br><span class="line">      initInternalComponent(vm, options)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      vm.$options = mergeOptions(</span><br><span class="line">        resolveConstructorOptions(vm.constructor),</span><br><span class="line">        options || &#123;&#125;,</span><br><span class="line">        vm</span><br><span class="line">      )</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义data会进行数据校验</p>
+<p>这时候vm实例为undefined，进入if判断，若data类型不是function，则出现警告提示</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">strats.data = <span class="function"><span class="keyword">function</span> (<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="function">  parentVal: any,</span></span></span><br><span class="line"><span class="params"><span class="function">  childVal: any,</span></span></span><br><span class="line"><span class="params"><span class="function">  vm?: Component</span></span></span><br><span class="line"><span class="params"><span class="function"></span>): ?<span class="title">Function</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!vm) &#123;</span><br><span class="line">    <span class="keyword">if</span> (childVal &amp;&amp; <span class="keyword">typeof</span> childVal !== <span class="string">&quot;function&quot;</span>) &#123;</span><br><span class="line">      process.env.NODE_ENV !== <span class="string">&quot;production&quot;</span> &amp;&amp;</span><br><span class="line">        warn(</span><br><span class="line">          <span class="string">&#x27;The &quot;data&quot; option should be a function &#x27;</span> +</span><br><span class="line">            <span class="string">&quot;that returns a per-instance value in component &quot;</span> +</span><br><span class="line">            <span class="string">&quot;definitions.&quot;</span>,</span><br><span class="line">          vm</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> parentVal;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> mergeDataOrFn(parentVal, childVal);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> mergeDataOrFn(parentVal, childVal, vm);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h1 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h1><ul>
+<li><strong>根实例对象data可以是对象也可以是函数（根实例是单例</strong>），不会产生数据污染情况</li>
+<li><strong>组件实例对象data必须是函数</strong>，目的是为了防止多个组件实例对象之间共用一个data,产生数据污染，采用函数的形式,initData时会将其作为<strong>工厂函数返回全新data对象</strong></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/29/Vue%E5%AE%9E%E4%BE%8B%E6%8C%82%E8%BD%BD%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -943,80 +1038,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/16/%E5%88%92%E5%88%86%E9%93%BE%E8%A1%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/16/%E5%88%92%E5%88%86%E9%93%BE%E8%A1%A8/" class="post-title-link" itemprop="url">划分链表</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-05-16 00:23:16 / 修改时间：00:34:36" itemprop="dateCreated datePublished" datetime="2022-05-16T00:23:16+08:00">2022-05-16</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95/%E9%93%BE%E8%A1%A8/" itemprop="url" rel="index"><span itemprop="name">链表</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ListPartition=<span class="function">(<span class="params">head,pivot</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> sH=<span class="literal">null</span>,sT=<span class="literal">null</span>,eH=<span class="literal">null</span>,eT=<span class="literal">null</span>,mH=<span class="literal">null</span>,mT=<span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">let</span> next=<span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">while</span>(head!==<span class="literal">null</span>)&#123;</span><br><span class="line">        next=head.next;</span><br><span class="line">        head.next=<span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">if</span>(head.value&lt;pivot)&#123;</span><br><span class="line">            <span class="keyword">if</span>(sH===<span class="literal">null</span>)&#123;</span><br><span class="line">                sH=head;</span><br><span class="line">                sT=head;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                sT.next=head;</span><br><span class="line">                sT=head;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(head.value===pivot)&#123;</span><br><span class="line">            <span class="keyword">if</span>(eH===<span class="literal">null</span>)&#123;</span><br><span class="line">                eH=head;</span><br><span class="line">                eT=head;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                eT.next=head;</span><br><span class="line">                eT=head;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(mH==<span class="literal">null</span>)&#123;</span><br><span class="line">                mH=head;</span><br><span class="line">                mT=head;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                mT.next=head;</span><br><span class="line">                mT=head;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        head=next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(sT!==<span class="literal">null</span>)&#123;<span class="comment">//如果有小于区域</span></span><br><span class="line">        sT.next=eH;</span><br><span class="line">        eT=eT===<span class="literal">null</span>?sT:eT;<span class="comment">//下一步谁连大于区域的头谁就是eT</span></span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(eT!==<span class="literal">null</span>)&#123;<span class="comment">//小于区域和等于区域不是都没有</span></span><br><span class="line">        eT.next=mH;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sH!==<span class="literal">null</span>?sH:(eH!==<span class="literal">null</span>?eH:mH)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1088,7 +1109,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">237</span>
+          <span class="site-state-item-count">238</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1162,7 +1183,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共219.2k字</span>
+  <span class="post-count">博客全站共221.2k字</span>
 </div>
         
 

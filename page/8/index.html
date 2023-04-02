@@ -187,6 +187,103 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/05/%E6%9D%A1%E4%BB%B6%E7%B1%BB%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/07/05/%E6%9D%A1%E4%BB%B6%E7%B1%BB%E5%9E%8B/" class="post-title-link" itemprop="url">条件类型</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-07-05 19:32:13 / 修改时间：20:30:47" itemprop="dateCreated datePublished" datetime="2022-07-05T19:32:13+08:00">2022-07-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="条件类型"><a href="#条件类型" class="headerlink" title="条件类型"></a>条件类型</h1><p>基于输入的值的类型决定输出的值的类型，条件类型就是用来帮助我们描述输入类型和输出类型之间的关系</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> IdLabel &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="built_in">number</span> <span class="comment">/* some fields */</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> NameLabel &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="built_in">string</span> <span class="comment">/* other fields */</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createLabel</span>(<span class="params">id: <span class="built_in">number</span></span>): <span class="title">IdLabel</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createLabel</span>(<span class="params">name: <span class="built_in">string</span></span>): <span class="title">NameLabel</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createLabel</span>(<span class="params">nameOrId: <span class="built_in">string</span> | <span class="built_in">number</span></span>): <span class="title">IdLabel</span> | <span class="title">NameLabel</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createLabel</span>(<span class="params">nameOrId: <span class="built_in">string</span> | <span class="built_in">number</span></span>): <span class="title">IdLabel</span> | <span class="title">NameLabel</span> </span>&#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="string">&quot;unimplemented&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>把逻辑写在条件类型中可以简化掉函数重载：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> NameOrId&lt;T <span class="keyword">extends</span> <span class="built_in">number</span>|<span class="built_in">string</span>&gt;=T <span class="keyword">extends</span> <span class="built_in">number</span>?IdLabel:NameLabel;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createLabel</span>&lt;<span class="title">T</span> <span class="title">extends</span> <span class="title">number</span>|<span class="title">string</span>&gt;(<span class="params">idOrName:T</span>):<span class="title">NameOrId</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="string">&quot;unimplemented&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> a=createLabel(<span class="string">&quot;typescript&quot;</span>);</span><br><span class="line"><span class="comment">//let a:NameLabel</span></span><br><span class="line"><span class="keyword">let</span> b=createLabel(<span class="number">2.8</span>);</span><br><span class="line"><span class="comment">//let b:IdLabel</span></span><br><span class="line"><span class="keyword">let</span> c=createLabel(<span class="built_in">Math</span>.radom()?<span class="string">&quot;hello&quot;</span>:<span class="number">42</span>);</span><br><span class="line"><span class="comment">//let c:NameLabel|IdLabel</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="条件类型约束"><a href="#条件类型约束" class="headerlink" title="条件类型约束"></a>条件类型约束</h1><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> MessageOf&lt;T <span class="keyword">extends</span> &#123;<span class="attr">message</span>:unknown&#125; ? T[<span class="string">&quot;message&quot;</span>]:<span class="built_in">never</span>;</span><br><span class="line"><span class="keyword">interface</span> Email &#123;</span><br><span class="line">    <span class="attr">message</span>:<span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> Dog &#123;</span><br><span class="line">    bark():<span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> EmailMessageContents=MessageOf&lt;Email&gt;;</span><br><span class="line"><span class="comment">//type EmailMessageContents=string</span></span><br><span class="line"><span class="keyword">type</span> DogMessageContents=MessageOf&lt;Dog&gt;;</span><br><span class="line"><span class="comment">//type DogMessageContents=nerver</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="在条件类型里推断"><a href="#在条件类型里推断" class="headerlink" title="在条件类型里推断"></a>在条件类型里推断</h1><p>infer关键词，<strong>可以从正在比较的类型中推断类型，然后在true分支里引用该推断结果</strong></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Flatten&lt;T&gt;=T <span class="keyword">extends</span> <span class="built_in">any</span>[]?T[<span class="built_in">number</span>]:T;<span class="comment">//number索引用来获取数组元素的类型</span></span><br><span class="line"><span class="keyword">type</span> Str=Flatten&lt;<span class="built_in">string</span>[]&gt;;</span><br><span class="line"><span class="comment">//type Str=string</span></span><br><span class="line"><span class="keyword">type</span> Num=Flatten&lt;<span class="built_in">number</span>&gt;;</span><br><span class="line"><span class="comment">//type Num=number;</span></span><br><span class="line"><span class="comment">//用infer</span></span><br><span class="line"><span class="keyword">type</span> Flatten&lt;Type&gt;=Type <span class="keyword">extends</span> <span class="built_in">Array</span>&lt;infer Item&gt;?Item:Type</span><br></pre></td></tr></table></figure>
+
+<p>使用infer写一些有用的类型帮助别名，我们可以获取一个函数返回的类型：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> GetReturnType&lt;Type&gt;=Type <span class="keyword">extends</span> (...args:nerver[])=&gt;infer Return ?Return :<span class="built_in">never</span>;</span><br><span class="line"><span class="keyword">type</span> Num=GetReturnType&lt;<span class="function">()=&gt;</span><span class="built_in">number</span>&gt;;</span><br><span class="line"><span class="comment">//type Num=number;</span></span><br><span class="line"><span class="keyword">type</span> Str=GetReturnType&lt;<span class="function">(<span class="params">x:<span class="built_in">string</span></span>)=&gt;</span><span class="built_in">string</span>&gt;;</span><br><span class="line"><span class="comment">//type Str=string</span></span><br></pre></td></tr></table></figure>
+
+<p>当从多重调用签名（比如重载函数）中推断类型时，<strong>会按照最后的签名进行推断，</strong>因为一般这个签名是用来处理所有情况的签名</p>
+<h1 id="分发条件类型"><a href="#分发条件类型" class="headerlink" title="分发条件类型"></a>分发条件类型</h1><p>在泛型中使用条件类型时，如果传入一个联合类型，就会变成分发的。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ToArray&lt;Type&gt;=Type <span class="keyword">extends</span> <span class="built_in">any</span>?Type[]:nerver;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在ToArray传入一个联合类型，这个条件类型会被应用到联合类型的每个成员</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> StrArrOrNumArr=ToArr&lt;<span class="built_in">string</span>|<span class="built_in">number</span>&gt;;</span><br><span class="line"><span class="comment">//type StrArrOrNumArr=string[]|number[]</span></span><br></pre></td></tr></table></figure>
+
+<p>先遍历联合类型string|number里的每一个成员，得到ToArray<string>|ToArray<number>,最后结果为string[]|number[]</number></string></p>
+<p>如果要避免这种行为，用方括号包裹extends关键字的每一部分</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ToArrayNonDist&lt;Type&gt;=[Type] <span class="keyword">extends</span> [<span class="built_in">any</span>] ? Type[]: nerver;</span><br><span class="line"><span class="keyword">type</span> StrArrOrNumArr=ToArrayNonDist&lt;<span class="built_in">string</span>|<span class="built_in">number</span>&gt;;</span><br><span class="line"><span class="comment">//type StrArrOrNumArr = (string | number)[]</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>先得到ToArrayNonDist&lt;string|number&gt;结果为(string|number)[]</p>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://ts.yayujs.com/handbook/ConditionalTypes.html#%E5%88%86%E5%8F%91%E6%9D%A1%E4%BB%B6%E7%B1%BB%E5%9E%8B-distributive-conditional-types">https://ts.yayujs.com/handbook/ConditionalTypes.html#%E5%88%86%E5%8F%91%E6%9D%A1%E4%BB%B6%E7%B1%BB%E5%9E%8B-distributive-conditional-types</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.typescriptlang.org/docs/handbook/2/conditional-types.html">https://www.typescriptlang.org/docs/handbook/2/conditional-types.html</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/05/%E7%B4%A2%E5%BC%95%E8%AE%BF%E9%97%AE%E7%B1%BB%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1218,101 +1315,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/29/%E4%B8%BA%E4%BB%80%E4%B9%88data%E5%B1%9E%E6%80%A7%E6%97%B6%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%E8%80%8C%E4%B8%8D%E6%98%AF%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/29/%E4%B8%BA%E4%BB%80%E4%B9%88data%E5%B1%9E%E6%80%A7%E6%97%B6%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%E8%80%8C%E4%B8%8D%E6%98%AF%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1/" class="post-title-link" itemprop="url">为什么data属性是一个函数而不是一个对象</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-05-29 17:08:36 / 修改时间：17:23:15" itemprop="dateCreated datePublished" datetime="2022-05-29T17:08:36+08:00">2022-05-29</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="组件data定义函数与对象的区别"><a href="#组件data定义函数与对象的区别" class="headerlink" title="组件data定义函数与对象的区别"></a>组件data定义函数与对象的区别</h1><p>在我们定义好一个组件的时候，vue最终都会通过Vue.extend()构成组件实例</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Component</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line">Component.prototype.data=&#123;</span><br><span class="line">    <span class="attr">count</span>:<span class="number">0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>创建两个组件实例：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> componentA=<span class="keyword">new</span> Component()</span><br><span class="line"><span class="keyword">const</span> componentB=<span class="keyword">new</span> Component();</span><br><span class="line"><span class="built_in">console</span>.log(componentB.data.count);<span class="comment">//0</span></span><br><span class="line">componentA.data.count=<span class="number">1</span>;</span><br><span class="line"><span class="built_in">console</span>.log(componentB.data.count)<span class="comment">//1</span></span><br></pre></td></tr></table></figure>
-
-<p>产生这样的原因是两者共用了同一个内存地址，compoentA修改的内容，同样对componentB产生了影响</p>
-<p>如果采用函数形式，则不会出现这种情况（函数返回的对象内存地址并不相同）</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Component</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">this</span>.data = <span class="built_in">this</span>.data()</span><br><span class="line">&#125;</span><br><span class="line">Component.prototype.data = <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">   		<span class="attr">count</span> : <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(componentB.data.count)  <span class="comment">// 0</span></span><br><span class="line">componentA.data.count = <span class="number">1</span></span><br><span class="line"><span class="built_in">console</span>.log(componentB.data.count)  <span class="comment">// 0</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><strong>vue组件可能有多个实例，采用函数返回一个全新data形式，使每个实例对象的数据不会受到其他实例对象数据的污染</strong></p>
-<h1 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h1><p>vue初始化data的代码时，data的定义可以是函数或者对象</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">initData</span> (<span class="params">vm: Component</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> data = vm.$options.data</span><br><span class="line">  data = vm._data = <span class="keyword">typeof</span> data === <span class="string">&#x27;function&#x27;</span></span><br><span class="line">    ? getData(data, vm)</span><br><span class="line">    : data || &#123;&#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>但是组件在创建的时候，会进行选项的合并，自定义组件会进入mergeOptions进行选择合并</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Vue.prototype._init = <span class="function"><span class="keyword">function</span> (<span class="params">options?: <span class="built_in">Object</span></span>) </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// merge options</span></span><br><span class="line">    <span class="keyword">if</span> (options &amp;&amp; options._isComponent) &#123;</span><br><span class="line">      <span class="comment">// optimize internal component instantiation</span></span><br><span class="line">      <span class="comment">// since dynamic options merging is pretty slow, and none of the</span></span><br><span class="line">      <span class="comment">// internal component options needs special treatment.</span></span><br><span class="line">      initInternalComponent(vm, options)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      vm.$options = mergeOptions(</span><br><span class="line">        resolveConstructorOptions(vm.constructor),</span><br><span class="line">        options || &#123;&#125;,</span><br><span class="line">        vm</span><br><span class="line">      )</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<p>定义data会进行数据校验</p>
-<p>这时候vm实例为undefined，进入if判断，若data类型不是function，则出现警告提示</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">strats.data = <span class="function"><span class="keyword">function</span> (<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="function">  parentVal: any,</span></span></span><br><span class="line"><span class="params"><span class="function">  childVal: any,</span></span></span><br><span class="line"><span class="params"><span class="function">  vm?: Component</span></span></span><br><span class="line"><span class="params"><span class="function"></span>): ?<span class="title">Function</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!vm) &#123;</span><br><span class="line">    <span class="keyword">if</span> (childVal &amp;&amp; <span class="keyword">typeof</span> childVal !== <span class="string">&quot;function&quot;</span>) &#123;</span><br><span class="line">      process.env.NODE_ENV !== <span class="string">&quot;production&quot;</span> &amp;&amp;</span><br><span class="line">        warn(</span><br><span class="line">          <span class="string">&#x27;The &quot;data&quot; option should be a function &#x27;</span> +</span><br><span class="line">            <span class="string">&quot;that returns a per-instance value in component &quot;</span> +</span><br><span class="line">            <span class="string">&quot;definitions.&quot;</span>,</span><br><span class="line">          vm</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> parentVal;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> mergeDataOrFn(parentVal, childVal);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> mergeDataOrFn(parentVal, childVal, vm);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<h1 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h1><ul>
-<li><strong>根实例对象data可以是对象也可以是函数（根实例是单例</strong>），不会产生数据污染情况</li>
-<li><strong>组件实例对象data必须是函数</strong>，目的是为了防止多个组件实例对象之间共用一个data,产生数据污染，采用函数的形式,initData时会将其作为<strong>工厂函数返回全新data对象</strong></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1384,7 +1386,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">237</span>
+          <span class="site-state-item-count">238</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1458,7 +1460,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共219.2k字</span>
+  <span class="post-count">博客全站共221.2k字</span>
 </div>
         
 

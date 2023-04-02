@@ -187,6 +187,91 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/11/Vue%E4%B8%AD%E5%B0%81%E8%A3%85axios%E8%AF%B7%E6%B1%82/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/11/Vue%E4%B8%AD%E5%B0%81%E8%A3%85axios%E8%AF%B7%E6%B1%82/" class="post-title-link" itemprop="url">Vue中封装axios请求</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-11 10:01:47" itemprop="dateCreated datePublished" datetime="2022-04-11T10:01:47+08:00">2022-04-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-11-12 16:52:26" itemprop="dateModified" datetime="2022-11-12T16:52:26+08:00">2022-11-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在src文件夹中新创建一个utils文件夹，创建index.js来实现axios实例，并配置拦截器</p>
+<h2 id="index-js"><a href="#index-js" class="headerlink" title="index.js"></a>index.js</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&#x27;axios&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123;ElLoading,ElMessage&#125; <span class="keyword">from</span> <span class="string">&#x27;element-plus&#x27;</span></span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">&quot;../router&quot;</span></span><br><span class="line"><span class="keyword">import</span> store <span class="keyword">from</span> <span class="string">&quot;../store&quot;</span></span><br><span class="line"><span class="keyword">import</span> CHAT <span class="keyword">from</span> <span class="string">&quot;../client&quot;</span></span><br><span class="line"><span class="comment">//const pendingMap=new Map();</span></span><br><span class="line"><span class="comment">//axios.defaults.headers.post[&#x27;Content-Type&#x27;] = &#x27;application/x-www-form-urlencoded;charset=UTF-8&#x27;;</span></span><br><span class="line"><span class="comment">//创建一个axios实例</span></span><br><span class="line"><span class="keyword">var</span> instance=axios.create(&#123;</span><br><span class="line">    <span class="attr">baseURL</span>:<span class="string">&quot;http://127.0.0.1:3007&quot;</span>,</span><br><span class="line">    <span class="attr">timeout</span>: <span class="number">10000</span>,<span class="comment">//设置超时</span></span><br><span class="line">    <span class="attr">headers</span>:&#123;</span><br><span class="line">        <span class="string">&#x27;Content-Type&#x27;</span>:<span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span>,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">let</span> loading;</span><br><span class="line"><span class="comment">//多次请求时</span></span><br><span class="line"><span class="keyword">let</span> requestCount=<span class="number">0</span>;</span><br><span class="line"><span class="comment">//显示Loading</span></span><br><span class="line"><span class="keyword">const</span> showLoading=<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(requestCount===<span class="number">0</span>&amp;&amp;!loading)&#123;<span class="comment">//第一次发送请求并且没有loading加载loaing</span></span><br><span class="line">        loading=ElLoading.service(&#123;</span><br><span class="line">            <span class="attr">text</span>:<span class="string">&#x27;Loading&#x27;</span>,</span><br><span class="line">            <span class="attr">background</span>:<span class="string">&#x27;rgba(0,0,0,0.7)&#x27;</span>,</span><br><span class="line">            <span class="attr">spinner</span>:<span class="string">&#x27;el-icon-loading&#x27;</span>,</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    requestCount++;<span class="comment">//多次请求</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//隐藏loading</span></span><br><span class="line"><span class="keyword">const</span> hideLoading=<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    requestCount--;</span><br><span class="line">    <span class="keyword">if</span>(requestCount===<span class="number">0</span>)&#123;</span><br><span class="line">        loading.close()<span class="comment">//直到请求都结束Loading才关闭</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//请求拦截器</span></span><br><span class="line">instance.interceptors.request.use(<span class="function">(<span class="params">config</span>)=&gt;</span>&#123;</span><br><span class="line">    showLoading()</span><br><span class="line">    <span class="comment">//每次发送请求前判断是否存在token如果存在则在header加上token</span></span><br><span class="line">    <span class="keyword">const</span> token=<span class="built_in">window</span>.localStorage.getItem(<span class="string">&#x27;token&#x27;</span>);</span><br><span class="line">    token&amp;&amp;(config.headers.Authorization=token)</span><br><span class="line">    <span class="keyword">return</span> config;</span><br><span class="line">&#125;,<span class="function">(<span class="params">error</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">Promise</span>.reject(error);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">//响应拦截器</span></span><br><span class="line">instance.interceptors.response.use(<span class="function">(<span class="params">response</span>)=&gt;</span>&#123;</span><br><span class="line">    hideLoading()</span><br><span class="line">    <span class="comment">//响应成功</span></span><br><span class="line">   <span class="comment">// console.log(&#x27;拦截器报错&#x27;)</span></span><br><span class="line">   <span class="comment">// console.log(response)</span></span><br><span class="line">    <span class="keyword">const</span> status=response.data.status;</span><br><span class="line">    <span class="keyword">if</span>(status!=<span class="number">1</span>)&#123;</span><br><span class="line">        <span class="keyword">switch</span>(status)&#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>: <span class="comment">//响应成功后如果是登录成功有token把token存储在本地</span></span><br><span class="line">                <span class="keyword">if</span>(response.data.token!=<span class="literal">undefined</span>)<span class="built_in">window</span>.localStorage.setItem(<span class="string">&#x27;token&#x27;</span>,response.data.token);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">200</span>:<span class="comment">//获取用户信息成功后存储在localStorage里和store</span></span><br><span class="line">                <span class="built_in">console</span>.log(response.data);</span><br><span class="line">                store.commit(<span class="string">&quot;saveUserInfo&quot;</span>,(response.data).data);</span><br><span class="line">                <span class="built_in">window</span>.localStorage.setItem(<span class="string">&#x27;userInfo&#x27;</span>,<span class="built_in">JSON</span>.stringify((response.data).data));</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">401</span>:<span class="comment">//登录过期跳转到登录页面</span></span><br><span class="line">            <span class="keyword">case</span> <span class="number">201</span>:<span class="comment">//退出登录清空token跳转登录页面                </span></span><br><span class="line">                <span class="built_in">window</span>.localStorage.removeItem(<span class="string">&#x27;token&#x27;</span>);</span><br><span class="line">                <span class="built_in">window</span>.localStorage.removeItem(<span class="string">&#x27;userInfo&#x27;</span>)</span><br><span class="line">                CHAT.logout();</span><br><span class="line">                router.push(<span class="string">&quot;/login&quot;</span>);  </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(response.data.message)ElMessage.success(response.data.message)           </span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Promise</span>.resolve(response); </span><br><span class="line">    &#125;</span><br><span class="line">     <span class="keyword">else</span> &#123;       </span><br><span class="line">        ElMessage.error(response.data.message);            </span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(response);        </span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">&#125;,<span class="function">(<span class="params">error</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(error);</span><br><span class="line">    <span class="comment">//响应错误</span></span><br><span class="line">    <span class="keyword">if</span>(error.response&amp;&amp;error.response.status)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(error)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(error);</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> instance;</span><br></pre></td></tr></table></figure>
+
+<h2 id="request-js"><a href="#request-js" class="headerlink" title="request.js"></a>request.js</h2><p>request.js中使用axios实例</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> instance <span class="keyword">from</span> <span class="string">&quot;./index&quot;</span></span><br><span class="line"><span class="keyword">const</span> axios=<span class="function">(<span class="params">&#123;</span></span></span><br><span class="line"><span class="params"><span class="function">    method,</span></span></span><br><span class="line"><span class="params"><span class="function">    url,</span></span></span><br><span class="line"><span class="params"><span class="function">    data,</span></span></span><br><span class="line"><span class="params"><span class="function">    config</span></span></span><br><span class="line"><span class="params"><span class="function">&#125;</span>)=&gt;</span>&#123;</span><br><span class="line">    method=method.toLowerCase();</span><br><span class="line">    <span class="keyword">if</span>(method==<span class="string">&#x27;post&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> instance.post(url,data,&#123;...config&#125;)</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(method==<span class="string">&#x27;get&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> instance.get(url,&#123;</span><br><span class="line">            <span class="attr">params</span>:data,</span><br><span class="line">            ...config</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(method==<span class="string">&#x27;delete&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> instance.delete(url,&#123;</span><br><span class="line">            <span class="attr">params</span>:data,</span><br><span class="line">            ...config</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(method==<span class="string">&#x27;put&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> instance.put(url,data,&#123;...config&#125;)</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;未知的方法&#x27;</span>+method)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> axios</span><br></pre></td></tr></table></figure>
+
+<h2 id="api-js"><a href="#api-js" class="headerlink" title="api.js"></a>api.js</h2><p>api.js用来封装各种类型的请求</p>
+<p>默认情况下，axios 将 JavaScript 对象序列化为<code>JSON</code>. 要改为以格式发送数据<code>application/x-www-form-urlencoded</code>，我用的是qs.stringfy将数据转换，其他方法可以参考官网</p>
+<p>[]: <a target="_blank" rel="noopener" href="https://axios-http.com/docs/urlencoded">https://axios-http.com/docs/urlencoded</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&quot;./request&quot;</span></span><br><span class="line"><span class="keyword">import</span> qs <span class="keyword">from</span> <span class="string">&quot;qs&quot;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> login=<span class="function">(<span class="params">data</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> axios(&#123;</span><br><span class="line">        <span class="attr">url</span>:<span class="string">&#x27;/api/login&#x27;</span>,</span><br><span class="line">        <span class="attr">method</span>:<span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">        <span class="attr">data</span>:qs.stringify(data),</span><br><span class="line">         </span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> register=<span class="function">(<span class="params">data</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> axios(&#123;</span><br><span class="line">        <span class="attr">url</span>:<span class="string">&#x27;/api/register&#x27;</span>,</span><br><span class="line">        <span class="attr">method</span>:<span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">        <span class="attr">data</span>:qs.stringify(data)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> logout=<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> axios(&#123;</span><br><span class="line">        <span class="attr">url</span>:<span class="string">&#x27;/api/logout&#x27;</span>,</span><br><span class="line">        <span class="attr">method</span>:<span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> getUserInfo=<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> axios(&#123;</span><br><span class="line">        <span class="attr">url</span>:<span class="string">&#x27;/my/getUserInfo&#x27;</span>,</span><br><span class="line">        <span class="attr">method</span>:<span class="string">&#x27;get&#x27;</span>,</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> updatePassword=<span class="function">(<span class="params">data</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> axios(&#123;</span><br><span class="line">        <span class="attr">url</span>:<span class="string">&#x27;/my/updatePassword&#x27;</span>,</span><br><span class="line">        <span class="attr">method</span>:<span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">        <span class="attr">data</span>:qs.stringify(data)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/10/%E6%89%93%E5%8C%85%E8%B5%84%E6%BA%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1501,84 +1586,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/03/20/node%E8%BF%9E%E6%8E%A5MySql%E6%8A%A5%E9%94%99ER-NOT-SUPPORTED-AUTH-MODE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/20/node%E8%BF%9E%E6%8E%A5MySql%E6%8A%A5%E9%94%99ER-NOT-SUPPORTED-AUTH-MODE/" class="post-title-link" itemprop="url">node连接MySql报错ER_NOT_SUPPORTED_AUTH_MODE</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-03-20 13:28:16 / 修改时间：13:33:56" itemprop="dateCreated datePublished" datetime="2022-03-20T13:28:16+08:00">2022-03-20</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Node/" itemprop="url" rel="index"><span itemprop="name">Node</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="报错信息"><a href="#报错信息" class="headerlink" title="报错信息"></a>报错信息</h1><p>本人系统安装的是mysql-installer-community-8.0.18.0.msi这个版本，然后我本地使用node-mysql去连接数据库。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> mysql=<span class="built_in">require</span>(<span class="string">&#x27;mysql&#x27;</span>)</span><br><span class="line"><span class="comment">//建立MYSQL与数据库的联系</span></span><br><span class="line"><span class="keyword">const</span> db=mysql.createPool(&#123;</span><br><span class="line">    <span class="attr">host</span>:<span class="string">&#x27;127.0.0.1&#x27;</span>,<span class="comment">//数据库的ip地址</span></span><br><span class="line">    <span class="attr">user</span>:<span class="string">&#x27;root&#x27;</span>,</span><br><span class="line">    <span class="attr">password</span>:<span class="string">&#x27;123456&#x27;</span>,</span><br><span class="line">    <span class="attr">database</span>:<span class="string">&#x27;my_db_01&#x27;</span>,<span class="comment">//指定要操作哪个数据库</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//测试mysql能否正常工作</span></span><br><span class="line">db.query(<span class="string">&#x27;select 1&#x27;</span>,<span class="function">(<span class="params">err,result</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//mysql工作期间报错</span></span><br><span class="line">    <span class="keyword">if</span>(err)<span class="keyword">return</span> <span class="built_in">console</span>.log(err.message)</span><br><span class="line">    <span class="comment">//能成功执行SQL语句</span></span><br><span class="line">    <span class="built_in">console</span>.log(result);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>运行db.js</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PS D:\Vue-chat\Server&gt; node db.js</span><br><span class="line">ER_NOT_SUPPORTED_AUTH_MODE: Client does not support authentication protocol requested by server; consider upgrading MySQL client</span><br></pre></td></tr></table></figure>
-
-<h1 id="报错原因"><a href="#报错原因" class="headerlink" title="报错原因"></a>报错原因</h1><p>mysql8.0以上加密方式，Node还不支持。</p>
-<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>第一步谷歌<br>查到了 <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-authentication-protocol-requested-by-server">https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-authentication-protocol-requested-by-server</a><br>这个答案，和我报错的步骤基本一样，按照这个进行操作，登录MySql Command Line Client使用这个</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; alter user &#x27;root&#x27;@&#x27;localhost&#x27; identified with mysql_native_password by &#x27;123456&#x27;;</span><br><span class="line">Query OK, 0 rows affected (0.27 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">Query OK, 0 rows affected (0.08 sec)</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1650,7 +1657,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">237</span>
+          <span class="site-state-item-count">238</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1724,7 +1731,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共219.2k字</span>
+  <span class="post-count">博客全站共221.2k字</span>
 </div>
         
 
