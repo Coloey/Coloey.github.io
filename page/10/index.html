@@ -187,6 +187,196 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/19/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/19/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">模板方法模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-19 19:42:49" itemprop="dateCreated datePublished" datetime="2022-05-19T19:42:49+08:00">2022-05-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-09-03 11:27:11" itemprop="dateModified" datetime="2022-09-03T11:27:11+08:00">2022-09-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>模板方法的<strong>核心在于对方法的重用</strong>，它将核心方法封装在抽象类中，让子类继承抽象类的方法，实现抽象类方法的共享，达到方法的共用，当然这种设计模式将导致抽象类控制子类必须遵守某些法则，这是一种行为的约束，但是为了让行为的约束更加可靠，抽象类中封装的方法通常是不变的算法，或者具有稳定的调用方式。</p>
+<h1 id="继承实现模板方法模式"><a href="#继承实现模板方法模式" class="headerlink" title="继承实现模板方法模式"></a>继承实现模板方法模式</h1><p>子类继承的方法也可以扩展，要求对抽象类继承的方法进行重写</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//模板类 基础提示框data渲染数据</span></span><br><span class="line"><span class="keyword">var</span> Alert=<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!data)<span class="keyword">return</span>;</span><br><span class="line">    <span class="comment">//设置内容</span></span><br><span class="line">    <span class="built_in">this</span>.content=data.content;</span><br><span class="line">    <span class="comment">//创建提示面板</span></span><br><span class="line">    <span class="built_in">this</span>.panel=<span class="built_in">document</span>.createElement(<span class="string">&#x27;div&#x27;</span>);</span><br><span class="line">    <span class="comment">//创建内容提示组件</span></span><br><span class="line">    <span class="built_in">this</span>.contentNode=<span class="built_in">document</span>.createElement(<span class="string">&#x27;p&#x27;</span>);</span><br><span class="line">    <span class="comment">//创建确定按钮组件</span></span><br><span class="line">    <span class="built_in">this</span>.confirmBtn=<span class="built_in">document</span>.createElement(<span class="string">&#x27;span&#x27;</span>);</span><br><span class="line">    <span class="comment">//创建关闭按钮组件</span></span><br><span class="line">    <span class="built_in">this</span>.closeBtn=<span class="built_in">document</span>.createElement(<span class="string">&#x27;b&#x27;</span>);</span><br><span class="line">    <span class="comment">//为提示面板添加类</span></span><br><span class="line">    <span class="built_in">this</span>.panel.className=<span class="string">&#x27;alert&#x27;</span>;</span><br><span class="line">    <span class="comment">//为关闭按钮添加类</span></span><br><span class="line">    <span class="built_in">this</span>.closeBtn.className=<span class="string">&#x27;a-close&#x27;</span>;</span><br><span class="line">    <span class="comment">//为确定按钮添加类</span></span><br><span class="line">    <span class="built_in">this</span>.confirmBtn.className=<span class="string">&#x27;a-confirm&#x27;</span>;</span><br><span class="line">    <span class="comment">//为确定按钮添加文案</span></span><br><span class="line">    <span class="built_in">this</span>.confirmBtn.innerHTML=data.confirm||<span class="string">&#x27;确认&#x27;</span></span><br><span class="line">    <span class="comment">//为提示内容添加文本</span></span><br><span class="line">    <span class="built_in">this</span>.contentNode.innerHTML=<span class="built_in">this</span>.content;</span><br><span class="line">    <span class="comment">//点击确定按钮执行方法 如果data中有success方法则为success方法，否则为空函数</span></span><br><span class="line">    <span class="built_in">this</span>.success=data.success||<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">    <span class="comment">//点击关闭按钮执行方法</span></span><br><span class="line">    <span class="built_in">this</span>.fail=data.fail||<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line">Alert.prototype=&#123;</span><br><span class="line">    <span class="attr">init</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//生成提示框</span></span><br><span class="line">        <span class="built_in">this</span>.panel.appendChild(<span class="built_in">this</span>.closeBtn);</span><br><span class="line">        <span class="built_in">this</span>.panel.appendChild(<span class="built_in">this</span>.contentNode);</span><br><span class="line">        <span class="built_in">this</span>.panel.appendChild(<span class="built_in">this</span>.confirmBtn);</span><br><span class="line">        <span class="comment">//插入页面</span></span><br><span class="line">        <span class="built_in">document</span>.body.appendChild(<span class="built_in">this</span>.panel);</span><br><span class="line">        <span class="comment">//绑定事件</span></span><br><span class="line">        <span class="built_in">this</span>.bindEvent();</span><br><span class="line">        <span class="comment">//显示提示框</span></span><br><span class="line">        <span class="built_in">this</span>.show();</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">bindEvent</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> me=<span class="built_in">this</span>;</span><br><span class="line">        <span class="comment">//关闭按钮点击事件</span></span><br><span class="line">        <span class="built_in">this</span>.closeBtn.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            me.fail();</span><br><span class="line">            <span class="comment">//隐藏弹层</span></span><br><span class="line">            me.hide()</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//确认按钮点击事件</span></span><br><span class="line">        <span class="built_in">this</span>.confirmBtn.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            me.success();</span><br><span class="line">            me.hide();</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">hide</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.panel.style.display=<span class="string">&#x27;none&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">//显示弹层</span></span><br><span class="line">    <span class="attr">show</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.panel.style.display=<span class="string">&#x27;block&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//右侧按钮提示框</span></span><br><span class="line"><span class="keyword">var</span> RightAlert=<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//继承基本提示框构造函数</span></span><br><span class="line">    Alert.call(<span class="built_in">this</span>,data);</span><br><span class="line">    <span class="comment">//为确认按钮添加right类</span></span><br><span class="line">    <span class="built_in">this</span>.confirmBtn.className=<span class="built_in">this</span>.confirmBtn.className+<span class="string">&#x27;right&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//继承基本提示框方法</span></span><br><span class="line">RightAlert.prototype=<span class="keyword">new</span> Alert();</span><br><span class="line"><span class="comment">//标题提示框</span></span><br><span class="line"><span class="keyword">var</span> TitleAlert=<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    Alert.call(<span class="built_in">this</span>,data);</span><br><span class="line">    <span class="built_in">this</span>.title=data.title;</span><br><span class="line">    <span class="built_in">this</span>.titleNode=<span class="built_in">document</span>.createElement(<span class="string">&#x27;h3&#x27;</span>);</span><br><span class="line">    <span class="built_in">this</span>.titleNode.innerHTML=<span class="built_in">this</span>.title</span><br><span class="line">&#125;</span><br><span class="line">TitleAlert.prototype=<span class="keyword">new</span> Alert();</span><br><span class="line"><span class="comment">//对基本提示框创建方法的拓展</span></span><br><span class="line">TitleAlert.prototype.init=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//插入标题</span></span><br><span class="line">    <span class="built_in">this</span>.panel.insertBefore(<span class="built_in">this</span>.titleNode,<span class="built_in">this</span>.panel.firstChild);</span><br><span class="line">    <span class="comment">//继承基本提示框的init方法</span></span><br><span class="line">    Alert.prototype.init.call(<span class="built_in">this</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//带有取消按钮的弹出框</span></span><br><span class="line"><span class="keyword">var</span> CancleAlert=<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//继承标题提示框构造函数</span></span><br><span class="line">    TitleAlert.call(<span class="built_in">this</span>,data)</span><br><span class="line">    <span class="comment">//取消按钮文案</span></span><br><span class="line">    <span class="built_in">this</span>.cancel=data.cancel;</span><br><span class="line">    <span class="comment">//创建取消按钮</span></span><br><span class="line">    <span class="built_in">this</span>.cancelBtn=<span class="built_in">document</span>.createElement(<span class="string">&#x27;span&#x27;</span>);</span><br><span class="line">    <span class="comment">//为取消按钮添加类</span></span><br><span class="line">    <span class="built_in">this</span>.cancelBtn.className=<span class="string">&#x27;cancel&#x27;</span></span><br><span class="line">    <span class="comment">//设置取消按钮内容</span></span><br><span class="line">    <span class="built_in">this</span>.cancelBtn.innerHTML=<span class="built_in">this</span>.cancel||<span class="string">&#x27;取消&#x27;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//继承标题提示框原型方法</span></span><br><span class="line">CancleAlert.prototype=<span class="keyword">new</span> Alert()</span><br><span class="line">CancleAlert.prototype.init=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//继承标题提示框创建方法</span></span><br><span class="line">    TitleAlert.prototype.init.call(<span class="built_in">this</span>);</span><br><span class="line">    <span class="comment">//由于取消按钮要添加在末尾，所以在创建完其他组件后添加</span></span><br><span class="line">    <span class="built_in">this</span>.panel.appendChild(<span class="built_in">this</span>.cancelBtn)</span><br><span class="line">&#125;</span><br><span class="line">CancleAlert.prototype.bindEvent=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> me=<span class="built_in">this</span>;</span><br><span class="line">    <span class="comment">//标题提示框绑定事件方法继承</span></span><br><span class="line">    TitleAlert.prototype.bindEvent.call(me);</span><br><span class="line">    <span class="comment">//取消按钮绑定事件</span></span><br><span class="line">    <span class="built_in">this</span>.cancelBtn.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        me.fail();</span><br><span class="line">        me.hide();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">new</span> CancleAlert(&#123;</span><br><span class="line">    <span class="attr">title</span>:<span class="string">&#x27;提示标题&#x27;</span>,</span><br><span class="line">    <span class="attr">content</span>:<span class="string">&#x27;提示内容&#x27;</span>,</span><br><span class="line">    <span class="attr">success</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;ok&#x27;</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">fail</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;cancel&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).init()</span><br></pre></td></tr></table></figure>
+
+<h1 id="JavaScript没有抽象类的缺点和解决方案"><a href="#JavaScript没有抽象类的缺点和解决方案" class="headerlink" title="JavaScript没有抽象类的缺点和解决方案"></a>JavaScript没有抽象类的缺点和解决方案</h1><h2 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h2><ul>
+<li>Js并没有从语法层面提供对抽象类的支持，抽象类的第一个作用是隐藏对象具体类型，由于Js是一门“类型模糊”的语言，所以隐藏对象的类型在Js中并不重要</li>
+<li>另一方面，当我们在Js中使用原型继承模拟传统的类式继承，并没有编译器帮助我们进行任何形式的检查，我们也没有办法保证子类会重写父类的“抽象方法”,在Java中编译器会保证子类重写父类中的抽象方法，但是Js并没有进行这些检查工作，当我们在编写代码时得不到任何形式的警告，完全寄托于程序员的记忆力是很危险的，特别是当我们使用模板方法模式这种完全依赖继承而实现的设计模式时。</li>
+</ul>
+<h2 id="解决方案："><a href="#解决方案：" class="headerlink" title="解决方案："></a>解决方案：</h2><ul>
+<li>使用鸭子类型模拟接口检查，确保子类中确实重写了父类的方法，但模拟接口检查会带来不必要的复杂性，而且要求程序员主动进行接口检查，就要求在业务代码中添加一些和业务逻辑无关的代码</li>
+<li>让Beverage.prototype.brew等方法直接抛出一个异常，如果因为粗心忘记编写Coffee.prototype.brew方法，那么至少我们会在程序运行时得到一个错误</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Beverage.prototype.brew = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;子类必须重写父类的brew方法&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line">Beverage.prototype.pourInCup = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;子类必须重写父类的pourInCup方法&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第二种方法实现简单，付出的额外代价小，缺点是我们得到错误信息的时间点太靠后</p>
+<p>我们一共有3中机会可以得到这个错误信息，第一次是在编写代码的时候，通过编译器检查来得到错误信息，第二次是在创建对象的时候用鸭子类型进行“接口检查”，最后一次是在程序运行过程中</p>
+<h1 id="用高阶函数实现模板继承"><a href="#用高阶函数实现模板继承" class="headerlink" title="用高阶函数实现模板继承"></a>用高阶函数实现模板继承</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> Beverage = <span class="function"><span class="keyword">function</span>(<span class="params">param</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> boilWater = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&quot;把水煮沸&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> brew = param.brew || <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;必须传递brew方法&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> pourInCup = param.pourInCup || <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;必须传递pourInCup方法&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span>  addCondiments = param.addCondiments || <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;必须传递addCondiments方法&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> F = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">    F.prototype.init = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        boilWater()</span><br><span class="line">        brew()</span><br><span class="line">        pourInCup()</span><br><span class="line">        addCondiments()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> F;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> Coffee = Beverage(&#123;</span><br><span class="line">    <span class="attr">brew</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;用沸水冲泡咖啡&#x27;</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">pourInCup</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;把咖啡倒进杯子&#x27;</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">addCondiments</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;加糖和牛奶&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">let</span> coffee = <span class="keyword">new</span> Coffee()</span><br><span class="line">coffee.init()</span><br></pre></td></tr></table></figure>
+
+<p>当我们把brew,pourInCup,addCondiments这些方法一次传入Beverage函数，Beverage函数被调用之后返回构造器F，F类中包含了“模板方法” F.prototype.init,跟继承得到的效果一样，该“模板方法依旧封装了子类的算法框架</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/16/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/16/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">组合模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-16 11:12:05" itemprop="dateCreated datePublished" datetime="2022-05-16T11:12:05+08:00">2022-05-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-09-01 23:24:13" itemprop="dateModified" datetime="2022-09-01T23:24:13+08:00">2022-09-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>组合模式能够给我们提供一个清晰的组成结构，组合对象类通过集成同一个父类使其具有统一的方法，方便我们统一管理和使用。</p>
+<h1 id="组合模式用途："><a href="#组合模式用途：" class="headerlink" title="组合模式用途："></a>组合模式用途：</h1><ul>
+<li>组合模式将对象组合成树形结构，以表示“部分-整体”的层次结构，除了用来表示树形结构外，组合模式可以通过对象的多态性表示，使得用户对单个对象和组合对象的使用具有一致性</li>
+<li>请求在树中传递，从树最顶端往下传，如果当前处理请求的对象是叶对象（普通子命令），叶对象会对请求做出相应处理，如果当前处理请求是组合对象，组合对象则会遍历它属下的子节点，将请求继续传递给子节点。</li>
+</ul>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;button&quot;</span>&gt;</span>按我<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> MacroCammond = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="keyword">return</span>&#123;</span></span><br><span class="line"><span class="javascript">                <span class="attr">commandList</span>:[],</span></span><br><span class="line"><span class="javascript">                <span class="attr">add</span>: <span class="function"><span class="keyword">function</span>(<span class="params">command</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                    <span class="built_in">this</span>.commandList.push(command)</span></span><br><span class="line"><span class="javascript">                &#125;,</span></span><br><span class="line"><span class="javascript">                <span class="attr">execute</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                    <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>,command;command = <span class="built_in">this</span>.commandList[i++];)&#123;</span></span><br><span class="line"><span class="javascript">                        command.execute()</span></span><br><span class="line"><span class="javascript">                    &#125;</span></span><br><span class="line"><span class="javascript">                &#125;</span></span><br><span class="line"><span class="javascript">            &#125;</span></span><br><span class="line"><span class="javascript">        &#125;;</span></span><br><span class="line"><span class="javascript">        <span class="comment">//</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> openAcCommand = &#123;</span></span><br><span class="line"><span class="javascript">            <span class="attr">execute</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                <span class="built_in">console</span>.log(<span class="string">&#x27;打开空调&#x27;</span>)</span></span><br><span class="line"><span class="javascript">            &#125;</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> openTvCommand = &#123;</span></span><br><span class="line"><span class="javascript">            <span class="attr">execute</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                <span class="built_in">console</span>.log(<span class="string">&#x27;打开电视&#x27;</span>)</span></span><br><span class="line"><span class="javascript">            &#125;</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> macroCommand1 = MacroCammond()</span></span><br><span class="line"><span class="javascript">        macroCommand1.add(openAcCommand)</span></span><br><span class="line"><span class="javascript">        macroCommand1.add(openTvCommand)</span></span><br><span class="line"><span class="javascript">        <span class="comment">//</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> closeDoorCommand = &#123;</span></span><br><span class="line"><span class="javascript">            <span class="attr">execute</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                <span class="built_in">console</span>.log(<span class="string">&#x27;关门&#x27;</span>)</span></span><br><span class="line"><span class="javascript">            &#125;</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> openComputer = &#123;</span></span><br><span class="line"><span class="javascript">            <span class="attr">execute</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                <span class="built_in">console</span>.log(<span class="string">&#x27;开电脑&#x27;</span>)</span></span><br><span class="line"><span class="javascript">            &#125;</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> macroCommand2 = MacroCammond()</span></span><br><span class="line"><span class="javascript">        macroCommand2.add(closeDoorCommand)</span></span><br><span class="line"><span class="javascript">        macroCommand2.add(openComputer)</span></span><br><span class="line"><span class="javascript">        <span class="comment">//现在所有命令组合在一起为一个超级命令</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> macroCommand = MacroCammond()</span></span><br><span class="line"><span class="javascript">        macroCommand.add(macroCommand1)</span></span><br><span class="line"><span class="javascript">        macroCommand.add(macroCommand2)</span></span><br><span class="line"><span class="javascript">        <span class="comment">//绑定超级命令</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> setCommand = (<span class="function"><span class="keyword">function</span>(<span class="params">command</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="built_in">document</span>.getElementById(<span class="string">&#x27;button&#x27;</span>).onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                command.execute()</span></span><br><span class="line"><span class="javascript">            &#125;</span></span><br><span class="line"><span class="javascript">        &#125;)(macroCommand)</span></span><br><span class="line"><span class="javascript"></span></span><br><span class="line"><span class="javascript"></span></span><br><span class="line"><span class="javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h1><ol>
+<li>组合模式不是父子关系</li>
+</ol>
+<p>组合模式是一种HAS-A(聚合)关系，而不是IS-A，组合对象包含一组叶对象，但是leaf不是Composite的子类，组合对象把请求委托给它包含的叶子结点，它们能合作的关键是拥有相同的接口。</p>
+<ol start="2">
+<li>对叶子操作的一致性：</li>
+</ol>
+<p>组合模式除了要求组合对象和叶对象拥有相同的接口外，还有一个必要条件，就是对一组叶对象的操作必须具有一致性</p>
+<ol start="3">
+<li>双向映射性：</li>
+</ol>
+<p>给父结点和子结点建立双向映射关系，例如给父对象和叶子分别添加集合保存对方的引用，但是，相互之间的引用1过于复杂时会引使得对象之间产生过多耦合性，可以引入中介者模式管理对象</p>
+<h1 id="组合模式适用情况："><a href="#组合模式适用情况：" class="headerlink" title="组合模式适用情况："></a>组合模式适用情况：</h1><ul>
+<li>表示对象的部分-整体层次结构，组合模式可以很方便地构造一棵树来表示对象的部分-整体结构，特别是开发期间不确定这棵树存在多少层次的时候，在树的构造最终完成之后，只需要通过请求树的最顶层对象，就能对树做统一的操作。在组合模式中增加和删除结点很方便，符合“开放-封闭”原则</li>
+<li>客户希望统一对待树中所有对象。组合模式可以使客户忽略对象和叶对象的区别，客户在面对这棵树时，不用关心正在处理的对象时组合对象还是叶对象，也就是不用写一堆if,else组合对象和叶对象会各自做正确的事情。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/16/%E5%88%92%E5%88%86%E9%93%BE%E8%A1%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -817,185 +1007,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/12/%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/12/%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">工厂模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-05-12 15:35:32 / 修改时间：16:55:09" itemprop="dateCreated datePublished" datetime="2022-05-12T15:35:32+08:00">2022-05-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="简单工厂模式"><a href="#简单工厂模式" class="headerlink" title="简单工厂模式"></a>简单工厂模式</h1><p>只提供一个类</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//蓝球基类</span></span><br><span class="line"><span class="keyword">var</span> Basketball=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.intro=<span class="string">&quot;篮球&quot;</span></span><br><span class="line">&#125;</span><br><span class="line">Basketball.prototype=&#123;</span><br><span class="line">    <span class="attr">getMember</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;每个队伍5名队员&#x27;</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">getBallSize</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;蓝球很大&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//足球基类</span></span><br><span class="line"><span class="keyword">var</span> Football=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.intro=<span class="string">&#x27;足球&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line">Football.prototype=&#123;</span><br><span class="line">    <span class="attr">getMember</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;每个队伍需要11名队员&#x27;</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">getBallSize</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;租足球很大&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//运动工厂</span></span><br><span class="line"><span class="keyword">var</span> SportFactory=<span class="function"><span class="keyword">function</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">switch</span>(name)&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;NBA&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Basketball();</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;wordCup&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Football()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//为世界杯创建一个足球，只需要记住运动工厂，调用并创建</span></span><br><span class="line"><span class="keyword">var</span> football=SportFactory(<span class="string">&#x27;wordCup&#x27;</span>)</span><br><span class="line"><span class="built_in">console</span>.log(football)</span><br><span class="line"><span class="built_in">console</span>.log(football.intro)</span><br><span class="line">football.getMember()</span><br></pre></td></tr></table></figure>
-
-<h1 id="抽象工厂模式"><a href="#抽象工厂模式" class="headerlink" title="抽象工厂模式"></a>抽象工厂模式</h1><p>抽象工厂其实就是一个实现子类继承父类的方法，在这个方法中我们通过传递子类以及要继承父类（抽象类）的名称，在抽象工厂方法中增加一次对抽象类存在性的一次判断，如果存在，则将子类继承父类的方法，然后子类通过寄生式继承，继承父类过程中，在对过渡类的原型继承时，我们不是继承父类的原型，<strong>而是通过new复制父类的一个实例，这么做是因为过渡类不应该仅仅继承父类的原型方法，还要继承父类的对象属性，通过new关键字将父类构造函数执行一遍来复制构造函数中的属性和方法。</strong></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//抽象工厂方法</span></span><br><span class="line"><span class="keyword">var</span> VehicleFactory=<span class="function"><span class="keyword">function</span>(<span class="params">subType,superType</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//判断抽象工厂中是否有该抽象类</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> VehicleFactory[superType]===<span class="string">&#x27;function&#x27;</span>)&#123;</span><br><span class="line">        <span class="comment">//缓存类</span></span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">F</span>(<span class="params"></span>)</span>&#123;  &#125;</span><br><span class="line">        <span class="comment">//继承父类属性和方法</span></span><br><span class="line">        F.prototype=<span class="keyword">new</span> VehicleFactory[superType]()</span><br><span class="line">        <span class="comment">//将子类constructor指向子类</span></span><br><span class="line">        subType.constructor=subType</span><br><span class="line">        <span class="comment">//子类原型继承父类</span></span><br><span class="line">        subType.prototype=<span class="keyword">new</span> F()</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//不存在抽象类抛出错误</span></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;未创建该抽象类&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//汽车抽象类</span></span><br><span class="line">VehicleFactory.Car=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.type=<span class="string">&#x27;car&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line">VehicleFactory.Car.prototype=&#123;</span><br><span class="line">    <span class="attr">getPrice</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;抽象方法不能调用&#x27;</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">getSpeed</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;抽象方法不能调用&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//公共车抽象类</span></span><br><span class="line">VehicleFactory.Bus=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.type=<span class="string">&#x27;bus&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line">VehicleFactory.Bus.prototype=&#123;</span><br><span class="line">    <span class="attr">getPrice</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;抽象方法不能调用&#x27;</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">getSpeed</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;抽象方法不能调用&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//货车抽象类</span></span><br><span class="line">VehicleFactory.Truck=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.type=<span class="string">&#x27;truck&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line">VehicleFactory.Truck.prototype=&#123;</span><br><span class="line">    <span class="attr">getPrice</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;抽象方法不能调用&#x27;</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">getSpeed</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;抽象方法不能调用&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//宝马汽车子类</span></span><br><span class="line"><span class="keyword">var</span> BMW=<span class="function"><span class="keyword">function</span>(<span class="params">price,speed</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.price=price;</span><br><span class="line">    <span class="built_in">this</span>.speed=speed</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//抽象工厂实现对Car抽象类继承</span></span><br><span class="line">VehicleFactory(BMW,<span class="string">&#x27;Car&#x27;</span>)</span><br><span class="line">BMW.prototype.getPrice=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.price</span><br><span class="line">&#125;</span><br><span class="line">BMW.prototype.getSpeed=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.speed</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//兰博基尼汽车子类</span></span><br><span class="line"><span class="keyword">var</span> Lamborghini=<span class="function"><span class="keyword">function</span> (<span class="params">price,speed</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.price=price;</span><br><span class="line">    <span class="built_in">this</span>.speed=speed</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//抽象工厂实现对Car抽象类继承</span></span><br><span class="line">VehicleFactory(Lamborghini,<span class="string">&#x27;Car&#x27;</span>)</span><br><span class="line">Lamborghini.prototype.getPrice=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.price</span><br><span class="line">&#125;</span><br><span class="line">Lamborghini.prototype.getSpeed=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.speed</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/11/%E8%AE%B0vuecli3%E8%81%8A%E5%A4%A9%E5%AE%A4%E9%A1%B9%E7%9B%AEwebpack%E6%89%93%E5%8C%85%E4%BC%98%E5%8C%96/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/11/%E8%AE%B0vuecli3%E8%81%8A%E5%A4%A9%E5%AE%A4%E9%A1%B9%E7%9B%AEwebpack%E6%89%93%E5%8C%85%E4%BC%98%E5%8C%96/" class="post-title-link" itemprop="url">记vuecli3聊天室项目webpack打包优化</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-05-11 17:58:40" itemprop="dateCreated datePublished" datetime="2022-05-11T17:58:40+08:00">2022-05-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-17 12:01:27" itemprop="dateModified" datetime="2022-08-17T12:01:27+08:00">2022-08-17</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>vue.config.js:</p>
-<h2 id="1-UglifyPlugin-Webpack-Plugin-插件用来缩小js文件"><a href="#1-UglifyPlugin-Webpack-Plugin-插件用来缩小js文件" class="headerlink" title="1 UglifyPlugin Webpack Plugin 插件用来缩小js文件"></a>1 UglifyPlugin Webpack Plugin 插件用来缩小js文件</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> UglifyJsPlugin=<span class="built_in">require</span>(<span class="string">&#x27;uglifyjs-webpack-plugin&#x27;</span>)</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    <span class="attr">publicPath</span>: process.env.NODE_ENV === <span class="string">&#x27;production&#x27;</span></span><br><span class="line">    ? <span class="string">&#x27;/Vue-chat/&#x27;</span></span><br><span class="line">    : <span class="string">&#x27;/&#x27;</span> ,</span><br><span class="line">    <span class="comment">// 输出文件目录</span></span><br><span class="line">    <span class="attr">outputDir</span>: <span class="string">&#x27;dist&#x27;</span>,</span><br><span class="line">    <span class="comment">// eslint-loader 是否在保存的时候检查</span></span><br><span class="line">    <span class="attr">lintOnSave</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="comment">// use the full build with in-browser compiler?</span></span><br><span class="line">    <span class="comment">// https://vuejs.org/v2/guide/installation.html#Runtime-Compiler-vs-Runtime-only</span></span><br><span class="line">    <span class="comment">// compiler: false,</span></span><br><span class="line">    <span class="comment">// webpack配置</span></span><br><span class="line">    <span class="comment">// see https://github.com/vuejs/vue-cli/blob/dev/docs/webpack.md</span></span><br><span class="line">    <span class="attr">chainWebpack</span>: <span class="function">() =&gt;</span> &#123;&#125;,</span><br><span class="line">    <span class="comment">//代码压缩</span></span><br><span class="line">    <span class="attr">configureWebpack</span>:&#123;</span><br><span class="line">      <span class="attr">plugins</span>:[</span><br><span class="line">        <span class="keyword">new</span> UglifyJsPlugin(&#123;</span><br><span class="line">          <span class="attr">uglifyOptions</span>:&#123;</span><br><span class="line">            <span class="attr">compress</span>:&#123;</span><br><span class="line">              <span class="attr">drop_debugger</span>:<span class="literal">true</span>,</span><br><span class="line">              <span class="attr">drop_console</span>:<span class="literal">true</span>,</span><br><span class="line">              <span class="attr">pure_funcs</span>:[<span class="string">&#x27;console.log&#x27;</span>]<span class="comment">//删除console.log语句</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="attr">sourceMap</span>:<span class="literal">false</span>,</span><br><span class="line">          <span class="attr">parallel</span>:<span class="literal">true</span></span><br><span class="line">        &#125;)</span><br><span class="line">      ],</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// vue-loader 配置项</span></span><br><span class="line">    <span class="comment">// https://vue-loader.vuejs.org/en/options.html</span></span><br><span class="line">    <span class="comment">// vueLoader: &#123;&#125;,</span></span><br><span class="line">    <span class="comment">// 生产环境是否生成 sourceMap 文件</span></span><br><span class="line">    <span class="attr">productionSourceMap</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="comment">// css相关配置</span></span><br><span class="line">    <span class="comment">//  css: &#123;</span></span><br><span class="line">    <span class="comment">// //  // 是否使用css分离插件 ExtractTextPlugin</span></span><br><span class="line">    <span class="comment">//     extract: true,</span></span><br><span class="line">    <span class="comment">//  // 开启 CSS source maps?</span></span><br><span class="line">    <span class="comment">//     sourceMap: false,</span></span><br><span class="line">    <span class="comment">// //  // css预设器配置项</span></span><br><span class="line">    <span class="comment">//     loaderOptions: &#123;</span></span><br><span class="line">    <span class="comment">//       css:&#123;&#125;,//这里的选项会传递给css-loader</span></span><br><span class="line">    <span class="comment">//       postcss:&#123;&#125;//这里的选项会传递给postcss-loader</span></span><br><span class="line">    <span class="comment">//     &#125;,</span></span><br><span class="line">    <span class="comment">// //  // 启用 CSS modules for all css / pre-processor files.</span></span><br><span class="line">    <span class="comment">//     requireModuleExtension: false</span></span><br><span class="line">    <span class="comment">//  &#125;,</span></span><br><span class="line">    <span class="comment">// use thread-loader for babel &amp; TS in production build</span></span><br><span class="line">    <span class="comment">// enabled by default if the machine has more than 1 cores</span></span><br><span class="line">    <span class="attr">parallel</span>: <span class="built_in">require</span>(<span class="string">&#x27;os&#x27;</span>).cpus().length &gt; <span class="number">1</span>,<span class="comment">// 是否为 Babel 或 TypeScript 使用 thread-loader。该选项在系统的 CPU 有多于一个内核时自动启用，仅作用于生产构建。</span></span><br><span class="line">    <span class="comment">// 是否启用dll</span></span><br><span class="line">    <span class="comment">// See https://github.com/vuejs/vue-cli/blob/dev/docs/cli-service.md#dll-mode</span></span><br><span class="line">    <span class="comment">// dll: false,</span></span><br><span class="line">    <span class="comment">// PWA 插件相关配置</span></span><br><span class="line">    <span class="comment">// see https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-pwa</span></span><br><span class="line">    <span class="attr">pwa</span>: &#123;&#125;,</span><br><span class="line">    <span class="comment">// webpack-dev-server 相关配置</span></span><br><span class="line">    <span class="attr">devServer</span>: &#123;</span><br><span class="line">      <span class="attr">open</span>: process.platform === <span class="string">&#x27;darwin&#x27;</span>,</span><br><span class="line">      <span class="attr">disableHostCheck</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="attr">port</span>:<span class="number">8081</span>,</span><br><span class="line">      <span class="attr">https</span>: <span class="literal">false</span>,</span><br><span class="line">      <span class="attr">hotOnly</span>: <span class="literal">false</span>,</span><br><span class="line">      </span><br><span class="line">     <span class="attr">before</span>: <span class="function"><span class="params">app</span> =&gt;</span> &#123;&#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 第三方插件配置</span></span><br><span class="line">    <span class="attr">pluginOptions</span>: &#123;</span><br><span class="line">     <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">   &#125;</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
-
-<h2 id="2-路由懒加载："><a href="#2-路由懒加载：" class="headerlink" title="2 路由懒加载："></a>2 路由懒加载：</h2><p>把不同路由对应的组件分割成不同的代码块，待路由被请求的时候会单独打包路由，使得入口文件变小，加载速度大大增加，以函数的形式加载路由，这样就可以把各自的路由文件分别打包，只有在解析给定的路由时，才会加载路由组件</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">routes:[&#123;</span><br><span class="line">      <span class="attr">path</span>:<span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">      <span class="attr">name</span>:<span class="string">&quot;通讯录&quot;</span>,</span><br><span class="line">      <span class="attr">component</span>:<span class="function">()=&gt;</span><span class="built_in">Promise</span>.resolve(<span class="keyword">import</span>(<span class="string">&quot;../components/contact/contact.vue&quot;</span>))</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-UI框架按需加载"><a href="#3-UI框架按需加载" class="headerlink" title="3 UI框架按需加载"></a>3 UI框架按需加载</h2><p>在日常使用的UI框架，例如element-plus，我们经常直接使用整个UI库</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> ElemtPlus <span class="keyword">from</span> <span class="string">&#x27;element-plus&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>但实际上我用到的组件只有按钮，分页，表格，输入与警告，所以我们需要按需引用</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;Button,Input,Table,TableColumn,MessageBox&#125; <span class="keyword">from</span> <span class="string">&#x27;element-plus&#x27;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="4-静态资源本地缓存"><a href="#4-静态资源本地缓存" class="headerlink" title="4 静态资源本地缓存"></a>4 静态资源本地缓存</h2><p>后端返回资源问题：</p>
-<ul>
-<li>采用<code>HTTP</code>缓存，设置<code>Cache-Control</code>，<code>Last-Modified</code>，<code>Etag</code>等响应头</li>
-<li>采用<code>Service Worker</code>离线缓存</li>
-</ul>
-<p>前端合理利用<code>localStorage</code></p>
-<h2 id="5-图片资源的压缩"><a href="#5-图片资源的压缩" class="headerlink" title="5 图片资源的压缩"></a>5 图片资源的压缩</h2><p>图片资源虽然不在编码过程中，但它却是对页面性能影响最大的因素</p>
-<p>对于所有的图片资源，我们可以进行适当的压缩</p>
-<p>对页面上使用到的<code>icon</code>，可以使用在线字体图标，或者雪碧图，将众多小图标合并到同一张图上，用以减轻<code>http</code>请求压力。</p>
-<h3 id="开启GZip压缩"><a href="#开启GZip压缩" class="headerlink" title="开启GZip压缩"></a>开启GZip压缩</h3><p>拆完包之后，我们再用<code>gzip</code>做一下压缩 安装<code>compression-webpack-plugin</code></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i compression-webpack-plugin -D</span><br></pre></td></tr></table></figure>
-
-<p>vue.config.js</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> CompressionPlugin = <span class="built_in">require</span>(<span class="string">&#x27;compression-webpack-plugin&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="attr">configureWebpack</span>: <span class="function">(<span class="params">config</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (process.env.NODE_ENV === <span class="string">&#x27;production&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">// 为生产环境修改配置...</span></span><br><span class="line">            config.mode = <span class="string">&#x27;production&#x27;</span></span><br><span class="line">            <span class="keyword">return</span> &#123;</span><br><span class="line">                <span class="attr">plugins</span>: [<span class="keyword">new</span> CompressionPlugin(&#123;</span><br><span class="line">                    <span class="attr">test</span>: <span class="regexp">/\.js$|\.html$|\.css/</span>, <span class="comment">//匹配文件名</span></span><br><span class="line">                    threshold: <span class="number">10240</span>, <span class="comment">//对超过10k的数据进行压缩</span></span><br><span class="line">                    <span class="attr">deleteOriginalAssets</span>: <span class="literal">false</span> <span class="comment">//是否删除原文件</span></span><br><span class="line">                &#125;)]</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="6-使用SSR"><a href="#6-使用SSR" class="headerlink" title="6 使用SSR"></a>6 使用SSR</h2><p>SSR（Server side ），也就是服务端渲染，组件或页面通过服务器生成html字符串，再发送到浏览器</p>
-<p>从头搭建一个服务端渲染是很复杂的，<code>vue</code>应用建议使用<code>Nuxt.js</code>实现服务端渲染</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1067,7 +1078,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">238</span>
+          <span class="site-state-item-count">240</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1141,7 +1152,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共221.2k字</span>
+  <span class="post-count">博客全站共222.3k字</span>
 </div>
         
 

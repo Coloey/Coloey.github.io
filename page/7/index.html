@@ -187,6 +187,216 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/27/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/07/27/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" class="post-title-link" itemprop="url">生命周期</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-07-27 18:00:55 / 修改时间：22:55:32" itemprop="dateCreated datePublished" datetime="2022-07-27T18:00:55+08:00">2022-07-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><img src="/2022/07/27/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/smzq.jpg" alt="image-20220727225427188"></p>
+<p>生命周期执行顺序：</p>
+<p>创建时：</p>
+<ul>
+<li><p>constructor()</p>
+</li>
+<li><p>static getDerivedStateFromProps()</p>
+</li>
+<li><p>render()</p>
+<p>是class组件中唯一必须实现的方法，用于渲染dom,render()方法必须返回reactDOM</p>
+<p>不要在render里面setState,否则会触发死循环导致内存崩溃</p>
+</li>
+<li><p>componentDidMount()</p>
+<p><strong>在组件挂载后立即调用，componentDidMount()是发送网络请求，启用事件监听方法的好时机，并且可以在此钩子函数里直接调用setState()</strong></p>
+</li>
+</ul>
+<p>更新时：</p>
+<ul>
+<li><p>static getDerivedStateFromProps()</p>
+</li>
+<li><p>shouldComponentUpdate()</p>
+<p>在组件更新之前调用，可以控制组件是否进行更新，返回true组件更新，返回false则不更新</p>
+<p>shouldComponentUpdate(nextProps,nextState),第一个是即将更新的props值，第二个是即将更新后的state值，可以根据更新前后的props或state来比较加一些限制条件，决定是否更新，进行性能优化，不要 <code>shouldComponentUpdate</code> 中调用 setState()，否则会导致无限循环调用更新、渲染，直至浏览器内存崩溃</p>
+</li>
+<li><p>render()</p>
+</li>
+<li><p>getSnapshotBeforeUpdate()</p>
+</li>
+<li><p>componentDidUpdate()</p>
+<p>会在更新后被立即调用，首次渲染不会执行。包含三个参数，第一个是上一次props值，第二个是上一次state值，如果组件实现了getSnapshotBeforeUpdate()生命周期，第三个snapshot参数传递</p>
+</li>
+</ul>
+<p>卸载时：</p>
+<ul>
+<li>componentWillUnmount()</li>
+</ul>
+<p>在组件即将被卸载或销毁时进行调用，是取消网络请求，移除监听事件，清理DOM元素，清理定时器等操作的好时机</p>
+<p>新生命周期钩子：</p>
+<p>1.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> getDerivedStateFromProps(props,state)</span><br></pre></td></tr></table></figure>
+
+<p><code>getDerivedStateFromProps</code> 会在调用 render 方法之前调用，并且在初始挂载及后续更新时都会被调用。它应返回一个对象来更新 state，如果返回 <code>null</code> 则不更新任何内容。</p>
+<p>此方法适用于<a target="_blank" rel="noopener" href="https://zh-hans.reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#when-to-use-derived-state">罕见的用例</a>，即 state 的值在任何时候都取决于 props。</p>
+<p>2.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">getSnapshotBeforeUpdate(prevProps,prevState)</span><br></pre></td></tr></table></figure>
+
+<p>getSnapshotBeforeUpdate()在最近一次渲染输出（提交到DOM结点）之前调用，它使得组件能在发生更改之前从DOM中捕获一些信息，此生命周期方法的任何值返回值将作为参数传递给componentDidUpdate()</p>
+<p>例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ScrollingList</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params">props</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">super</span>(props);</span><br><span class="line">        <span class="built_in">this</span>.listRef=React.createRef();</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">getSnapshotBeforeUpdate</span>(<span class="params">prevProps,prevState</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(prevProps.list.length&lt;<span class="built_in">this</span>.props.list.length)&#123;</span><br><span class="line">            <span class="keyword">const</span> list = <span class="built_in">this</span>.listRef.current;</span><br><span class="line">            <span class="keyword">return</span> list.scrollHeight-list.scrollTop</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">componentDidUpdate</span>(<span class="params">prevProps,prevState,snapshot</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(snapshot!=<span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="keyword">const</span> list=<span class="built_in">this</span>.listRef.current;</span><br><span class="line">            list.scrollTop=list.scrollHeight-snapshot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">render</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span>(</span><br><span class="line">            <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">ref</span>=<span class="string">&#123;this.listRef&#125;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/27/Context/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/07/27/Context/" class="post-title-link" itemprop="url">Context</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-07-27 11:02:34 / 修改时间：15:54:21" itemprop="dateCreated datePublished" datetime="2022-07-27T11:02:34+08:00">2022-07-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="理解："><a href="#理解：" class="headerlink" title="理解："></a>理解：</h1><p>一种组件间通信方式，用于祖组件和后代组件之间的通信</p>
+<p>1.使用Context</p>
+<p>2.创建Context容器对象</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> xxxContext = React.createContext(defaultValue)</span><br></pre></td></tr></table></figure>
+
+<p>3.渲染子组件，外面包裹xxxContext.Provider,通过value属性给后代组件传递数据</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;xxxContext.Provider value=&#123;数据&#125;&gt;</span><br><span class="line">&lt;/xxxContext.Provider&gt;</span><br></pre></td></tr></table></figure>
+
+<p>4.后代组件读取数据<br>第一种适用于类组件：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> contextType = xxxContext;<span class="comment">//声明接收context</span></span><br><span class="line"><span class="built_in">this</span>.context<span class="comment">//context是一个对象，读取context中value的值</span></span><br></pre></td></tr></table></figure>
+
+<p>第二种函数组件和类组件都可以：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;xxxContext.Consumer&gt;</span><br><span class="line">    &#123;</span><br><span class="line">    	<span class="function"><span class="params">value</span>=&gt;</span>(<span class="comment">//value是context中的value数据</span></span><br><span class="line">    		要显示的内容</span><br><span class="line">    	)</span><br><span class="line">    </span><br><span class="line">	&#125;</span><br><span class="line">&lt;/xxxContext.Consumer&gt;</span><br></pre></td></tr></table></figure>
+
+<p>例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ThemeContext = React.createContext(&#123;</span><br><span class="line">    <span class="attr">value</span>:<span class="string">&quot;blue&quot;</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params">props</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">super</span>(props)</span><br><span class="line">        <span class="built_in">this</span>.state=&#123;<span class="attr">value</span>:<span class="string">&quot;red&quot;</span>&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">render</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span>(</span><br><span class="line">            <span class="xml"><span class="tag">&lt;<span class="name">ThemeContext.Provider</span> <span class="attr">value</span>=<span class="string">&#123;this.state&#125;</span>&gt;</span></span></span><br><span class="line"><span class="xml">            	<span class="tag">&lt;<span class="name">B</span>/&gt;</span></span></span><br><span class="line"><span class="xml">            <span class="tag">&lt;/<span class="name">ThemeContext.Provider</span>&gt;</span></span></span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">B</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">        <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">        	<span class="tag">&lt;<span class="name">C</span>/&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">C</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        <span class="xml"><span class="tag">&lt;<span class="name">ThemeContext.Consumer</span>&gt;</span></span></span><br><span class="line"><span class="xml">        &#123;(&#123;value&#125;)=&gt;(</span></span><br><span class="line"><span class="xml">        	<span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;value&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="xml">    	)&#125;</span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">ThemeContext.Consumer</span>&gt;</span></span></span><br><span class="line">        </span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>context一般用于封装react插件</p>
+<h1 id="使用useContext"><a href="#使用useContext" class="headerlink" title="使用useContext"></a>使用useContext</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> value = useContext(MyContext)</span><br></pre></td></tr></table></figure>
+
+<p>接收一个<strong>context对象</strong>（React.createContext的返回值）并返回该context的当前值，当前的context值由上层㢟中距离当前组件最近的&lt;MyContext.Provider&gt;的value prop角色</p>
+<p>当组件上层最近的&lt;MyContext.Provider&gt;更新时，该Hook会触发重渲染，使用最新传递给MyContext provider的context value值。</p>
+<p><strong>useContext(MyContext)相当于static contextType=MyContext或者&lt;MyContext.Consumer&gt;</strong></p>
+<p><code>useContext(MyContext)</code> 只是让你能够<em>读取</em> context 的值以及订阅 context 的变化。你仍然需要在上层组件树中使用 <code>&lt;MyContext.Provider&gt;</code> 来为下层组件<em>提供</em> context。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/26/redux/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1066,170 +1276,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/06/keyof/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/06/keyof/" class="post-title-link" itemprop="url">keyof</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-07-06 10:19:50 / 修改时间：11:12:08" itemprop="dateCreated datePublished" datetime="2022-07-06T10:19:50+08:00">2022-07-06</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="keyof"><a href="#keyof" class="headerlink" title="keyof"></a>keyof</h1><p>对一个对象使用keyof操作符，会返回<strong>该对象属性名组成的一个字符串或者数字字面量的联合</strong></p>
-<p>如果这个类型有一个<strong>string或者number的类型的索引签名</strong>，keyof直接返回这些类型</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Arrayish=&#123;[n:<span class="built_in">number</span>]:unknown&#125;;</span><br><span class="line"><span class="keyword">type</span> A=keypf Arrayish;</span><br><span class="line"><span class="comment">//type A=number</span></span><br><span class="line"><span class="keyword">type</span> Mapish=&#123;[k:<span class="built_in">string</span>]:<span class="built_in">boolean</span>&#125;;</span><br><span class="line"><span class="keyword">type</span> M=keyof Mapish;</span><br><span class="line"><span class="comment">//type M=string |number</span></span><br></pre></td></tr></table></figure>
-
-<p>M是stirng|number,这是因为<strong>JavaScript对象的属性名会被强制转换为一个字符串，所以obj[0]和obj[“0”]是一样的</strong></p>
-<p>数字字面量联合类型</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> NumericObject =&#123;</span><br><span class="line">    [<span class="number">1</span>]:<span class="string">&quot;1&quot;</span>;</span><br><span class="line">    [<span class="number">2</span>]:<span class="string">&quot;2&quot;</span>;</span><br><span class="line">	[<span class="number">3</span>]:<span class="string">&quot;3&quot;</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> result=keyof <span class="keyword">typeof</span> NumericObject;</span><br><span class="line"><span class="comment">// typeof NumbericObject 的结果为：</span></span><br><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">//   1: string;</span></span><br><span class="line"><span class="comment">//   2: string;</span></span><br><span class="line"><span class="comment">//   3: string;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"><span class="comment">// 所以最终的结果为：</span></span><br><span class="line"><span class="comment">// type result = 1 | 2 | 3</span></span><br></pre></td></tr></table></figure>
-
-<p>注意：</p>
-<p>下面例子会报错</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">useKey</span>&lt;<span class="title">T</span>,<span class="title">K</span> <span class="title">extends</span> <span class="title">keyof</span> <span class="title">T</span>&gt;(<span class="params">o:T,k:K</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name:<span class="built_in">string</span>=k;</span><br><span class="line">    <span class="comment">//Type &#x27;string|number|symbol&#x27; is not assignable to type &#x27;stirng&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果确定只使用字符串类型的属性名，</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">useKey</span>&lt;<span class="title">T</span>,<span class="title">K</span> <span class="title">extends</span> <span class="title">Extract</span>&lt;<span class="title">keyof</span> <span class="title">T</span>,<span class="title">string</span>&gt;&gt;(<span class="params">o:T,k:K</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name:<span class="built_in">string</span>=k;<span class="comment">//OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果要处理所有属性名：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">useKey</span>&lt;<span class="title">T</span>,<span class="title">K</span> <span class="title">extends</span> <span class="title">keyof</span> <span class="title">T</span>&gt;(<span class="params">o:T,k:K</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name:<span class="built_in">string</span> | <span class="built_in">number</span> |symbol=k;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/05/%E6%98%A0%E5%B0%84%E7%B1%BB%E5%9E%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/05/%E6%98%A0%E5%B0%84%E7%B1%BB%E5%9E%8B/" class="post-title-link" itemprop="url">映射类型</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-07-05 21:28:04 / 修改时间：21:41:11" itemprop="dateCreated datePublished" datetime="2022-07-05T21:28:04+08:00">2022-07-05</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>一个类型需要基于另外一个类型，但是又不想拷贝一份，可以考虑用映射类型</p>
-<h1 id="映射修饰符："><a href="#映射修饰符：" class="headerlink" title="映射修饰符："></a>映射修饰符：</h1><p>在使用映射类型时，两个额外修饰符:readonly用于设置属性只读，?用于设置属性可选，可以通过前缀-或者+删除或者添加这些修饰符，如果没有写前缀，相当于使用了+前缀</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//删除属性中的只读属性</span></span><br><span class="line"><span class="keyword">type</span> CreateMutable&lt;Type&gt;=&#123;</span><br><span class="line">    -<span class="keyword">readonly</span> [Property <span class="keyword">in</span> keyof Type]:Type[Property];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> LockedAccount=&#123;</span><br><span class="line">    <span class="keyword">readonly</span> id:<span class="built_in">string</span>;</span><br><span class="line">    <span class="keyword">readonly</span> name:<span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> UnlockedAccount=CreateMutable&lt;LockedAccount&gt;;</span><br><span class="line"><span class="comment">// type UnlockedAccount = &#123;</span></span><br><span class="line"><span class="comment">//    id: string;</span></span><br><span class="line"><span class="comment">//    name: string;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"><span class="comment">//删除属性中的可选属性</span></span><br><span class="line"><span class="keyword">type</span> Concrete&lt;Type&gt;=&#123;</span><br><span class="line">    [Property <span class="keyword">in</span> keyof Type]-?:Type[Property];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> MaybeUser=&#123;</span><br><span class="line">    <span class="attr">id</span>:<span class="built_in">string</span>;</span><br><span class="line">    name?:<span class="built_in">string</span>;</span><br><span class="line">    age?:<span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> User=Concrete&lt;MaybeUser&gt;;</span><br><span class="line"><span class="comment">// type User = &#123;</span></span><br><span class="line"><span class="comment">//    id: string;</span></span><br><span class="line"><span class="comment">//    name: string;</span></span><br><span class="line"><span class="comment">//    age: number;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="as实现键名重新映射"><a href="#as实现键名重新映射" class="headerlink" title="as实现键名重新映射"></a>as实现键名重新映射</h1><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> MappedTypeWithProperties&lt;Type&gt;=&#123;</span><br><span class="line">    [Properties <span class="keyword">in</span> keyof Type <span class="keyword">as</span> NewKeyType]:Type[Properties]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Getters&lt;Type&gt; = &#123;</span><br><span class="line">    [Property <span class="keyword">in</span> keyof Type <span class="keyword">as</span> <span class="string">`get<span class="subst">$&#123;Capitalize&lt;<span class="built_in">string</span> &amp; Property&gt;&#125;</span>`</span>]: <span class="function">() =&gt;</span> Type[Property]</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">interface</span> Person &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="built_in">string</span>;</span><br><span class="line">    age: <span class="built_in">number</span>;</span><br><span class="line">    location: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> LazyPerson = Getters&lt;Person&gt;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// type LazyPerson = &#123;</span></span><br><span class="line"><span class="comment">//    getName: () =&gt; string;</span></span><br><span class="line"><span class="comment">//    getAge: () =&gt; number;</span></span><br><span class="line"><span class="comment">//    getLocation: () =&gt; string;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>参考：</p>
-<p><a target="_blank" rel="noopener" href="https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html">https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1301,7 +1347,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">238</span>
+          <span class="site-state-item-count">240</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1375,7 +1421,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共221.2k字</span>
+  <span class="post-count">博客全站共222.3k字</span>
 </div>
         
 

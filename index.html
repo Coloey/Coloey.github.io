@@ -187,6 +187,190 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2023/04/08/%E5%9B%9E%E6%B5%81%E9%87%8D%E7%BB%98%E4%B9%8B%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/04/08/%E5%9B%9E%E6%B5%81%E9%87%8D%E7%BB%98%E4%B9%8B%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="post-title-link" itemprop="url">回流重绘之性能优化</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-04-08 17:18:29" itemprop="dateCreated datePublished" datetime="2023-04-08T17:18:29+08:00">2023-04-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-09 14:54:24" itemprop="dateModified" datetime="2023-04-09T14:54:24+08:00">2023-04-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">项目总结</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>实习的时候遇到一个写一个tag-input的需求，也就是在input输入后里面每次回车都生成一个标签，在每次改变input的padding的时候都涉及到回流重绘的问题，为了优化性能，减少回流重绘的次数，又复习了一遍回流重绘。</p>
+<p>回流这一阶段主要是计算节点的位置和几何信息，那么当页面布局和几何信息发生变化的时候，就需要回流。比如以下情况：</p>
+<ul>
+<li>添加或删除可见的DOM元素</li>
+<li>元素的位置发生变化</li>
+<li>元素的尺寸发生变化（包括外边距、内边框、边框大小、高度和宽度等）</li>
+<li>内容发生变化，比如文本变化或图片被另一个不同尺寸的图片所替代。</li>
+<li>页面一开始渲染的时候（这肯定避免不了）</li>
+<li>浏览器的窗口尺寸变化（因为回流是根据视口的大小来计算元素的位置和大小的）</li>
+</ul>
+<h2 id="浏览器的优化机制"><a href="#浏览器的优化机制" class="headerlink" title="浏览器的优化机制"></a>浏览器的优化机制</h2><p>由于每次重排都会造成额外的计算消耗，因此大多数浏览器都会通过队列化修改并批量执行来优化重排过程。浏览器会将修改操作放入到队列里，直到过了一段时间或者操作达到了一个阈值，才清空队列。但是！<strong>当你获取布局信息的操作的时候，会强制队列刷新</strong>，比如当你访问以下属性或者使用以下方法：</p>
+<ul>
+<li>offsetTop、offsetLeft、offsetWidth、offsetHeight</li>
+<li>scrollTop、scrollLeft、scrollWidth、scrollHeight</li>
+<li>clientTop、clientLeft、clientWidth、clientHeight</li>
+<li>getComputedStyle()</li>
+<li>getBoundingClientRect</li>
+</ul>
+<p>因此浏览器不得不清空队列，触发回流重绘来返回正确的值，造成强制同步布局</p>
+<h2 id="减少回流和重绘"><a href="#减少回流和重绘" class="headerlink" title="减少回流和重绘"></a>减少回流和重绘</h2><h3 id="最小化重绘和重排"><a href="#最小化重绘和重排" class="headerlink" title="最小化重绘和重排"></a>最小化重绘和重排</h3><p>由于重绘和重排可能代价比较昂贵，因此最好就是可以减少它的发生次数。为了减少发生次数，我们可以合并多次对DOM和样式的修改，然后一次处理掉。</p>
+<p>使用cssText：</p>
+<p>比如我的tag-input组件,优化前：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">methods:&#123;</span><br><span class="line">        <span class="function"><span class="title">delTag</span>(<span class="params">index</span>)</span>&#123;</span><br><span class="line">            <span class="built_in">this</span>.tags.splice(index,<span class="number">1</span>)</span><br><span class="line">             <span class="built_in">this</span>.$nextTick(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">                <span class="keyword">let</span> el = <span class="built_in">document</span>.querySelector(<span class="string">&#x27;.yh-tag:last-child&#x27;</span>)</span><br><span class="line">                <span class="keyword">let</span> top = el.offsetTop - el.clientHeight</span><br><span class="line">                <span class="keyword">let</span> left = el.offsetLeft + el.clientWidth</span><br><span class="line">                <span class="built_in">document</span>.querySelector(<span class="string">&#x27;.yh-tag-input  .el-textarea__inner&#x27;</span>).style.paddingLeft = left + <span class="number">10</span> +<span class="string">&#x27;px&#x27;</span></span><br><span class="line">                <span class="built_in">document</span>.querySelector(<span class="string">&#x27;.yh-tag-input  .el-textarea__inner&#x27;</span>).style.paddingTop = top + <span class="number">10</span>  +<span class="string">&#x27;px&#x27;</span></span><br><span class="line">                <span class="built_in">document</span>.querySelector(<span class="string">&#x27;.yh-tag-input  .el-textarea__inner&#x27;</span>).style.height = el.offsetTop + <span class="number">40</span> +<span class="string">&#x27;px&#x27;</span></span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="function"><span class="title">addTag</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(!<span class="built_in">this</span>.inputData) <span class="keyword">return</span> ;</span><br><span class="line">            <span class="built_in">this</span>.tags.push(<span class="built_in">this</span>.inputData)</span><br><span class="line">            <span class="built_in">this</span>.$nextTick(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">                <span class="keyword">let</span> el = <span class="built_in">document</span>.querySelector(<span class="string">&#x27;.yh-tag:last-child&#x27;</span>)</span><br><span class="line">                <span class="keyword">let</span> top = el.offsetTop - el.clientHeight</span><br><span class="line">                <span class="keyword">let</span> left = el.offsetLeft + el.clientWidth</span><br><span class="line">                <span class="built_in">document</span>.querySelector(<span class="string">&#x27;.yh-tag-input  .el-textarea__inner&#x27;</span>).style.paddingLeft = left + <span class="number">10</span> +<span class="string">&#x27;px&#x27;</span></span><br><span class="line">                <span class="built_in">document</span>.querySelector(<span class="string">&#x27;.yh-tag-input  .el-textarea__inner&#x27;</span>).style.paddingTop = top + <span class="number">10</span>  +<span class="string">&#x27;px&#x27;</span></span><br><span class="line">                <span class="built_in">document</span>.querySelector(<span class="string">&#x27;.yh-tag-input  .el-textarea__inner&#x27;</span>).style.height = el.offsetTop + <span class="number">40</span> +<span class="string">&#x27;px&#x27;</span></span><br><span class="line">            &#125;)</span><br><span class="line">            <span class="built_in">this</span>.inputData = <span class="string">&#x27;&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>优化后：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">methods:&#123;</span><br><span class="line">        <span class="function"><span class="title">delTag</span>(<span class="params">index</span>)</span>&#123;</span><br><span class="line">            <span class="built_in">this</span>.tags.splice(index,<span class="number">1</span>)</span><br><span class="line">             <span class="built_in">this</span>.$nextTick(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">              <span class="comment">// tag-box布局为absolute 重排开销较小 不用考虑对其他元素的影响</span></span><br><span class="line">                <span class="keyword">let</span> el = <span class="built_in">document</span>.querySelector(<span class="string">&#x27;.yh-tag:last-child&#x27;</span>)</span><br><span class="line">                <span class="keyword">if</span>(el) &#123;</span><br><span class="line">                  <span class="comment">// 缓存布局信息，读写分离，一次回流+重绘</span></span><br><span class="line">                  <span class="keyword">let</span> top = el.offsetTop;</span><br><span class="line">                  <span class="keyword">let</span> left = el.offsetLeft + el.clientWidth</span><br><span class="line">                   <span class="comment">// 放入浏览器队列中执行</span></span><br><span class="line">                   <span class="built_in">document</span>.querySelector(<span class="string">&#x27;.yh-tag-input  .el-input__inner&#x27;</span>).style.cssText = </span><br><span class="line">                   <span class="string">`padding-left:<span class="subst">$&#123;left + <span class="number">10</span>&#125;</span>px;padding-top:<span class="subst">$&#123;top - <span class="number">5</span>&#125;</span>px;height:<span class="subst">$&#123;top+<span class="number">30</span>&#125;</span>px`</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                  <span class="built_in">document</span>.querySelector(<span class="string">&#x27;.yh-tag-input  .el-input__inner&#x27;</span>).style.cssText = </span><br><span class="line">                  <span class="string">`padding-left:5px;padding-top:5px;`</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="function"><span class="title">addTag</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(!<span class="built_in">this</span>.inputData) <span class="keyword">return</span> ;</span><br><span class="line">            <span class="built_in">this</span>.tags.push(<span class="built_in">this</span>.inputData)</span><br><span class="line">            <span class="built_in">this</span>.$nextTick(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">                <span class="keyword">let</span> el = <span class="built_in">document</span>.querySelector(<span class="string">&#x27;.yh-tag:last-child&#x27;</span>)</span><br><span class="line">                <span class="keyword">if</span>(el) &#123;</span><br><span class="line">                  <span class="keyword">let</span> top = el.offsetTop</span><br><span class="line">                  <span class="keyword">let</span> left = el.offsetLeft + el.clientWidth</span><br><span class="line">                   <span class="built_in">document</span>.querySelector(<span class="string">&#x27;.yh-tag-input  .el-input__inner&#x27;</span>).style.cssText= </span><br><span class="line">                   <span class="string">`padding-left:<span class="subst">$&#123;left + <span class="number">10</span>&#125;</span>px;padding-top:<span class="subst">$&#123;top - <span class="number">5</span>&#125;</span>px;height:<span class="subst">$&#123;top+<span class="number">30</span>&#125;</span>px`</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">            <span class="built_in">this</span>.inputData = <span class="string">&#x27;&#x27;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="function"><span class="title">focus</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">          <span class="built_in">this</span>.$refs.input.focus();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>或者改为使用class</p>
+<h3 id="批量修改DOM，读写dom分离"><a href="#批量修改DOM，读写dom分离" class="headerlink" title="批量修改DOM，读写dom分离"></a>批量修改DOM，读写dom分离</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">initP</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; paragraphs.length; i++) &#123;</span><br><span class="line">        paragraphs[i].style.width = box.offsetWidth + <span class="string">&#x27;px&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面这段代码每次循环都读取box的offsetWidth属性值，再写style.width，每次循环都会强制浏览器刷新对列，可以将width缓存</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> width = box.offsetWidth;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">initP</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; paragraphs.length; i++) &#123;</span><br><span class="line">        paragraphs[i].style.width = width + <span class="string">&#x27;px&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="css3硬件加速（GPU加速）"><a href="#css3硬件加速（GPU加速）" class="headerlink" title="css3硬件加速（GPU加速）"></a>css3硬件加速（GPU加速）</h3><p><strong>1. 使用css3硬件加速，可以让transform、opacity、filters这些动画不会引起回流重绘 。</strong></p>
+<p><strong>2. 对于动画的其它属性，比如background-color这些，还是会引起回流重绘的，不过它还是可以提升这些动画的性能。</strong></p>
+<p>因为使用css动画在合成线程上执行，如果采用GPU进行栅格化，合成效率会更高</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2023/04/05/babel%E5%92%8Ctsc%E7%BC%96%E8%AF%91typeScript%E5%8C%BA%E5%88%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/04/05/babel%E5%92%8Ctsc%E7%BC%96%E8%AF%91typeScript%E5%8C%BA%E5%88%AB/" class="post-title-link" itemprop="url">babel和tsc编译typeScript区别</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-04-05 21:47:04" itemprop="dateCreated datePublished" datetime="2023-04-05T21:47:04+08:00">2023-04-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-06 22:50:20" itemprop="dateModified" datetime="2023-04-06T22:50:20+08:00">2023-04-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">项目总结</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2023/04/02/mini-webpack/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1053,188 +1237,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/11/12/b%E7%AB%99%E5%89%8D%E7%AB%AF%E6%97%A5%E5%B8%B8%E5%AE%9E%E4%B9%A0%E4%B8%80%E9%9D%A2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/11/12/b%E7%AB%99%E5%89%8D%E7%AB%AF%E6%97%A5%E5%B8%B8%E5%AE%9E%E4%B9%A0%E4%B8%80%E9%9D%A2/" class="post-title-link" itemprop="url">b站前端日常实习一面</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-11-12 14:51:38 / 修改时间：14:58:31" itemprop="dateCreated datePublished" datetime="2022-11-12T14:51:38+08:00">2022-11-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9D%A2%E7%BB%8F/" itemprop="url" rel="index"><span itemprop="name">面经</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>自我介绍</p>
-<p>1.css选择器优先级</p>
-<p>2.visibility:none,opacity:0,display:none区别 如果设置还能进行事件绑定和监听吗</p>
-<p>3.闭包</p>
-<p>4.作用域链</p>
-<p>5 深拷贝有几种实现方法</p>
-<p>差点写错了</p>
-<p>6.遇到过内存泄漏问题吗？怎么解决</p>
-<p>7.浏览器垃圾回收机制</p>
-<p>之前看过V8的垃圾回收机制，就回答了那部分</p>
-<p>8.vue看过哪些源码？答：响应式部分</p>
-<p>9 讲讲vue2 vue3响应式原理</p>
-<p>10 vue2中computed有用到watcher吗?</p>
-<p>我了解的是vue3的源码，用到了副作用函数和getter，本质上也是发布订阅模式…</p>
-<p>11 vue3diff 算法有什么优化？</p>
-<p>讲了Vue2和vue3的diff算法以及优化原理</p>
-<p>12 vue3中的patchFlag了解吗 不是很了解</p>
-<p>13 你的项目用的gulp做打包 是基于什么想法用的gulp</p>
-<p>14 了解vite snowpack吗</p>
-<p>不是很了解</p>
-<p>15 计网还记得哪些？http https tcp udp</p>
-<p>16 讲讲http和https</p>
-<p>17 https还有什么需要缺陷</p>
-<p>回答了http1,http2,http3的区别 </p>
-<p>18 http3还了解哪些</p>
-<p>就讲了Quic协议解决可靠传输问题和运输层用UDP实现</p>
-<p>问：还有吗？ 了解的只有这些</p>
-<p>19 深挖Quic协议 不是很了解</p>
-<p>20 实习项目中做了什么</p>
-<p>21 实习项目中遇到了哪些困难</p>
-<p>22 怎么在组件中实现的国际化</p>
-<p>23 写一个二叉树的前序遍历 非递归写法</p>
-<p>反问：学习建议</p>
-<p>回答：计网挺熟悉的 你项目中用的gulp做打包，在项目中用哪些构建工具要做一个系统的考察</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/11/10/Vue%E5%90%84%E9%98%B6%E6%AE%B5%E6%95%B0%E6%8D%AE%E5%8F%AF%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/11/10/Vue%E5%90%84%E9%98%B6%E6%AE%B5%E6%95%B0%E6%8D%AE%E5%8F%AF%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5/" class="post-title-link" itemprop="url">Vue各阶段数据可使用情况</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-11-10 09:53:25 / 修改时间：10:04:09" itemprop="dateCreated datePublished" datetime="2022-11-10T09:53:25+08:00">2022-11-10</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>加载顺序：</p>
-<p><img src="/2022/11/10/Vue%E5%90%84%E9%98%B6%E6%AE%B5%E6%95%B0%E6%8D%AE%E5%8F%AF%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5/1-16680454078781.png"></p>
-<p>在new Vue()时，vue\src\core\instance\index.js里面的_init()初始化各个功能</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Vue</span> (<span class="params">options</span>) </span>&#123;</span><br><span class="line"><span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">&#x27;production&#x27;</span> &amp;&amp;</span><br><span class="line">  !(<span class="built_in">this</span> <span class="keyword">instanceof</span> Vue)</span><br><span class="line">) &#123;</span><br><span class="line">  warn(<span class="string">&#x27;Vue is a constructor and should be called with the `new` keyword&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">this</span>._init(options) <span class="comment">//初始化各个功能</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>在_init()中是这样一个执行顺序，initState是在beforeCreate和created之间</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">initLifecycle(vm)</span><br><span class="line">  initEvents(vm)</span><br><span class="line">  initRender(vm)</span><br><span class="line">  callHook(vm, <span class="string">&#x27;beforeCreate&#x27;</span>)</span><br><span class="line">  initInjections(vm) <span class="comment">// resolve injections before data/props</span></span><br><span class="line">  initState(vm) <span class="comment">//初始化</span></span><br><span class="line">  initProvide(vm) <span class="comment">// resolve provide after data/props</span></span><br><span class="line">  callHook(vm, <span class="string">&#x27;created&#x27;</span>) </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>在initState()中：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (opts.props) initProps(vm, opts.props)<span class="comment">//初始化Props</span></span><br><span class="line"><span class="keyword">if</span> (opts.methods) initMethods(vm, opts.methods)<span class="comment">//初始化methods</span></span><br><span class="line"><span class="keyword">if</span> (opts.data) &#123;</span><br><span class="line">  initData(vm)&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  observe(vm._data = &#123;&#125;, <span class="literal">true</span> <span class="comment">/* asRootData */</span>)&#125;<span class="comment">//初始化data</span></span><br><span class="line"><span class="keyword">if</span> (opts.computed) initComputed(vm, opts.computed)<span class="comment">//初始化computed</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>所以Props，methods,data和computed的初始化都是在beforeCreated和created之间完成的。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1306,7 +1308,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">238</span>
+          <span class="site-state-item-count">240</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1380,7 +1382,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共221.2k字</span>
+  <span class="post-count">博客全站共222.3k字</span>
 </div>
         
 

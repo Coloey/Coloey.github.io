@@ -187,6 +187,170 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/06/keyof/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/07/06/keyof/" class="post-title-link" itemprop="url">keyof</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-07-06 10:19:50 / 修改时间：11:12:08" itemprop="dateCreated datePublished" datetime="2022-07-06T10:19:50+08:00">2022-07-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="keyof"><a href="#keyof" class="headerlink" title="keyof"></a>keyof</h1><p>对一个对象使用keyof操作符，会返回<strong>该对象属性名组成的一个字符串或者数字字面量的联合</strong></p>
+<p>如果这个类型有一个<strong>string或者number的类型的索引签名</strong>，keyof直接返回这些类型</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Arrayish=&#123;[n:<span class="built_in">number</span>]:unknown&#125;;</span><br><span class="line"><span class="keyword">type</span> A=keypf Arrayish;</span><br><span class="line"><span class="comment">//type A=number</span></span><br><span class="line"><span class="keyword">type</span> Mapish=&#123;[k:<span class="built_in">string</span>]:<span class="built_in">boolean</span>&#125;;</span><br><span class="line"><span class="keyword">type</span> M=keyof Mapish;</span><br><span class="line"><span class="comment">//type M=string |number</span></span><br></pre></td></tr></table></figure>
+
+<p>M是stirng|number,这是因为<strong>JavaScript对象的属性名会被强制转换为一个字符串，所以obj[0]和obj[“0”]是一样的</strong></p>
+<p>数字字面量联合类型</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> NumericObject =&#123;</span><br><span class="line">    [<span class="number">1</span>]:<span class="string">&quot;1&quot;</span>;</span><br><span class="line">    [<span class="number">2</span>]:<span class="string">&quot;2&quot;</span>;</span><br><span class="line">	[<span class="number">3</span>]:<span class="string">&quot;3&quot;</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> result=keyof <span class="keyword">typeof</span> NumericObject;</span><br><span class="line"><span class="comment">// typeof NumbericObject 的结果为：</span></span><br><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">//   1: string;</span></span><br><span class="line"><span class="comment">//   2: string;</span></span><br><span class="line"><span class="comment">//   3: string;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"><span class="comment">// 所以最终的结果为：</span></span><br><span class="line"><span class="comment">// type result = 1 | 2 | 3</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<p>下面例子会报错</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">useKey</span>&lt;<span class="title">T</span>,<span class="title">K</span> <span class="title">extends</span> <span class="title">keyof</span> <span class="title">T</span>&gt;(<span class="params">o:T,k:K</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name:<span class="built_in">string</span>=k;</span><br><span class="line">    <span class="comment">//Type &#x27;string|number|symbol&#x27; is not assignable to type &#x27;stirng&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果确定只使用字符串类型的属性名，</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">useKey</span>&lt;<span class="title">T</span>,<span class="title">K</span> <span class="title">extends</span> <span class="title">Extract</span>&lt;<span class="title">keyof</span> <span class="title">T</span>,<span class="title">string</span>&gt;&gt;(<span class="params">o:T,k:K</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name:<span class="built_in">string</span>=k;<span class="comment">//OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果要处理所有属性名：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">useKey</span>&lt;<span class="title">T</span>,<span class="title">K</span> <span class="title">extends</span> <span class="title">keyof</span> <span class="title">T</span>&gt;(<span class="params">o:T,k:K</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name:<span class="built_in">string</span> | <span class="built_in">number</span> |symbol=k;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/05/%E6%98%A0%E5%B0%84%E7%B1%BB%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/07/05/%E6%98%A0%E5%B0%84%E7%B1%BB%E5%9E%8B/" class="post-title-link" itemprop="url">映射类型</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-07-05 21:28:04 / 修改时间：21:41:11" itemprop="dateCreated datePublished" datetime="2022-07-05T21:28:04+08:00">2022-07-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>一个类型需要基于另外一个类型，但是又不想拷贝一份，可以考虑用映射类型</p>
+<h1 id="映射修饰符："><a href="#映射修饰符：" class="headerlink" title="映射修饰符："></a>映射修饰符：</h1><p>在使用映射类型时，两个额外修饰符:readonly用于设置属性只读，?用于设置属性可选，可以通过前缀-或者+删除或者添加这些修饰符，如果没有写前缀，相当于使用了+前缀</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//删除属性中的只读属性</span></span><br><span class="line"><span class="keyword">type</span> CreateMutable&lt;Type&gt;=&#123;</span><br><span class="line">    -<span class="keyword">readonly</span> [Property <span class="keyword">in</span> keyof Type]:Type[Property];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> LockedAccount=&#123;</span><br><span class="line">    <span class="keyword">readonly</span> id:<span class="built_in">string</span>;</span><br><span class="line">    <span class="keyword">readonly</span> name:<span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> UnlockedAccount=CreateMutable&lt;LockedAccount&gt;;</span><br><span class="line"><span class="comment">// type UnlockedAccount = &#123;</span></span><br><span class="line"><span class="comment">//    id: string;</span></span><br><span class="line"><span class="comment">//    name: string;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"><span class="comment">//删除属性中的可选属性</span></span><br><span class="line"><span class="keyword">type</span> Concrete&lt;Type&gt;=&#123;</span><br><span class="line">    [Property <span class="keyword">in</span> keyof Type]-?:Type[Property];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> MaybeUser=&#123;</span><br><span class="line">    <span class="attr">id</span>:<span class="built_in">string</span>;</span><br><span class="line">    name?:<span class="built_in">string</span>;</span><br><span class="line">    age?:<span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> User=Concrete&lt;MaybeUser&gt;;</span><br><span class="line"><span class="comment">// type User = &#123;</span></span><br><span class="line"><span class="comment">//    id: string;</span></span><br><span class="line"><span class="comment">//    name: string;</span></span><br><span class="line"><span class="comment">//    age: number;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="as实现键名重新映射"><a href="#as实现键名重新映射" class="headerlink" title="as实现键名重新映射"></a>as实现键名重新映射</h1><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> MappedTypeWithProperties&lt;Type&gt;=&#123;</span><br><span class="line">    [Properties <span class="keyword">in</span> keyof Type <span class="keyword">as</span> NewKeyType]:Type[Properties]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Getters&lt;Type&gt; = &#123;</span><br><span class="line">    [Property <span class="keyword">in</span> keyof Type <span class="keyword">as</span> <span class="string">`get<span class="subst">$&#123;Capitalize&lt;<span class="built_in">string</span> &amp; Property&gt;&#125;</span>`</span>]: <span class="function">() =&gt;</span> Type[Property]</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">interface</span> Person &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="built_in">string</span>;</span><br><span class="line">    age: <span class="built_in">number</span>;</span><br><span class="line">    location: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> LazyPerson = Getters&lt;Person&gt;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// type LazyPerson = &#123;</span></span><br><span class="line"><span class="comment">//    getName: () =&gt; string;</span></span><br><span class="line"><span class="comment">//    getAge: () =&gt; number;</span></span><br><span class="line"><span class="comment">//    getLocation: () =&gt; string;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html">https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/05/%E6%9D%A1%E4%BB%B6%E7%B1%BB%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1041,280 +1205,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/31/%E5%88%A4%E6%96%AD%E6%95%B0%E7%BB%84%E7%B1%BB%E5%9E%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/31/%E5%88%A4%E6%96%AD%E6%95%B0%E7%BB%84%E7%B1%BB%E5%9E%8B/" class="post-title-link" itemprop="url">判断数组类型</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-05-31 19:24:58 / 修改时间：19:43:40" itemprop="dateCreated datePublished" datetime="2022-05-31T19:24:58+08:00">2022-05-31</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="instanceof"><a href="#instanceof" class="headerlink" title="instanceof"></a>instanceof</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="built_in">console</span>.log(arr <span class="keyword">instanceof</span> <span class="built_in">Array</span>)</span><br></pre></td></tr></table></figure>
-
-<h1 id="变量-constructor-变量类型"><a href="#变量-constructor-变量类型" class="headerlink" title="变量.constructor===变量类型"></a>变量.constructor===变量类型</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="built_in">console</span>.log(arr.constructor===<span class="built_in">Array</span>)</span><br></pre></td></tr></table></figure>
-
-<h1 id="Array-isArray-变量"><a href="#Array-isArray-变量" class="headerlink" title="Array.isArray(变量)"></a>Array.isArray(变量)</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Array</span>.isArray(arr))</span><br></pre></td></tr></table></figure>
-
-<h1 id="Object-prototype-toString-call-返回true则变量时数组类型"><a href="#Object-prototype-toString-call-返回true则变量时数组类型" class="headerlink" title="Object.prototype.toString.call(),返回true则变量时数组类型"></a>Object.prototype.toString.call(),返回true则变量时数组类型</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.prototype.toString.call(arr)===<span class="string">&#x27;[object Array]&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
-<h1 id="判断对象原型"><a href="#判断对象原型" class="headerlink" title="判断对象原型"></a>判断对象原型</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="built_in">console</span>.log(arr.__proto__===<span class="built_in">Array</span>.prototype)</span><br></pre></td></tr></table></figure>
-
-<h1 id="Object-getPrototypeOf-来判断是否为数组类型"><a href="#Object-getPrototypeOf-来判断是否为数组类型" class="headerlink" title="Object.getPrototypeOf()来判断是否为数组类型"></a>Object.getPrototypeOf()来判断是否为数组类型</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.getPrototypeOf(arr)===<span class="built_in">Array</span>.prototype);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="isPrototypeOf-判断是否为数组类型"><a href="#isPrototypeOf-判断是否为数组类型" class="headerlink" title="isPrototypeOf()判断是否为数组类型"></a>isPrototypeOf()判断是否为数组类型</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Array</span>.prototype.isPrototypeOf(arr))</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/29/Vue%E4%B8%AD%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/29/Vue%E4%B8%AD%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1/" class="post-title-link" itemprop="url">Vue中组件通信</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-05-29 18:15:22 / 修改时间：19:15:11" itemprop="dateCreated datePublished" datetime="2022-05-29T18:15:22+08:00">2022-05-29</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li>父子组件之间通信</li>
-<li>兄弟组件之间的通信</li>
-<li>祖孙与后代组件之间的通信</li>
-<li>非关系组件间的通信</li>
-</ul>
-<h1 id="整理vue中8种常规的通信方案"><a href="#整理vue中8种常规的通信方案" class="headerlink" title="整理vue中8种常规的通信方案"></a>整理<code>vue</code>中8种常规的通信方案</h1><ol>
-<li>通过 props 传递</li>
-<li>通过 $emit 触发自定义事件</li>
-<li>使用 ref</li>
-<li>EventBus</li>
-<li>$parent 或$root</li>
-<li>attrs 与 listeners</li>
-<li>Provide 与 Inject</li>
-<li>Vuex</li>
-</ol>
-<h1 id="组件通信方案："><a href="#组件通信方案：" class="headerlink" title="组件通信方案："></a>组件通信方案：</h1><ul>
-<li>通过props传递</li>
-<li>通过$emit触发自定义事件</li>
-<li>使用ref</li>
-<li>EventBus</li>
-<li>$parent或$root</li>
-<li>attrs与listeners</li>
-<li>Provide与inject</li>
-<li>Vuex</li>
-</ul>
-<h1 id="props传递数据"><a href="#props传递数据" class="headerlink" title="props传递数据"></a>props传递数据</h1><ul>
-<li>适用场景：父组件传递数据给子组件</li>
-<li>子组件设置props属性，定义接收父组件传递过来的参数</li>
-<li>父组件在使用子组件标签中通过字面量来传递值</li>
-</ul>
-<p>Children.vue</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">props:&#123;</span><br><span class="line">    <span class="comment">//字符串形式</span></span><br><span class="line">    <span class="attr">name</span>:<span class="built_in">String</span><span class="comment">//接收的类型参数</span></span><br><span class="line">    <span class="comment">//对象形式</span></span><br><span class="line">    <span class="attr">age</span>:&#123;</span><br><span class="line">        <span class="attr">type</span>:<span class="built_in">Number</span>,<span class="comment">//接收的类型为数值</span></span><br><span class="line">        <span class="attr">default</span>:<span class="number">18</span>;<span class="comment">//默认值为18</span></span><br><span class="line">        <span class="built_in">require</span>:<span class="literal">true</span>;<span class="comment">//age属性必须传递</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Father.vue</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Children name=<span class="string">&#x27;jack&#x27;</span> age=<span class="number">18</span>/&gt;</span><br></pre></td></tr></table></figure>
-
-<h1 id="emit触发自定义事件"><a href="#emit触发自定义事件" class="headerlink" title="$emit触发自定义事件"></a>$emit触发自定义事件</h1><ul>
-<li>适用场景：子组件传递数据给父组件</li>
-<li>子组件通过$emit触发自定义事件，$emit第二个参数为传递的数值</li>
-<li>父组件绑定监听器获取子组件传递过来的参数</li>
-<li>与组件和 prop 一样，事件名提供了自动的大小写转换。如果在子组件中触发一个以 camelCase (驼峰式命名) 命名的事件，你将可以在父组件中添加一个 kebab-case (短横线分隔命名) 的监听器。</li>
-</ul>
-<p>Children.vue</p>
-<p>methods中</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">this</span>.$emit(<span class="string">&#x27;add&#x27;</span>,good)</span><br></pre></td></tr></table></figure>
-
-<p>Father.vue</p>
-<p>template中：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Children @add=<span class="string">&quot;cartAdd($event)&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>ref</p>
-<p>父组件在使用子组件的时候设置ref</p>
-<p>父组件通过这只子组件ref来获取数据</p>
-<p>父组件</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;Children ref=<span class="string">&#x27;foo&#x27;</span>/&gt;</span><br><span class="line">    <span class="built_in">this</span>.$refs.foo<span class="comment">//获取子组件实例，通过子组件实例我们可以拿到对应数据</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="EventBus"><a href="#EventBus" class="headerlink" title="EventBus"></a>EventBus</h1><ul>
-<li>使用场景：兄弟组件传值</li>
-<li>创建一个中央事件总线EventBus</li>
-<li>兄弟组件通过$emit触发自定义事件，$emit第二个参数为传递的数值</li>
-<li>另一个兄弟组件通过$on监听自定义事件</li>
-</ul>
-<p>Bus.js</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bus</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.events=&#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">on</span>(<span class="params">event,fn</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.events[event]=<span class="built_in">this</span>.events[event]||[];</span><br><span class="line">        <span class="built_in">this</span>.events[event].push(fn)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">emit</span>(<span class="params">event,data</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">this</span>.events[event])&#123;</span><br><span class="line">            <span class="built_in">this</span>.events[event].forEach(<span class="function"><span class="params">cb</span>=&gt;</span>&#123;</span><br><span class="line">                cb(data)</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">off</span>(<span class="params">event,fn</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">this</span>.events[event])&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="number">0</span>;i&lt;<span class="built_in">this</span>.events[event].length;i++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(<span class="built_in">this</span>.events[event][i]===fn)&#123;</span><br><span class="line">                    <span class="built_in">this</span>.events[event].splice(i,<span class="number">1</span>);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在入口中执行挂载</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//main.js</span></span><br><span class="line"><span class="keyword">import</span> &#123;createApp&#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">&#x27;./App.vue&#x27;</span></span><br><span class="line"><span class="comment">//引入事件类</span></span><br><span class="line"><span class="keyword">import</span> EventBus <span class="keyword">from</span> <span class="string">&#x27;lib/Bus.js&#x27;</span></span><br><span class="line"><span class="keyword">const</span> $bus=<span class="keyword">new</span> Bus()</span><br><span class="line"><span class="comment">//挂载</span></span><br><span class="line"><span class="comment">//1使用provide</span></span><br><span class="line">app.provide(<span class="string">&#x27;$bus&#x27;</span>,$bus);</span><br><span class="line"><span class="comment">//2 挂载到this上</span></span><br><span class="line">app.config.globalProperties.$bus=$bus</span><br></pre></td></tr></table></figure>
-
-<p>在组件中引入并使用</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span>&#123;</span><br><span class="line">    <span class="function"><span class="title">created</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.$bus.emit(<span class="string">&#x27;ButtonCreated&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在setup中使用</p>
-<p>setup中无法访问到应用实例的this,所以用provide/inject</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;inject&#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    <span class="function"><span class="title">setup</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">const</span> $bus=inject(<span class="string">&#x27;$bus&#x27;</span>)</span><br><span class="line">        $bus.emit(<span class="string">&#x27;ButtonSetup&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="parent或-root"><a href="#parent或-root" class="headerlink" title="$parent或$root"></a>$parent或$root</h1><p>通过共同父辈$parent或者$root搭建通信桥梁</p>
-<p>兄弟组件</p>
-<p>this.$parent.on(‘add’,this.add);</p>
-<p>另一个兄弟组件</p>
-<p>this.$parent.emit(‘add’)</p>
-<h1 id="attrs-与-listeners"><a href="#attrs-与-listeners" class="headerlink" title="$attrs 与$ listeners"></a>$attrs 与$ listeners</h1><ul>
-<li>适用场景：祖先传递数据给子孙</li>
-<li>设置批量向下传属性<code>$attrs</code>和 <code>$listeners</code></li>
-<li>包含了父级作用域中不作为 <code>prop</code> 被识别 (且获取) 的特性绑定 ( class 和 style 除外)。</li>
-<li>可以通过 <code>v-bind=&quot;$attrs&quot;</code> 传⼊内部组件</li>
-</ul>
-<p>在vue2.4中，为了解决该需求，引入了<code>$attrs</code>和<code>$listeners</code>，新增了<code>inheritAttrs</code>选项。我们只需要在B组件中对引入的C组件增加下面两个属性即可绑定所有的属性和事件。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;C v-bind=<span class="string">&quot;$attrs&quot;</span> v-on=<span class="string">&quot;$listeners&quot;</span>&gt;&lt;/C&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>A组件</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;<span class="name">h2</span>&gt;</span>组件A 数据项:&#123;&#123;myData&#125;&#125;<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;<span class="name">B</span> @<span class="attr">changeMyData</span>=<span class="string">&quot;changeMyData&quot;</span> <span class="attr">:myData</span>=<span class="string">&quot;myData&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">B</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="keyword">import</span> B <span class="keyword">from</span> <span class="string">&quot;./B&quot;</span>;</span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="function"><span class="title">data</span>(<span class="params"></span>)</span> &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="keyword">return</span> &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">      <span class="attr">myData</span>: <span class="string">&quot;100&quot;</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">    &#125;;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">components</span>: &#123; B &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">methods</span>: &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="function"><span class="title">changeMyData</span>(<span class="params">val</span>)</span> &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">      <span class="built_in">this</span>.myData = val;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">&#125;;</span></span></span><br><span class="line"><span class="javascript"><span class="xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>B组件</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">h3</span>&gt;</span>组件B<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">C</span> <span class="attr">v-bind</span>=<span class="string">&quot;$attrs&quot;</span> <span class="attr">v-on</span>=<span class="string">&quot;$listeners&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">C</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="keyword">import</span> C <span class="keyword">from</span> <span class="string">&quot;./C&quot;</span>;</span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">components</span>: &#123; C &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">&#125;;</span></span></span><br><span class="line"><span class="javascript"><span class="xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>C组件</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">h5</span>&gt;</span>组件C<span class="tag">&lt;/<span class="name">h5</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">v-model</span>=<span class="string">&quot;myc&quot;</span> @<span class="attr">input</span>=<span class="string">&quot;hInput&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">props</span>: &#123; <span class="attr">myData</span>: &#123; <span class="built_in">String</span> &#125; &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="function"><span class="title">created</span>(<span class="params"></span>)</span> &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="built_in">this</span>.myc = <span class="built_in">this</span>.myData;  <span class="comment">// 在组件A中传递过来的属性</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="built_in">console</span>.info(<span class="built_in">this</span>.$attrs, <span class="built_in">this</span>.$listeners);</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">methods</span>: &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="function"><span class="title">hInput</span>(<span class="params"></span>)</span> &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">      <span class="built_in">this</span>.$emit(<span class="string">&quot;changeMyData&quot;</span>, <span class="built_in">this</span>.myc); <span class="comment">// // 在组件A中传递过来的事件</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">    &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">&#125;;</span></span></span><br><span class="line"><span class="javascript"><span class="xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>参考：<a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903828098138120">https://juejin.cn/post/6844903828098138120</a></p>
-<p>provide与inject</p>
-<p>在祖先组件定义provide属性，并返回传递的值</p>
-<p>在后代组件通过inject接收组件传递过来的值</p>
-<p>祖先组件：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">provide</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">foo</span>:<span class="string">&#x27;foo&#x27;</span></span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>后代组件：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">inject:[<span class="string">&#x27;foo&#x27;</span>];<span class="comment">//获取到祖先组件传递过来的值</span></span><br></pre></td></tr></table></figure>
-
-<p>具体：<a target="_blank" rel="noopener" href="https://v3.cn.vuejs.org/guide/component-provide-inject.html#%E5%A4%84%E7%90%86%E5%93%8D%E5%BA%94%E6%80%A7">https://v3.cn.vuejs.org/guide/component-provide-inject.html#%E5%A4%84%E7%90%86%E5%93%8D%E5%BA%94%E6%80%A7</a></p>
-<h1 id="Vuex"><a href="#Vuex" class="headerlink" title="Vuex"></a>Vuex</h1><ul>
-<li>适用场景: 复杂关系的组件数据传递</li>
-<li><code>Vuex</code>作用相当于一个用来存储共享变量的容器</li>
-<li><code>state</code>用来存放共享变量的地方</li>
-<li><code>getter</code>，可以增加一个<code>getter</code>派生状态，(相当于<code>store</code>中的计算属性），用来获得共享变量的值</li>
-<li><code>mutations</code>用来存放修改<code>state</code>的方法。</li>
-<li><code>actions</code>也是用来存放修改state的方法，不过<code>action</code>是在<code>mutations</code>的基础上进行。常用来做一些异步操作</li>
-</ul>
-<h1 id="小结"><a href="#小结" class="headerlink" title="#小结"></a><a target="_blank" rel="noopener" href="https://vue3js.cn/interview/vue/communication.html#%E5%B0%8F%E7%BB%93">#</a>小结</h1><ul>
-<li>父子关系的组件数据传递选择 <code>props</code> 与 <code>$emit</code>进行传递，也可选择<code>ref</code></li>
-<li>兄弟关系的组件数据传递可选择<code>$bus</code>，其次可以选择<code>$parent</code>进行传递</li>
-<li>祖先与后代组件数据传递可选择<code>attrs</code>与<code>listeners</code>或者 <code>Provide</code>与 <code>Inject</code></li>
-<li>复杂关系的组件数据传递可以通过<code>vuex</code>存放共享的变量</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1386,7 +1276,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">238</span>
+          <span class="site-state-item-count">240</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1460,7 +1350,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共221.2k字</span>
+  <span class="post-count">博客全站共222.3k字</span>
 </div>
         
 

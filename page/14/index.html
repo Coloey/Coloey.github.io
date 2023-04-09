@@ -187,6 +187,234 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/24/%E5%AE%9E%E7%8E%B0node%E4%B8%AD%E7%9A%84EventEmitter/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/24/%E5%AE%9E%E7%8E%B0node%E4%B8%AD%E7%9A%84EventEmitter/" class="post-title-link" itemprop="url">实现node中的EventEmitter</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-24 22:08:59" itemprop="dateCreated datePublished" datetime="2022-04-24T22:08:59+08:00">2022-04-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-29 15:46:55" itemprop="dateModified" datetime="2022-05-29T15:46:55+08:00">2022-05-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Node/" itemprop="url" rel="index"><span itemprop="name">Node</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="一、是什么"><a href="#一、是什么" class="headerlink" title="一、是什么"></a>一、是什么</h2><p>我们了解到，<code>Node </code>采用了事件驱动机制，而<code>EventEmitter </code>就是<code>Node</code>实现事件驱动的基础</p>
+<p>在<code>EventEmitter</code>的基础上，<code>Node </code>几乎所有的模块都继承了这个类，这些模块拥有了自己的事件，可以绑定／触发监听器，实现了异步操作</p>
+<p><code>Node.js</code> 里面的许多对象都会分发事件，比如 fs.readStream 对象会在文件被打开的时候触发一个事件</p>
+<p>这些产生事件的对象都是 events.EventEmitter 的实例，这些对象有一个 eventEmitter.on() 函数，用于将一个或多个函数绑定到命名事件上</p>
+<h2 id="二、使用方法"><a href="#二、使用方法" class="headerlink" title="二、使用方法"></a>二、使用方法</h2><p><code>Node </code>的<code>events</code>模块只提供了一个<code>EventEmitter</code>类，这个类实现了<code>Node</code>异步事件驱动架构的基本模式——观察者模式</p>
+<p>在这种模式中，被观察者(主体)维护着一组其他对象派来(注册)的观察者，有新的对象对主体感兴趣就注册观察者，不感兴趣就取消订阅，主体有更新的话就依次通知观察者们</p>
+<p>基本代码如下所示：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> EventEmitter = <span class="built_in">require</span>(<span class="string">&#x27;events&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyEmitter</span> <span class="keyword">extends</span> <span class="title">EventEmitter</span> </span>&#123;&#125;</span><br><span class="line"><span class="keyword">const</span> myEmitter = <span class="keyword">new</span> MyEmitter()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">callback</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;触发了event事件！&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line">myEmitter.on(<span class="string">&#x27;event&#x27;</span>, callback)</span><br><span class="line">myEmitter.emit(<span class="string">&#x27;event&#x27;</span>)</span><br><span class="line">myEmitter.removeListener(<span class="string">&#x27;event&#x27;</span>, callback);</span><br></pre></td></tr></table></figure>
+
+<p>通过实例对象的<code>on</code>方法注册一个名为<code>event</code>的事件，通过<code>emit</code>方法触发该事件，而<code>removeListener</code>用于取消事件的监听</p>
+<p>关于其常见的方法如下：</p>
+<ul>
+<li>emitter.addListener/on(eventName, listener) ：添加类型为 eventName 的监听事件到事件数组尾部</li>
+<li>emitter.prependListener(eventName, listener)：添加类型为 eventName 的监听事件到事件数组头部</li>
+<li>emitter.emit(eventName[, …args])：触发类型为 eventName 的监听事件</li>
+<li>emitter.removeListener/off(eventName, listener)：移除类型为 eventName 的监听事件</li>
+<li>emitter.once(eventName, listener)：添加类型为 eventName 的监听事件，以后只能执行一次并删除</li>
+<li>emitter.removeAllListeners([eventName])： 移除全部类型为 eventName 的监听事件</li>
+</ul>
+<h2 id="三、实现过程"><a href="#三、实现过程" class="headerlink" title="三、实现过程"></a>三、实现过程</h2><p>通过上面的方法了解，<code>EventEmitter</code>是一个构造函数，内部存在一个包含所有事件的对象</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EventEmitter</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.events = &#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>events</code>存放的监听事件的函数的结构如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;event1&quot;</span>: [f1,f2,f3]，</span><br><span class="line">  <span class="string">&quot;event2&quot;</span>: [f4,f5]，</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后开始一步步实现实例方法，首先是<code>emit</code>，第一个参数为事件的类型，第二个参数开始为触发事件函数的参数，实现如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">emit</span>(<span class="params">type, ...args</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.events[type].forEach(<span class="function">(<span class="params">item</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">Reflect</span>.apply(item, <span class="built_in">this</span>, args);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当实现了<code>emit</code>方法之后，然后实现<code>on</code>、<code>addListener</code>、<code>prependListener</code>这三个实例方法，都是添加事件监听触发函数，实现也是大同小异</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">on</span>(<span class="params">type, handler</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">this</span>.events[type]) &#123;</span><br><span class="line">        <span class="built_in">this</span>.events[type] = [];</span><br><span class="line">   &#125;</span><br><span class="line">    <span class="built_in">this</span>.events[type].push(handler);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">addListener</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.on(type,handler)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">prependListener</span>(<span class="params">type, handler</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">this</span>.events[type]) &#123;</span><br><span class="line">        <span class="built_in">this</span>.events[type] = [];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">this</span>.events[type].unshift(handler);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>紧接着就是实现事件监听的方法<code>removeListener/on</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">removeListener</span>(<span class="params">type, handler</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">this</span>.events[type]) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">this</span>.events[type] = <span class="built_in">this</span>.events[type].filter(<span class="function"><span class="params">item</span> =&gt;</span> item !== handler);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">off</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.removeListener(type,handler)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后再来实现<code>once</code>方法， 再传入事件监听处理函数的时候进行封装，利用闭包的特性维护当前状态，通过<code>fired</code>属性值判断事件函数是否执行过</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">once</span>(<span class="params">type, handler</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.on(type, <span class="built_in">this</span>._onceWrap(type, handler, <span class="built_in">this</span>));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">_onceWrap</span>(<span class="params">type, handler, target</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> state = &#123; <span class="attr">fired</span>: <span class="literal">false</span>, handler, type , target&#125;;</span><br><span class="line">    <span class="keyword">const</span> wrapFn = <span class="built_in">this</span>._onceWrapper.bind(state);</span><br><span class="line">    state.wrapFn = wrapFn;</span><br><span class="line">    <span class="keyword">return</span> wrapFn;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">_onceWrapper</span>(<span class="params">...args</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">this</span>.fired) &#123;</span><br><span class="line">      <span class="built_in">this</span>.fired = <span class="literal">true</span>;</span><br><span class="line">      <span class="built_in">Reflect</span>.apply(<span class="built_in">this</span>.handler, <span class="built_in">this</span>.target, args);</span><br><span class="line">      <span class="built_in">this</span>.target.off(<span class="built_in">this</span>.type, <span class="built_in">this</span>.wrapFn);</span><br><span class="line">    &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>完整代码如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EventEmitter</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.events=&#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">on</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!<span class="built_in">this</span>.events[type])&#123;</span><br><span class="line">            <span class="built_in">this</span>.events[type]=[]</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.events[type].push(handler)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">addListener</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.on(type,handler)</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">prependListener</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!<span class="built_in">this</span>.events[type])&#123;</span><br><span class="line">            <span class="built_in">this</span>.events[type]=[]</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.events[type].unshift(handler)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">removeListener</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!<span class="built_in">this</span>.events[type])&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.events[type]=<span class="built_in">this</span>.events[type].filter(<span class="function"><span class="params">item</span>=&gt;</span>item!==handler)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">off</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.removeListener(type,handler)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">emit</span>(<span class="params">type,...args</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.events[type].forEach(<span class="function"><span class="params">item</span>=&gt;</span>&#123;</span><br><span class="line">            <span class="built_in">Reflect</span>.apply(item,<span class="built_in">this</span>,args);</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">once</span>(<span class="params">type,handler</span>)</span>&#123;</span><br><span class="line">         <span class="comment">//把监听器注销，即利用闭包，在内部函数中销毁了外部函数的引用</span></span><br><span class="line">        <span class="keyword">let</span> temp=<span class="function">(<span class="params">...args</span>)=&gt;</span>&#123;</span><br><span class="line">            handler(args);</span><br><span class="line">            <span class="built_in">this</span>.off(type,temp)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.on(event,temp)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/24/%E9%98%B2%E6%8A%96%E8%8A%82%E6%B5%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/24/%E9%98%B2%E6%8A%96%E8%8A%82%E6%B5%81/" class="post-title-link" itemprop="url">防抖节流</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-24 17:49:35" itemprop="dateCreated datePublished" datetime="2022-04-24T17:49:35+08:00">2022-04-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-14 16:22:39" itemprop="dateModified" datetime="2022-08-14T16:22:39+08:00">2022-08-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h1><p>本质上是优化高频率执行代码的一种手段</p>
+<p>如：浏览器的 <code>resize</code>、<code>scroll</code>、<code>keypress</code>、<code>mousemove</code> 等事件在触发时，会不断地调用绑定在事件上的回调函数，极大地浪费资源，降低前端性能</p>
+<p>为了优化体验，需要对这类事件进行调用次数的限制，对此我们就可以采用<code>throttle</code>（节流）和<code>debounce</code>（防抖）的方式来减少调用频率</p>
+<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><ul>
+<li>节流: n 秒内只运行一次，若在 n 秒内重复触发，只有一次生效</li>
+<li>防抖: n 秒后再执行该事件，若在 n 秒内被重复触发，则重新计时</li>
+</ul>
+<h1 id="节流："><a href="#节流：" class="headerlink" title="节流："></a>节流：</h1><p>用时间戳实现：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttled</span>(<span class="params">fn,delay=<span class="number">500</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> oldTime=<span class="keyword">new</span> <span class="built_in">Date</span>.now();</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">let</span> context=<span class="built_in">this</span>;</span><br><span class="line">        <span class="keyword">let</span> newTime=<span class="keyword">new</span> <span class="built_in">Date</span>.now();</span><br><span class="line">        <span class="keyword">if</span>(newTime-oldTime&gt;=delay)&#123;</span><br><span class="line">            fn.apply(context,args);</span><br><span class="line">            oldTime=<span class="keyword">new</span> <span class="built_in">Date</span>.now();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用定时器实现</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttled</span>(<span class="params">fn,delay=<span class="number">500</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timer=<span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">..args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">let</span> context=<span class="built_in">this</span>;</span><br><span class="line">        <span class="keyword">if</span>(!timer)&#123;<span class="comment">//n秒内只运行一次，若在n秒内重复触发，只有一次生效</span></span><br><span class="line">            timer=<span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">                fn.apply(context,args);</span><br><span class="line">                timer=<span class="literal">null</span>;</span><br><span class="line">            &#125;,delay)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="防抖："><a href="#防抖：" class="headerlink" title="防抖："></a>防抖：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">fn,delay=<span class="number">500</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timer;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">let</span> context=<span class="built_in">this</span>;</span><br><span class="line">        <span class="built_in">clearTimeout</span>(timer);</span><br><span class="line">        timer=<span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">            fn.apply(context,args);<span class="comment">//n秒内只能触发一次,若在n秒内重复触发，都会被清除,重新计时</span></span><br><span class="line">        &#125;,delay)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>立即执行的防抖函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">fn,delay=<span class="number">500</span>,immediate</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timer;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">let</span> context=<span class="built_in">this</span>;</span><br><span class="line">        <span class="keyword">if</span>(timer)<span class="built_in">clearTimeout</span>(timer);</span><br><span class="line">        <span class="keyword">if</span>(immediate)&#123;</span><br><span class="line">            immediate=!immediate;</span><br><span class="line">            fn.apply(context,args);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">           </span><br><span class="line">            timer=<span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">                fn.apply(context,args);</span><br><span class="line">            &#125;,delay)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h1><p>相同点：</p>
+<ul>
+<li>都可以通过使用 <code>setTimeout</code> 实现</li>
+<li>目的都是，降低回调执行频率。节省计算资源</li>
+</ul>
+<p>不同点：</p>
+<ul>
+<li>函数防抖，在一段连续操作结束后，处理回调，利用<code>clearTimeout </code>和 <code>setTimeout</code>实现。函数节流，在一段连续操作中，每一段时间只执行一次，频率较高的事件中使用来提高性能</li>
+<li>函数防抖关注一定时间连续触发的事件，因为会清除定时器，只在最后执行一次，而函数节流一段时间内只执行一次,不会清除定时器，因此会在隔一段时间执行一次。</li>
+</ul>
+<p>例如，都设置时间频率为500ms，在2秒时间内，频繁触发函数，节流，每隔 500ms 就执行一次。防抖，则不管调动多少次方法，在2s后，只会执行一次</p>
+<h1 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h1><p>防抖在连续的事件，只需触发一次回调的场景有：</p>
+<ul>
+<li>搜索框搜索输入。只需用户最后一次输入完，再发送请求</li>
+<li>手机号、邮箱验证输入检测</li>
+<li>窗口大小<code>resize</code>。只需窗口调整完成后，计算窗口大小。防止重复渲染。</li>
+</ul>
+<p>节流在间隔一段时间执行一次回调的场景有：</p>
+<ul>
+<li>滚动加载，加载更多或滚到底部监听</li>
+<li>搜索框，搜索联想功能</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/24/%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84%E5%9B%9E%E6%B5%81%E5%92%8C%E9%87%8D%E7%BB%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1220,268 +1448,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/20/wepack-proxy%E7%9A%84%E5%8E%9F%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/20/wepack-proxy%E7%9A%84%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">wepack proxy的原理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-20 22:22:14" itemprop="dateCreated datePublished" datetime="2022-04-20T22:22:14+08:00">2022-04-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-02 23:50:18" itemprop="dateModified" datetime="2022-05-02T23:50:18+08:00">2022-05-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/webpack/" itemprop="url" rel="index"><span itemprop="name">webpack</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="一、是什么"><a href="#一、是什么" class="headerlink" title="一、是什么"></a>一、是什么</h2><p><code>webpack proxy</code>，即<code>webpack</code>提供的代理服务</p>
-<p>基本行为就是接收客户端发送的请求后转发给其他服务器</p>
-<p>其目的是为了便于开发者在开发模式下解决跨域问题（浏览器安全策略限制）</p>
-<p>想要实现代理首先需要一个中间服务器，<code>webpack</code>中提供服务器的工具为<code>webpack-dev-server</code></p>
-<h4 id="webpack-dev-server"><a href="#webpack-dev-server" class="headerlink" title="webpack-dev-server"></a>webpack-dev-server</h4><p><code>webpack-dev-server</code>是 <code>webpack</code> 官方推出的一款开发工具，将自动编译和自动刷新浏览器等一系列对开发友好的功能全部集成在了一起</p>
-<p>目的是为了提高开发者日常的开发效率，<strong>只适用在开发阶段</strong></p>
-<p>关于配置方面，在<code>webpack</code>配置对象属性中通过<code>devServer</code>属性提供，如下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="comment">// ./webpack.config.js</span></span><br><span class="line">2<span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"><span class="number">3</span></span><br><span class="line">4<span class="built_in">module</span>.exports = &#123;</span><br><span class="line"><span class="number">5</span>    <span class="comment">// ...</span></span><br><span class="line"><span class="number">6</span>    devServer: &#123;</span><br><span class="line"><span class="number">7</span>        contentBase: path.join(__dirname, <span class="string">&#x27;dist&#x27;</span>),</span><br><span class="line"><span class="number">8</span>        compress: <span class="literal">true</span>,</span><br><span class="line"><span class="number">9</span>        port: <span class="number">9000</span>,</span><br><span class="line"><span class="number">10</span>        proxy: &#123;</span><br><span class="line"><span class="number">11</span>            <span class="string">&#x27;/api&#x27;</span>: &#123;</span><br><span class="line"><span class="number">12</span>                target: <span class="string">&#x27;https://api.github.com&#x27;</span></span><br><span class="line"><span class="number">13</span>            &#125;</span><br><span class="line"><span class="number">14</span>        &#125;</span><br><span class="line"><span class="number">15</span>        <span class="comment">// ...</span></span><br><span class="line"><span class="number">16</span>    &#125;</span><br><span class="line"><span class="number">17</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>devServetr</code>里面<code>proxy</code>则是关于代理的配置，该属性为对象的形式，对象中每一个属性就是一个代理的规则匹配</p>
-<p>属性的名称是需要被代理的请求路径前缀，一般为了辨别都会设置前缀为<code> /api</code>，值为对应的代理匹配规则，对应如下：</p>
-<ul>
-<li>target：表示的是代理到的目标地址</li>
-<li>pathRewrite：默认情况下，我们的 /api-hy 也会被写入到URL中，如果希望删除，可以使用pathRewrite</li>
-<li>secure：默认情况下不接收转发到https的服务器上，如果希望支持，可以设置为false</li>
-<li>changeOrigin：它表示是否更新代理后请求的 headers 中host地址</li>
-</ul>
-<h2 id="二、工作原理"><a href="#二、工作原理" class="headerlink" title="二、工作原理"></a>二、工作原理</h2><p><code>proxy</code>工作原理实质上是利用<code>http-proxy-middleware</code> 这个<code>http</code>代理中间件，实现请求转发给其他服务器</p>
-<p>举个例子：</p>
-<p>在开发阶段，本地地址为<code>http://localhost:3000</code>，该浏览器发送一个前缀带有<code>/api</code>标识的请求到服务端获取数据，但响应这个请求的服务器只是将请求转发到另一台服务器中</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line">2<span class="keyword">const</span> proxy = <span class="built_in">require</span>(<span class="string">&#x27;http-proxy-middleware&#x27;</span>);</span><br><span class="line"><span class="number">3</span></span><br><span class="line">4<span class="keyword">const</span> app = express();</span><br><span class="line"><span class="number">5</span></span><br><span class="line">6app.use(<span class="string">&#x27;/api&#x27;</span>, proxy(&#123;<span class="attr">target</span>: <span class="string">&#x27;http://www.example.org&#x27;</span>, <span class="attr">changeOrigin</span>: <span class="literal">true</span>&#125;));</span><br><span class="line">7app.listen(<span class="number">3000</span>);</span><br><span class="line"><span class="number">8</span></span><br><span class="line"><span class="number">9</span><span class="comment">// http://localhost:3000/api/foo/bar -&gt; http://www.example.org/api/foo/bar</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="三、跨域"><a href="#三、跨域" class="headerlink" title="三、跨域"></a>三、跨域</h2><p>在开发阶段， <code>webpack-dev-server</code> 会启动一个本地开发服务器，所以我们的应用在开发阶段是独立运行在 <code>localhost </code>的一个端口上，而后端服务又是运行在另外一个地址上</p>
-<p>所以在开发阶段中，由于浏览器同源策略的原因，当本地访问后端就会出现跨域请求的问题</p>
-<p>通过设置<code>webpack proxy</code>实现代理请求后，相当于浏览器与服务端中添加一个代理者</p>
-<p>当本地发送请求的时候，代理服务器响应该请求，并将请求转发到目标服务器，目标服务器响应数据后再将数据返回给代理服务器，最终再由代理服务器将数据响应给本地</p>
-<p><img src="/2022/04/20/wepack-proxy%E7%9A%84%E5%8E%9F%E7%90%86/web1.jpg"></p>
-<p>在代理服务器传递数据给本地浏览器的过程中，两者同源，并不存在跨域行为，这时候浏览器就能正常接收数据</p>
-<p>注意：<strong>服务器与服务器之间请求数据并不会存在跨域行为，跨域行为是浏览器安全策略限制</strong></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/20/Object-defineProperty%E5%92%8CProxy%E5%8C%BA%E5%88%AB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/20/Object-defineProperty%E5%92%8CProxy%E5%8C%BA%E5%88%AB/" class="post-title-link" itemprop="url">Object.defineProperty和Proxy区别</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-20 14:17:15 / 修改时间：21:07:36" itemprop="dateCreated datePublished" datetime="2022-04-20T14:17:15+08:00">2022-04-20</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="一、Object-defineProperty"><a href="#一、Object-defineProperty" class="headerlink" title="一、Object.defineProperty"></a>一、Object.defineProperty</h1><p>定义：<code>Object.defineProperty()</code> 方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性，并返回此对象</p>
-<h2 id="为什么能实现响应式"><a href="#为什么能实现响应式" class="headerlink" title="为什么能实现响应式"></a>为什么能实现响应式</h2><p>通过<code>defineProperty</code> 两个属性，<code>get</code>及<code>set</code></p>
-<ul>
-<li>get</li>
-</ul>
-<p>属性的 getter 函数，当访问该属性时，会调用此函数。执行时不传入任何参数，但是会传入 this 对象（由于继承关系，这里的this并不一定是定义该属性的对象）。该函数的返回值会被用作属性的值</p>
-<ul>
-<li>set</li>
-</ul>
-<p>属性的 setter 函数，当属性值被修改时，会调用此函数。该方法接受一个参数（也就是被赋予的新值），会传入赋值时的 this 对象。默认为 undefined</p>
-<p>下面通过代码展示：</p>
-<p>定义一个响应式函数<code>defineReactive</code></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">function</span> <span class="function"><span class="title">update</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line"><span class="number">2</span>    app.innerText = obj.foo</span><br><span class="line"><span class="number">3</span>&#125;</span><br><span class="line"><span class="number">4</span></span><br><span class="line">5<span class="keyword">function</span> <span class="function"><span class="title">defineReactive</span>(<span class="params">obj, key, val</span>)</span> &#123;</span><br><span class="line"><span class="number">6</span>    <span class="built_in">Object</span>.defineProperty(obj, key, &#123;</span><br><span class="line"><span class="number">7</span>        <span class="function"><span class="title">get</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line"><span class="number">8</span>            <span class="built_in">console</span>.log(<span class="string">`get <span class="subst">$&#123;key&#125;</span>:<span class="subst">$&#123;val&#125;</span>`</span>);</span><br><span class="line"><span class="number">9</span>            <span class="keyword">return</span> val</span><br><span class="line"><span class="number">10</span>        &#125;,</span><br><span class="line"><span class="number">11</span>        <span class="function"><span class="title">set</span>(<span class="params">newVal</span>)</span> &#123;</span><br><span class="line"><span class="number">12</span>            <span class="keyword">if</span> (newVal !== val) &#123;</span><br><span class="line"><span class="number">13</span>                val = newVal</span><br><span class="line"><span class="number">14</span>                update()</span><br><span class="line"><span class="number">15</span>            &#125;</span><br><span class="line"><span class="number">16</span>        &#125;</span><br><span class="line"><span class="number">17</span>    &#125;)</span><br><span class="line"><span class="number">18</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>调用<code>defineReactive</code>，数据发生变化触发<code>update</code>方法，实现数据响应式</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">const</span> obj = &#123;&#125;</span><br><span class="line">2defineReactive(obj, <span class="string">&#x27;foo&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">3<span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line"><span class="number">4</span>    obj.foo = <span class="keyword">new</span> <span class="built_in">Date</span>().toLocaleTimeString()</span><br><span class="line"><span class="number">5</span>&#125;,<span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
-
-<p>在对象存在多个<code>key</code>情况下，需要进行遍历</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">function</span> <span class="function"><span class="title">observe</span>(<span class="params">obj</span>)</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="keyword">if</span> (<span class="keyword">typeof</span> obj !== <span class="string">&#x27;object&#x27;</span> || obj == <span class="literal">null</span>) &#123;</span><br><span class="line"><span class="number">3</span>        <span class="keyword">return</span></span><br><span class="line"><span class="number">4</span>    &#125;</span><br><span class="line"><span class="number">5</span>    <span class="built_in">Object</span>.keys(obj).forEach(<span class="function"><span class="params">key</span> =&gt;</span> &#123;</span><br><span class="line"><span class="number">6</span>        defineReactive(obj, key, obj[key])</span><br><span class="line"><span class="number">7</span>    &#125;)</span><br><span class="line"><span class="number">8</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果存在嵌套对象的情况，还需要在<code>defineReactive</code>中进行递归</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">function</span> <span class="function"><span class="title">defineReactive</span>(<span class="params">obj, key, val</span>)</span> &#123;</span><br><span class="line"><span class="number">2</span>    observe(val)</span><br><span class="line"><span class="number">3</span>    <span class="built_in">Object</span>.defineProperty(obj, key, &#123;</span><br><span class="line"><span class="number">4</span>        <span class="function"><span class="title">get</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line"><span class="number">5</span>            <span class="built_in">console</span>.log(<span class="string">`get <span class="subst">$&#123;key&#125;</span>:<span class="subst">$&#123;val&#125;</span>`</span>);</span><br><span class="line"><span class="number">6</span>            <span class="keyword">return</span> val</span><br><span class="line"><span class="number">7</span>        &#125;,</span><br><span class="line"><span class="number">8</span>        <span class="function"><span class="title">set</span>(<span class="params">newVal</span>)</span> &#123;</span><br><span class="line"><span class="number">9</span>            <span class="keyword">if</span> (newVal !== val) &#123;</span><br><span class="line"><span class="number">10</span>                val = newVal</span><br><span class="line"><span class="number">11</span>                update()</span><br><span class="line"><span class="number">12</span>            &#125;</span><br><span class="line"><span class="number">13</span>        &#125;</span><br><span class="line"><span class="number">14</span>    &#125;)</span><br><span class="line"><span class="number">15</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>当给<code>key</code>赋值为对象的时候，还需要在<code>set</code>属性中进行递归</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1<span class="function"><span class="title">set</span>(<span class="params">newVal</span>)</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="keyword">if</span> (newVal !== val) &#123;</span><br><span class="line"><span class="number">3</span>        observe(newVal) <span class="comment">// 新值是对象的情况</span></span><br><span class="line"><span class="number">4</span>        notifyUpdate()</span><br><span class="line"><span class="number">5</span>    &#125;</span><br><span class="line"><span class="number">6</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上述例子能够实现对一个对象的基本响应式，但仍然存在诸多问题</p>
-<p>现在对一个对象进行删除与添加属性操作，无法劫持到</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">const</span> obj = &#123;</span><br><span class="line"><span class="number">2</span>    foo: <span class="string">&quot;foo&quot;</span>,</span><br><span class="line"><span class="number">3</span>    bar: <span class="string">&quot;bar&quot;</span></span><br><span class="line"><span class="number">4</span>&#125;</span><br><span class="line">5observe(obj)</span><br><span class="line">6<span class="keyword">delete</span> obj.foo <span class="comment">// no ok</span></span><br><span class="line">7obj.jar = <span class="string">&#x27;xxx&#x27;</span> <span class="comment">// no ok</span></span><br></pre></td></tr></table></figure>
-
-<p>当我们对一个数组进行监听的时候，并不那么好使了</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">const</span> arrData = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>];</span><br><span class="line">2arrData.forEach(<span class="function">(<span class="params">val,index</span>)=&gt;</span>&#123;</span><br><span class="line"><span class="number">3</span>    defineProperty(arrData,index,val)</span><br><span class="line"><span class="number">4</span>&#125;)</span><br><span class="line">5arrData.push() <span class="comment">// no ok</span></span><br><span class="line">6arrData.pop()  <span class="comment">// no ok</span></span><br><span class="line">7arrDate[<span class="number">0</span>] = <span class="number">99</span> <span class="comment">// ok</span></span><br></pre></td></tr></table></figure>
-
-<p>可以看到数据的<code>api</code>无法劫持到，从而无法实现数据响应式，</p>
-<p>所以在<code>Vue2</code>中，增加了<code>set</code>、<code>delete</code> API，并且对数组<code>api</code>方法进行一个重写</p>
-<p>还有一个问题则是，如果存在深层的嵌套对象关系，需要深层的进行监听，造成了性能的极大问题</p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
-<li>检测不到对象属性的添加和删除</li>
-<li>数组<code>API</code>方法无法监听到</li>
-<li>需要对每个属性进行遍历监听，如果嵌套对象，需要深层监听，造成性能问题</li>
-</ul>
-<h1 id="二、proxy"><a href="#二、proxy" class="headerlink" title="二、proxy"></a>二、proxy</h1><p><code>Proxy</code>的监听是<strong>针对一个对象</strong>的，那么对这个对象的所有操作会进入监听操作，这就完全可以代理所有属性了</p>
-<p>在<code>ES6</code>系列中，我们详细讲解过<code>Proxy</code>的使用，就不再述说了</p>
-<p>下面通过代码进行展示：</p>
-<p>定义一个响应式方法<code>reactive</code></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="function"><span class="keyword">function</span> <span class="title">reactive</span>(<span class="params">obj</span>) </span>&#123;</span><br><span class="line"><span class="number">2</span>    <span class="keyword">if</span> (<span class="keyword">typeof</span> obj !== <span class="string">&#x27;object&#x27;</span> &amp;&amp; obj != <span class="literal">null</span>) &#123;</span><br><span class="line"><span class="number">3</span>        <span class="keyword">return</span> obj</span><br><span class="line"><span class="number">4</span>    &#125;</span><br><span class="line"><span class="number">5</span>    <span class="comment">// Proxy相当于在对象外层加拦截</span></span><br><span class="line"><span class="number">6</span>    <span class="keyword">const</span> observed = <span class="keyword">new</span> <span class="built_in">Proxy</span>(obj, &#123;</span><br><span class="line"><span class="number">7</span>        <span class="function"><span class="title">get</span>(<span class="params">target, key, receiver</span>)</span> &#123;</span><br><span class="line"><span class="number">8</span>            <span class="keyword">const</span> res = <span class="built_in">Reflect</span>.get(target, key, receiver)</span><br><span class="line"><span class="number">9</span>            <span class="built_in">console</span>.log(<span class="string">`获取<span class="subst">$&#123;key&#125;</span>:<span class="subst">$&#123;res&#125;</span>`</span>)</span><br><span class="line"><span class="number">10</span>           <span class="keyword">return</span> res</span><br><span class="line"><span class="number">11</span>        &#125;,</span><br><span class="line"><span class="number">12</span>        <span class="function"><span class="title">set</span>(<span class="params">target, key, value, receiver</span>)</span> &#123;</span><br><span class="line"><span class="number">13</span>            <span class="keyword">const</span> res = <span class="built_in">Reflect</span>.set(target, key, value, receiver)</span><br><span class="line"><span class="number">14</span>            <span class="built_in">console</span>.log(<span class="string">`设置<span class="subst">$&#123;key&#125;</span>:<span class="subst">$&#123;value&#125;</span>`</span>)</span><br><span class="line"><span class="number">15</span>            <span class="keyword">return</span> res</span><br><span class="line"><span class="number">16</span>        &#125;,</span><br><span class="line"><span class="number">17</span>        <span class="function"><span class="title">deleteProperty</span>(<span class="params">target, key</span>)</span> &#123;</span><br><span class="line"><span class="number">18</span>            <span class="keyword">const</span> res = <span class="built_in">Reflect</span>.deleteProperty(target, key)</span><br><span class="line"><span class="number">19</span>            <span class="built_in">console</span>.log(<span class="string">`删除<span class="subst">$&#123;key&#125;</span>:<span class="subst">$&#123;res&#125;</span>`</span>)</span><br><span class="line"><span class="number">20</span>            <span class="keyword">return</span> res</span><br><span class="line"><span class="number">21</span>        &#125;</span><br><span class="line"><span class="number">22</span>    &#125;)</span><br><span class="line"><span class="number">23</span>    <span class="keyword">return</span> observed</span><br><span class="line"><span class="number">24</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>测试一下简单数据的操作，发现都能劫持</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">const</span> state = reactive(&#123;</span><br><span class="line"><span class="number">2</span>    foo: <span class="string">&#x27;foo&#x27;</span></span><br><span class="line"><span class="number">3</span>&#125;)</span><br><span class="line"><span class="number">4</span><span class="comment">// 1.获取</span></span><br><span class="line">5state.foo <span class="comment">// ok</span></span><br><span class="line"><span class="number">6</span><span class="comment">// 2.设置已存在属性</span></span><br><span class="line">7state.foo = <span class="string">&#x27;fooooooo&#x27;</span> <span class="comment">// ok</span></span><br><span class="line"><span class="number">8</span><span class="comment">// 3.设置不存在属性</span></span><br><span class="line">9state.dong = <span class="string">&#x27;dong&#x27;</span> <span class="comment">// ok</span></span><br><span class="line"><span class="number">10</span><span class="comment">// 4.删除属性</span></span><br><span class="line">11<span class="keyword">delete</span> state.dong <span class="comment">// ok</span></span><br></pre></td></tr></table></figure>
-
-<p>再测试嵌套对象情况，这时候发现就不那么 OK 了</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">const</span> state = reactive(&#123;</span><br><span class="line"><span class="number">2</span>    bar: &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;</span><br><span class="line"><span class="number">3</span>&#125;)</span><br><span class="line"><span class="number">4</span></span><br><span class="line"><span class="number">5</span><span class="comment">// 设置嵌套对象属性</span></span><br><span class="line"><span class="number">6</span> state.bar.a = <span class="number">10</span> <span class="comment">// no ok</span></span><br></pre></td></tr></table></figure>
-
-<p>如果要解决，需要在<code>get</code>之上再进行一层代理</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">function</span> <span class="function"><span class="title">reactive</span>(<span class="params">obj</span>)</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="keyword">if</span> (<span class="keyword">typeof</span> obj !== <span class="string">&#x27;object&#x27;</span> &amp;&amp; obj != <span class="literal">null</span>) &#123;</span><br><span class="line"><span class="number">3</span>        <span class="keyword">return</span> obj</span><br><span class="line"><span class="number">4</span>    &#125;</span><br><span class="line"><span class="number">5</span>    <span class="comment">// Proxy相当于在对象外层加拦截</span></span><br><span class="line"><span class="number">6</span>    <span class="keyword">const</span> observed = <span class="keyword">new</span> <span class="built_in">Proxy</span>(obj, &#123;</span><br><span class="line"><span class="number">7</span>        <span class="function"><span class="title">get</span>(<span class="params">target, key, receiver</span>)</span> &#123;</span><br><span class="line"><span class="number">8</span>            <span class="keyword">const</span> res = <span class="built_in">Reflect</span>.get(target, key, receiver)</span><br><span class="line"><span class="number">9</span>            <span class="built_in">console</span>.log(<span class="string">`获取<span class="subst">$&#123;key&#125;</span>:<span class="subst">$&#123;res&#125;</span>`</span>)</span><br><span class="line"><span class="number">10</span>           <span class="keyword">return</span> isObject(res) ? reactive(res) : res</span><br><span class="line"><span class="number">11</span>        &#125;,</span><br><span class="line"><span class="number">12</span>    <span class="keyword">return</span> observed</span><br><span class="line"><span class="number">13</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h1><p><code>Object.defineProperty</code>只能遍历对象属性进行劫持</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">function</span> <span class="function"><span class="title">observe</span>(<span class="params">obj</span>)</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="keyword">if</span> (<span class="keyword">typeof</span> obj !== <span class="string">&#x27;object&#x27;</span> || obj == <span class="literal">null</span>) &#123;</span><br><span class="line"><span class="number">3</span>        <span class="keyword">return</span></span><br><span class="line"><span class="number">4</span>    &#125;</span><br><span class="line"><span class="number">5</span>    <span class="built_in">Object</span>.keys(obj).forEach(<span class="function"><span class="params">key</span> =&gt;</span> &#123;</span><br><span class="line"><span class="number">6</span>        defineReactive(obj, key, obj[key])</span><br><span class="line"><span class="number">7</span>    &#125;)</span><br><span class="line"><span class="number">8</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>Proxy</code>直接可以劫持整个对象，并返回一个新对象，我们可以只操作新的对象达到响应式目的</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">function</span> <span class="function"><span class="title">reactive</span>(<span class="params">obj</span>)</span> &#123;</span><br><span class="line"><span class="number">2</span>    <span class="keyword">if</span> (<span class="keyword">typeof</span> obj !== <span class="string">&#x27;object&#x27;</span> &amp;&amp; obj != <span class="literal">null</span>) &#123;</span><br><span class="line"><span class="number">3</span>        <span class="keyword">return</span> obj</span><br><span class="line"><span class="number">4</span>    &#125;</span><br><span class="line"><span class="number">5</span>    <span class="comment">// Proxy相当于在对象外层加拦截</span></span><br><span class="line"><span class="number">6</span>    <span class="keyword">const</span> observed = <span class="keyword">new</span> <span class="built_in">Proxy</span>(obj, &#123;</span><br><span class="line"><span class="number">7</span>        <span class="function"><span class="title">get</span>(<span class="params">target, key, receiver</span>)</span> &#123;</span><br><span class="line"><span class="number">8</span>            <span class="keyword">const</span> res = <span class="built_in">Reflect</span>.get(target, key, receiver)</span><br><span class="line"><span class="number">9</span>            <span class="built_in">console</span>.log(<span class="string">`获取<span class="subst">$&#123;key&#125;</span>:<span class="subst">$&#123;res&#125;</span>`</span>)</span><br><span class="line"><span class="number">10</span>            <span class="keyword">return</span> res</span><br><span class="line"><span class="number">11</span>        &#125;,</span><br><span class="line"><span class="number">12</span>        <span class="function"><span class="title">set</span>(<span class="params">target, key, value, receiver</span>)</span> &#123;</span><br><span class="line"><span class="number">13</span>            <span class="keyword">const</span> res = <span class="built_in">Reflect</span>.set(target, key, value, receiver)</span><br><span class="line"><span class="number">14</span>            <span class="built_in">console</span>.log(<span class="string">`设置<span class="subst">$&#123;key&#125;</span>:<span class="subst">$&#123;value&#125;</span>`</span>)</span><br><span class="line"><span class="number">15</span>            <span class="keyword">return</span> res</span><br><span class="line"><span class="number">16</span>        &#125;,</span><br><span class="line"><span class="number">17</span>        <span class="function"><span class="title">deleteProperty</span>(<span class="params">target, key</span>)</span> &#123;</span><br><span class="line"><span class="number">18</span>            <span class="keyword">const</span> res = <span class="built_in">Reflect</span>.deleteProperty(target, key)</span><br><span class="line"><span class="number">19</span>            <span class="built_in">console</span>.log(<span class="string">`删除<span class="subst">$&#123;key&#125;</span>:<span class="subst">$&#123;res&#125;</span>`</span>)</span><br><span class="line"><span class="number">20</span>            <span class="keyword">return</span> res</span><br><span class="line"><span class="number">21</span>        &#125;</span><br><span class="line"><span class="number">22</span>    &#125;)</span><br><span class="line"><span class="number">23</span>    <span class="keyword">return</span> observed</span><br><span class="line"><span class="number">24</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>Proxy</code>可以直接监听数组的变化（<code>push</code>、<code>shift</code>、<code>splice</code>）</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1<span class="keyword">const</span> obj = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line">2<span class="keyword">const</span> proxtObj = reactive(obj)</span><br><span class="line">3obj.psuh(<span class="number">4</span>) <span class="comment">// ok</span></span><br></pre></td></tr></table></figure>
-
-<p><code>Proxy</code>有多达13种拦截方法,不限于<code>apply</code>、<code>ownKeys</code>、<code>deleteProperty</code>、<code>has</code>等等，这是<code>Object.defineProperty</code>不具备的</p>
-<p>正因为<code>defineProperty</code>自身的缺陷，导致<code>Vue2</code>在实现响应式过程需要实现其他的方法辅助（如重写数组方法、增加额外<code>set</code>、<code>delete</code>方法）</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="comment">// 数组重写</span></span><br><span class="line">2<span class="keyword">const</span> originalProto = <span class="built_in">Array</span>.prototype</span><br><span class="line">3<span class="keyword">const</span> arrayProto = <span class="built_in">Object</span>.create(originalProto)</span><br><span class="line"><span class="number">4</span>[<span class="string">&#x27;push&#x27;</span>, <span class="string">&#x27;pop&#x27;</span>, <span class="string">&#x27;shift&#x27;</span>, <span class="string">&#x27;unshift&#x27;</span>, <span class="string">&#x27;splice&#x27;</span>, <span class="string">&#x27;reverse&#x27;</span>, <span class="string">&#x27;sort&#x27;</span>].forEach(<span class="function"><span class="params">method</span> =&gt;</span> &#123;</span><br><span class="line"><span class="number">5</span>  arrayProto[method] = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"><span class="number">6</span>    originalProto[method].apply(<span class="built_in">this</span>.arguments)</span><br><span class="line"><span class="number">7</span>    dep.notice()</span><br><span class="line"><span class="number">8</span>  &#125;</span><br><span class="line"><span class="number">9</span>&#125;);</span><br><span class="line"><span class="number">10</span></span><br><span class="line"><span class="number">11</span><span class="comment">// set、delete</span></span><br><span class="line">12Vue.set(obj,<span class="string">&#x27;bar&#x27;</span>,<span class="string">&#x27;newbar&#x27;</span>)</span><br><span class="line">13Vue.delete(obj),<span class="string">&#x27;bar&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
-<p><code>Proxy</code> 不兼容IE，也没有 <code>polyfill</code>, <code>defineProperty</code> 能支持到IE9</p>
-<h1 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h1><ul>
-<li><p>拦截和监视外部对对象的访问</p>
-</li>
-<li><p>降低函数或类的复杂度</p>
-</li>
-<li><p>在复杂操作前对操作进行校验或对所需资源进行管理</p>
-<p>保障数据类型的准确性</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> numericDataStore=&#123;<span class="attr">count</span>:<span class="number">0</span>,<span class="attr">amount</span>:<span class="number">1234</span>,<span class="attr">total</span>:<span class="number">14</span>&#125;</span><br><span class="line">numericDataStore=<span class="keyword">new</span> <span class="built_in">Proxy</span>(numericDataStore,&#123;</span><br><span class="line">    <span class="function"><span class="title">set</span>(<span class="params">target,key,value,proxy</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">typeof</span> value!=<span class="string">&#x27;number&#x27;</span>)&#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="built_in">Error</span>(<span class="string">&quot;属性只能是Number类型&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Reflect</span>.set(target,key,value,proxy)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line">numericDataStore.count=<span class="string">&quot;foo&quot;</span></span><br><span class="line">numericDataStore.count=<span class="number">33</span>;</span><br></pre></td></tr></table></figure>
-
-<p>实现观察者模式</p>
-</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//观察者模式，观察者函数都放在Set集合，当修改obj的值，会在set函数中拦截，自动执行Set所有的观察者</span></span><br><span class="line"><span class="keyword">const</span> queueObservers=<span class="keyword">new</span> <span class="built_in">Set</span>();</span><br><span class="line"><span class="keyword">const</span> observe=<span class="function"><span class="params">fn</span>=&gt;</span>queueObservers.add(fn)<span class="comment">//将观察者函数加入队列</span></span><br><span class="line"><span class="keyword">const</span> observable=<span class="function"><span class="params">obj</span>=&gt;</span><span class="keyword">new</span> <span class="built_in">Proxy</span>(obj,&#123;set&#125;);<span class="comment">//返回一个原始对象的Proxy代理，拦截赋值操作，触发充当观察者的每个函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">set</span>(<span class="params">target,key,value,receiver</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> res=<span class="built_in">Reflect</span>.set(target,key,value,receiver);</span><br><span class="line">    queueObservers.forEach(<span class="function"><span class="params">observer</span>=&gt;</span>observer());<span class="comment">//触发充当观察者的每个函数</span></span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>声明一个私有的apiKey,便于api这个对象内部的方法调用，但不希望外部也能够访问api._apiKey</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> api=&#123;</span><br><span class="line">    <span class="attr">_apiKey</span>:<span class="string">&#x27;123456def&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> RESTRICTED=[<span class="string">&#x27;_apiKey&#x27;</span>]</span><br><span class="line">api=<span class="keyword">new</span> <span class="built_in">Proxy</span>(api,&#123;</span><br><span class="line">    <span class="function"><span class="title">get</span>(<span class="params">target,key,proxy</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(RESTRICTED.indexOf(key)&gt;-<span class="number">1</span>)&#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="built_in">Error</span>(<span class="string">`<span class="subst">$&#123;key&#125;</span>不可访问`</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Reflect</span>.get(target,key,proxy)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="function"><span class="title">set</span>(<span class="params">target,key,value,proxy</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(RESTRICTED.indexOf(key)&gt;-<span class="number">1</span>)&#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="built_in">Error</span>(<span class="string">`<span class="subst">$&#123;key&#125;</span>不可修改`</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Reflect</span>.set(target,key,value,proxy)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(api._apiKey);</span><br><span class="line">api._apiKey=<span class="string">&#x27;12345&#x27;</span>;<span class="comment">//上述都抛出错误</span></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1553,7 +1519,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">238</span>
+          <span class="site-state-item-count">240</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1627,7 +1593,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共221.2k字</span>
+  <span class="post-count">博客全站共222.3k字</span>
 </div>
         
 
