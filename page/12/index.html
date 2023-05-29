@@ -800,7 +800,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-08 10:01:26" itemprop="dateModified" datetime="2022-05-08T10:01:26+08:00">2022-05-08</time>
+                <time title="修改时间：2023-05-29 18:25:14" itemprop="dateModified" datetime="2023-05-29T18:25:14+08:00">2023-05-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -863,12 +863,31 @@
 <li>Etag/If-None-Match， 值都是由服务器为每一个资源生成的唯一标识串，只要资源有变化就这个值就会改变。服务器根据文件本身算出一个哈希值并通过 ETag字段返回给浏览器，接收到 If-None-Match 字段以后，服务器通过比较两者是否一致来判定文件内容是否被改变。与 Last-Modified 不一样的是，当服务器返回 304 Not Modified 的响应时，由于在服务器上ETag 重新计算过，response header中还会把这个 ETag 返回，即使这个 ETag 跟之前的没有变化。</li>
 </ul>
 <p>HTTP 中并没有指定如何生成 ETag，可以由开发者自行生成，哈希是比较理想的选择。</p>
-<h1 id="ETag的出现，主要是为了解决-Last-Modified-无法解决的一些问题："><a href="#ETag的出现，主要是为了解决-Last-Modified-无法解决的一些问题：" class="headerlink" title="ETag的出现，主要是为了解决 Last-Modified 无法解决的一些问题："></a>ETag的出现，主要是为了解决 Last-Modified 无法解决的一些问题：</h1><ul>
+<h2 id="ETag"><a href="#ETag" class="headerlink" title="ETag"></a>ETag</h2><p>主要是为了解决 Last-Modified 无法解决的一些问题：</p>
+<ul>
 <li>某些服务器不能精确得到文件的最后修改时间， 这样就无法通过最后修改时间来判断文件是否更新了。</li>
 <li>某些文件的修改非常频繁，在秒以下的时间内进行修改. Last-Modified只能精确到秒。</li>
 <li>一些文件的最后修改时间改变了，但是内容并未改变。 我们不希望客户端认为这个文件修改了</li>
 </ul>
 <p><img src="/2022/05/02/%E5%BC%BA%E7%BC%93%E5%AD%98%E5%92%8C%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/store2.png"></p>
+<p>浏览器没有设置缓存策略，怎么处理？</p>
+<p>浏览器会采用一个启发式的算法，通常会取响应头中的Date减去Last-Modified值的10%作为缓存时间。</p>
+<h2 id="禁用缓存的方法："><a href="#禁用缓存的方法：" class="headerlink" title="禁用缓存的方法："></a>禁用缓存的方法：</h2><h3 id="meta缓存头设置为禁止缓存"><a href="#meta缓存头设置为禁止缓存" class="headerlink" title="meta缓存头设置为禁止缓存"></a>meta缓存头设置为禁止缓存</h3><p>在html的head标签中加入下面内容，禁止浏览器读取缓存。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Cache-Control&quot;</span> <span class="attr">content</span>=<span class="string">&quot;no-cache,no-store,must-revalidate&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Pragma&quot;</span> <span class="attr">content</span>=<span class="string">&quot;no-cache&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Expires&quot;</span> <span class="attr">conetent</span>=<span class="string">&quot;0&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Cache-Control作用于Http1.1;Pragma作用于HTTP1.0,Expires作用于proxies</p>
+<p>must-revalidate作用：如果缓存不过期可以继续使用，但是过期了就必须去服务器验证</p>
+<p>缺点：浏览器在资源没修改的时候也不能加载缓存，影响体验</p>
+<h3 id="js-css加上版本号"><a href="#js-css加上版本号" class="headerlink" title="js,css加上版本号"></a>js,css加上版本号</h3><p>当请求js,css的时候，给它们最后加上版本号，浏览器发现版本高了，就不会读取低版本的缓存，版本号不需要改变文件名，只需要在调用js,css的时候再末尾加上?v=1.0,或者使用随机数生成随机版本号，但是同理，这样浏览器在资源没修改的时候也不能加载缓存</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.write(<span class="string">&quot;&lt;script src=&#x27;test.js?v=&quot;</span> + <span class="built_in">Math</span>.random()+<span class="string">&quot;&#x27;&gt;&lt;/script&gt;&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>或者：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> js=<span class="built_in">document</span>.createElement(<span class="string">&#x27;script&#x27;</span>)</span><br><span class="line">js.src=<span class="string">&#x27;test.js&#x27;</span> + <span class="string">&#x27;?v=&#x27;</span> + <span class="built_in">Math</span>.random()</span><br><span class="line"><span class="built_in">document</span>.body.appendChild(js)</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加MD5"><a href="#添加MD5" class="headerlink" title="添加MD5"></a>添加MD5</h3><p>MD5相当于文件的唯一标识，同一个文件经过修改，MD5就不一样，我们可以通过MD5判断资源是否经过修改。</p>
+<h2 id="对于频繁变动的资源"><a href="#对于频繁变动的资源" class="headerlink" title="对于频繁变动的资源"></a>对于频繁变动的资源</h2><p>使用<strong>Cache-Control:no-cache</strong>使浏览器每次都请求服务器，然后配合ETag或者Last-Modified来验证资源是否有效，这样的做法不能节省请求数量，但是能减少响应数据大小。</p>
+<h2 id="用户行为对浏览器缓存的影响"><a href="#用户行为对浏览器缓存的影响" class="headerlink" title="用户行为对浏览器缓存的影响"></a>用户行为对浏览器缓存的影响</h2><p>普通F5刷新：强缓存没有，有协商缓存，memory cache优先使用，其次是disk cache</p>
+<p>强制刷新(Ctrl+F5):浏览器不使用缓存，因此发送的请求头部均带有Cache-control:no-cache（为了兼容，还带有Pragma:no-cache），服务器直接返回200和最新内容。</p>
 
       
     </div>
@@ -1547,7 +1566,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共222.8k字</span>
+  <span class="post-count">博客全站共223.4k字</span>
 </div>
         
 
