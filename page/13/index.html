@@ -187,6 +187,128 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/01/tree-shaking/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/01/tree-shaking/" class="post-title-link" itemprop="url">tree shaking</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-01 22:15:55" itemprop="dateCreated datePublished" datetime="2022-05-01T22:15:55+08:00">2022-05-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-11-09 18:18:39" itemprop="dateModified" datetime="2022-11-09T18:18:39+08:00">2022-11-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/webpack/" itemprop="url" rel="index"><span itemprop="name">webpack</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="tree-shaking如何工作的呢？"><a href="#tree-shaking如何工作的呢？" class="headerlink" title="tree shaking如何工作的呢？"></a>tree shaking如何工作的呢？</h1><p>虽然 tree shaking 的概念在 1990 就提出了，但直到 ES6 的 <code>ES6-style</code> 模块出现后才真正被利用起来。</p>
+<p>在ES6以前，我们可以使用CommonJS引入模块：require()，这种引入是动态的，也意味着我们可以基于条件来导入需要的代码</p>
+<p>但是CommonJS规范无法确定在实际运行前需要或者不需要某些模块，所以CommonJS不适合tree-shaking机制。在 ES6 中，引入了完全静态的导入语法：import。</p>
+<p>因为tree shaking只能在静态modules下工作。ECMAScript 6 模块加载是静态的,因此整个依赖树可以被静态地推导出解析语法树。所以在 ES6 中使用 tree shaking 是非常容易的。</p>
+<h1 id="tree-shaking的原理是什么"><a href="#tree-shaking的原理是什么" class="headerlink" title="tree shaking的原理是什么?"></a>tree shaking的原理是什么?</h1><ul>
+<li><p><strong>ES6 Module引入进行静态分析，</strong>故而编译的时候正确判断到底加载了哪些模块</p>
+</li>
+<li><p><strong>静态分析程序流，</strong>判断哪些模块和变量未被使用或者引用，进而删除对应代码</p>
+</li>
+<li><p>webpack中，tree-shaking的实现一是先标记出模块导出值哪些没有被用过，二是使用Terser删除这些没被用到的导出语句，标记过程分为三个步骤：</p>
+<p>（1）Make阶段，收集模块导出变量记录到模块关系依赖图ModuleGraph变量中</p>
+<p>（2）Seal阶段，遍历ModuleGraph标记模块导出变量有没有被使用</p>
+<p>（3）生成产物时，若变量没有被其他模块使用则删除对应导出语句</p>
+</li>
+</ul>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="将文件标记为无副作用-side-effect-free"><a href="#将文件标记为无副作用-side-effect-free" class="headerlink" title="将文件标记为无副作用(side-effect-free)"></a>将文件标记为无副作用(side-effect-free)</h2><p>在一个纯粹的 ESM 模块世界中，识别出哪些文件有副作用很简单。然而，我们的项目无法达到这种纯度，所以，此时有必要向 webpack 的 compiler 提供提示哪些代码是“纯粹部分”。</p>
+<p>这种方式是通过 package.json 的 <code>&quot;sideEffects&quot;</code> 属性来实现的。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;your-project&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;sideEffects&quot;</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如同上面提到的，如果所有代码都不包含副作用，我们就可以简单地将该属性标记为 <code>false</code>，来告知 webpack，它可以安全地删除未用到的 export 导出。</p>
+<blockquote>
+<p>「副作用」的定义是，在导入时会执行特殊行为的代码，而不是仅仅暴露一个 export 或多个 export。举例说明，例如 polyfill，它影响全局作用域，并且通常不提供 export。</p>
+</blockquote>
+<h2 id="压缩输出"><a href="#压缩输出" class="headerlink" title="压缩输出"></a>压缩输出</h2><p>通过如上方式，我们已经可以通过 <code>import</code> 和 <code>export</code> 语法，找出那些需要删除的“未使用代码(dead code)”，然而，我们不只是要找出，还需要在 bundle 中删除它们。为此，我们将使用 <code>-p</code>(production) 这个 webpack 编译标记，来启用 uglifyjs 压缩插件。</p>
+<blockquote>
+<p>注意，<code>--optimize-minimize</code> 标记也会在 webpack 内部调用 <code>UglifyJsPlugin</code>。</p>
+</blockquote>
+<p>从 webpack 4 开始，也可以通过 <code>&quot;mode&quot;</code> 配置选项轻松切换到压缩输出，只需设置为 <code>&quot;production&quot;</code>。</p>
+<p><strong>webpack.config.js</strong></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const path = require(&#x27;path&#x27;);</span><br><span class="line"></span><br><span class="line">module.exports = &#123;</span><br><span class="line">  entry: &#x27;./src/index.js&#x27;,</span><br><span class="line">  output: &#123;</span><br><span class="line">    filename: &#x27;bundle.js&#x27;,</span><br><span class="line">    path: path.resolve(__dirname, &#x27;dist&#x27;)</span><br><span class="line"><span class="deletion">- &#125;</span></span><br><span class="line"><span class="addition">+ &#125;,</span></span><br><span class="line"><span class="addition">+ mode: &quot;production&quot;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意，也可以在命令行接口中使用 <code>--optimize-minimize</code> 标记，来使用 <code>UglifyJSPlugin</code>。为了学会使用 <em>tree shaking</em>，你必须……</p>
+</blockquote>
+<ul>
+<li><p>使用 ES2015 模块语法（即 <code>import</code> 和 <code>export</code>）。</p>
+</li>
+<li><p>在项目 <code>package.json</code> 文件中，添加一个 “sideEffects” 入口。</p>
+</li>
+<li><p>引入一个能够删除未引用代码(dead code)的压缩工具(minifier)（例如 <code>UglifyJSPlugin</code>）。</p>
+</li>
+<li><p>配置optimization对象的usedExports为true</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="attr">entry</span>: <span class="string">&quot;./src/index&quot;</span>,</span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&quot;production&quot;</span>,</span><br><span class="line">  <span class="attr">devtool</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">optimization</span>: &#123;</span><br><span class="line">    <span class="attr">usedExports</span>: <span class="literal">true</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/05/01/HMR/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1137,117 +1259,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/24/new-%E5%8E%9F%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/24/new-%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">new 原理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-24 23:50:57" itemprop="dateCreated datePublished" datetime="2022-04-24T23:50:57+08:00">2022-04-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-11-02 20:34:56" itemprop="dateModified" datetime="2022-11-02T20:34:56+08:00">2022-11-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="一、是什么"><a href="#一、是什么" class="headerlink" title="一、是什么"></a>一、是什么</h2><p>在<code>JavaScript</code>中，<code>new</code>操作符用于创建一个给定构造函数的实例对象</p>
-<p>例子</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">function Person(name, age)&#123;</span><br><span class="line">    this.name = name;</span><br><span class="line">    this.age = age;</span><br><span class="line">&#125;</span><br><span class="line">Person.prototype.sayName = function () &#123;</span><br><span class="line">    console.log(this.name)</span><br><span class="line">&#125;</span><br><span class="line">const person1 = new Person(&#x27;Tom&#x27;, 20)</span><br><span class="line">console.log(person1)  // Person &#123;name: &quot;Tom&quot;, age: 20&#125;</span><br><span class="line">person1.sayName() // &#x27;Tom&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>从上面可以看到：</p>
-<ul>
-<li><code>new</code> 通过构造函数 <code>Person</code> 创建出来的实例可以访问到构造函数中的属性</li>
-<li><code>new</code> 通过构造函数 <code>Person</code> 创建出来的实例可以访问到构造函数原型链中的属性（即实例与构造函数通过原型链连接了起来）</li>
-</ul>
-<p>现在在构建函数中显式加上返回值，并且这个返回值是一个原始类型</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function Test(name) &#123;</span><br><span class="line">  this.name = name</span><br><span class="line">  return 1</span><br><span class="line">&#125;</span><br><span class="line">const t = new Test(&#x27;xxx&#x27;)</span><br><span class="line">console.log(t.name) // &#x27;xxx&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>可以发现，构造函数中返回一个原始值，然而这个返回值并没有作用</p>
-<p>下面在构造函数中返回一个对象</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">function Test(name) &#123;</span><br><span class="line">  this.name = name</span><br><span class="line">  console.log(this) // Test &#123; name: &#x27;xxx&#x27; &#125;</span><br><span class="line">  return &#123; age: 26 &#125;</span><br><span class="line">&#125;</span><br><span class="line">const t = new Test(&#x27;xxx&#x27;)</span><br><span class="line">console.log(t) // &#123; age: 26 &#125;</span><br><span class="line">console.log(t.name) // &#x27;undefined&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>从上面可以发现，构造函数如果返回值为一个对象，那么这个返回值会被正常使用</p>
-<h2 id="二、流程"><a href="#二、流程" class="headerlink" title="二、流程"></a>二、流程</h2><p>从上面介绍中，我们可以看到<code>new</code>关键字主要做了以下的工作：</p>
-<ul>
-<li>创建一个新的对象<code>obj</code></li>
-<li>将对象与构建函数通过原型链连接起来</li>
-<li>将构建函数中的<code>this</code>绑定到新建的对象<code>obj</code>上</li>
-<li>根据构建函数返回类型作判断，如果是原始值则被忽略，如果是返回对象，需要正常处理</li>
-</ul>
-<p>举个例子：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function Person(name, age)&#123;</span><br><span class="line">    this.name = name;</span><br><span class="line">    this.age = age;</span><br><span class="line">&#125;</span><br><span class="line">const person1 = new Person(&#x27;Tom&#x27;, 20)</span><br><span class="line">console.log(person1)  // Person &#123;name: &quot;Tom&quot;, age: 20&#125;</span><br><span class="line">person1.sayName() // &#x27;Tom&#x27;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="手写new-操作符"><a href="#手写new-操作符" class="headerlink" title="手写new 操作符"></a>手写new 操作符</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">my</span> <span class="title">new</span>(<span class="params">Func,..args</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> obj=&#123;&#125;;</span><br><span class="line">    obj.__proto__=Func.prototype;</span><br><span class="line">    <span class="keyword">let</span> result=Func.apply(obj,args);</span><br><span class="line">    <span class="keyword">return</span> result instanceOf <span class="built_in">Object</span>?result:obj</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>原型链：obj-&gt;Func.prototype-&gt;Object.prototype-&gt;null</p>
-<p><strong>当无返回值或者返回值不是对象，则obj作为新的对象返回，否则将返回值作为新的对象返回</strong>，当构造函数return的是简单的基本数据类型(undefined,数字，字符串，布尔值)能够正确new出想要的对象，如果构造函数return的是对象，那么我们new完得不到想要的对象</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/25/">25</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1315,7 +1330,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">240</span>
+          <span class="site-state-item-count">241</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1389,7 +1404,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共223.4k字</span>
+  <span class="post-count">博客全站共224.8k字</span>
 </div>
         
 

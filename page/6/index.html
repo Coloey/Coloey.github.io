@@ -187,6 +187,120 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/24/%E8%AF%A6%E8%A7%A3useEffect/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/24/%E8%AF%A6%E8%A7%A3useEffect/" class="post-title-link" itemprop="url">详解useEffect</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-24 15:06:04 / 修改时间：23:36:42" itemprop="dateCreated datePublished" datetime="2022-08-24T15:06:04+08:00">2022-08-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="每次渲染都有它自己的Effects"><a href="#每次渲染都有它自己的Effects" class="headerlink" title="每次渲染都有它自己的Effects"></a>每次渲染都有它自己的Effects</h2><p><code>count</code>是某个特定渲染中的常量。事件处理函数“看到”的是属于它那次特定渲染中的<code>count</code>状态值。对于effects也同样如此：</p>
+<p><strong>并不是<code>count</code>的值在“不变”的effect中发生了改变，而是effect 函数本身在每一次渲染中都不相同,概念上它是组件输出的一部分，可以看到属于某次特定渲染的props和state</strong></p>
+<h2 id="Effects的清除"><a href="#Effects的清除" class="headerlink" title="Effects的清除"></a>Effects的清除</h2><p>effects有时候需要有一个清理步骤，目的是消除副作用，<strong>React只会在浏览器绘制后运行effects</strong>，这使得你的应用更流畅，因为大多数effects不会阻塞屏幕的更新，<strong>effects的清除同样被延迟，上一次的effect会在重新渲染后被清除</strong></p>
+<ul>
+<li><strong>React 渲染<code>&#123;id: 20&#125;</code>的UI。</strong></li>
+<li>浏览器绘制。我们在屏幕上看到<code>&#123;id: 20&#125;</code>的UI。</li>
+<li><strong>React 清除<code>&#123;id: 10&#125;</code>的effect。</strong></li>
+<li>React 运行<code>&#123;id: 20&#125;</code>的effect。</li>
+</ul>
+<p><strong>effect的清除不会读取最新的props，它只能读取到定义它的那次渲染中华的prop值</strong></p>
+<h2 id="告诉React去比对你的Effects"><a href="#告诉React去比对你的Effects" class="headerlink" title="告诉React去比对你的Effects"></a>告诉React去比对你的Effects</h2><p>这是为什么你如果想要避免effects不必要的重复调用，你可以提供给<code>useEffect</code>一个依赖数组参数(deps)：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">document</span>.title = <span class="string">&#x27;Hello, &#x27;</span> + name;</span><br><span class="line">&#125;, [name]); <span class="comment">// Our deps</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>这好比你告诉React：“Hey，我知道你看不到这个函数里的东西，但我可以保证只使用了渲染中的<code>name</code>，别无其他。”</strong></p>
+<p>移除依赖</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> id = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      setCount(count + <span class="number">1</span>);</span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="built_in">clearInterval</span>(id);</span><br><span class="line">  &#125;, [count]);</span><br></pre></td></tr></table></figure>
+
+<p>定时器会在每一次<code>count</code>改变后清除和重新设定</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> id = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      setCount(<span class="function"><span class="params">c</span> =&gt;</span> c + <span class="number">1</span>);</span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="built_in">clearInterval</span>(id);</span><br><span class="line">  &#125;, []);</span><br></pre></td></tr></table></figure>
+
+<p><strong>React已经知道当前的count,我们需要告知React的仅仅是去递增状态，不管它现在具体是什么值</strong></p>
+<p>解耦来自Actions的更新</p>
+<p>当你写setSomething(something=&gt;…)这种代码时可以考虑使用reducer,reducer可以让你把组件内发生了什么和状态如何响应并更新分开描述</p>
+<p>我们用一个dispatch依赖去替换effect的step依赖</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, dispatch] = useReducer(reducer, initialState);</span><br><span class="line"><span class="keyword">const</span> &#123; count, step &#125; = state;</span><br><span class="line"></span><br><span class="line">useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> id = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    dispatch(&#123; <span class="attr">type</span>: <span class="string">&#x27;tick&#x27;</span> &#125;); <span class="comment">// Instead of setCount(c =&gt; c + step);</span></span><br><span class="line">  &#125;, <span class="number">1000</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="built_in">clearInterval</span>(id);</span><br><span class="line">&#125;, [dispatch]);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> initialState = &#123;</span><br><span class="line">  <span class="attr">count</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="attr">step</span>: <span class="number">1</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reducer</span>(<span class="params">state, action</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; count, step &#125; = state;</span><br><span class="line">  <span class="keyword">if</span> (action.type === <span class="string">&#x27;tick&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="attr">count</span>: count + step, step &#125;;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (action.type === <span class="string">&#x27;step&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; count, <span class="attr">step</span>: action.step &#125;;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>React保证dispatch在每次渲染中都是一样的，所以可以在依赖中去掉它，不会引起effect不必要的重复执行，当dispatch时，React只记住了action,它会在下一次渲染中再次调用reducer</p>
+<h2 id="无限重复请求问题："><a href="#无限重复请求问题：" class="headerlink" title="无限重复请求问题："></a>无限重复请求问题：</h2><p>1 没有依赖数组，那么每次渲染都会触发这个副作用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    fetchData()</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>2 设置了依赖数组，但是依赖数组里的变量一直在变</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [data,setData] = useState()</span><br><span class="line"></span><br><span class="line">useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> fetchData = <span class="keyword">async</span>() =&gt; &#123;</span><br><span class="line">        <span class="keyword">const</span> res = <span class="keyword">await</span> fetchNewData()</span><br><span class="line">        setData(res.data)</span><br><span class="line">    &#125;</span><br><span class="line">    fetchData()</span><br><span class="line">&#125;,[data])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="定义函数请求"><a href="#定义函数请求" class="headerlink" title="定义函数请求"></a>定义函数请求</h2><ul>
+<li><p>某些函数只在effect中使用，那就在effect中定义</p>
+</li>
+<li><p>某些函数在多个地方使用，就独立定义，最好用useCallBack包裹，并且在依赖数组里把依赖项写全</p>
+<p>eg:</p>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SearchResults</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [query, setQuery] = useState(<span class="string">&#x27;react&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ✅ Preserves identity until query changes</span></span><br><span class="line">  <span class="keyword">const</span> getFetchUrl = useCallback(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;https://hn.algolia.com/api/v1/search?query=&#x27;</span> + query;</span><br><span class="line">  &#125;, [query]);  <span class="comment">// ✅ Callback deps are OK</span></span><br><span class="line"></span><br><span class="line">  useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> url = getFetchUrl();</span><br><span class="line">    <span class="comment">// ... Fetch data and do something ...</span></span><br><span class="line">  &#125;, [getFetchUrl]); <span class="comment">// ✅ Effect deps are OK</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果query不变，getFetchUrl也会保持不变，effect也不会重新运行，反之，query改变了，getFetchUrl也会随之改变</p>
+<p>参考：</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/08/24/%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E6%A8%A1%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1058,121 +1172,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/07/28/%E8%99%9A%E6%8B%9FDOM/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/28/%E8%99%9A%E6%8B%9FDOM/" class="post-title-link" itemprop="url">虚拟DOM</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-07-28 22:07:37" itemprop="dateCreated datePublished" datetime="2022-07-28T22:07:37+08:00">2022-07-28</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-25 10:07:25" itemprop="dateModified" datetime="2022-08-25T10:07:25+08:00">2022-08-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue3%E6%BA%90%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">Vue3源码</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="命令式框架与声明式框架："><a href="#命令式框架与声明式框架：" class="headerlink" title="命令式框架与声明式框架："></a>命令式框架与声明式框架：</h1><p>命令式框架：关注过程(Jquery)</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">&#x27;#app&#x27;</span>)</span><br><span class="line"> .text(<span class="string">&#x27;hello world&#x27;</span>)</span><br><span class="line"> .on(<span class="string">&#x27;click&#x27;</span>,<span class="function">()=&gt;</span>alert(<span class="string">&#x27;ok&#x27;</span>))</span><br></pre></td></tr></table></figure>
-
-<p>声明式框架：关注结果(Vue.js)</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div @click=<span class="string">&#x27;()=&gt;alert(&#x27;</span>ok<span class="string">&#x27;)&#x27;</span>&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-
-<p><strong>结论</strong>：声明式代码的性能不优于命令式代码的性能</p>
-<p><strong>声明式代码的更新性能消耗=找出差异的性能消耗+直接修改的性能消耗</strong></p>
-<h1 id="Vue3中虚拟DOM的性能："><a href="#Vue3中虚拟DOM的性能：" class="headerlink" title="Vue3中虚拟DOM的性能："></a>Vue3中虚拟DOM的性能：</h1><p>创建JavaScript对象的计算量+创建真实DOM的计算量</p>
-<h2 id="比较："><a href="#比较：" class="headerlink" title="比较："></a>比较：</h2><p>纯JavaScript:Js运算+DOM运算（性能因素）</p>
-<p>虚拟DOM：创建Js对象（Vnode)+Diff+必要的DOM更新（与数据量变化有关）</p>
-<p>innerHTML:渲染HTML字符串+销毁所有旧DOM，新建所有新DOM（与模板大小有关）</p>
-<h2 id="结论："><a href="#结论：" class="headerlink" title="结论："></a>结论：</h2><p><strong>性能</strong>：</p>
-<p>innerHTML&lt;虚拟DOM&lt;原始JavaScript</p>
-<p><strong>心智负担</strong>：</p>
-<p>虚拟DOM&lt;innerHTML&lt;原生JavaScript</p>
-<p><strong>可维护性</strong>：</p>
-<p>虚拟DOM&gt;innerHTML和原生JS</p>
-<h1 id="框架的设计可以有三种选择："><a href="#框架的设计可以有三种选择：" class="headerlink" title="框架的设计可以有三种选择："></a>框架的设计可以有三种选择：</h1><ul>
-<li>纯运行时</li>
-<li>运行时+编译时（Vue3)</li>
-<li>纯编译时</li>
-</ul>
-<h2 id="1-纯运行时"><a href="#1-纯运行时" class="headerlink" title="1.纯运行时"></a>1.纯运行时</h2><p>一个树型结构的数据对象</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj=&#123;</span><br><span class="line">    <span class="attr">tag</span>:<span class="string">&#x27;div&#x27;</span>,</span><br><span class="line">    <span class="attr">children</span>:[</span><br><span class="line">        &#123;<span class="attr">tag</span>:<span class="string">&#x27;span&#x27;</span>,<span class="attr">children</span>:<span class="string">&#x27;hello world&#x27;</span>&#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>tag:标签名，children:子节点</p>
-<p>render:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Render</span>(<span class="params">obj,root</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> el = <span class="built_in">document</span>.createElement(obj.tag)</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> children ===<span class="string">&#x27;string&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">const</span> text=<span class="built_in">document</span>.createTextNode(obj,children)</span><br><span class="line">        el.appendChild(text)</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(obj.children)&#123;</span><br><span class="line">        obj.children.forEach(<span class="function">(<span class="params">child</span>)=&gt;</span>Render(child,el))</span><br><span class="line">    &#125;</span><br><span class="line">    root.appendChild(el) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Render(obj,<span class="built_in">document</span>.body)</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-运行时-编译时"><a href="#2-运行时-编译时" class="headerlink" title="2.运行时+编译时"></a>2.运行时+编译时</h2><p>编写一个Compiler函数，把HTML标签编译成树型结构的对象</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> html=<span class="string">`&lt;div&gt;</span></span><br><span class="line"><span class="string">			&lt;span&gt;Hello world&lt;/span&gt;</span></span><br><span class="line"><span class="string">			&lt;/div&gt;`</span></span><br><span class="line"><span class="keyword">const</span> obj=Compiler(html)</span><br><span class="line">Render(obj,<span class="built_in">document</span>.body)</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-纯编译式：-Svelte"><a href="#3-纯编译式：-Svelte" class="headerlink" title="3.纯编译式：(Svelte)"></a>3.纯编译式：(Svelte)</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;<span class="xml"><span class="tag">&lt;<span class="name">span</span>&gt;</span>hello world<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span>&lt;/div&gt;</span><br><span class="line"> <span class="comment">//就是</span></span><br><span class="line"><span class="keyword">const</span> div=<span class="built_in">document</span>.createElement(<span class="string">&#x27;div&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> span=<span class="built_in">document</span>.createElement(<span class="string">&#x27;span&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> text=<span class="built_in">document</span>.createElement(<span class="string">&#x27;hello wrold&#x27;</span>)</span><br><span class="line">span.appendChild(text)</span><br><span class="line">div.appendChild(span)</span><br><span class="line"><span class="built_in">document</span>.body.appendChild(div)</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/25/">25</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1240,7 +1243,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">240</span>
+          <span class="site-state-item-count">241</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1314,7 +1317,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共223.4k字</span>
+  <span class="post-count">博客全站共224.8k字</span>
 </div>
         
 

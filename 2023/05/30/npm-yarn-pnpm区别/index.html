@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"coloey.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="npm:嵌套结构我们都知道，执行 npm install 后，依赖包被安装到了 node_modules ，下面我们来具体了解下，npm 将依赖包安装到 node_modules 的具体机制是什么。 在 npm 的早期版本， npm 处理依赖的方式简单粗暴，以递归的形式，严格按照 package.json 结构以及子依赖包的 package.json 结构将依赖安装到他们各自的 node_modu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="npm,yarn,pnpm区别">
+<meta property="og:url" content="https://coloey.github.io/2023/05/30/npm-yarn-pnpm%E5%8C%BA%E5%88%AB/index.html">
+<meta property="og:site_name" content="小柒">
+<meta property="og:description" content="npm:嵌套结构我们都知道，执行 npm install 后，依赖包被安装到了 node_modules ，下面我们来具体了解下，npm 将依赖包安装到 node_modules 的具体机制是什么。 在 npm 的早期版本， npm 处理依赖的方式简单粗暴，以递归的形式，严格按照 package.json 结构以及子依赖包的 package.json 结构将依赖安装到他们各自的 node_modu">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-05-30T14:12:53.000Z">
+<meta property="article:modified_time" content="2023-05-30T14:30:04.118Z">
+<meta property="article:author" content="小柒">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://coloey.github.io/2023/05/30/npm-yarn-pnpm%E5%8C%BA%E5%88%AB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>npm,yarn,pnpm区别 | 小柒</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="小柒" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小柒</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">www.xiaoqi.cn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2023/05/30/npm-yarn-pnpm%E5%8C%BA%E5%88%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h1 class="post-title" itemprop="name headline">
+          npm,yarn,pnpm区别
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-05-30 22:12:53 / 修改时间：22:30:04" itemprop="dateCreated datePublished" datetime="2023-05-30T22:12:53+08:00">2023-05-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">前端工程化</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="npm"><a href="#npm" class="headerlink" title="npm:"></a>npm:</h1><h2 id="嵌套结构"><a href="#嵌套结构" class="headerlink" title="嵌套结构"></a><strong>嵌套结构</strong></h2><p>我们都知道，执行 <code>npm install</code> 后，依赖包被安装到了 <code>node_modules</code> ，下面我们来具体了解下，<code>npm</code> 将依赖包安装到 <code>node_modules</code> 的具体机制是什么。</p>
+<p>在 <code>npm</code> 的早期版本， <code>npm</code> 处理依赖的方式简单粗暴，以递归的形式，严格按照 <code>package.json</code> 结构以及子依赖包的 <code>package.json</code> 结构将依赖安装到他们各自的 <code>node_modules</code> 中。直到有子依赖包不在依赖其他模块。</p>
+<h2 id="扁平结构"><a href="#扁平结构" class="headerlink" title="扁平结构"></a><strong>扁平结构</strong></h2><p>为了解决以上问题，<code>NPM</code> 在 <code>3.x</code> 版本做了一次较大更新。其将早期的嵌套结构改为扁平结构：</p>
+<ul>
+<li>安装模块时，不管其是直接依赖还是子依赖的依赖，优先将其安装在 <code>node_modules</code> 根目录。</li>
+<li><code>npm 3.x</code> 版本并未完全解决老版本的模块冗余问题,加入你的项目没有依赖B，但是依赖了不同B版本的A@1和A@2，由于在执行npm install，按照package.json依赖的顺序依次解析，则A@1和A@2在package.json的位置决定了node_modules的依赖结构，可能先依赖A@1也可能先依赖A@2，造成了不确定性。</li>
+</ul>
+<h2 id="Lock文件"><a href="#Lock文件" class="headerlink" title="Lock文件"></a><strong>Lock文件</strong></h2><p>为了解决 <code>npm install</code> 的不确定性问题，在 <code>npm 5.x</code> 版本新增了 <code>package-lock.json</code> 文件，而安装方式还沿用了 <code>npm 3.x</code> 的扁平化的方式。</p>
+<p><code>package-lock.json</code> 的作用是锁定依赖结构，即只要你目录下有 <code>package-lock.json</code> 文件，那么你每次执行 <code>npm install</code> 后生成的 <code>node_modules</code> 目录结构一定是完全相同的。</p>
+<h2 id="整体流程"><a href="#整体流程" class="headerlink" title="整体流程"></a><strong>整体流程</strong></h2><p>好了，我们再来整体总结下上面的流程：</p>
+<ul>
+<li><p>检查 <code>.npmrc</code> 文件：优先级为：项目级的 <code>.npmrc</code> 文件 &gt; 用户级的 <code>.npmrc</code> 文件&gt; 全局级的 <code>.npmrc</code> 文件 &gt; npm 内置的 <code>.npmrc</code> 文件</p>
+</li>
+<li><p>检查项目中有无 <code>lock</code> 文件。</p>
+</li>
+<li><p>无 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lock</span><br></pre></td></tr></table></figure>
+
+<p> 文件：</p>
+<ul>
+<li><p>从 <code>npm</code> 远程仓库获取包信息</p>
+</li>
+<li><p>根据 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">package.json</span><br></pre></td></tr></table></figure>
+
+<p> 构建依赖树，构建过程：</p>
+<ul>
+<li>构建依赖树时，不管其是直接依赖还是子依赖的依赖，优先将其放置在 <code>node_modules</code> 根目录。</li>
+<li>当遇到相同模块时，判断已放置在依赖树的模块版本是否符合新模块的版本范围，如果符合则跳过，不符合则在当前模块的 <code>node_modules</code> 下放置该模块。</li>
+<li>注意这一步只是确定逻辑上的依赖树，并非真正的安装，后面会根据这个依赖结构去下载或拿到缓存中的依赖包</li>
+</ul>
+</li>
+<li><p>在缓存中依次查找依赖树中的每个包     </p>
+<ul>
+<li>不存在缓存：<ul>
+<li>从 <code>npm</code> 远程仓库下载包</li>
+<li>校验包的完整性</li>
+<li>校验不通过：<ul>
+<li>重新下载 </li>
+</ul>
+</li>
+<li>校验通过：<ul>
+<li>将下载的包复制到 <code>npm</code> 缓存目录</li>
+<li>将下载的包按照依赖结构解压到 <code>node_modules</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>存在缓存：将缓存按照依赖结构解压到 <code>node_modules</code></p>
+</li>
+<li><p>将包解压到 <code>node_modules</code></p>
+</li>
+<li><p>生成 <code>lock</code> 文件</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="pnpm"><a href="#pnpm" class="headerlink" title="pnpm"></a>pnpm</h1><h2 id="pnpm好处："><a href="#pnpm好处：" class="headerlink" title="pnpm好处："></a>pnpm好处：</h2><ul>
+<li><p>安装速度快（非扁平的包结构，没有复杂的扁平算法，只更新变化的文件）</p>
+</li>
+<li><p>节省磁盘空间，统一安装到磁盘的某个位置，项目中的node_modules通过hard-link的方式链接到实际安装地址</p>
+</li>
+<li><p>pnpm 与 npm/yarn 另外一个很大的不同就是支持了 monorepo，体现在各个子命令的功能上，比如在根目录下 <code>pnpm add A -r</code>, 那么所有的 package 中都会被添加 A 这个依赖，当然也支持 <code>--filter</code>字段来对 package 进行过滤。</p>
+</li>
+</ul>
+<h2 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h2><p>比如安装bar包，根目录只包含安装的包bar,而node_modules目录下的bar包会软链接到.pnpm/bar/node_modules/bar@…,被bar依赖的包会被提升到.pnpm的根目录，其他依赖该包的也会软链接到这里，而bar,foo包硬链接到.pnpm store；总之，<strong>软链接解决了磁盘占用的问题，而硬链接解决了包的同步更新和统一管理问题。</strong></p>
+<p>嵌套结构的问题在于：</p>
+<ul>
+<li><strong>包文件的目录可能会非常长</strong></li>
+<li><strong>重复安装包</strong></li>
+<li><strong>相同包的实例不能共享</strong></li>
+</ul>
+<p>而扁平结构也同样存在问题：</p>
+<ul>
+<li><strong>依赖结构的不确定性</strong>（不同包依赖某个包的不同版本 最终安装的版本具有不确定性）可通过lock文件确定安装版本</li>
+<li><strong>扁平化算法复杂，耗时</strong></li>
+<li><strong>非法访问未声明的包</strong></li>
+</ul>
+<h2 id="monorepo"><a href="#monorepo" class="headerlink" title="monorepo:"></a>monorepo:</h2><p>多个项目或者包文件放到一个git仓库管理，解决代码复用问题，开发流程统一，高效管理多项目/包</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>小柒
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://coloey.github.io/2023/05/30/npm-yarn-pnpm%E5%8C%BA%E5%88%AB/" title="npm,yarn,pnpm区别">https://coloey.github.io/2023/05/30/npm-yarn-pnpm区别/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/04/08/%E5%9B%9E%E6%B5%81%E9%87%8D%E7%BB%98%E4%B9%8B%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" rel="prev" title="回流重绘之性能优化">
+      <i class="fa fa-chevron-left"></i> 回流重绘之性能优化
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#npm"><span class="nav-number">1.</span> <span class="nav-text">npm:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B5%8C%E5%A5%97%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">嵌套结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%81%E5%B9%B3%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">扁平结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lock%E6%96%87%E4%BB%B6"><span class="nav-number">1.3.</span> <span class="nav-text">Lock文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E4%BD%93%E6%B5%81%E7%A8%8B"><span class="nav-number">1.4.</span> <span class="nav-text">整体流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pnpm"><span class="nav-number">2.</span> <span class="nav-text">pnpm</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#pnpm%E5%A5%BD%E5%A4%84%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">pnpm好处：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%EF%BC%9A"><span class="nav-number">2.2.</span> <span class="nav-text">原理：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#monorepo"><span class="nav-number">2.3.</span> <span class="nav-text">monorepo:</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小柒"
+      src="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+  <p class="site-author-name" itemprop="name">小柒</p>
+  <div class="site-description" itemprop="description">欢迎来到我的世界!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">241</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Coloey" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Coloey" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/487336863@qq.com" title="E-Mail → 487336863@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小柒</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_pv">
+    本站访问量:<span id="busuanzi_value_site_pv"></span>次
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_uv">
+    本站总访客量：<span id="busuanzi_value_site_uv"></span>人
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共224.8k字</span>
+</div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 动态背景 -->
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="../source/js/src/clicklove.js"></script>
+</body>
+</html>

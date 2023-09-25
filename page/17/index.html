@@ -187,6 +187,148 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/13/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
+      <meta itemprop="name" content="小柒">
+      <meta itemprop="description" content="欢迎来到我的世界!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小柒">
+    </span>
+      <header class="post-header">
+
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/13/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">原型模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-13 22:03:03" itemprop="dateCreated datePublished" datetime="2022-04-13T22:03:03+08:00">2022-04-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-03 00:03:58" itemprop="dateModified" datetime="2022-05-03T00:03:58+08:00">2022-05-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h1><p>构造函数也是函数，与普通函数唯一区别就是调用方式不同。任何函数只要使用new操作符调用就是构造函数，而不适用new操作符调用的函数就是普通函数。</p>
+<h1 id="理解原型"><a href="#理解原型" class="headerlink" title="理解原型"></a>理解原型</h1><p>只要创建一个函数，就会按照特定的规则为这个函数创建一个prototype属性（指向原型对象），默认情况下，所有原型对象会自动获得一个名为constructor指向Person</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="keyword">typeof</span> Person.prototype);</span><br><span class="line">   <span class="built_in">console</span>.log(Person.prototype);</span><br><span class="line">   <span class="comment">//正常原型链都会终止于Object的原型对象</span></span><br><span class="line">   <span class="comment">//Object原型的原型是null</span></span><br><span class="line">   <span class="built_in">console</span>.log(Person.prototype.__proto__===<span class="built_in">Object</span>.prototype);<span class="comment">//true</span></span><br><span class="line">   <span class="built_in">console</span>.log(Person.prototype.__proto__.constructor===<span class="built_in">Object</span>);<span class="comment">//true</span></span><br><span class="line">   <span class="built_in">console</span>.log(Person.prototype.__proto__.__proto__===<span class="literal">null</span>);<span class="comment">//true</span></span><br><span class="line">   <span class="built_in">console</span>.log(Person.prototype.__proto__);<span class="comment">//true</span></span><br><span class="line">   <span class="keyword">let</span> person1=<span class="keyword">new</span> Person(),person2=<span class="keyword">new</span> Person();</span><br><span class="line">   <span class="comment">//构造函数，原型对象和实例是3个完全不同的对象</span></span><br><span class="line">   <span class="built_in">console</span>.log(person1!==Person);<span class="comment">//true</span></span><br><span class="line">   <span class="built_in">console</span>.log(person1!==Person.prototype);<span class="comment">//true</span></span><br><span class="line">   <span class="built_in">console</span>.log(Person.prototype!==Person);<span class="comment">//true</span></span><br><span class="line">   <span class="comment">//实例通过__proto__链接到原型对象，它实际上指向隐藏特性[[Prototype]]</span></span><br><span class="line">   <span class="comment">//实例与构造函数没有联系，与原型对象有直接联系</span></span><br><span class="line">   <span class="built_in">console</span>.log(person1.__proto__===Person.prototype);</span><br><span class="line">   <span class="built_in">console</span>.log(person1.__proto__.constructor===Person);</span><br><span class="line">   <span class="comment">//同一个构造函数创建的两个实例共享同一个原型对象</span></span><br><span class="line">   <span class="built_in">console</span>.log(person1.__proto__===person2.__proto__);</span><br><span class="line">   <span class="comment">//instanceof检查实例的原型链中是否包含指定构造函数的原型</span></span><br><span class="line">   <span class="built_in">console</span>.log(person1 <span class="keyword">instanceof</span> Person);<span class="comment">//true</span></span><br><span class="line">   <span class="built_in">console</span>.log(person1 <span class="keyword">instanceof</span> <span class="built_in">Object</span>);<span class="comment">//true</span></span><br><span class="line">   <span class="built_in">console</span>.log(Person.prototype <span class="keyword">instanceof</span> <span class="built_in">Object</span>);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2022/04/13/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/yuan3.png" alt="原型"></p>
+<p>Person构造函数，Person原型对象和Person现有实例的关系如上：Person.prototype指向原型对象，因此Person.prototye.constructor指回Person构造函数。原型对象包含constructor属性和其他后来添加的属性。Person的两个实例person1,person2有一个内部属性指回Person.prototype,而且两者和构造函数没有直接联系。person1.sayName()可以正常调用，这是由于对象属性查找机制的原因</p>
+<p>虽然不是所有实现都对外暴露[[Prototype]]，但可以使用isPrototypeOf()方法确定两个对象之间的关系，本质上isPrototypeOf()会在传入参数的[[Prototype]]指向调用它的对象时返回true</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(Person.prototype.isprototypeOf(person1));<span class="comment">//true</span></span><br><span class="line"><span class="built_in">console</span>.log(Person.prototype.isprototypeOf(person2));<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>Object类型有一个方法叫Object.getPrototypeOf(),返回参数的内部特性[[Prototype]]的值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.getPrototypeOf(person1)==Person.prototype);<span class="comment">//true</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.getPrototypeOf(person1).name);</span><br></pre></td></tr></table></figure>
+
+<p>使用Object.getPrototypeOf()可以取得一个对象的原型</p>
+<p>Object类型还有一个setPrototypeOf()方法，可以向实例的私有特性[[Prototype]]写入一个新值，这样就可以重写一个对象的原型继承关系</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> biped=&#123;</span><br><span class="line">       <span class="attr">numLegs</span>:<span class="number">2</span></span><br><span class="line">   &#125;;</span><br><span class="line">   <span class="keyword">let</span> person=&#123;</span><br><span class="line">       <span class="attr">name</span>:<span class="string">&#x27;Matt&#x27;</span></span><br><span class="line">   &#125;;</span><br><span class="line">   <span class="built_in">Object</span>.setPrototypeOf(person,biped);</span><br><span class="line">   <span class="built_in">console</span>.log(person.name);</span><br><span class="line">   <span class="built_in">console</span>.log(person.numLegs);</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="built_in">Object</span>.getPrototypeOf(person)===biped);</span><br></pre></td></tr></table></figure>
+
+<p>Object.setPrototypeOf()可能会严重影响代码性能，会涉及所有访问了哪些修改过[[Prototype]]的对象的代码</p>
+<p>可以通过Object.create()创建一个新对象，同时为其指定原型</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> biped=&#123;</span><br><span class="line">    <span class="attr">numLegs</span>:<span class="number">2</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">let</span> person=<span class="built_in">Object</span>.create(biped);</span><br><span class="line">person.name=<span class="string">&#x27;Matt&#x27;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(person.name);</span><br><span class="line"><span class="built_in">console</span>.log(person.numLegs);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.getPrototypeOf(person)===biped);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="原型层级"><a href="#原型层级" class="headerlink" title="原型层级"></a>原型层级</h1><p>通过对象访问属性时会按照这个属性名称开始搜索，搜索开始于对象实例本身，如果在实例上发现给定的名称，则返回该名称对应值，如果没有找到这个属性，则搜索会沿着指针进入原型对象，在原型对象找到属性后返回对应值。</p>
+<p>比如foo不直接存在于myObject中而是存在于原型链上层时，myObject.foo=”bar”会出现三种情况：</p>
+<ol>
+<li><p>如果在[[Prototype]]链上层存在名为foo的普通数据访问属性，并且writable:true,那就会直接在myObject中添加一个名为foo的新属性，它是屏蔽属性</p>
+</li>
+<li><p>如果在[[Prototype]]链上层存在foo,但是它是被标记为只读(writable:false)，那么无法修改已有属性或者在myObject上创建屏蔽属性。如果运行在严格模式下，代码会抛出一个错误。否则，这条赋值语句会被忽略。不会发生屏蔽</p>
+</li>
+<li><p>如果在[[Prototype]]链上层存在foo并且它是一个setter，那就一定会调用这个setter,foo不会添加到myObject，也不会重新定义foo这个setter。</p>
+</li>
+</ol>
+<p>当属性被屏蔽时，可以使用delete删除实例上的这个属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">Person.prototype.name=<span class="string">&#x27;Nicholas&#x27;</span>;</span><br><span class="line">Person.prototype.age=<span class="number">29</span>;</span><br><span class="line"><span class="keyword">let</span> person1=<span class="keyword">new</span> Person();</span><br><span class="line"><span class="keyword">let</span> person2=<span class="keyword">new</span> Person();</span><br><span class="line">person1.name=<span class="string">&quot;Greg&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(person1.name);<span class="comment">//&quot;Greg&quot;,来自实例</span></span><br><span class="line"><span class="built_in">console</span>.log(person2.name);<span class="comment">//Nicholas,来自原型</span></span><br><span class="line"><span class="keyword">delete</span> person1.name;</span><br><span class="line"><span class="built_in">console</span>.log(person1.name);<span class="comment">//Nicholas,来自原型</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="hasOwnProperty-NaN"><a href="#hasOwnProperty-NaN" class="headerlink" title="hasOwnProperty()"></a>hasOwnProperty()</h2><p>hasOwnProperty()方法用于确定某个属性是在实例上还是原型对象上。这个方法继承自Object，会在属性存在于调用它的对象实例善时返回true</p>
+<p><img src="/2022/04/13/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/yuan2-16515074359011.png"></p>
+<h2 id="in操作符"><a href="#in操作符" class="headerlink" title="in操作符"></a>in操作符</h2><p>in操作符会在可以通过对象访问指定属性时返回true，无论该属性是在实例上还是在原型上</p>
+<p>因此如果要确定某个属性是否在原型上可以同时使用hasOwnProperty()和in操作符</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasPrototypeProperty</span>(<span class="params">object,name</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> !<span class="built_in">Object</span>.hasOwnProperty(name)&amp;&amp;(name <span class="keyword">in</span> 		object)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="原型的问题"><a href="#原型的问题" class="headerlink" title="原型的问题"></a>原型的问题</h1><p>弱化了向构造函数传递初始化参数的能力，会导致所有实例默认取得属性相同的值，以及它的共享特性：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        Person.prototype=&#123;</span><br><span class="line">            <span class="attr">constructor</span>:Person,</span><br><span class="line">            <span class="attr">name</span>:<span class="string">&#x27;nic&#x27;</span>,</span><br><span class="line">            <span class="attr">age</span>:<span class="number">29</span>,</span><br><span class="line">            <span class="attr">job</span>:<span class="string">&quot;Software Engineer&quot;</span>,</span><br><span class="line">            <span class="attr">friends</span>:[<span class="string">&#x27;Coloey&#x27;</span>,<span class="string">&#x27;Amy&#x27;</span>],</span><br><span class="line">            <span class="function"><span class="title">sayName</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="built_in">this</span>.name)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> person1=<span class="keyword">new</span> Person();</span><br><span class="line">    <span class="keyword">let</span> person2=<span class="keyword">new</span> Person();</span><br><span class="line">    person1.friends.push(<span class="string">&#x27;Van&#x27;</span>);</span><br><span class="line">    <span class="built_in">console</span>.log(person1.friends===person2.friends);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>不同实例应有不同的副本</strong>。</p>
+<h1 id="原型链"><a href="#原型链" class="headerlink" title="原型链"></a>原型链</h1><p>原型链是ECMAScript的主要继承方式</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      <span class="built_in">this</span>.property=<span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  SuperType.prototype.getSuperValue=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">this</span>.property;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      <span class="built_in">this</span>.subproperty=<span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//继承SuperType</span></span><br><span class="line">  SubType.prototype=<span class="keyword">new</span> SuperType();</span><br><span class="line">  SubType.prototype.getSubValue=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">this</span>.subproperty;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">let</span> instance=<span class="keyword">new</span> SubType();</span><br><span class="line">  <span class="built_in">console</span>.log(instance.getSuperValue());<span class="comment">//true</span></span><br><span class="line">  <span class="built_in">console</span>.log(instance.property)<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/04/13/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/yuan1.png"></p>
+<p>SubType.prototype是SuperType的实例，因此SubType.prototype指向SuperType.prototype,注意，getSuperValue()方法还在SuperType.prototype对象上，而property是一个实例属性，SubType.prototype是SuperType的实例，因此property存在它上面，由于SubType.prototype的constructor属性被重写指向SuperType,所以instance.constructor也指向SuperType.</p>
+<h1 id="原型与继承关系"><a href="#原型与继承关系" class="headerlink" title="原型与继承关系"></a>原型与继承关系</h1><p>使用instanceOf操作符，如果一个实例的原型链出现过相应构造函数则instanceOf返回true</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(instance <span class="keyword">instanceof</span> <span class="built_in">Object</span>);</span><br><span class="line"><span class="built_in">console</span>.loh(instance <span class="keyword">instanceof</span> SubType);</span><br></pre></td></tr></table></figure>
+
+<p>使用**isPrototypeOf()**方法，原型链上的每个原型都可以调用这个方法，只要原型链上包含这个原型就返回true</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.prototype.isPrototypeOf(instance));<span class="comment">//true</span></span><br><span class="line">    <span class="built_in">console</span>.log(SuperType.prototype.isPrototypeOf(instance));<span class="comment">//true</span></span><br><span class="line">    <span class="built_in">console</span>.log(SubType.prototype.isPrototypeOf(instance));<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>以对象字面量的方式创建原型方法会破坏之前的原型链：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">function SuperType()&#123;</span><br><span class="line">        this.property=true;</span><br><span class="line">    &#125;</span><br><span class="line">    SuperType.prototype.getSuperValue=function()&#123;</span><br><span class="line">        return this.property;</span><br><span class="line">    &#125;</span><br><span class="line">    function SubType()&#123;</span><br><span class="line">        this.subproperty=false;</span><br><span class="line">    &#125;</span><br><span class="line">    //继承SuperType</span><br><span class="line">    SubType.prototype=new SuperType();</span><br><span class="line">//通过对象字面量添加新方法，会导致上一行无效</span><br><span class="line">  SubType.prototype=&#123;</span><br><span class="line">        getSubValue()&#123;</span><br><span class="line">            return this.subproperty;</span><br><span class="line">        &#125;,</span><br><span class="line">        someOtherMethod()&#123;</span><br><span class="line">            return false;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    let instance=new SubType();</span><br><span class="line">    console.log(instance.getSuperValue());//出错</span><br></pre></td></tr></table></figure>
+
+<p><strong>原型链的问题就是会在原型中包含的引用值会在实例间共享</strong>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">       <span class="built_in">this</span>.color=[<span class="string">&quot;red&quot;</span>,<span class="string">&quot;blue&quot;</span>,<span class="string">&quot;green&quot;</span>]</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">   &#125;</span><br><span class="line">   SubType.prototype=<span class="keyword">new</span> SuperType();</span><br><span class="line">   <span class="keyword">let</span> intance1=<span class="keyword">new</span> SubType();</span><br><span class="line">   intance1.color.push(<span class="string">&quot;black&quot;</span>);</span><br><span class="line">   <span class="built_in">console</span>.log(intance1.color);</span><br><span class="line">   <span class="keyword">let</span> instance2=<span class="keyword">new</span> SubType();</span><br><span class="line">   <span class="built_in">console</span>.log(instance2.color);</span><br></pre></td></tr></table></figure>
+
+<h1 id="盗用构造函数"><a href="#盗用构造函数" class="headerlink" title="盗用构造函数"></a>盗用构造函数</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.color=[<span class="string">&quot;red&quot;</span>,<span class="string">&quot;blue&quot;</span>,<span class="string">&quot;green&quot;</span>]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//继承SuperType</span></span><br><span class="line">        SuperType.call(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//SubType.prototype=new SuperType();</span></span><br><span class="line">    <span class="keyword">let</span> intance1=<span class="keyword">new</span> SubType();</span><br><span class="line">    intance1.color.push(<span class="string">&quot;black&quot;</span>);</span><br><span class="line">    <span class="built_in">console</span>.log(intance1.color);</span><br><span class="line">    <span class="keyword">let</span> instance2=<span class="keyword">new</span> SubType();</span><br><span class="line">    <span class="built_in">console</span>.log(instance2.color);</span><br></pre></td></tr></table></figure>
+
+<p>使用call()，SuperType构造函数在为SubType的实例创建的新对象的上下文中执行了，相当于新的SubType对象上运行了SuperType()函数的所有初始化代码</p>
+<h2 id="传递参数："><a href="#传递参数：" class="headerlink" title="传递参数："></a>传递参数：</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.color=[<span class="string">&quot;red&quot;</span>,<span class="string">&quot;blue&quot;</span>,<span class="string">&quot;green&quot;</span>]</span><br><span class="line">        arr.forEach(<span class="function"><span class="params">item</span>=&gt;</span><span class="built_in">this</span>.color.push(item));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//继承SuperType</span></span><br><span class="line">        SuperType.call(<span class="built_in">this</span>,[<span class="string">&#x27;black&#x27;</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> intance1=<span class="keyword">new</span> SubType();</span><br><span class="line">    <span class="built_in">console</span>.log(intance1.color);<span class="comment">//[&#x27;red&#x27;, &#x27;blue&#x27;, &#x27;green&#x27;, &#x27;black&#x27;]</span></span><br><span class="line">    <span class="keyword">let</span> instance2=<span class="keyword">new</span> SubType();</span><br><span class="line">    <span class="built_in">console</span>.log(instance2.color);<span class="comment">//[&#x27;red&#x27;, &#x27;blue&#x27;, &#x27;green&#x27;, &#x27;black&#x27;]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h2><p>也是使用构造函数模式自定义类型的问题：必须在构造函数中定义方法，因此函数不能重用，此外，子类也不能访问父类原型上定义的方法，因此所有类型只能使用构造函数模式。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/13/js%E4%B8%AD%E7%9A%84%E9%81%8D%E5%8E%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1252,141 +1394,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://coloey.github.io/2022/04/11/%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C%E7%9A%84http%E7%8A%B6%E6%80%81%E7%A0%81/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://pic3.zhimg.com/80/v2-93091834844364ab73fd617db4685210_720w.jpg?source=1940ef5c">
-      <meta itemprop="name" content="小柒">
-      <meta itemprop="description" content="欢迎来到我的世界!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小柒">
-    </span>
-      <header class="post-header">
-
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/11/%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C%E7%9A%84http%E7%8A%B6%E6%80%81%E7%A0%81/" class="post-title-link" itemprop="url">返回结果的http状态码</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-11 19:58:12 / 修改时间：21:30:34" itemprop="dateCreated datePublished" datetime="2022-04-11T19:58:12+08:00">2022-04-11</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/http/" itemprop="url" rel="index"><span itemprop="name">http</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="状态码作用："><a href="#状态码作用：" class="headerlink" title="状态码作用："></a>状态码作用：</h1><p>状态码的职责是当客户端向服务器发送请求时，描述返回的请求结果，借助状态码，用户可以知道服务器时正常处理了请求，还是出现了错误。</p>
-<h1 id="状态码类别："><a href="#状态码类别：" class="headerlink" title="状态码类别："></a>状态码类别：</h1><table>
-<thead>
-<tr>
-<th></th>
-<th>类别</th>
-<th>原因短语</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1xx</td>
-<td>Informational(信息状态码)</td>
-<td>接收的请求正在处理</td>
-</tr>
-<tr>
-<td>2xx</td>
-<td>Success(成功状态码)</td>
-<td>请求正常处理完毕</td>
-</tr>
-<tr>
-<td>3xx</td>
-<td>Redirection(重定向状态码)</td>
-<td>需要进行附加操作以完成请求</td>
-</tr>
-<tr>
-<td>4xx</td>
-<td>Client Error(客户端错误状态码)</td>
-<td>服务器无法处理请求</td>
-</tr>
-<tr>
-<td>5xx</td>
-<td>Server Error(服务器错误状态码)</td>
-<td>服务器处理请求出错</td>
-</tr>
-</tbody></table>
-<h1 id="2xx成功"><a href="#2xx成功" class="headerlink" title="2xx成功"></a>2xx成功</h1><h2 id="200-OK"><a href="#200-OK" class="headerlink" title="200 OK"></a>200 OK</h2><p>表示从客户端发来的请求在服务器端被正常处理了</p>
-<p>在响应报文内，随状态码一起返回的信息会因方法的不同而发生改变。比如，使用Get方法，对应请求支援的实体会作为响应返回；而使用HEAD方法时，对应请求资源的实体首部不随报文实体作为响应返回。（即在响应中只返回首部，不返回实体主体部分）</p>
-<h2 id="204-No-Content"><a href="#204-No-Content" class="headerlink" title="204 No Content"></a>204 No Content</h2><p>该状态码代表服务器接收的请求已成功处理，但在返回的响应报文中不含实体的主体部分。另外，不允许返回任何实体的主体。比如，当从浏览器中发出请求处理后，返回204响应，那么浏览器显示的页面不发生更新。</p>
-<p>一般在只需要从客户端往服务器发送消息，而对客户端不需要发送新消息内容的情况下使用</p>
-<h2 id="206-Partial-Content"><a href="#206-Partial-Content" class="headerlink" title="206 Partial Content"></a>206 Partial Content</h2><p>该状态码表示客户端进行范围请求，而服务器成功执行了这部分的GET请求。响应报文中包含由Content-Range指定范围的实体内容</p>
-<h1 id="3xx重定向"><a href="#3xx重定向" class="headerlink" title="3xx重定向"></a>3xx重定向</h1><p>3xx响应结果表明浏览器需要执行某些特殊的处理以正确处理请求。</p>
-<h2 id="301-Moved-Permanently"><a href="#301-Moved-Permanently" class="headerlink" title="301 Moved Permanently"></a>301 Moved Permanently</h2><p>永久性重定向。该状态码表示请求的资源已被分配了新的URI，以后应该使用资源现在所指的URI，也就是说，如果已经把资源对应的URI保存为书签，这时应该按Location首部字段提示的URI重新保存。</p>
-<p>eg:</p>
-<p><a target="_blank" rel="noopener" href="http://example.com/sample">http://example.com/sample</a></p>
-<p>当指定资源路径的最后忘记添加“/“，就会产生301状态码</p>
-<h2 id="302-Found"><a href="#302-Found" class="headerlink" title="302 Found"></a>302 Found</h2><p>临时性重定向，该状态码表示请求的资源已被分配了新的URI，希望用户（本次）能使用新的URI访问。和301 Moved Permanently状态码相似，但302状态码代表的资源不是被永久移动，只是临时性质。换句话说，已移动的资源对应的URI将来还有可能发生改变。用户把URI保存成书签，但不会像301状态码出现时那样去更新书签，而是仍旧保留返回的302状态码的页面对应的URI。</p>
-<h2 id="303-See-Other"><a href="#303-See-Other" class="headerlink" title="303 See Other"></a>303 See Other</h2><p>该状态码表示由于请求对应的资源存在着另一个URI，应使用GET方法定向获取请求的资源。303状态码和302Found状态码有着相同功能。但303状态码明确表示客户端应当采用GET方法获取资源，这点与302状态码有区别。比如，当使用POST方法访问CGI程序，其执行后的处理结果是希望客户端能以GET方法重定向到另一个URI上去时，返回303状态码。</p>
-<p>当301,302,303返回响应码时，几乎所有浏览器都会把POST改为GET，并删除请求报文的主体，之后请求会自动再次发送。</p>
-<p>301,302标准是禁止将POST改为GET，但实际上大家都这么做。</p>
-<h2 id="304-Not-Modified"><a href="#304-Not-Modified" class="headerlink" title="304 Not Modified"></a>304 Not Modified</h2><p>该状态码表示客户端发送附带条件的请求时，服务器端允许请求访问资源，但未满足条件的情况，304状态码返回时，不包括任何响应的主体部分。304和重定向没有关系。</p>
-<h2 id="307-Temporary-Redirect"><a href="#307-Temporary-Redirect" class="headerlink" title="307 Temporary Redirect"></a>307 Temporary Redirect</h2><p>临时重定向。该状态码与302 Found有着相同的含义。尽管302标准禁止POST变为GET，但实际使用时大家并不遵守。307会按照浏览器标准，不会从POST变成GET。但是，对于处理响应时的行为，每种浏览器有可能出现不同情况。</p>
-<h1 id="4xx客户端错误"><a href="#4xx客户端错误" class="headerlink" title="4xx客户端错误"></a>4xx客户端错误</h1><p>4xx的响应结果表明客户端时发生错误的原因所在</p>
-<h2 id="400-Bad-Request"><a href="#400-Bad-Request" class="headerlink" title="400 Bad Request"></a>400 Bad Request</h2><p>该状态码表示请求报文中存在语法错误，当错误发生时，需修改请求的内容后再次发送请求。另外，浏览器会像200 Ok一样对待状态码</p>
-<h2 id="401-Unauthorized"><a href="#401-Unauthorized" class="headerlink" title="401 Unauthorized"></a>401 Unauthorized</h2><p>该状态码表示发送的请求需要有通过HTTP认证（BASIC认证、DIGEST认证）的认证信息。另外若之前已进行过1次请求，则表示用户认证失败。</p>
-<p>返回含有401的响应必须包含一个适用于被请求资源的WWW-Authenticate首部用于质询用户信息，当浏览器初次接收到401响应，会弹出认证用的对话窗口。</p>
-<h2 id="403-Forbidden"><a href="#403-Forbidden" class="headerlink" title="403 Forbidden"></a>403 Forbidden</h2><p>该状态码表明对请求资源的访问被服务器拒绝了。服务端没有给出拒绝的详细理由，但如果做说明，可以在实体的主体部分对原因进行描述。</p>
-<p>未获得文件系统的访问授权，访问权限出现某些问题（从未授权的源IP地址试图访问）等列举的情况都可能是发生403的原因。</p>
-<h2 id="404-Not-Found"><a href="#404-Not-Found" class="headerlink" title="404 Not Found"></a>404 Not Found</h2><p>该状态码表明服务器上无法找到请求的资源。除此之外，也可以在服务端拒绝请求且不想说理由时使用。</p>
-<h1 id="5xx服务器错误"><a href="#5xx服务器错误" class="headerlink" title="5xx服务器错误"></a>5xx服务器错误</h1><p>5xx的响应结果表明服务器本身发生错误</p>
-<h2 id="500-Internal-Server-Error"><a href="#500-Internal-Server-Error" class="headerlink" title="500 Internal Server Error"></a>500 Internal Server Error</h2><p>表明服务器端在执行请求时发生了错误，也有可能时Web应用存在的bug或某些临时的故障</p>
-<h2 id="503-Service-Unavailable"><a href="#503-Service-Unavailable" class="headerlink" title="503 Service Unavailable"></a>503 Service Unavailable</h2><p>表明服务器暂时处于超负载或正在进行停机维护，现在无法处理请求。如果事先得知解除以上状况需要的时间，最好写入Retry-After首部字段再返回给客户端。</p>
-<p>状态码和状况不一致：</p>
-<p>不少返回的状态码响应都是错误的，但是用户可能察觉不到这点，比如Web应用程序内部发生错误，状态码依然返回200 OK。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/16/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/18/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/16/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/25/">25</a><a class="extend next" rel="next" href="/page/18/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1454,7 +1465,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">240</span>
+          <span class="site-state-item-count">241</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1528,7 +1539,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共223.4k字</span>
+  <span class="post-count">博客全站共224.8k字</span>
 </div>
         
 
